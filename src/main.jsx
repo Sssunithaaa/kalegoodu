@@ -12,15 +12,14 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import { BrowserRouter } from 'react-router-dom'
-
- 
+import { HashRouter } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-  <BrowserRouter>
+  <HashRouter>
     <ContextProvider>
       <App />
     </ContextProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>,
 )
