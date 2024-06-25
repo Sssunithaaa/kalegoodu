@@ -1,0 +1,24 @@
+/* src/components/HalfPageDiv.css */
+.half-page-container {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+}
+
+.half-page-div {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 100vh;
+    background-color: #f0f0f0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+}
+
+.half-page-container button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
