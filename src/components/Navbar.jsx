@@ -6,6 +6,7 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
 import { img1, img2 } from '../assets/images';
 import Title from './Title';
+import { useNavigate } from 'react-router-dom';
 
 const navButtons = [
   { name: "Kitchen decor", href: "#" },
@@ -36,6 +37,7 @@ const cartItems = [
 ];
 
 const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
+  const navigate = useNavigate()
   return (
     <div
       className={`fixed top-0 right-0 w-[400px] bg-white h-full shadow-md transition-transform transform z-30 ${
@@ -74,7 +76,7 @@ const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
                 <span className="text-md font-bold">TOTAL:</span>
                 <span className="text-md font-bold">€1858</span>
               </div>
-              <button className="w-full bg-gold text-white py-3 rounded-md font-semibold">
+              <button onClick={()=> navigate("/checkout")} className="w-full bg-[#967b67] text-[18px] text-white py-3 rounded-md font-semibold">
                 Proceed to checkout
               </button>
             </>
@@ -129,7 +131,7 @@ const MegaMenu = () => {
   const handleMenuToggle = () => {
     setIsMenuVisible(!isMenuVisible);
   };
-
+  const navigate = useNavigate()
   return (
     <nav className="bg-white">
       <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 ">
@@ -163,7 +165,7 @@ const MegaMenu = () => {
             <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
               {navButtons.map((item, index) =>
                 !item.hasDropdown ? (
-                  <li key={index} className='relative py-3 px-3 transition-all duration-500'>
+                  <li onClick={()=> navigate("/products")} key={index} className='relative py-3 px-3 transition-all duration-500'>
                     <a href={item.href} className="block py-2 px-3 text-gray-900   md:p-0" aria-current="page"><span className='hover:text-orange-900 hover:font-medium'>{item.name}</span></a>
                     <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
                   </li>

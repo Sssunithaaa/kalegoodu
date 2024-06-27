@@ -1,5 +1,6 @@
 // src/Cart.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const cartItems = [
   {
@@ -18,6 +19,7 @@ const cartItems = [
   },
 ];
 
+const navigate = useNavigate()
 const Cart = () => {
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
@@ -45,7 +47,7 @@ const Cart = () => {
         <span className="text-lg font-bold">TOTAL:</span>
         <span className="text-lg font-bold">€1858</span>
       </div>
-      <button className="w-full bg-gold text-white py-3 rounded-md font-semibold">
+      <button onClick={()=>navigate("/checkout")} className="w-full text-[18px] text-white bg-orange py-3 rounded-md font-semibold">
         Proceed to checkout
       </button>
     </div>

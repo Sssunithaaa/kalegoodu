@@ -11,4 +11,6 @@ import img8 from "./10.webp"
 import img9 from "./11.webp"
 import img10 from './12.png'
 import img11 from './13.jpg'
-export {img,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11}
+import img12 from './16.jpg'
+import img14 from './14.jpg'
+export {img,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14}
