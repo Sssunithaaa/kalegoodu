@@ -5,14 +5,14 @@ import Slider from 'react-slick';
 import styled from "styled-components";
 import ModalCard from "./ModalCard";
 import ProductModal from './ProductModal';
-import { img1, img2, img3 } from '../assets/images'; // Import your images
+import { img1, img2, img3 } from '../assets/images';
 
 const ProductCarousel = () => {
   const [products] = useState([
     { id: 1, name: 'Product 1', price: '€658', rating: 4, description: 'Description for Product 1', img: img1 },
     { id: 2, name: 'Product 2', price: '€758', rating: 5, description: 'Description for Product 2', img: img2 },
     { id: 3, name: 'Product 3', price: '€858', rating: 3, description: 'Description for Product 3', img: img3 },
-    // Add more products as needed
+   
   ]);
 
   const [selectedProduct, setSelectedProduct] = useState(null);

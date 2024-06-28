@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { CartContext } from '../context/CartContext';
 
 const ProductModal = ({ product, isOpen, onClose }) => {
+  const { addToCart } = useContext(CartContext);
+  const [quantity,setQuantity] = useState(1);
+  const handleAddToCart = () => {
+    addToCart({...product,quantity});
+    onClose();
+  };
+  
+
   if (!isOpen) return null;
 
   return (
@@ -39,9 +48,13 @@ const ProductModal = ({ product, isOpen, onClose }) => {
                 min="1" 
                 className="w-16 p-2 border border-gray-300 rounded" 
                 defaultValue="1" 
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
               />
             </div>
-            <button className="w-full bg-orange-600 text-white py-2 rounded-lg">Add to cart</button>
+            <button className="w-full bg-orange-600 text-white py-2 rounded-lg" onClick={handleAddToCart}>
+              Add to cart
+            </button>
             <button className="w-full mt-2 text-orange-600">Add to Wishlist</button>
           </div>
         </div>
@@ -51,3 +64,6 @@ const ProductModal = ({ product, isOpen, onClose }) => {
 };
 
 export default ProductModal;
+
+
+

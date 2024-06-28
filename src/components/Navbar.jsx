@@ -7,95 +7,16 @@ import { IoClose } from "react-icons/io5";
 import { img1, img2 } from '../assets/images';
 import Title from './Title';
 import { useNavigate } from 'react-router-dom';
-
+import { CartContext } from '../context/CartContext';
+import { useContext } from 'react';
 const navButtons = [
-  { name: "Kitchen decor", href: "#" },
-  { name: "Shop all", href: "#", hasDropdown: true },
-  { name: "Living room decor", href: "#" },
-  { name: "Office decor", href: "#" },
-  { name: "Contact us", href: "#" },
-  { name: "About us", href: "#" }
+  { name: "Kitchen decor", href: "/kitchen-decor" },
+  { name: "Shop all", href: "/shop-all", hasDropdown: true },
+  { name: "Living room decor", href: "/living-room" },
+  { name: "Office decor", href: "/office-decor" },
+  { name: "Contact us", href: "/contact-us" },
+  { name: "About us", href: "/about-us" }
 ];
-
-
-
-const cartItems = [
-  {
-    id: 1,
-    image: img1, // Replace with actual image paths
-    name: 'FEET SCULPTURE',
-    quantity: 1,
-    price: '€658',
-  },
-  {
-    id: 2,
-    image: img2, // Replace with actual image paths
-    name: 'SCULPTURE ARTWORK',
-    quantity: 1,
-    price: '€1200',
-  },
-];
-
-const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
-  const navigate = useNavigate()
-  return (
-    <div
-      className={`fixed top-0 right-0 w-[400px] bg-white h-full shadow-md transition-transform transform z-30 ${
-        isSidebarVisible ? 'translate-x-0' : 'translate-x-full'
-      }`}
-    >
-      <div className="p-4">
-        <button className="text-2xl mb-4" onClick={toggleSidebar}>
-          &times;
-        </button>
-        <div className="text-center">
-          <h2 className="text-xl font-semibold">Shopping Cart</h2>
-          {cartItems.length > 0 ? (
-            <>
-              {cartItems.map(item => (
-                <div key={item.id} className="flex justify-between items-center border-b py-4">
-                  <img src={item.image} alt={item.name} className="w-24 h-24 object-cover" />
-                  <div className="ml-4 flex-1">
-                    <h2 className="text-md text-left font-bold">{item.name}</h2>
-                    <div className="flex items-center">
-                      <span className="text-gray-500">Quantity</span>
-                      <div className="flex items-center ml-2 border px-2 py-1">
-                        <button className="text-md">{"<"}</button>
-                        <span className="mx-2 text-left">{item.quantity}</span>
-                        <button className="text-md">{">"}</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-md font-semibold">{item.price}</p>
-                    <button className="text-red-500 hover:text-red-700">&times;</button>
-                  </div>
-                </div>
-              ))}
-              <div className="border-t py-4 flex justify-between items-center">
-                <span className="text-md font-bold">TOTAL:</span>
-                <span className="text-md font-bold">€1858</span>
-              </div>
-              <button onClick={()=> navigate("/checkout")} className="w-full bg-[#967b67] text-[18px] text-white py-3 rounded-md font-semibold">
-                Proceed to checkout
-              </button>
-            </>
-          ) : (
-            <>
-              <p className="mt-4">Your Shopping Cart is Empty</p>
-              <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
-                Start Shopping
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-
 
 const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
   if (!isSearchBarVisible) {
@@ -113,6 +34,66 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
       />
       <IoClose onClick={toggleSearchbar} size={25} className="cursor-pointer text-gray-900" />
     </div>
+  )
+}
+const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
+  const { cartItems,removeFromCart } = useContext(CartContext);
+  console.log(cartItems)
+  const navigate = useNavigate();
+
+  return (
+    <div
+      className={`fixed top-0 right-0 w-[400px] bg-white h-full shadow-md transition-transform transform z-30 ${
+        isSidebarVisible ? 'translate-x-0' : 'translate-x-full'
+      }`}
+    >
+      <div className="p-4">
+        <button className="text-2xl mb-4" onClick={toggleSidebar}>
+          &times;
+        </button>
+        <div className="text-center">
+          <h2 className="text-xl font-semibold">Shopping Cart</h2>
+          {cartItems && cartItems.length > 0 ? (
+            <>
+              {cartItems.map(item => (
+                <div key={item.id} className="flex justify-between items-center border-b py-4">
+                  <img src={item.img} alt={item.name} className="w-24 h-24 object-cover" />
+                  <div className="ml-4 flex-1">
+                    <h2 className="text-md text-left font-bold">{item.name}</h2>
+                    <div className="flex items-center">
+                      <span className="text-gray-500">Quantity</span>
+                      <div className="flex items-center ml-2 border px-2 py-1">
+                        <button className="text-md">{"<"}</button>
+                        <span className="mx-2 text-left">{item.quantity}</span>
+                        <button className="text-md">{">"}</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-md font-semibold">{item.price}</p>
+                    <button onClick={()=>removeFromCart(item.id)} className="text-red-500 hover:text-red-700">&times;</button>
+                  </div>
+                </div>
+              ))}
+              <div className="border-t py-4 flex justify-between items-center">
+                <span className="text-md font-bold">TOTAL:</span>
+                <span className="text-md font-bold">€1858</span>
+              </div>
+              <button onClick={() => navigate("/checkout")} className="w-full bg-[#967b67] text-[18px] text-white py-3 rounded-md font-semibold">
+                Proceed to checkout
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="mt-4">Your Shopping Cart is Empty</p>
+              <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
+                Start Shopping
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -121,6 +102,7 @@ const MegaMenu = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
+   const { cartItemCount } = useContext(CartContext);
 
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
@@ -131,7 +113,9 @@ const MegaMenu = () => {
   const handleMenuToggle = () => {
     setIsMenuVisible(!isMenuVisible);
   };
-  const navigate = useNavigate()
+  
+
+  const navigate = useNavigate();
   return (
     <nav className="bg-white">
       <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 ">
@@ -146,12 +130,16 @@ const MegaMenu = () => {
             >
               <CiSearch size={20} />
             </button>
-            <button
-              className="text-2xl"
-              onClick={toggleSidebar}
-            >
-              <HiOutlineShoppingBag size={20} />
-            </button>
+             <div className="relative">
+      <button className="text-2xl relative" onClick={toggleSidebar}>
+        <HiOutlineShoppingBag size={24} />
+        {cartItemCount > 0 && (
+          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+            {cartItemCount}
+          </span>
+        )}
+      </button>
+    </div>
             <button
               className="text-2xl"
               onClick={handleMenuToggle}
@@ -165,8 +153,8 @@ const MegaMenu = () => {
             <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
               {navButtons.map((item, index) =>
                 !item.hasDropdown ? (
-                  <li onClick={()=> navigate("/products")} key={index} className='relative py-3 px-3 transition-all duration-500'>
-                    <a href={item.href} className="block py-2 px-3 text-gray-900   md:p-0" aria-current="page"><span className='hover:text-orange-900 hover:font-medium'>{item.name}</span></a>
+                  <li onClick={()=> navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
+                    <div href={item.href} className="block py-2 px-3 text-gray-900   md:p-0" aria-current="page"><span className='hover:text-orange hover:font-medium'>{item.name}</span></div>
                     <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
                   </li>
                 ) : (
@@ -251,9 +239,16 @@ const MegaMenu = () => {
                 </button>
               </li>
               <li className='hidden lg:block py-3'>
-                <button className="text-2xl" onClick={toggleSidebar}>
-                  <HiOutlineShoppingBag size={20} />
-                </button>
+             <div className="relative">
+      <button className="text-2xl relative" onClick={toggleSidebar}>
+        <HiOutlineShoppingBag size={24} />
+        {cartItemCount > 0 && (
+          <span className="absolute top-[-4px] right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+            {cartItemCount}
+          </span>
+        )}
+      </button>
+    </div>
               </li>
             </ul>
           </div>
