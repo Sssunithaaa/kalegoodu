@@ -99,7 +99,7 @@ const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
 
 const MegaMenu = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [isMenuVisible, setIsMenuVisible] = useState(true);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
    const { cartItemCount } = useContext(CartContext);
@@ -111,17 +111,20 @@ const MegaMenu = () => {
     setIsSearchBarVisible(!isSearchBarVisible);
   };
   const handleMenuToggle = () => {
-    setIsMenuVisible(!isMenuVisible);
+    setIsMenuVisible(true);
   };
-  
+  const handleMenuToggleOff = () => {
+    setIsMenuVisible(false);
+  };
+  console.log(isMenuVisible)
 
   const navigate = useNavigate();
   return (
     <nav className="bg-white">
       <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 ">
         <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4  lg:pt-0 md:py-3 w-screen lg:w-auto'>
-         <Title>
-          KALEGOODU
+         <Title >
+          <button onClick={()=> navigate("/")} className="hover:cursor-pointer">KALEGOODU</button>
          </Title>
           <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
             <button
@@ -142,117 +145,118 @@ const MegaMenu = () => {
     </div>
             <button
               className="text-2xl"
-              onClick={handleMenuToggle}
+              
             >
-              {isMenuVisible ? <RiCloseLargeLine size={20} /> : <HiMenuAlt3 size={20} />}
+              {isMenuVisible ? <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : <HiMenuAlt3 size={20} onClick={handleMenuToggle} />}
             </button>
           </div>
         </div>
-        {isMenuVisible && (
-          <div id="mega-menu-full-image" className="items-center justify-between py-0 w-full md:flex md:w-auto md:order-1">
-            <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
-              {navButtons.map((item, index) =>
-                !item.hasDropdown ? (
-                  <li onClick={()=> navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
-                    <div href={item.href} className="block py-2 px-3 text-gray-900   md:p-0" aria-current="page"><span className='hover:text-orange hover:font-medium'>{item.name}</span></div>
-                    <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
-                  </li>
-                ) : (
-                  <li
-                    key={index}
-                    className='relative py-3 px-3 transition-all duration-500'
-                    onMouseEnter={() => setIsDropdownVisible(true)}
-                    onMouseLeave={() => setIsDropdownVisible(false)}
-                  >
-      <button
-        id="mega-menu-full-cta-image-button"
-        data-collapse-toggle="mega-menu-full-image-dropdown"
-        className={`flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 hover:text-orange md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 uppercase dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700`}
-      >
-        {item.name}
-        <svg className="w-2.5 h-2.5 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-        </svg>
-      </button>
-      {isDropdownVisible && (
-        <div
-        id="mega-menu-full-image-dropdown"
-        className={`lg:absolute mt-4 z-[100001] bg-white border-gray-200 shadow-sm border-y transition-max-height duration-1000 ease-in-out ${
-          isDropdownVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-        } overflow-hidden`}
-      >
-        <div className="grid max-w-screen-xl grid-cols-2 gap-x-5 px-6 py-3 mx-auto text-sm text-gray-500 dark:text-gray-400 md:grid-cols-3 lg:px-10 lg:py-5 lg:gap-x-10">
-          <ul className="mb-4 space-y-4 md:mb-0 md:block" aria-labelledby="mega-menu-full-image-button">
-            <li>
-              <a href="#" className="hover:underline hover:text-orange">
-                Online Stores
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline hover:text-orange">
-                Segmentation
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline hover:text-orange">
-                Marketing CRM
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline hover:text-orange">
-                Online Stores
-              </a>
-            </li>
-          </ul>
-          <ul className="mb-4 space-y-4 md:mb-0">
-            <li>
-              <a href="#" className="hover:underline hover:text-orange">
-                Our Blog
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline hover:text-orange">
-                Terms & Conditions
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
-                License
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
-                Resources
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      )}
-    </li>
-  )
-)}
-
-              <li className='hidden lg:block py-3'>
-                <button onClick={toggleSearchbar}>
-                  <CiSearch size={20} />
-                </button>
-              </li>
-              <li className='hidden lg:block py-3'>
-             <div className="relative">
-      <button className="text-2xl relative" onClick={toggleSidebar}>
-        <HiOutlineShoppingBag size={24} />
-        {cartItemCount > 0 && (
-          <span className="absolute top-[-4px] right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-            {cartItemCount}
-          </span>
-        )}
-      </button>
+      {isMenuVisible || "md:flex" && (
+  <div id="mega-menu-full-image" className={`items-center justify-between py-0 w-full ${isMenuVisible ? 'block' : 'hidden'} md:flex md:w-auto md:order-1`}>
+    <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+      {navButtons.map((item, index) =>
+        !item.hasDropdown ? (
+          <li onClick={()=> navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
+            <div href={item.href} className="block py-2 px-3 text-gray-900   md:p-0" aria-current="page"><span className='hover:text-orange hover:font-medium'>{item.name}</span></div>
+            <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
+          </li>
+        ) : (
+          <li
+            key={index}
+            className='relative py-3 px-3 transition-all duration-500'
+            onMouseEnter={() => setIsDropdownVisible(true)}
+            onMouseLeave={() => setIsDropdownVisible(false)}
+          >
+  <button
+    id="mega-menu-full-cta-image-button"
+    data-collapse-toggle="mega-menu-full-image-dropdown"
+    className={`flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 hover:text-orange md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 uppercase dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700`}
+  >
+    {item.name}
+    <svg className="w-2.5 h-2.5 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+    </svg>
+  </button>
+  {isDropdownVisible && (
+    <div
+    id="mega-menu-full-image-dropdown"
+    className={`lg:absolute mt-4 z-[100001] bg-white border-gray-200 shadow-sm border-y transition-max-height duration-1000 ease-in-out ${
+      isDropdownVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+    } overflow-hidden`}
+  >
+    <div className="grid max-w-screen-xl grid-cols-2 gap-x-5 px-6 py-3 mx-auto text-sm text-gray-500 dark:text-gray-400 md:grid-cols-3 lg:px-10 lg:py-5 lg:gap-x-10">
+      <ul className="mb-4 space-y-4 md:mb-0 md:block" aria-labelledby="mega-menu-full-image-button">
+        <li>
+          <a href="#" className="hover:underline hover:text-orange">
+            Online Stores
+          </a>
+        </li>
+        <li>
+          <a href="#" className="hover:underline hover:text-orange">
+            Segmentation
+          </a>
+        </li>
+        <li>
+          <a href="#" className="hover:underline hover:text-orange">
+            Marketing CRM
+          </a>
+        </li>
+        <li>
+          <a href="#" className="hover:underline hover:text-orange">
+            Online Stores
+          </a>
+        </li>
+      </ul>
+      <ul className="mb-4 space-y-4 md:mb-0">
+        <li>
+          <a href="#" className="hover:underline hover:text-orange">
+            Our Blog
+          </a>
+        </li>
+        <li>
+          <a href="#" className="hover:underline hover:text-orange">
+            Terms & Conditions
+          </a>
+        </li>
+        <li>
+          <a href="#" className="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
+            License
+          </a>
+        </li>
+        <li>
+          <a href="#" className="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
+            Resources
+          </a>
+        </li>
+      </ul>
     </div>
-              </li>
-            </ul>
-          </div>
-        )}
+  </div>
+  )}
+</li>
+)
+)}
+<li className='hidden lg:block py-3'>
+<button onClick={toggleSearchbar}>
+<CiSearch size={20} />
+</button>
+</li>
+<li className='hidden lg:block py-3'>
+<div className="relative">
+<button className="text-2xl relative" onClick={toggleSidebar}>
+<HiOutlineShoppingBag size={24} />
+{cartItemCount > 0 && (
+<span className="absolute top-[-4px] right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+{cartItemCount}
+</span>
+)}
+</button>
+
+ </div>
+           </li>
+         </ul>
+       </div>
+     )}
+ 
         <SearchBar isSearchBarVisible={isSearchBarVisible} toggleSearchbar={toggleSearchbar} />
         <SideBar isSidebarVisible={isSidebarVisible} toggleSidebar={toggleSidebar} />
         {(isSidebarVisible || isSearchBarVisible) && (

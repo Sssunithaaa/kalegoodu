@@ -49,7 +49,7 @@ const MainPage = () => {
      <HomeDecor
     imageSrc={img14}
     heading="Beautiful Home Decor"
-    description="This is a description of the home decor. It highlights the features and aesthetic appeal of the item."
+    description="Enhance your home with this exquisite flower pot, showcasing a blend of modern elegance and timeless beauty that complements any decor.."
   />
     </div>
       <div className='h-30 py-10'>
@@ -66,7 +66,7 @@ const MainPage = () => {
       </div>
      
       <div className='flex flex-col w-full justify-center items-center mx-auto px-10 gap-x-4 my-10  z-10'>
-        <Title>Product Cards</Title>
+        <Title>Kitchen decor</Title>
         <div className='flex flex-wrap justify-center gap-x-5 gap-y-10 items-center w-[100%]'>
           <ProductCard />
           <ProductCard />

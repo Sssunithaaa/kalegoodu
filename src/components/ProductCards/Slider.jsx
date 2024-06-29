@@ -1,25 +1,24 @@
 import {Carousel} from './Carousel';
+import { img17, img18, img19, img20 } from "../../assets/images"
 
-const slides = [
-  '../../../images/image-product-1.jpg',
-  '../../../images/image-product-2.jpg',
-  '../../../images/image-product-3.jpg',
-  '../../../images/image-product-4.jpg',
-];
+const thumbnails = [
+  img17,img18,img19,img20
+]
 
 
 export const Slider = () => {
   return (
-    // <div className='relative h-72 overflow-hidden'>
-    <div className='relative md:w-full md:max-w-[500px]'>
-      {/* <img className='absolute top-[50%] left-[50%] -translate-y-1/2 -translate-x-1/2' src="./images/image-product-1.jpg" alt="" /> */}
+    <div className="relative md:w-auto md:h-full md:max-w-[500px]">
       <Carousel>
-        {
-          slides.map( s => (
-            <img className='' key={s} src={ s } />
-          ))
-        }
+        {thumbnails.map((s, index) => (
+          <img
+            className="object-cover"
+            key={index}
+            src={s}
+            alt={`Slide ${index + 1}`}
+          />
+        ))}
       </Carousel>
     </div>
-  )
-}
+  );
+};
