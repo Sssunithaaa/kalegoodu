@@ -21,6 +21,7 @@ body {
   scroll-behavior: smooth;
   color-scheme: light;
   overflow-x: hidden;
+  height: 100%;
 }
 
 .beige {

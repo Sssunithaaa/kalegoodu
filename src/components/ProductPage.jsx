@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { DetailsSection, Slider } from "./ProductCards";
 import Navbar from './Navbar';
-
+import '../App.css'
 function ProductPage() {
   const [cartCounter, setCartCounter] = useState(0);
 
   return (
-    <div>
+    <div className="overflow-y-hidden">
       <div className="fixed md:static mt-0 z-[100001] navbar w-full m-0">
         <Navbar />
       </div>

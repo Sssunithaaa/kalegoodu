@@ -27,7 +27,7 @@ const ProductModal = ({ product, isOpen, onClose }) => {
           </div>
           <div className="flex-1">
             <h2 className="text-2xl font-semibold mb-2">{product.name}</h2>
-            <p className="text-xl font-medium text-gray-600 mb-4">{product.price}</p>
+            <p className="text-xl font-medium text-gray-600 mb-4">€{product.price}</p>
             <div className="flex items-center mb-4">
               <div className="flex items-center">
                 <span className="text-yellow-400">

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const StateContext = createContext();
 
@@ -17,10 +17,32 @@ export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [isClicked, setIsClicked] = useState(initialState);
 
+  useEffect(() => {
+    // Function to update screenSize based on viewport width
+    const updateScreenSize = () => {
+      if (window.innerWidth >= 1024) {
+        setScreenSize("large"); // Large devices (width >= 1024px)
+      } else {
+        setScreenSize("mobile"); // Mobile devices (width < 1024px)
+      }
+    };
+
+    // Initial call to set screenSize
+    updateScreenSize();
+
+    // Event listener to update screenSize on window resize
+    window.addEventListener("resize", updateScreenSize);
+
+    // Clean-up function to remove event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", updateScreenSize);
+    };
+  }, []); // Empty dependency array ensures this effect runs only once
+
   const setMode = (e) => {
     setCurrentMode(e.target.value);
     localStorage.setItem("themeMode", e.target.value);
-    setThemeSettings(false)
+    setThemeSettings(false);
   };
 
   const setColor = (color) => {

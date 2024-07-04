@@ -1,0 +1,21 @@
+.ProductPage {
+    flex: 1;
+    /* Grow to fill available space */
+}
+
+.navbar {
+    margin-bottom: 0;
+    /* Ensure no margin at the bottom */
+}
+
+.font-kumbhsans {
+    margin-bottom: 0;
+    /* Ensure no margin at the bottom */
+    padding-bottom: 0;
+    /* Ensure no padding at the bottom */
+}
+
+.md:py-20 {
+    padding-bottom: 0;
+    /* Ensure no padding at the bottom */
+}

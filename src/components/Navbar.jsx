@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiCloseLargeLine } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
@@ -9,6 +9,8 @@ import Title from './Title';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
+import { useStateContext } from '../context/ContextProvider';
+
 const navButtons = [
   { name: "Kitchen decor", href: "/kitchen-decor" },
   { name: "Shop all", href: "/shop-all", hasDropdown: true },
@@ -24,9 +26,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
   }
 
   return (
-    <div
-      className="fixed top-10 right-10 w-64 h-10 flex items-center gap-x-2 p-2 shadow-md z-30 bg-white"
-    >
+    <div className="fixed top-10 right-10 w-64 h-10 flex items-center gap-x-2 p-2 shadow-md z-30 bg-white">
       <input
         type="text"
         className="flex-grow p-2 w-full bg-white border border-gray-300 rounded"
@@ -34,11 +34,11 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
       />
       <IoClose onClick={toggleSearchbar} size={25} className="cursor-pointer text-gray-900" />
     </div>
-  )
-}
+  );
+};
+
 const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
-  const { cartItems,removeFromCart } = useContext(CartContext);
-  console.log(cartItems)
+  const { cartItems, removeFromCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   return (
@@ -70,8 +70,8 @@ const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-md font-semibold">{item.price}</p>
-                    <button onClick={()=>removeFromCart(item.id)} className="text-red-500 hover:text-red-700">&times;</button>
+                    <p className="text-md font-semibold">€{item.price}</p>
+                    <button onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-700">&times;</button>
                   </div>
                 </div>
               ))}
@@ -99,62 +99,77 @@ const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
 
 const MegaMenu = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const { screenSize } = useStateContext();
+  const [isMenuVisible, setIsMenuVisible] = useState(screenSize === "large");
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
-   const { cartItemCount } = useContext(CartContext);
+  const { cartItemCount } = useContext(CartContext);
 
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
   };
+
   const toggleSearchbar = () => {
     setIsSearchBarVisible(!isSearchBarVisible);
   };
+
   const handleMenuToggle = () => {
     setIsMenuVisible(true);
   };
+
   const handleMenuToggleOff = () => {
     setIsMenuVisible(false);
   };
-  console.log(isMenuVisible)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsMenuVisible(true);
+      } else {
+        setIsMenuVisible(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initialize the state based on the current window size
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const navigate = useNavigate();
   return (
-    <nav className="bg-white">
-      <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 ">
-        <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4  lg:pt-0 md:py-3 w-screen lg:w-auto'>
-         <Title >
-          <button onClick={()=> navigate("/")} className="hover:cursor-pointer">KALEGOODU</button>
-         </Title>
+    <div>
+<div className="fixed md:static mt-0 w-full m-0 bg-white z-[10001]">
+  <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
+        <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
+          <Title>
+            <button onClick={() => navigate("/")} className="hover:cursor-pointer">KALEGOODU</button>
+          </Title>
           <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
-            <button
-              className="text-2xl"
-              onClick={toggleSearchbar}
-            >
+            <button className="text-2xl" onClick={toggleSearchbar}>
               <CiSearch size={20} />
             </button>
-             <div className="relative">
-      <button className="text-2xl relative" onClick={toggleSidebar}>
-        <HiOutlineShoppingBag size={24} />
-        {cartItemCount > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-            {cartItemCount}
-          </span>
-        )}
-      </button>
-    </div>
-            <button
-              className="text-2xl"
-              
-            >
+            <div className="relative">
+              <button className="text-2xl relative" onClick={toggleSidebar}>
+                <HiOutlineShoppingBag size={24} />
+                {cartItemCount > 0 && (
+                  <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </button>
+            </div>
+            <button className="text-2xl">
               {isMenuVisible ? <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : <HiMenuAlt3 size={20} onClick={handleMenuToggle} />}
             </button>
           </div>
         </div>
-      {isMenuVisible || "md:flex" && (
-  <div id="mega-menu-full-image" className={`items-center justify-between py-0 w-full ${isMenuVisible ? 'block' : 'hidden'} md:flex md:w-auto md:order-1`}>
-    <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
-      {navButtons.map((item, index) =>
+        {isMenuVisible && (
+          <div id="mega-menu-full-image" className={`items-center justify-between py-0 w-full block md:flex md:w-auto md:order-1`}>
+            <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+              {navButtons.map((item, index) =>
         !item.hasDropdown ? (
           <li onClick={()=> navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
             <div href={item.href} className="block py-2 px-3 text-gray-900   md:p-0" aria-current="page"><span className='hover:text-orange hover:font-medium'>{item.name}</span></div>
@@ -256,17 +271,28 @@ const MegaMenu = () => {
          </ul>
        </div>
      )}
- 
-        <SearchBar isSearchBarVisible={isSearchBarVisible} toggleSearchbar={toggleSearchbar} />
-        <SideBar isSidebarVisible={isSidebarVisible} toggleSidebar={toggleSidebar} />
-        {(isSidebarVisible || isSearchBarVisible) && (
-          <div
-            className="fixed inset-0 z-20 bg-black opacity-50"
-            onClick={!isSearchBarVisible ? toggleSidebar : toggleSearchbar}
-          />
-        )}
       </div>
-    </nav>
+  </div>
+       <SearchBar isSearchBarVisible={isSearchBarVisible} toggleSearchbar={toggleSearchbar} />
+<SideBar isSidebarVisible={isSidebarVisible} toggleSidebar={toggleSidebar} />
+{(isSidebarVisible || isSearchBarVisible || (isMenuVisible && screenSize !== "large")) && (
+  <div
+    className="fixed inset-0 z-20 bg-black opacity-50"
+    onClick={() => {
+      if (isSidebarVisible) {
+        toggleSidebar();
+      } else if (isSearchBarVisible) {
+        toggleSearchbar();
+      } else if (isMenuVisible && screenSize !== "large") {
+        handleMenuToggleOff();
+      }
+    }}
+  />
+)}
+
+
+     
+    </div>
   );
 };
 
