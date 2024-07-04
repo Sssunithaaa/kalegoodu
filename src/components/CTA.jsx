@@ -3,10 +3,10 @@ import Title from './Title'
 
 const CTA = () => {
   return (
-    <section class="py-10 bg-gray-50 w-screen sm:pt-16 lg:pt-24">
+    <section class="py-10 bg-gray-200 w-screen sm:pt-16 lg:pt-24 mt-[5%]">
     <div class=" mx-auto sm:px-6 max-w-7xl px-4">
         <div class="flex lg:flex-row flex-col gap-x-10">
-            <div class="lg:pr-8 w-[40%]">
+            <div class="lg:pr-8 ml-[10%] w-[40%]">
               <span className="text-2xl md:text-3xl text-center font-semibold text-gray-800 tracking-wide">Kalegoodu</span>
 
                 <p class="text-base leading-relaxed text-gray-600 mt-7">Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.</p>
@@ -49,7 +49,7 @@ const CTA = () => {
                     </li>
                 </ul>
             </div>
-           <div className='flex flex-row justify-center gap-x-[100px] w-[60%]'>
+           <div className='flex flex-row justify-center ml-[10%] md:mt-[0%] mt-[10%] gap-x-[100px] w-[60%]'>
             <div>
                 <p class="text-sm font-semibold tracking-widest text-gray-400 uppercase">Company</p>
 

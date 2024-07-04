@@ -66,7 +66,7 @@ const MainPage = () => {
       */}
       <div className='flex flex-col w-full justify-center items-center mx-auto px-10 gap-x-4 my-10  z-10'>
         <Title>Kitchen decor</Title>
-        <div className='flex flex-wrap justify-center gap-x-5 gap-y-10 items-center w-[100%]'>
+        <div className='flex flex-wrap justify-center mt-[3%] gap-x-5 gap-y-10 items-center w-[100%]'>
           <ProductCard />
           <ProductCard />
           <ProductCard />
