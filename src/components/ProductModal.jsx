@@ -13,7 +13,7 @@ const ProductModal = ({ product, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-200 bg-opacity-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-100 md:mt-0 mt-[15%] overflow-y-auto bg-gray-200 bg-opacity-50 flex items-center justify-center">
       <div className="bg-white lg:max-w-2xl max-w-lg mx-4 p-8 rounded-lg shadow-lg relative">
         <button 
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none" 
