@@ -3,7 +3,7 @@ import Title from './Title'
 
 const CTA = () => {
   return (
-    <section class="py-10 bg-gray-200 w-screen sm:pt-16 lg:pt-24 mt-[5%]">
+    <section class="py-10 bg-white w-screen sm:pt-16 lg:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-4">
         <div class="flex lg:flex-row flex-col gap-x-10">
             <div class="lg:pr-8 ml-[10%] w-[40%]">

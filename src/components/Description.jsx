@@ -7,7 +7,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: #fff;
+  background-color: transparent;
   flex-wrap: wrap;
 
   @media (max-width: 768px) {
@@ -57,7 +57,7 @@ const DecorImage = styled.img`
 const Button = styled.button`
   width: 40%;
   height: 50px;
-  background-color: #B49680;
+  background-color: #C0E6CD;
   margin-top: 10px;
   border: none;
   cursor: pointer;

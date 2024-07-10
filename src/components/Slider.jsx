@@ -57,7 +57,7 @@ const ProductCarousel = () => {
   };
 
   return (
-    <div className="px-10 relative">
+    <div className="px-10 mx-auto my-5 relative">
       <Slider {...settings}>
         {products.map((product) => (
           <div key={product.id} onClick={() => handleCardClick(product.id)}>
@@ -100,7 +100,7 @@ const SampleNextArrow = (props) => {
       onClick={onClick}
       style={{ ...style, right: '-50px' }} // Adjust the position
     >
-      &#8250;
+      {/* &#8250; */}
     </Arrow>
   );
 };
@@ -111,9 +111,9 @@ const SamplePrevArrow = (props) => {
     <Arrow
       className={className}
       onClick={onClick}
-      style={{ ...style, left: '-50px' }} // Adjust the position
+      style={{ ...style }} // Adjust the position
     >
-      &#8249;
+      {/* &#8249; */}
     </Arrow>
   );
 };

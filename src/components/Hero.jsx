@@ -1,22 +1,45 @@
 import React from 'react';
-import styled from 'styled-components';
-import {hero,img10} from '../assets/images'
+import styled, { keyframes } from 'styled-components';
+import {img21, img22,img23 } from '../assets/images'; // Import your images
+
+const slide = keyframes`
+  0% { transform: translateX(0); }
+  33% { transform: translateX(0); }
+  38% { transform: translateX(-100%); }
+  71% { transform: translateX(-100%); }
+  76% { transform: translateX(-200%); }
+  100% { transform: translateX(-200%); }
+`;
 
 const HeroSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url(${img10});
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+  position: relative;
   color: #fff;
   text-align: center;
   padding: 0 20px;
 `;
 
+const ImageSlider = styled.div`
+  display: flex;
+  position: absolute;
+  width: 300%;
+  animation: ${slide} 18s linear infinite;
+`;
+
+const ImageWrapper = styled.div`
+  flex: 1 0 100%;
+  height: 100vh;
+  background-size: contain; /* Or use 'cover' depending on your preference */
+  background-position: center;
+`;
+
 const HeroContent = styled.div`
   max-width: 600px;
+  z-index: 1;
 `;
 
 const HeroTitle = styled.h1`
@@ -52,6 +75,11 @@ const HeroButton = styled.a`
 const Hero = () => {
   return (
     <HeroSection>
+      <ImageSlider>
+        <ImageWrapper style={{ backgroundImage: `url(${img21})` }} />
+        <ImageWrapper style={{ backgroundImage: `url(${img22})` }} />
+        <ImageWrapper style={{ backgroundImage: `url(${img23})` }} />
+      </ImageSlider>
       <HeroContent>
         <HeroTitle>Transform Your Space</HeroTitle>
         <HeroSubtitle>Discover the best home decor ideas to beautify your home.</HeroSubtitle>

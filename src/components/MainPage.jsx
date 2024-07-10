@@ -12,6 +12,7 @@ import { img1,img2,img3,img14 } from '../assets/images';
 import HomeDecor from './Description';
 import Banner from './Banner';
 import MainLayout from './MainComponents/MainLayout';
+import Testimonials from './Testimonials/Testimonials';
 const MainPage = () => {
   const [isHovered, setIsHovered] = useState(false);
   useEffect(()=> {
@@ -35,7 +36,11 @@ const MainPage = () => {
       <div className='w-full'>
         <Hero />
       </div>
-       <div className='w-full my-10'>
+       <div className='h-30 py-10'>
+        <Title>Categories</Title>
+        <Categories />
+      </div>
+       <div className='w-full'>
         <Title>Product Carousel</Title>
         <ProductCarousel />
       </div>
@@ -51,10 +56,7 @@ const MainPage = () => {
     description="Enhance your home with this exquisite flower pot, showcasing a blend of modern elegance and timeless beauty that complements any decor.."
   />
     </div>
-      <div className='h-30 py-10'>
-        <Title>Categories</Title>
-        <Categories />
-      </div>
+     
       {/* <div className='w-full'>
         <Title>Featured Products</Title>
         <div className='flex flex-row justify-between container overflow-x-auto gap-x-4 my-10 mx-3 z-10 whitespace-nowrap'>
@@ -71,6 +73,10 @@ const MainPage = () => {
           <ProductCard />
           <ProductCard />
         </div>
+      </div>
+      <div>
+    
+        <Testimonials/>
       </div>
       
     </MainLayout>
