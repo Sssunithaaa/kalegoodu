@@ -43,7 +43,7 @@ const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 w-[400px] bg-white h-full shadow-md transition-transform transform z-30 ${
+      className={`fixed top-0 right-0 sm:w-[400px] w-full md:max-w-[450px] bg-white h-full shadow-md transition-transform transform z-30 ${
         isSidebarVisible ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
