@@ -4,26 +4,20 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import styled from "styled-components";
 import ModalCard from "./ModalCard";
-import ProductModal from './ProductModal';
+import { useNavigate } from 'react-router-dom';
 import { img1, img2, img3 } from '../assets/images';
 
 const ProductCarousel = () => {
   const [products] = useState([
-    { id: 1, name: 'Product 1', price: 658, rating: 4, description: 'Description for Product 1', img: img1 },
-    { id: 2, name: 'Product 2', price: 758, rating: 5, description: 'Description for Product 2', img: img2 },
-    { id: 3, name: 'Product 3', price: 858, rating: 3, description: 'Description for Product 3', img: img3 },
+    { id: 1, name: 'Product-1', price: 658, rating: 4, description: 'Description for Product 1', img: img1 },
+    { id: 2, name: 'Product-2', price: 758, rating: 5, description: 'Description for Product 2', img: img2 },
+    { id: 3, name: 'Product-3', price: 858, rating: 3, description: 'Description for Product 3', img: img3 },
    
+
   ]);
+ const navigate = useNavigate()
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  const handleCardClick = (productId) => {
-    setSelectedProduct(products.find((p) => p.id === productId));
-  };
-
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
-  };
+ 
 
   const settings = {
     dots: true,
@@ -60,18 +54,12 @@ const ProductCarousel = () => {
     <div className="px-10 mx-auto my-5 relative">
       <Slider {...settings}>
         {products.map((product) => (
-          <div key={product.id} onClick={() => handleCardClick(product.id)}>
+          <div key={product.id} onClick={() => navigate(`/products/${product.name}`)} >
             <ModalCard product={product} />
           </div>
         ))}
       </Slider>
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          isOpen={true}
-          onClose={handleCloseModal}
-        />
-      )}
+     
     </div>
   );
 };

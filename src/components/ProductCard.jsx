@@ -9,10 +9,9 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { MdEventAvailable } from "react-icons/md";
-import { img4 } from "../assets/images";
-export function ProductCard({img}) {
+export default function ProductCard({img}) {
   return (
-    <Card className="w-full max-w-[26rem] shadow-lg">
+    <Card className="w-full max-w-[22rem] shadow-lg">
       <CardHeader className="p-0" floated={false} color="blue-gray">
         <img
           src={img}

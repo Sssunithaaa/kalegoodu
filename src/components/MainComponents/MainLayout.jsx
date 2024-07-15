@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import CTA from '../CTA';
+import Breadcrumbs from '../BreadCrumbs'
 
 const MainWrapper = styled.div`
   // background: rgb(192,230,109,0.1);
@@ -10,9 +12,13 @@ const MainWrapper = styled.div`
 `;
 
 const MainLayout = ({ children }) => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
-    <div className="bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD]">
+    <div className="">
       <Navbar />
+      {!isHomePage && <Breadcrumbs />}
       {children}
       <CTA />
     </div>

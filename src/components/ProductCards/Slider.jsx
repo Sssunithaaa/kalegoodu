@@ -1,20 +1,15 @@
-import {Carousel} from './Carousel';
-import { img17, img18, img19, img20 } from "../../assets/images"
-
-const thumbnails = [
-  img17,img18,img19,img20
-]
+import { Carousel } from './Carousel';
 
 
-export const Slider = () => {
+export const Slider = ({ images }) => {
   return (
     <div className="relative md:w-auto md:h-full md:max-w-[500px]">
       <Carousel>
-        {thumbnails.map((s, index) => (
+        {images.map((image, index) => (
           <img
             className="object-cover"
             key={index}
-            src={s}
+            src={image}
             alt={`Slide ${index + 1}`}
           />
         ))}

@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 import { useStateContext } from '../context/ContextProvider';
-
+import SearchBar from '../searchbar/SearchBar';
 const navButtons = [
   { name: "Kitchen decor", href: "/kitchen-decor" },
   { name: "Shop all", href: "/shop-all", hasDropdown: true },
@@ -20,22 +20,22 @@ const navButtons = [
   { name: "About us", href: "/about-us" }
 ];
 
-const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
-  if (!isSearchBarVisible) {
-    return null; // Return null when the search bar should not be visible
-  }
+// const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
+//   if (!isSearchBarVisible) {
+//     return null; // Return null when the search bar should not be visible
+//   }
 
-  return (
-    <div className="fixed top-10 right-10 w-64 h-10 flex items-center gap-x-2 p-2 shadow-md z-30 bg-white">
-      <input
-        type="text"
-        className="flex-grow p-2 w-full bg-white border border-gray-300 rounded"
-        placeholder="Search..."
-      />
-      <IoClose onClick={toggleSearchbar} size={25} className="cursor-pointer text-gray-900" />
-    </div>
-  );
-};
+//   return (
+//     <div className="fixed top-10 right-10 w-64 h-10 flex items-center gap-x-2 p-2 shadow-md z-30 bg-white">
+//       <input
+//         type="text"
+//         className="flex-grow p-2 w-full bg-white border border-gray-300 rounded"
+//         placeholder="Search..."
+//       />
+//       <IoClose onClick={toggleSearchbar} size={25} className="cursor-pointer text-gray-900" />
+//     </div>
+//   );
+// };
 
 const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
   const { cartItems, removeFromCart } = useContext(CartContext);
@@ -140,8 +140,8 @@ const MegaMenu = () => {
 
   const navigate = useNavigate();
   return (
-    <div>
-<div className="fixed md:static mt-0 w-full m-0 bg-white z-[10001]">
+    <div className='top-0'>
+<div className="fixed md:static mt-0 top-0 w-full m-0 bg-white z-[10001]">
   <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
         <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
           <Title>

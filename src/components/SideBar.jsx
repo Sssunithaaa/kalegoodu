@@ -3,7 +3,6 @@ import ReactSlider from 'react-slider';
 import { img, img1, img2, img3, img4 } from '../assets/images';
 
 const Sidebar = () => {
-  // Sample data for categories
   const categories = [
     { id: 1, name: 'Electronics', image: img },
     { id: 2, name: 'Clothing', image: img1 },
@@ -12,17 +11,11 @@ const Sidebar = () => {
     { id: 5, name: 'Post', image: img4 },
   ];
 
-  // Sample data for filter options
   const types = ['Electronics', 'Clothing', 'Books', 'Hats', 'Post'];
-  const colors = ['#FF0000', '#008000', '#0000FF', '#000000', '#808080', '#FFA500', '#800080'];
 
-  // State to track selected filters
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 100]);
-  const [hoveredCategory, setHoveredCategory] = useState(null);
 
-  // Function to handle type filter change
   const handleTypeChange = (type) => {
     setSelectedTypes((prev) =>
       prev.includes(type)
@@ -31,21 +24,18 @@ const Sidebar = () => {
     );
   };
 
-  // Function to handle color filter change
-  const handleColorChange = (color) => {
-    setSelectedColors((prev) =>
-      prev.includes(color)
-        ? prev.filter((c) => c !== color)
-        : [...prev, color]
-    );
-  };
-
-  // Function to handle price range change
   const handlePriceChange = (newRange) => {
     setPriceRange(newRange);
   };
 
-
+  const handlePriceInputChange = (e, index) => {
+    const value = parseInt(e.target.value, 10);
+    setPriceRange((prev) => {
+      const newRange = [...prev];
+      newRange[index] = value;
+      return newRange;
+    });
+  };
 
   return (
     <div className="flex flex-col p-4 w-64">
@@ -80,21 +70,6 @@ const Sidebar = () => {
           </div>
         </div>
 
-       <div className="mb-4">
-  <h3 className="text-lg font-semibold mb-2">Colors:</h3>
-  <div className="flex space-x-2">
-    {colors.map((color) => (
-      <button
-        key={color}
-        className={`w-6 h-6 rounded-full ${selectedColors.includes(color) ? "ring-2 ring-offset-2 ring-gray-600" : ""}`}
-        style={{ backgroundColor: color }}
-        onClick={() => handleColorChange(color)}
-      />
-    ))}
-  </div>
-</div>
-
-
         <div className="mb-4">
           <h3 className="text-lg font-semibold mb-2">Types:</h3>
           {types.map((type) => (
@@ -114,23 +89,37 @@ const Sidebar = () => {
           <h3 className="text-lg font-semibold mb-2">Price Range:</h3>
           <ReactSlider
             className="w-full h-4 bg-gray-200 rounded"
-            thumbClassName="bg-blue-500 rounded-full w-6 h-6"
+            thumbClassName="bg-indigo-500 rounded-full w-6 h-6"
             trackClassName="bg-blue-300 rounded"
             min={0}
             max={100}
             value={priceRange}
             onChange={handlePriceChange}
             pearling
+            
             minDistance={10}
           />
           <div className="flex justify-between mt-2">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}</span>
+            <input
+              type="number"
+              value={priceRange[0]}
+              onChange={(e) => handlePriceInputChange(e, 0)}
+              className="w-20 p-1 border border-gray-300 rounded-md"
+              min={0}
+              max={priceRange[1]}
+            />
+            <span className="mx-2">to</span>
+            <input
+              type="number"
+              value={priceRange[1]}
+              onChange={(e) => handlePriceInputChange(e, 1)}
+              className="w-20 p-1 border border-gray-300 rounded-md"
+              min={priceRange[0]}
+              max={100}
+            />
           </div>
         </div>
       </div>
-
-    
     </div>
   );
 };

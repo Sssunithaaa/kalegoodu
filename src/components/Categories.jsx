@@ -35,7 +35,7 @@ const Categories = () => {
           <img
             src={category.image}
             alt={category.name}
-            className={`w-32 h-32 rounded-full object-cover mx-auto ${hoveredCategory === category.id ? 'transform scale-110 ease-in-out duration-300' : ''}`}
+            className={`w-40 h-40 rounded-full object-cover mx-auto ${hoveredCategory === category.id ? 'transform scale-110 ease-in-out duration-300' : ''}`}
           />
           <div className="mt-2">{category.name}</div>
         </div>
