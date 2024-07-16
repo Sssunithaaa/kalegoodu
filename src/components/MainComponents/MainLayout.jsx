@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import CTA from '../CTA';
-import Breadcrumbs from '../BreadCrumbs'
+import Breadcrumbs from '../BreadCrumbs';
 
 const MainWrapper = styled.div`
   // background: rgb(192,230,109,0.1);
@@ -14,11 +14,14 @@ const MainWrapper = styled.div`
 const MainLayout = ({ children }) => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-   useEffect(()=> {
-    window.scrollTo(0, 0);
-   },[])
+  const isAdminPage = location.pathname.startsWith('/admin');
+
+  if (isAdminPage) {
+    return <div>{children}</div>;
+  }
+
   return (
-    <div className="">
+    <div>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}
       {children}
