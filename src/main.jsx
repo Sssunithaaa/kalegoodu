@@ -11,7 +11,8 @@ import 'primereact/resources/themes/saga-blue/theme.css'; // or another theme
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter, HashRouter } from 'react-router-dom'
+import ScrollToTop from './components/ScrollToTop.jsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <CartProvider>
       <ContextProvider>
     <QueryClientProvider client={queryClient}>
+      <ScrollToTop/>
         <App />
       </QueryClientProvider>
     </ContextProvider>

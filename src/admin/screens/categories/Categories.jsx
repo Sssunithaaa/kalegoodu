@@ -71,13 +71,13 @@ const Categories = () => {
   });
 
   return (
-    <div className="grid grid-cols-12 gap-x-4">
-      <div className="col-span-4 py-8">
-        <h4 className="text-lg leading-tight">Add New Category</h4>
+    <div className="grid grid-cols-12 gap-x-4 mx-auto w-full">
+      <div className="col-span-4 py-8 mx-auto">
+        <h4 className="text-lg leading-tight text-center">Add New Category</h4>
         <div className="d-form-control w-full mt-6">
           <input
             value={categoryTitle}
-            className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
+            className="d-input placeholder:text-center d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
             onChange={(e) => seTcategoryTitle(e.target.value)}
             placeholder="category title"
           />
@@ -85,13 +85,13 @@ const Categories = () => {
             disabled={isLoadingCreateCategory}
             type="button"
             onClick={handleCreateCategory}
-            className="w-fit mt-3 bg-green-500 text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-fit mt-3 bg-green-500 mx-auto text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
           >
             Add Category
           </button>
         </div>
       </div>
-      <div className="col-span-8">
+      <div className="col-span-8 mx-auto">
         <DataTable
           pageTitle=""
           dataListName="Categories"

@@ -13,7 +13,7 @@ import { useStateContext } from '../context/ContextProvider';
 import SearchBar from '../searchbar/SearchBar';
 const navButtons = [
   { name: "Kitchen decor", href: "/kitchen-decor" },
-  { name: "Shop all", href: "/shop-all", hasDropdown: true },
+  { name: "Shop all", href: "/products" },
   { name: "Living room decor", href: "/living-room" },
   { name: "Office decor", href: "/office-decor" },
   { name: "Contact us", href: "/contact-us" },
@@ -37,18 +37,18 @@ const navButtons = [
 //   );
 // };
 
-const SideBar = ({ isSidebarVisible, toggleSidebar }) => {
+const SideBar = ({  isCartVisible,toggleCart }) => {
   const { cartItems, removeFromCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   return (
     <div
       className={`fixed top-0 right-0 sm:w-[400px] w-full md:max-w-[450px] bg-white h-full shadow-md transition-transform transform z-30 ${
-        isSidebarVisible ? 'translate-x-0' : 'translate-x-full'
+        isCartVisible ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
       <div className="p-4">
-        <button className="text-2xl mb-4" onClick={toggleSidebar}>
+        <button className="text-2xl mb-4" onClick={toggleCart}>
           &times;
         </button>
         <div className="text-center">
@@ -103,11 +103,9 @@ const MegaMenu = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(screenSize === "large");
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
-  const { cartItemCount } = useContext(CartContext);
+  const { cartItemCount,isCartVisible,toggleCart } = useContext(CartContext);
 
-  const toggleSidebar = () => {
-    setIsSidebarVisible(!isSidebarVisible);
-  };
+
 
   const toggleSearchbar = () => {
     setIsSearchBarVisible(!isSearchBarVisible);
@@ -152,7 +150,7 @@ const MegaMenu = () => {
               <CiSearch size={20} />
             </button>
             <div className="relative">
-              <button className="text-2xl relative" onClick={toggleSidebar}>
+              <button className="text-2xl relative" onClick={toggleCart}>
                 <HiOutlineShoppingBag size={24} />
                 {cartItemCount > 0 && (
                   <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
@@ -257,7 +255,7 @@ const MegaMenu = () => {
 </li>
 <li className='hidden lg:block py-3'>
 <div className="relative">
-<button className="text-2xl relative" onClick={toggleSidebar}>
+<button className="text-2xl relative" onClick={toggleCart}>
 <HiOutlineShoppingBag size={24} />
 {cartItemCount > 0 && (
 <span className="absolute top-[-4px] right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
@@ -274,13 +272,13 @@ const MegaMenu = () => {
       </div>
   </div>
        <SearchBar isSearchBarVisible={isSearchBarVisible} toggleSearchbar={toggleSearchbar} />
-<SideBar isSidebarVisible={isSidebarVisible} toggleSidebar={toggleSidebar} />
-{(isSidebarVisible || isSearchBarVisible || (isMenuVisible && screenSize !== "large")) && (
+<SideBar isCartVisible={isCartVisible} toggleCart={toggleCart} />
+{(isCartVisible || isSearchBarVisible || (isMenuVisible && screenSize !== "large")) && (
   <div
     className="fixed inset-0 z-20 bg-black opacity-50"
     onClick={() => {
-      if (isSidebarVisible) {
-        toggleSidebar();
+      if (isCartVisible) {
+        toggleCart();
       } else if (isSearchBarVisible) {
         toggleSearchbar();
       } else if (isMenuVisible && screenSize !== "large") {

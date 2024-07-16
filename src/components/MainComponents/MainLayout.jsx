@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
@@ -14,7 +14,9 @@ const MainWrapper = styled.div`
 const MainLayout = ({ children }) => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-
+   useEffect(()=> {
+    window.scrollTo(0, 0);
+   },[])
   return (
     <div className="">
       <Navbar />

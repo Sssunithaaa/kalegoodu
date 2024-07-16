@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import styled from "styled-components";
 import ModalCard from "./ModalCard";
-import { useNavigate } from 'react-router-dom';
+
 import { img1, img2, img3 } from '../assets/images';
 
 const ProductCarousel = () => {
@@ -15,7 +15,7 @@ const ProductCarousel = () => {
    
 
   ]);
- const navigate = useNavigate()
+
 
  
 
@@ -54,7 +54,7 @@ const ProductCarousel = () => {
     <div className="px-10 mx-auto my-5 relative">
       <Slider {...settings}>
         {products.map((product) => (
-          <div key={product.id} onClick={() => navigate(`/products/${product.name}`)} >
+          <div key={product.id}  >
             <ModalCard product={product} />
           </div>
         ))}
@@ -88,7 +88,7 @@ const SampleNextArrow = (props) => {
       onClick={onClick}
       style={{ ...style, right: '-50px' }} // Adjust the position
     >
-      {/* &#8250; */}
+      &#8250;
     </Arrow>
   );
 };
@@ -101,7 +101,7 @@ const SamplePrevArrow = (props) => {
       onClick={onClick}
       style={{ ...style }} // Adjust the position
     >
-      {/* &#8249; */}
+      &#8249;
     </Arrow>
   );
 };

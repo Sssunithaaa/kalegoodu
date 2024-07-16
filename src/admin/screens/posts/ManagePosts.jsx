@@ -1,17 +1,14 @@
-import { images, stables } from "../../../../constants";
-import { deletePost, getAllPosts } from "../../../../services/index/posts";
-import Pagination from "../../../../components/Pagination";
-import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
-import { useDataTable } from "../../../../hooks/useDataTable";
-import DataTable from "../../components/DataTable";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import DataTable from '../../DataTable';
+import { useDataTable } from '../../hooks/useDataTable';
+import { deleteProduct, getAllProducts } from '../../../services/index/products';
 
-const ManagePosts = () => {
+const ManageProducts = () => {
   const {
-    userState,
     currentPage,
     searchKeyword,
-    data: postsData,
+    data: productsData,
     isLoading,
     isFetching,
     isLoadingDeleteData,
@@ -21,65 +18,84 @@ const ManagePosts = () => {
     deleteDataHandler,
     setCurrentPage,
   } = useDataTable({
-    dataQueryFn: () => getAllPosts(searchKeyword, currentPage),
-    dataQueryKey: "posts",
-    deleteDataMessage: "Post is deleted",
+    dataQueryFn: () => getAllProducts(searchKeyword, currentPage),
+    dataQueryKey: "products",
+    deleteDataMessage: "Product is deleted",
     mutateDeleteFn: ({ slug, token }) => {
-      return deletePost({
+      return deleteProduct({
         slug,
         token,
       });
     },
   });
 
+  const productt = {
+    "brand": "Kalegoodu",
+    "name": "Flower pot",
+    "description": "Enhance your home with this exquisite flower pot, showcasing a blend of modern elegance and timeless beauty that complements any decor.",
+    "price": 125.00,
+    "discount": 50,
+    "originalPrice": 250.00,
+    "photo": null,
+    "slug": "flower-pot",
+    "createdAt": new Date().toISOString(),
+    "categories": [{ title: "Home Decor" }],
+    "tags": ["modern", "elegant", "decor"]
+  };
+
   return (
     <DataTable
-      pageTitle="Manage Posts"
-      dataListName="Posts"
-      searchInputPlaceHolder="Post title..."
+      pageTitle="Manage Products"
+      dataListName="Products"
+      searchInputPlaceHolder="Product name..."
       searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
       searchKeywordOnChangeHandler={searchKeywordHandler}
       searchKeyword={searchKeyword}
-      tableHeaderTitleList={["Title", "Category", "Created At", "Tags", ""]}
+      tableHeaderTitleList={["Name", "Brand", "Price", "Category", "Tags", ""]}
       isLoading={isLoading}
       isFetching={isFetching}
-      data={postsData?.data}
+      data={[productt]} // Using the static product data
       setCurrentPage={setCurrentPage}
       currentPage={currentPage}
-      headers={postsData?.headers}
-      userState={userState}
+      headers={productsData?.headers}
     >
-      {postsData?.data.map((post) => (
-        <tr>
+      {[productt].map((product) => (
+        <tr key={product.slug}>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <a href="/" className="relative block">
                   <img
                     src={
-                      post?.photo
-                        ? stables.UPLOAD_FOLDER_BASE_URL + post?.photo
-                        : images.samplePostImage
+                      product?.photo
+                        ? stables.UPLOAD_FOLDER_BASE_URL + product?.photo
+                        : 'path/to/sampleProductImage' // Replace with your sample image path
                     }
-                    alt={post.title}
+                    alt={product.name}
                     className="mx-auto object-cover rounded-lg w-10 aspect-square"
                   />
                 </a>
               </div>
               <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">{post.title}</p>
+                <p className="text-gray-900 whitespace-no-wrap">{product.name}</p>
               </div>
             </div>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <p className="text-gray-900 whitespace-no-wrap">{product.brand}</p>
+          </td>
+          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <p className="text-gray-900 whitespace-no-wrap">${product.price.toFixed(2)}</p>
+          </td>
+          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">
-              {post.categories.length > 0
-                ? post.categories
+              {product.categories.length > 0
+                ? product.categories
                     .slice(0, 3)
                     .map(
                       (category, index) =>
                         `${category.title}${
-                          post.categories.slice(0, 3).length === index + 1
+                          product.categories.slice(0, 3).length === index + 1
                             ? ""
                             : ", "
                         }`
@@ -88,34 +104,25 @@ const ManagePosts = () => {
             </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
-              {new Date(post.createdAt).toLocaleDateString("en-US", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </p>
-          </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex gap-x-2">
-              {post.tags.length > 0
-                ? post.tags.map((tag, index) => (
-                    <p>
+              {product.tags.length > 0
+                ? product.tags.map((tag, index) => (
+                    <p key={index}>
                       {tag}
-                      {post.tags.length - 1 !== index && ","}
+                      {product.tags.length - 1 !== index && ","}
                     </p>
                   ))
                 : "No tags"}
             </div>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 space-x-5">
+          <td className="px-5 flex flex-row py-14  text-sm bg-white border-b border-gray-200 space-x-5">
             <button
               disabled={isLoadingDeleteData}
               type="button"
               className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={() => {
                 deleteDataHandler({
-                  slug: post?.slug,
+                  slug: product?.slug,
                   token: userState.userInfo.token,
                 });
               }}
@@ -123,7 +130,7 @@ const ManagePosts = () => {
               Delete
             </button>
             <Link
-              to={`/admin/posts/manage/edit/${post?.slug}`}
+              to={`/admin/products/manage/edit/${product?.slug}`}
               className="text-green-600 hover:text-green-900"
             >
               Edit
@@ -135,4 +142,4 @@ const ManagePosts = () => {
   );
 };
 
-export default ManagePosts;
+export default ManageProducts;

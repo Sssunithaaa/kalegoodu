@@ -103,13 +103,13 @@ const Header = () => {
               />
 
               <NavItemCollapse
-                title="Posts"
+                title="Products"
                 icon={<MdDashboard className="text-xl" />}
-                name="posts"
+                name="Products"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               >
-                <Link to="/admin/posts/manage">Manage all posts</Link>
+                <Link to="/admin/products/manage">Manage all posts</Link>
                 <button
                   // disabled={isLoadingCreatePost}
                   className="text-start disabled:opacity-60 disabled:cursor-not-allowed"

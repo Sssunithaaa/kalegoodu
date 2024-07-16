@@ -15,7 +15,8 @@ import Testimonials from './Testimonials/Testimonials';
 const MainPage = () => {
   const [isHovered, setIsHovered] = useState(false);
   useEffect(()=> {
-    window.scrollTo(0,0);
+    window.scrollTo(0,20);
+  
   },[])
     const [products] = useState([
     { name: 'Product 1', price: '€658', rating: 4, description: 'Description for Product 1', img: img1 },

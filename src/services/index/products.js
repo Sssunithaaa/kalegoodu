@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const getAllPosts = async (searchKeyword = "", page = 1, limit = 10) => {
+export const getAllProducts = async (searchKeyword = "", page = 1, limit = 10) => {
   try {
     const { data, headers } = await axios.get(
-      `/api/posts?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
+      `/api/products?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
     );
     return { data, headers };
   } catch (error) {
@@ -13,9 +13,9 @@ export const getAllPosts = async (searchKeyword = "", page = 1, limit = 10) => {
   }
 };
 
-export const getSinglePost = async ({ slug }) => {
+export const getSingleProduct = async ({ slug }) => {
   try {
-    const { data } = await axios.get(`/api/posts/${slug}`);
+    const { data } = await axios.get(`/api/products/${slug}`);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -24,7 +24,7 @@ export const getSinglePost = async ({ slug }) => {
   }
 };
 
-export const deletePost = async ({ slug, token }) => {
+export const deleteProduct = async ({ slug, token }) => {
   try {
     const config = {
       headers: {
@@ -32,7 +32,7 @@ export const deletePost = async ({ slug, token }) => {
       },
     };
 
-    const { data } = await axios.delete(`/api/posts/${slug}`, config);
+    const { data } = await axios.delete(`/api/products/${slug}`, config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -41,7 +41,7 @@ export const deletePost = async ({ slug, token }) => {
   }
 };
 
-export const updatePost = async ({ updatedData, slug, token }) => {
+export const updateProduct = async ({ updatedData, slug, token }) => {
   try {
     const config = {
       headers: {
@@ -49,7 +49,7 @@ export const updatePost = async ({ updatedData, slug, token }) => {
       },
     };
 
-    const { data } = await axios.put(`/api/posts/${slug}`, updatedData, config);
+    const { data } = await axios.put(`/api/products/${slug}`, updatedData, config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -58,7 +58,7 @@ export const updatePost = async ({ updatedData, slug, token }) => {
   }
 };
 
-export const createPost = async ({ token }) => {
+export const createProduct = async ({ token }) => {
   try {
     const config = {
       headers: {
@@ -66,7 +66,7 @@ export const createPost = async ({ token }) => {
       },
     };
 
-    const { data } = await axios.post(`/api/posts`, {}, config);
+    const { data } = await axios.post(`/api/products`, {}, config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)

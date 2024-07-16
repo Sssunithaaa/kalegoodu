@@ -51,7 +51,7 @@ const Breadcrumbs = () => {
           return (
             <div key={index} className="text-black opacity-50 text-[16px] font-roboto md:text-[16px]">
           <Link to={to}>{value}</Link>
-          {index !== pathnames - 1 && <span className="px-3">/</span>}
+          {index !== pathnames.length - 1 && <span className="px-3">/</span>}
         </div>
           );
         })}

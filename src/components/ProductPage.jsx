@@ -21,6 +21,9 @@ function ProductPage() {
   "originalPrice": 250.00,
  
 }
+ useEffect(()=> {
+  window.scrollTo(0,0)
+ },[])
 
   useEffect(() => {
     // Fetch product data based on the slug
