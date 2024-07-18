@@ -11,6 +11,7 @@ const BreadcrumbNav = styled.nav`
 const BreadcrumbList = styled.ul`
   display: flex;
   list-style: none;
+  flex-direction: row;
   padding: 0;
   margin: 0;
   margin-left:10px;
@@ -44,7 +45,7 @@ const Breadcrumbs = () => {
     <BreadcrumbNav>
       <BreadcrumbList>
       
-          <div className='text-black lg:mt-0 mt-20 opacity-50 text-[16px] font-roboto md:text-[16px] mr-[8px]' to="/"><Link to="/">Home&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp; </Link></div>
+          <div className='text-black lg:mt-0  opacity-50 text-[16px] font-roboto md:text-[16px] mr-[8px]' to="/"><Link to="/">Home&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp; </Link></div>
    
         {pathnames.map((value, index) => {
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
