@@ -21,7 +21,7 @@ const MainLayout = ({ children }) => {
   }
 
   return (
-    <div>
+    <div className='pt-[80px] md:pt-0'>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}
       {children}

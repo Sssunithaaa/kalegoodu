@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import {img21, img22,img23 } from '../assets/images'; // Import your images
+import { img21, img22, img23 } from '../assets/images'; // Import your images
 
 const slide = keyframes`
   0% { transform: translateX(0); }
@@ -21,6 +21,10 @@ const HeroSection = styled.div`
   color: #fff;
   text-align: center;
   padding: 0 20px;
+
+  @media (max-width: 768px) {
+    height: 90vh;
+  }
 `;
 
 const ImageSlider = styled.div`
@@ -33,13 +37,22 @@ const ImageSlider = styled.div`
 const ImageWrapper = styled.div`
   flex: 1 0 100%;
   height: 100vh;
-  background-size: contain; /* Or use 'cover' depending on your preference */
+  background-size: contain; /* Or use 'contain' depending on your preference */
   background-position: center;
+ 
+  @media (max-width: 768px) {
+   max-height: 90vh;
+    // padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  }
 `;
 
 const HeroContent = styled.div`
   max-width: 600px;
   z-index: 1;
+
+  @media (max-width: 768px) {
+    padding-top: 20px;
+  }
 `;
 
 const HeroTitle = styled.h1`
@@ -47,12 +60,20 @@ const HeroTitle = styled.h1`
   margin-bottom: 1rem;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 const HeroSubtitle = styled.p`
   font-size: 1.5rem;
   margin-bottom: 2rem;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
 `;
 
 const HeroButton = styled.a`
@@ -69,6 +90,11 @@ const HeroButton = styled.a`
 
   &:hover {
     background-color: #ff4500;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
   }
 `;
 
