@@ -99,7 +99,7 @@ const SamplePrevArrow = (props) => {
     <Arrow
       className={className}
       onClick={onClick}
-      style={{ ...style }} // Adjust the position
+      style={{ ...style,left: '-50px' }} // Adjust the position
     >
       &#8249;
     </Arrow>
