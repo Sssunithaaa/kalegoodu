@@ -142,9 +142,7 @@ const MegaMenu = () => {
 <div className=" md:static mt-0 top-0 w-full m-0 bg-white z-[10001]">
   <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
         <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
-          <div>
-            <img src={logo} alt='logo' className="h-12 w-auto py-0 px-0" onClick={() => navigate("/")}></img>
-          </div>
+          <Title>KALEGOODU</Title>
           <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
             <button className="text-2xl" onClick={toggleSearchbar}>
               <CiSearch size={20} />
