@@ -35,9 +35,7 @@ const handlePlaceOrder = () => {
 
   return (
     <div>
-      <div className="fixed md:static mt-0 z-[100001] navbar w-full m-0">
-        <Navbar />
-      </div>
+     
       <div className='lg:mt-5'><ParallaxSection /></div>
       <div className="max-w-2xl mx-auto p-4">
 

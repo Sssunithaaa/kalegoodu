@@ -20,4 +20,5 @@ import img20 from './20.jpg'
 import img21 from './21.jpg'
 import img22 from './22.jpg'
 import img23 from './23.jpg'
-export {img,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14,img17,img18,img19,img20,img21,img22,img23}
+import logo from './file.png'
+export {logo,img,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14,img17,img18,img19,img20,img21,img22,img23}

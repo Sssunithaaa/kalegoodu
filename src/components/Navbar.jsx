@@ -4,7 +4,7 @@ import { RiCloseLargeLine } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
-import { img1, img2 } from '../assets/images';
+import { img1, img2, logo } from '../assets/images';
 import Title from './Title';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
@@ -142,9 +142,9 @@ const MegaMenu = () => {
 <div className="fixed md:static mt-0 top-0 w-full m-0 bg-white z-[10001]">
   <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
         <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
-          <Title>
-            <button onClick={() => navigate("/")} className="hover:cursor-pointer">KALEGOODU</button>
-          </Title>
+          <div>
+            <img src={logo} alt='logo' className="h-12 w-auto py-0 px-0" onClick={() => navigate("/")}></img>
+          </div>
           <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
             <button className="text-2xl" onClick={toggleSearchbar}>
               <CiSearch size={20} />
