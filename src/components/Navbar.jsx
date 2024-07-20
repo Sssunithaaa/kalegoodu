@@ -16,6 +16,7 @@ const navButtons = [
   { name: "Shop all", href: "/products" },
   { name: "Living room decor", href: "/living-room" },
   { name: "Office decor", href: "/office-decor" },
+   { name: "Gifting combos", href: "/gifting-combos" },
   { name: "Contact us", href: "/contact-us" },
   { name: "About us", href: "/about-us" }
 ];
@@ -142,7 +143,7 @@ const MegaMenu = () => {
   const navigate = useNavigate();
   return (
    <div className=''>
-<div className={`${display} md:static mt-0  w-full m-0 bg-white z-[10001]`}>
+<div className={`${display} border-b-2 md:static mt-0  w-full m-0 bg-white z-[10001]`}>
   <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
         <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
           <Title>KALEGOODU</Title>

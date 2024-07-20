@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const BreadcrumbNav = styled.nav`
   padding: 1rem;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 `;
 
 const BreadcrumbList = styled.ul`
@@ -45,14 +45,14 @@ const Breadcrumbs = () => {
     <BreadcrumbNav>
       <BreadcrumbList>
       
-          <div className='text-black lg:mt-0  opacity-50 text-[16px] font-roboto md:text-[16px] mr-[8px]' to="/"><Link to="/">Home&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp; </Link></div>
+          <div className='text-black lg:mt-0  opacity-80 text-[16px] font-roboto md:text-[16px] mr-[8px]' to="/"><Link to="/">Home&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp; </Link></div>
    
         {pathnames.map((value, index) => {
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
           return (
-            <div key={index} className="text-black opacity-50 text-[16px] font-roboto md:text-[16px]">
+            <div key={index} className="text-black opacity-80 text-[16px] font-roboto md:text-[16px]">
           <Link to={to}>{value}</Link>
-          {index !== pathnames.length - 1 && <span className="px-3">/</span>}
+          {index !== pathnames.length - 1 && <span className="px-3">&gt;</span>}
         </div>
           );
         })}
