@@ -106,7 +106,7 @@ const MegaMenu = () => {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
   const { cartItemCount,isCartVisible,toggleCart } = useContext(CartContext);
 
-  const [display,setDisplay] = useState("fixed")
+  const [display,setDisplay] = useState("static")
 
   const toggleSearchbar = () => {
     setIsSearchBarVisible(!isSearchBarVisible);
