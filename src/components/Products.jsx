@@ -5,6 +5,8 @@ import ProductCard from './ProductCard';
 import Navbar from './Navbar';
 import { img1, img2, img3, img4,img11 } from '../assets/images'; // Example images
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { IoFilter } from 'react-icons/io5';
+import { BiSort } from 'react-icons/bi';
 const toTitleCase = (str) => {
   return str
     .replace(/-/g, ' ') // Replace hyphens with spaces
@@ -14,7 +16,7 @@ const toTitleCase = (str) => {
 
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState('dateNewToOld');
 
@@ -29,8 +31,8 @@ const Products = () => {
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
-
-  useEffect(() => {
+  
+    useEffect(() => {
     const fetchProducts = async () => {
       let fetchedProducts = [
         { id: 1, name: 'Home Product 1', category: 'Home Decor', date: new Date(2023, 5, 10), price: 100, img: img1 },
@@ -39,7 +41,7 @@ const Products = () => {
         { id: 4, name: 'Hat Product 4', category: 'Hats', date: new Date(2023, 3, 5), price: 70, img: img4 },
       ];
 
-      if (selectedCategory !== 'all') {
+      if (selectedCategory !== 'All') {
         fetchedProducts = fetchedProducts.filter(product => product.category === selectedCategory);
       }
 
@@ -71,7 +73,7 @@ const Products = () => {
 
     fetchProducts();
   }, [selectedCategory, sortOption]);
-
+  const [sort,setSort] = useState(false)
   return (
     <div className='w-screen'>
       <div
@@ -90,14 +92,16 @@ const Products = () => {
           <h1 className='text-[30px] font-semibold'>{selectedCategory} Products</h1>
         </div>
         <div className='flex lg:flex-row flex-col'>
-          <div className={`fixed inset-0 bg-gray-800 bg-opacity-50 z-40 ${showSidebar ? 'block' : 'hidden'}`} onClick={toggleSidebar}></div>
-          <div className={`fixed bg-white inset-y-0 left-0 z-50 transform ${showSidebar ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:w-64`}>
+          <div className={`fixed inset-0 bg-gray-800 bg-opacity-40 z-30 ${showSidebar ? 'block' : 'hidden'}`} onClick={toggleSidebar}></div>
+          <div className={`fixed bg-white inset-y-0 left-0 z-40 transform ${showSidebar ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:w-64`}>
             <Sidebar onCategorySelect={setSelectedCategory} />
           </div>
           <div className="flex-1 p-4">
-            <div className="flex flex-row w-[350px] justify-center items-center gap-x-2">
-              <h1 className="text-2xl font-bold mb-4 ml-[5%]">Sort by</h1>
-              <div className="flex justify-center items-center mx-auto mb-4">
+            <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
+               <h1 onClick={toggleSidebar} className="lg:hidden text-2xl flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold mb-4 ml-[5%]">Filter<span><IoFilter/></span></h1>
+              <h1 onClick={()=>setSort(!sort)} className="text-2xl flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold mb-4 ml-[5%]">Sort by<span><BiSort/></span></h1>
+             {
+              sort &&  <div className="flex justify-center items-center mx-auto mb-4">
                 <FormControl sx={{ m: 1, minWidth: 120, maxHeight: 70 }}>
                   <Select
                     labelId="sort-select-label"
@@ -115,18 +119,16 @@ const Products = () => {
                   </Select>
                 </FormControl>
               </div>
+             }
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {products.map((product) => (
-                <ProductCard key={product.id} img={product.img} />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           </div>
         </div>
-        <div  className="lg:hidden fixed bottom-0 left-0 right-0 bg-white p-4 flex justify-around border-t border-gray-300 z-50">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => alert('Sort By clicked')}>Sort By</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={toggleSidebar}>Filter</button>
-        </div>
+        
       </div>
     </div>
   );

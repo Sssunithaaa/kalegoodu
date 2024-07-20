@@ -9,12 +9,20 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { MdEventAvailable } from "react-icons/md";
-export default function ProductCard({img}) {
+import { CartContext } from "../context/CartContext";
+import { useContext } from "react";
+export default function ProductCard({product}) {
+  const {addToCart,setIsCartVisible} = useContext(CartContext);
+  const quantity=1;
+  const handleCartClick=()=> {
+    addToCart({...product,quantity})
+    setIsCartVisible(true);
+  }
   return (
     <Card className="w-full max-w-[22rem] shadow-lg">
       <CardHeader className="p-0" floated={false} color="blue-gray">
         <img
-          src={img}
+          src={product.img}
           alt="ui/ux review check"
           className="w-full h-full p-0"
         />
@@ -38,7 +46,7 @@ export default function ProductCard({img}) {
       <CardBody className="py-4">
         <div className="mb-3 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray" className="font-medium">
-            Wooden House, Florida
+            {product.name}
           </Typography>
           <Typography
             color="blue-gray"
@@ -56,7 +64,7 @@ export default function ProductCard({img}) {
                 clipRule="evenodd"
               />
             </svg>
-            5.0
+            {product.rating}
           </Typography>
         </div>
         {/* <Typography color="black">
@@ -64,12 +72,12 @@ export default function ProductCard({img}) {
           surrounded by ancient trees, stone walls, and open meadows.
         </Typography> */}
         <Typography className="my-2">
-          <strong className="text-black py-3">₹ 995</strong>
+          <strong className="text-black py-3">₹ {product.price}</strong>
         </Typography>
         
       </CardBody>
       <CardFooter className="py-0 mb-3">
-        <Button size="lg" className="py-2" fullWidth={true}>
+        <Button onClick={handleCartClick} size="lg" className="py-2" fullWidth={true}>
           Add to cart
         </Button>
       </CardFooter>

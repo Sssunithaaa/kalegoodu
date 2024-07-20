@@ -270,7 +270,7 @@ const MegaMenu = () => {
 <SideBar isCartVisible={isCartVisible} toggleCart={toggleCart} />
 {(isCartVisible || isSearchBarVisible || (isMenuVisible && screenSize !== "large")) && (
   <div
-    className="fixed inset-0 z-20 bg-black opacity-50"
+    className="fixed inset-0 z-40 bg-black opacity-50"
     onClick={() => {
       if (isCartVisible) {
         toggleCart();
