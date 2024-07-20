@@ -9,7 +9,8 @@ const Categories = () => {
     { id: 1, name: 'Home decor', image: img,link:'home-decor' },
     { id: 2, name: 'Office decor', image: img1,link:'office-decor' },
     { id: 3, name: 'Kitchen decor', image: img2,link:'kitchen-decor' },
-   
+       { id: 4, name: 'Gifting combos', image: img3,link:'gifting-combos' },
+
   ];
 
   const [hoveredCategory, setHoveredCategory] = useState(null);
