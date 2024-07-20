@@ -1,26 +1,29 @@
 import React, { useState } from 'react';
-import {img,img1,img2,img3,img4} from '../assets/images'
-const Categories = () => {
-  // Sample data for categories
-  const categories = [
-    { id: 1, name: 'Electronics', image: img },
-    { id: 2, name: 'Clothing', image: img1 },
-    { id: 3, name: 'Books', image: img2 },
-        { id: 4, name: 'Hats', image: img3 },
-    { id: 5, name: 'Post', image: img4 },
+import { img, img1, img2, img3, img4 } from '../assets/images';
+import { useNavigate } from 'react-router-dom';
 
+const Categories = () => {
+  const navigate = useNavigate();
+  
+  const categories = [
+    { id: 1, name: 'Home decor', image: img,link:'home-decor' },
+    { id: 2, name: 'Office decor', image: img1,link:'office-decor' },
+    { id: 3, name: 'Kitchen decor', image: img2,link:'kitchen-decor' },
+   
   ];
 
-  // State to track the hovered category
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
-  // Function to handle hover events
   const handleMouseEnter = (categoryId) => {
     setHoveredCategory(categoryId);
   };
 
   const handleMouseLeave = () => {
     setHoveredCategory(null);
+  };
+
+  const handleCategoryClick = (category) => {
+    navigate(`/products/?category=${category.link}`);
   };
 
   return (
@@ -31,6 +34,7 @@ const Categories = () => {
           className={`m-4 text-center `}
           onMouseEnter={() => handleMouseEnter(category.id)}
           onMouseLeave={handleMouseLeave}
+          onClick={() => handleCategoryClick(category)}
         >
           <img
             src={category.image}

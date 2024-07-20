@@ -21,7 +21,12 @@ const MainLayout = ({ children }) => {
   }
 
   return (
-    <div className='pt-[80px] md:pt-0'>
+    <div className=''>
+        <div className="static py-4 h-6  bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  my-auto flex w-[100%]  m-0 overflow-hidden justify-center items-center">
+        <div className="whitespace-nowrap w-full animate-marquee text-center">
+          Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.
+        </div>
+      </div>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}
       {children}

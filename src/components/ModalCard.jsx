@@ -28,7 +28,7 @@ const ModalCard = ({ product }) => {
      <div onClick={()=> navigate(`/products/${product.name}`)}>
        <img src={product.img} alt={product.name} className="w-full h-72 object-cover rounded-lg mb-4" />
       <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-      <p className="text-gray-600">€{product.price}</p>
+      <p className="text-gray-600">₹ {product.price}</p>
      </div>
       <Button onClick={handleAddToCart} className='text-[16px]'>Add to cart</Button>
     </div>

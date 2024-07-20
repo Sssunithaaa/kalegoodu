@@ -126,7 +126,7 @@ body {
 }
 
 @media (min-width: 1024px) {
-  li::after {
+  #nav::after {
     content: '';
     position: absolute;
     left: 0;
@@ -139,7 +139,7 @@ body {
     transition: transform 0.3s;
   }
 
-  li:hover::after {
+  #nav:hover::after {
     transform: scaleX(1);
     color: #B59480;
   }
