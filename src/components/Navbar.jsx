@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiCloseLargeLine } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
@@ -8,37 +8,20 @@ import { img1, img2, logo } from '../assets/images';
 import Title from './Title';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
-import { useContext } from 'react';
 import { useStateContext } from '../context/ContextProvider';
 import SearchBar from '../searchbar/SearchBar';
+
 const navButtons = [
   { name: "Kitchen decor", href: "/kitchen-decor" },
   { name: "Shop all", href: "/products" },
   { name: "Living room decor", href: "/living-room" },
   { name: "Office decor", href: "/office-decor" },
-   { name: "Gifting combos", href: "/gifting-combos" },
+  { name: "Gifting combos", href: "/gifting-combos" },
   { name: "Contact us", href: "/contact-us" },
   { name: "About us", href: "/about-us" }
 ];
 
-// const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
-//   if (!isSearchBarVisible) {
-//     return null; // Return null when the search bar should not be visible
-//   }
-
-//   return (
-//     <div className="fixed top-10 right-10 w-64 h-10 flex items-center gap-x-2 p-2 shadow-md z-30 bg-white">
-//       <input
-//         type="text"
-//         className="flex-grow p-2 w-full bg-white border border-gray-300 rounded"
-//         placeholder="Search..."
-//       />
-//       <IoClose onClick={toggleSearchbar} size={25} className="cursor-pointer text-gray-900" />
-//     </div>
-//   );
-// };
-
-const SideBar = ({  isCartVisible,toggleCart }) => {
+const SideBar = ({ isCartVisible, toggleCart }) => {
   const { cartItems, removeFromCart } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -83,7 +66,6 @@ const SideBar = ({  isCartVisible,toggleCart }) => {
               <button onClick={() => {
                 toggleCart();
                 navigate("/checkout");
-                
               }} className="w-full bg-[#967b67] text-[18px] text-white py-3 rounded-md font-semibold">
                 Proceed to checkout
               </button>
@@ -108,9 +90,9 @@ const MegaMenu = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(screenSize === "large");
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
-  const { cartItemCount,isCartVisible,toggleCart } = useContext(CartContext);
+  const { cartItemCount, isCartVisible, toggleCart } = useContext(CartContext);
 
-  const [display,setDisplay] = useState("static")
+  const [display, setDisplay] = useState("static");
 
   const toggleSearchbar = () => {
     setIsSearchBarVisible(!isSearchBarVisible);
@@ -118,13 +100,12 @@ const MegaMenu = () => {
 
   const handleMenuToggle = () => {
     setIsMenuVisible(true);
-    setDisplay("fixed")
-
+    setDisplay("fixed");
   };
 
   const handleMenuToggleOff = () => {
     setIsMenuVisible(false);
-    setDisplay("static")
+    setDisplay("static");
   };
 
   useEffect(() => {
@@ -145,38 +126,46 @@ const MegaMenu = () => {
   }, []);
 
   const navigate = useNavigate();
+
   return (
-   <div className=''>
-<div className={`${display} border-b-2 md:static mt-0  w-full m-0 bg-white z-49`}>
-  <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
-        <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
-         <div className='hover:cursor-pointer' onClick={()=>navigate("/")}> <Title>KALEGOODU</Title></div>
-          <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
-            <button className="text-2xl" onClick={toggleSearchbar}>
-              <CiSearch size={20} />
-            </button>
-            <div className="relative">
-              <button className="text-2xl relative" onClick={toggleCart}>
-                <HiOutlineShoppingBag size={24} />
-                {cartItemCount > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                    {cartItemCount}
-                  </span>
-                )}
+    <div className="">
+      <div className={`${display} border-b-2 md:static mt-0 w-full m-0 bg-white z-[10001]`}>
+        <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
+          <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
+            <div className='hover:cursor-pointer' onClick={() => navigate("/")}>
+              <Title>KALEGOODU</Title>
+            </div>
+            <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
+              <button className="text-2xl" onClick={toggleSearchbar}>
+                <CiSearch size={20} />
+              </button>
+              <div className="relative">
+                <button className="text-2xl relative" onClick={toggleCart}>
+                  <HiOutlineShoppingBag size={24} />
+                  {cartItemCount > 0 && (
+                    <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </button>
+              </div>
+              <button className="text-2xl">
+                {isMenuVisible ? 
+                  <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : 
+                  <HiMenuAlt3 size={20} onClick={handleMenuToggle} />
+                }
               </button>
             </div>
-            <button className="text-2xl">
-              {isMenuVisible ? <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : <HiMenuAlt3 size={20} onClick={handleMenuToggle} />}
-            </button>
           </div>
-        </div>
-        {isMenuVisible && (
-          <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block md:flex md:w-auto md:order-1`}>
-            <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
-              {navButtons.map((item, index) =>
-        !item.hasDropdown ? (
-          <li id="nav" onClick={()=> navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
-            <div href={item.href} className="block py-2 px-3 text-gray-900   md:p-0" aria-current="page"><span className='hover:text-orange hover:font-medium'>{item.name}</span></div>
+          {isMenuVisible && (
+            <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block md:flex md:w-auto md:order-1`}>
+              <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+                {navButtons.map((item, index) =>
+                  !item.hasDropdown ? (
+                    <li id="nav" onClick={() => navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
+                      <div className="block py-2 px-3 text-gray-900 md:p-0" aria-current="page">
+                        <span className='hover:text-orange hover:font-medium'>{item.name}</span>
+                      </div>
             <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
           </li>
         ) : (
