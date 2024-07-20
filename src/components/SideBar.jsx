@@ -68,6 +68,7 @@ const Sidebar = () => {
            <Box display="flex" flexDirection="column" mt={2}>
       <TextField
         type="number"
+        label="From"
         value={priceRange[0]}
         onChange={(e) => handlePriceInputChange(e, 0)}
         variant="outlined"
@@ -83,6 +84,7 @@ const Sidebar = () => {
       />
       <TextField
         type="number"
+        label="To"
         value={priceRange[1]}
         onChange={(e) => handlePriceInputChange(e, 1)}
         variant="outlined"
