@@ -37,7 +37,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
      <div className='flex flex-row gap-x-4'>
       <img src={item.img} alt={item.name} style={{ width: '50px'}}/>
       <div>
-                <span style={{ display: 'block', textAlign: 'left' }}>id: {item.name}</span>
+                <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
         <span style={{ display: 'block', textAlign: 'left' }}>Rs. {item.price}</span>
       </div>
      </div>
@@ -49,7 +49,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
   }
  
   return (
-    <div className='top-24 md:top-0 w-[80%] md:w-[50%]' style={{ position: 'relative', zIndex: 49,marginInline:'auto',marginBlock:'10px',borderRadius:'0px' }}>
+    <div className='md:top-24 top-0 w-[80%] md:w-[50%]' style={{ position: 'relative', zIndex: 49,marginInline:'auto',marginBlock:'10px',borderRadius:'0px' }}>
       <ReactSearchAutocomplete
         items={items}
         onSearch={handleOnSearch}
