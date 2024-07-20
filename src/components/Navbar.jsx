@@ -138,8 +138,8 @@ const MegaMenu = () => {
 
   const navigate = useNavigate();
   return (
-    <div className='top-0'>
-<div className="static mt-0 top-0 w-full m-0 bg-white z-[10001]">
+   <div className=''>
+<div className="fixed md:static mt-0  w-full m-0 bg-white z-[10001]">
   <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
         <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
           <Title>KALEGOODU</Title>
@@ -163,7 +163,7 @@ const MegaMenu = () => {
           </div>
         </div>
         {isMenuVisible && (
-          <div id="mega-menu-full-image" className={`items-center justify-between py-0 w-full block md:flex md:w-auto md:order-1`}>
+          <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block md:flex md:w-auto md:order-1`}>
             <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
               {navButtons.map((item, index) =>
         !item.hasDropdown ? (
