@@ -49,7 +49,7 @@ const handlePlaceOrder = () => {
                   <img src={item.img} alt="" className='h-16 w-auto' />
                   <span>{item.name} × {item.quantity}</span>
                 </div>
-                <span className='flex items-center'>€{item.price * item.quantity}</span>
+                <span className='flex items-center'>₹ {item.price * item.quantity}</span>
               </div>
             ))}
           </div>
@@ -60,7 +60,7 @@ const handlePlaceOrder = () => {
           </div>
           <div className="flex justify-between font-bold text-lg mt-4">
             <span>Total</span>
-            <span>€{total}</span>
+            <span>₹ {total}</span>
           </div>
         </div>
 

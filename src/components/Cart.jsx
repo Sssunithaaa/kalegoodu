@@ -45,7 +45,7 @@ const Cart = () => {
       ))}
       <div className="border-t py-4 flex justify-between items-center">
         <span className="text-lg font-bold">TOTAL:</span>
-        <span className="text-lg font-bold">€1858</span>
+        <span className="text-lg font-bold">₹1858</span>
       </div>
       <button onClick={()=>navigate("/checkout")} className="w-full text-[18px] text-white bg-orange py-3 rounded-md font-semibold">
         Proceed to checkout

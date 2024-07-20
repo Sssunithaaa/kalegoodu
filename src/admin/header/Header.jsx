@@ -94,8 +94,8 @@ const Header = () => {
                 setActiveNavName={setActiveNavName}
               />
               <NavItem
-                title="Comments"
-                link="/admin/comments"
+                title="Categories"
+                link="/admin/categories/manage"
                 icon={<FaComments className="text-xl" />}
                 name="comments"
                 activeNavName={activeNavName}
@@ -119,12 +119,12 @@ const Header = () => {
                 >
                   Add New Post
                 </button>
-                <Link to="/admin/categories/manage">Categories</Link>
+                {/* <Link to="/admin/categories/manage">Categories</Link> */}
               </NavItemCollapse>
 
               <NavItem
-                title="Users"
-                link="/admin/users/manage"
+                title="Banner"
+                link="/admin/banner"
                 icon={<FaUser className="text-xl" />}
                 name="users"
                 activeNavName={activeNavName}

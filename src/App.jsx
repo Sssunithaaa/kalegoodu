@@ -12,6 +12,7 @@ import ProductCarouselAdmin from './admin/screens/Carousel';
 import MainLayout from './components/MainComponents/MainLayout';
 import ScrollToTop from './components/ScrollToTop';
 import ManagePosts from './admin/screens/posts/ManagePosts';
+import Banner from './admin/screens/Banner';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
           <Route path="products/manage" element={<ManagePosts />} />
+          <Route path="banner" element={<Banner />} />
           <Route path="categories/manage" element={<Categories />} />
           <Route path="categories/manage/edit/:slug" element={<EditCategories />} />
         </Route>

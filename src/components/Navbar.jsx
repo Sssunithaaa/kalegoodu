@@ -44,7 +44,7 @@ const SideBar = ({  isCartVisible,toggleCart }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 sm:w-[400px] w-full md:max-w-[450px] bg-white h-full shadow-md transition-transform transform z-30 ${
+      className={`fixed top-0 right-0 sm:w-[400px] w-full md:max-w-[450px] bg-white h-full shadow-md transition-transform transform z-[10000001] ${
         isCartVisible ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -78,9 +78,13 @@ const SideBar = ({  isCartVisible,toggleCart }) => {
               ))}
               <div className="border-t py-4 flex justify-between items-center">
                 <span className="text-md font-bold">TOTAL:</span>
-                <span className="text-md font-bold">€1858</span>
+                <span className="text-md font-bold">₹1858</span>
               </div>
-              <button onClick={() => navigate("/checkout")} className="w-full bg-[#967b67] text-[18px] text-white py-3 rounded-md font-semibold">
+              <button onClick={() => {
+                toggleCart();
+                navigate("/checkout");
+                
+              }} className="w-full bg-[#967b67] text-[18px] text-white py-3 rounded-md font-semibold">
                 Proceed to checkout
               </button>
             </>
@@ -143,7 +147,7 @@ const MegaMenu = () => {
   const navigate = useNavigate();
   return (
    <div className=''>
-<div className={`${display} border-b-2 md:static mt-0  w-full m-0 bg-white z-[10001]`}>
+<div className={`${display} border-b-2 md:static mt-0  w-full m-0 bg-white z-49`}>
   <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
         <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
          <div className='hover:cursor-pointer' onClick={()=>navigate("/")}> <Title>KALEGOODU</Title></div>
