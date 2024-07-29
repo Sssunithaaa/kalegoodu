@@ -12,13 +12,15 @@ import { useStateContext } from '../context/ContextProvider';
 import SearchBar from '../searchbar/SearchBar';
 
 const navButtons = [
+   { name: "Shop all", href: "/products" },
   { name: "Kitchen decor", href: "/kitchen-decor" },
-  { name: "Shop all", href: "/products" },
+ 
   { name: "Living room decor", href: "/living-room" },
   { name: "Office decor", href: "/office-decor" },
   { name: "Gifting combos", href: "/gifting-combos" },
+  {name: "Workshop",href:"/workshop"},
   { name: "Contact us", href: "/contact-us" },
-  { name: "About us", href: "/about-us" }
+  // { name: "About us", href: "/about-us" }
 ];
 
 const SideBar = ({ isCartVisible, toggleCart }) => {
@@ -129,11 +131,21 @@ const MegaMenu = () => {
 
   return (
     <div className="">
-      <div className={`${display} border-b-2 md:static mt-0 w-full m-0 bg-white z-[10001]`}>
+      <div className={`${display} border-b-2 md:static mt-0 w-full m-0 bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  z-[10001]`}>
         <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
           <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
+            <div className='flex flex-row items-center gap-x-4'>
+              <div className='md:hidden mt-1'>
+               <button className="text-2xl">
+                {isMenuVisible ? 
+                  <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : 
+                  <HiMenuAlt3 size={20} onClick={handleMenuToggle} />
+                }
+              </button>
+            </div>
             <div className='hover:cursor-pointer' onClick={() => navigate("/")}>
               <Title>KALEGOODU</Title>
+            </div>
             </div>
             <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
               <button className="text-2xl" onClick={toggleSearchbar}>
@@ -149,12 +161,7 @@ const MegaMenu = () => {
                   )}
                 </button>
               </div>
-              <button className="text-2xl">
-                {isMenuVisible ? 
-                  <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : 
-                  <HiMenuAlt3 size={20} onClick={handleMenuToggle} />
-                }
-              </button>
+             
             </div>
           </div>
           {isMenuVisible && (
@@ -164,7 +171,7 @@ const MegaMenu = () => {
                   !item.hasDropdown ? (
                     <li id="nav" onClick={() => navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
                       <div className="block py-2 px-3 text-gray-900 md:p-0" aria-current="page">
-                        <span className='hover:text-orange hover:font-medium'>{item.name}</span>
+                        <span className='hover:text-black hover:font-semibold'>{item.name}</span>
                       </div>
             <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
           </li>

@@ -133,7 +133,7 @@ body {
     right: 0;
     bottom: 0;
     height: 4px;
-    background-color: #B59480;
+    background-color: rgba(136, 0, 136, 0);
     transform: scaleX(0);
     transform-origin: bottom left;
     transition: transform 0.3s;
@@ -141,7 +141,7 @@ body {
 
   #nav:hover::after {
     transform: scaleX(1);
-    color: #B59480;
+    color: rgba(136, 0, 136, 0);
   }
 }
 

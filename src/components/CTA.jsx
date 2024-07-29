@@ -17,10 +17,9 @@ const CTA = () => {
                        <a href="#" title="" class="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-[40px] h-[40px] hover:bg-green-600 focus:bg-green-600">
 
                             <svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.05a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.611-.1-.923a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"
-                                ></path>
-                            </svg>
+    <path d="M23.498 6.186a2.97 2.97 0 0 0-2.088-2.098C19.298 3.594 12 3.594 12 3.594s-7.298 0-9.41.494a2.97 2.97 0 0 0-2.088 2.098C.002 8.304 0 12 0 12s.002 3.696.502 5.814a2.97 2.97 0 0 0 2.088 2.098C4.702 20.406 12 20.406 12 20.406s7.298 0 9.41-.494a2.97 2.97 0 0 0 2.088-2.098c.5-2.118.502-5.814.502-5.814s-.002-3.696-.502-5.814zM9.75 15.086V8.914l6.125 3.086L9.75 15.086z"/>
+</svg>
+
                         </a>
                     </li>
 
@@ -57,15 +56,15 @@ const CTA = () => {
 
                 <ul class="mt-6 space-y-4">
                     <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Home page </a>
+                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Home page </a>
                     </li>
 
                     <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Search </a>
+                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Search </a>
                     </li>
 
                     <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> New arrivals </a>
+                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> New arrivals </a>
                     </li>
 
                
@@ -77,20 +76,18 @@ const CTA = () => {
 
                 <ul class="mt-6 space-y-4">
                     <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Customer Support </a>
+                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Returns and Refunds policy </a>
                     </li>
 
                     <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Delivery Details </a>
+                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Delivery Details </a>
                     </li>
 
                     <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Terms & Conditions </a>
+                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Terms & Conditions </a>
                     </li>
 
-                    <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Privacy Policy </a>
-                    </li>
+                    
                 </ul>
             </div>
             </div>

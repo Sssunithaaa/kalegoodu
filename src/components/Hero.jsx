@@ -15,7 +15,7 @@ const HeroSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
   overflow: hidden;
   position: relative;
   color: #fff;
@@ -23,7 +23,7 @@ const HeroSection = styled.div`
   padding: 0 20px;
 
   @media (max-width: 768px) {
-    height: 90vh;
+    height: 85vh;
   }
 `;
 
@@ -36,12 +36,12 @@ const ImageSlider = styled.div`
 
 const ImageWrapper = styled.div`
   flex: 1 0 100%;
-  height: 100vh;
+  height: 90vh;
   background-size: contain; /* Or use 'contain' depending on your preference */
   background-position: center;
  
   @media (max-width: 768px) {
-   max-height: 90vh;
+   max-height: 85vh;
     // padding-top: 56.25%; /* 16:9 Aspect Ratio */
   }
 `;
