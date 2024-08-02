@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { CardElement, useStripe, useElements, PaymentRequestButtonElement } from '@stripe/react-stripe-js';
 
-const CheckoutForm = ({ totalAmount, onPaymentSuccess, paymentMethod }) => { // Add paymentMethod prop
+const CheckoutForm = ({ totalAmount, onPaymentSuccess, paymentMethod }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setProcessing] = useState(false);
@@ -11,7 +11,7 @@ const CheckoutForm = ({ totalAmount, onPaymentSuccess, paymentMethod }) => { // 
   const [paymentRequest, setPaymentRequest] = useState(null);
 
   useEffect(() => {
-    if (stripe && paymentMethod === 'upi') { // Check if payment method is UPI
+    if (stripe && paymentMethod !== 'card') {
       const pr = stripe.paymentRequest({
         country: 'IN',
         currency: 'inr',
@@ -23,10 +23,10 @@ const CheckoutForm = ({ totalAmount, onPaymentSuccess, paymentMethod }) => { // 
         requestPayerEmail: true,
         requestPayerPhone: true,
         // Specify supported payment methods
-        supportedPaymentMethods: ['card', 'upi'],
+        supportedPaymentMethods: ['card', 'upi', { supportedMethods: ['https://google.com/pay'] }],
       });
 
-      // Check if the browser supports UPI
+      // Check if the browser supports the payment method
       pr.canMakePayment().then((result) => {
         if (result) {
           setPaymentRequest(pr);
@@ -65,7 +65,7 @@ const CheckoutForm = ({ totalAmount, onPaymentSuccess, paymentMethod }) => { // 
         setProcessing(false);
       });
     }
-  }, [stripe, totalAmount, paymentMethod]); // Add paymentMethod as dependency
+  }, [stripe, totalAmount, paymentMethod]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -111,16 +111,16 @@ const CheckoutForm = ({ totalAmount, onPaymentSuccess, paymentMethod }) => { // 
 
     setProcessing(false);
   };
-  console.log(paymentRequest)
+
   return (
     <div className="checkout-form-container">
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Payment</h2>
 
-        {paymentMethod === 'upi' && paymentRequest ? ( // Use paymentMethod prop
+        {paymentMethod !== 'card' && paymentRequest ? (
           <div className="mb-4">
             <PaymentRequestButtonElement options={{ paymentRequest }} />
-            <p className="text-sm text-gray-600 mt-2">Use UPI or other payment methods supported by your device.</p>
+            <p className="text-sm text-gray-600 mt-2">Use UPI, Google Pay, or other payment methods supported by your device.</p>
           </div>
         ) : (
           <div>
