@@ -20,7 +20,7 @@ const MainPage = () => {
   }, []);
 
    const [products] = useState([
-    { id: 1, name: 'Product-1', price: 658, rating: 4, description: 'Description for Product 1', img: img1 },
+    { id: 1, name: 'Product-1', price: 1, rating: 4, description: 'Description for Product 1', img: img1 },
     { id: 2, name: 'Product-2', price: 758, rating: 5, description: 'Description for Product 2', img: img2 },
     { id: 3, name: 'Product-3', price: 858, rating: 3, description: 'Description for Product 3', img: img3 },
    

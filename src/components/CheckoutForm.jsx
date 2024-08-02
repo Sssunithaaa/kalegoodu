@@ -17,12 +17,11 @@ const CheckoutForm = ({ totalAmount, onPaymentSuccess, paymentMethod }) => {
         currency: 'inr',
         total: {
           label: 'Total',
-          amount: totalAmount * 100, // Amount in cents
+          amount: totalAmount * 100,
         },
         requestPayerName: true,
         requestPayerEmail: true,
         requestPayerPhone: true,
-        // Specify supported payment methods
         supportedPaymentMethods: ['card', 'upi', { supportedMethods: ['https://google.com/pay'] }],
       });
 
