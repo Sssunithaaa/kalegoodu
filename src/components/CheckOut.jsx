@@ -54,12 +54,12 @@ const CheckOut = () => {
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
           <div className="border-b pb-4 mb-4">
             {cartItems.map((item) => (
-              <div key={item.id} className="flex my-3 justify-between items-center">
+              <div key={item.id} className="flex my-3  justify-between items-center">
                 <div className="flex flex-row items-center gap-x-3">
-                  <img src={item.img} alt="" className="h-16 w-auto" />
-                  <span>{item.name}</span>
-                </div>
-                <div className="flex items-center gap-x-3">
+                  <img src={item.img} alt="" className="h-16  w-auto" />
+                  <div className=' flex flex-col gap-x-5 ml-2 md:flex-row'>
+                    <div><span>{item.name}</span></div>
+                   <div className="flex items-center md:mt-0 mt-2 gap-x-3">
                   <button
                     onClick={() => decreaseQuantity(item.id)}
                     className="bg-gray-300 text-black py-1 px-2 rounded-lg"
@@ -74,6 +74,9 @@ const CheckOut = () => {
                     +
                   </button>
                 </div>
+                  </div>
+                </div>
+               
                 <span className="flex items-center">₹ {item.price * item.quantity}</span>
                 <button
                   onClick={() => removeItem(item.id)}
