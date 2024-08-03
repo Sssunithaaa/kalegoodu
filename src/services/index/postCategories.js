@@ -1,18 +1,33 @@
 import axios from "axios";
-
+ const url = import.meta.env.VITE_APP_URL;
 export const getAllCategories = async (
-  searchKeyword = "",
-  page = 1,
-  limit = 10
+ 
 ) => {
   try {
-    const { data, headers } = await axios.get(
-      `/api/post-categories?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
+   
+    const response = await axios.get(
+      `${url}/api/categories`
     );
-    return { data, headers };
+ 
+    return response.data;
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
+    console.log(error)
+    throw new Error(error.message);
+  }
+};
+
+export const getCategoryImages = async () => {
+  try {
+    const response = await axios.get(`${url}/api/category_images/`);
+ 
+    return response.data.category_images; // Adjust to the actual response structure
+  } catch (error) {
+    if (error.response && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
+    console.log(error);
     throw new Error(error.message);
   }
 };
