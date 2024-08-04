@@ -29,7 +29,7 @@ const EditPost = () => {
 
 
   // Fetching post details with react-query
-  const { data, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryFn: () => getSingleProduct({ slug }),
     queryKey: ["blog", slug],
     onSuccess: (data) => {
@@ -42,7 +42,8 @@ const EditPost = () => {
     },
     refetchOnWindowFocus: false, // Do not refetch on window focus
   });
-
+  const isLoading = false;
+  const isError=false;
   // Mutation for updating post details
   const {
     mutate: mutateUpdatePostDetail,

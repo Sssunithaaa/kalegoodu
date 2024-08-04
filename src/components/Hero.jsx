@@ -15,7 +15,7 @@ const HeroSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  height: 81vh;
   overflow: hidden;
   position: relative;
   color: #fff;
@@ -23,7 +23,7 @@ const HeroSection = styled.div`
   padding: 0 20px;
 
   @media (max-width: 768px) {
-    height: 82vh;
+    height: 80vh;
   }
 `;
 

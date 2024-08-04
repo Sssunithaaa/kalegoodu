@@ -12,6 +12,7 @@ import { img1, img2, img3, img14 } from '../assets/images';
 
 import Testimonials from './Testimonials/Testimonials';
 import AboutUs from './AboutUs';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   
@@ -26,6 +27,7 @@ const MainPage = () => {
    
 
   ]);
+  const navigate = useNavigate()
 
   return (
     <div>
@@ -50,6 +52,9 @@ const MainPage = () => {
       </div>
       <div>
         <AboutUs />
+      </div>
+      <div className='hover:cursor-pointer' onClick={()=> navigate("/admin")}>
+        <Title >Admin</Title>
       </div>
     </div>
   );

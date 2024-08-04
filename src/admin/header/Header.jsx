@@ -109,7 +109,7 @@ const Header = () => {
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               >
-                <Link to="/admin/products/manage">Manage all posts</Link>
+                <Link to="/admin/products/manage">Manage all products</Link>
                 <button
                   // disabled={isLoadingCreatePost}
                   className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
@@ -117,7 +117,7 @@ const Header = () => {
                   //   handleCreateNewPost({ token: userState.userInfo.token })
                   // }
                 >
-                  Add New Post
+                  Add New Product
                 </button>
                 {/* <Link to="/admin/categories/manage">Categories</Link> */}
               </NavItemCollapse>
