@@ -1,115 +1,141 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from '../../DataTable';
 import { useDataTable } from '../../hooks/useDataTable';
-import { deleteProduct, getAllProducts } from '../../../services/index/products';
+import { deleteProduct } from '../../../services/index/products'; 
+import axios from 'axios';
+
+const API_URL = 'https://kalegoodupractice.pythonanywhere.com/api'; // Base URL
 
 const ManageProducts = () => {
-  const {
-    currentPage,
-    searchKeyword,
-    data: productsData,
-    isLoading,
-    isFetching,
-    isLoadingDeleteData,
-    queryClient,
-    searchKeywordHandler,
-    submitSearchKeywordHandler,
-    deleteDataHandler,
-    setCurrentPage,
-  } = useDataTable({
-    dataQueryFn: () => getAllProducts(searchKeyword, currentPage),
-    dataQueryKey: "products",
-    deleteDataMessage: "Product is deleted",
-    mutateDeleteFn: ({ slug, token }) => {
-      return deleteProduct({
-        slug,
-        token,
-      });
-    },
-  });
+  // const {
+  //   currentPage,
+  //   searchKeyword,
+  //   isLoading,
+  //   isFetching,
+  //   isLoadingDeleteData,
+  //   queryClient,
+  //   searchKeywordHandler,
+  //   submitSearchKeywordHandler,
+  //   deleteDataHandler,
+  //   setCurrentPage,
+  // } = useDataTable();
 
-  const productt = {
-    "brand": "Kalegoodu",
-    "name": "Flower pot",
-    "description": "Enhance your home with this exquisite flower pot, showcasing a blend of modern elegance and timeless beauty that complements any decor.",
-    "price": 125.00,
-    "discount": 50,
-    "originalPrice": 250.00,
-    "photo": null,
-    "slug": "flower-pot",
-    "createdAt": new Date().toISOString(),
-    "categories": [{ title: "Home Decor" }],
-    "tags": ["modern", "elegant", "decor"]
-  };
+  const [products, setProducts] = useState([]);
+  const [images, setImages] = useState([]);
 
+  useEffect(() => {
+    // Fetch products and images from the API
+    const fetchData = async () => {
+      try {
+        const [productResponse, imageResponse] = await Promise.all([
+          axios.get(`${API_URL}/products/`),
+          axios.get(`${API_URL}/product_images/`),
+        ]);
+
+        const { products } = productResponse.data;
+        const { product_images } = imageResponse.data;
+
+        // Map images to products
+        const productsWithImages = products.map((product) => {
+          const productImages = product_images.filter(
+            (image) => image.product === product.product_id
+          );
+          return { ...product, images: productImages };
+        });
+
+        setProducts(productsWithImages);
+        setImages(product_images);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const url = import.meta.env.VITE_APP_URL
+  const isLoading = false;
+   const isFetching = false;
+    const isLoadingDeleteData = false;
+    console.log(products)
   return (
     <DataTable
       pageTitle="Manage Products"
       dataListName="Products"
       searchInputPlaceHolder="Product name..."
-      searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
-      searchKeywordOnChangeHandler={searchKeywordHandler}
-      searchKeyword={searchKeyword}
-      tableHeaderTitleList={["Name", "Brand", "Price", "Category", "Tags", ""]}
+      // searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
+      // searchKeywordOnChangeHandler={searchKeywordHandler}
+      // searchKeyword={searchKeyword}
+      tableHeaderTitleList={["Images", "Name", "Description", "Price", "Discount Price", "Categories", "Sale Type"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
-      data={[productt]} // Using the static product data
-      setCurrentPage={setCurrentPage}
-      currentPage={currentPage}
-      headers={productsData?.headers}
+      data={products}
+      // setCurrentPage={setCurrentPage}
+      // currentPage={currentPage}
     >
-      {[productt].map((product) => (
-        <tr key={product.slug}>
+      {products.map((product) => (
+        <tr key={product.product_id}>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <a href="/" className="relative block">
+              <div className="flex flex-wrap gap-x-3">
+                {
+                  product.images.map((image)=> (
+                   
                   <img
                     src={
-                      product?.photo
-                        ? stables.UPLOAD_FOLDER_BASE_URL + product?.photo
+                      product.images.length > 0
+                        ? `${url}${image.image}` // Construct full image URL
                         : 'path/to/sampleProductImage' // Replace with your sample image path
                     }
                     alt={product.name}
                     className="mx-auto object-cover rounded-lg w-10 aspect-square"
                   />
-                </a>
+              
+                  ))
+                }
               </div>
-              <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">{product.name}</p>
-              </div>
+             
             </div>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{product.brand}</p>
+         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <p className="text-gray-900 whitespace-no-wrap">{product.name}</p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">${product.price.toFixed(2)}</p>
+            <p className="text-gray-900 whitespace-no-wrap">{product.short_description}</p>
+          </td>
+          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <p className="text-gray-900 whitespace-no-wrap">{product.price}</p>
+          </td>
+          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <p className="text-gray-900 whitespace-no-wrap">
+              {product.discounted_price !== '0' ? (
+                <>
+                  <span className="line-through text-gray-500">
+                    {product.price}
+                  </span>
+                  <span className="text-red-600"> {product.discounted_price}</span>
+                </>
+              ) : (
+                product.price
+              )}
+            </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">
               {product.categories.length > 0
                 ? product.categories
-                    .slice(0, 3)
-                    .map(
-                      (category, index) =>
-                        `${category.title}${
-                          product.categories.slice(0, 3).length === index + 1
-                            ? ""
-                            : ", "
-                        }`
-                    )
+                    .map((category, index) => `${category.name}`)
+                    .join(', ')
                 : "Uncategorized"}
             </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex gap-x-2">
-              {product.tags.length > 0
-                ? product.tags.map((tag, index) => (
+              {product.sale_types.length > 0
+                ? product.sale_types.map((sale_type, index) => (
                     <p key={index}>
-                      {tag}
-                      {product.tags.length - 1 !== index && ","}
+                      {sale_type.name}
+                      {product.sale_types.length - 1 !== index && ","}
                     </p>
                   ))
                 : "No tags"}
@@ -122,15 +148,15 @@ const ManageProducts = () => {
               className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={() => {
                 deleteDataHandler({
-                  slug: product?.slug,
-                  token: userState.userInfo.token,
+                  slug: product.slug, // Make sure the slug field is correctly used here
+                  token: userState.userInfo.token, // Ensure token handling is implemented
                 });
               }}
             >
               Delete
             </button>
             <Link
-              to={`/admin/products/manage/edit/${product?.slug}`}
+              to={`/admin/products/manage/edit/${product.slug}`} // Make sure the slug field is correctly used here
               className="text-green-600 hover:text-green-900"
             >
               Edit
