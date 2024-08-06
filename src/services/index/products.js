@@ -16,8 +16,8 @@ export const getAllProducts = async () => {
 
 export const getSingleProduct = async ({ slug }) => {
   try {
-    const { data } = await axios.get(`/api/products/${slug}`);
-    return data;
+    const response = await axios.get(`${url}/api/products/${slug}/`);
+    return response.data.product;
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);

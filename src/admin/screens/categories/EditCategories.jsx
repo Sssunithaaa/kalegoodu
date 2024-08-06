@@ -48,18 +48,16 @@ const EditCategories = () => {
   setCategoryTitle(data?.name || "Sample Category Title");
       setDescription(data?.description || "Sample Description");
       setCreatedAt(data?.created_at || "2024-06-18T15:50:36.589403+05:30");
+      data?.images?.map((image)=>console.log(image)) 
+      setFiles(data?.images?.map((image)=>image?.image) || [null,null,null])
  },[data])
-
-  const images = [
-    "/media/category_images/Canvas%20Paintings/canvas1.webp",
-    "/media/category_images/Canvas%20Paintings/canvas2.webp",
-    "/media/category_images/Canvas%20Paintings/canvas3.webp",
-  ];
+ 
+  
 
   // Mutation for updating category
   const { mutate: mutateUpdateCategory, isLoading: isLoadingUpdateCategory } =
     useMutation({
-      mutationFn: ({ title, slug, description, status, visibility, token }) => {
+      mutationFn: ({ title, slug, description, token }) => {
         return updateCategory({
           title,
           slug,
@@ -83,6 +81,7 @@ const EditCategories = () => {
     });
 const [files, setFiles] = useState([null, null, null]);
 const [previews, setPreviews] = useState([null, null, null]);
+console.log(files)
 const handleFileChange = (acceptedFiles, index) => {
   const updatedFiles = [...files];
   updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone

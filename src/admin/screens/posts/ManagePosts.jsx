@@ -156,7 +156,7 @@ const ManageProducts = () => {
               Delete
             </button>
             <Link
-              to={`/admin/products/manage/edit/${product.slug}`} // Make sure the slug field is correctly used here
+              to={`/admin/products/manage/edit/${product.product_id}`} // Make sure the slug field is correctly used here
               className="text-green-600 hover:text-green-900"
             >
               Edit
