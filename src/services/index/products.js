@@ -1,11 +1,12 @@
 import axios from "axios";
-
-export const getAllProducts = async (searchKeyword = "", page = 1, limit = 10) => {
+ const url = import.meta.env.VITE_APP_URL;
+export const getAllProducts = async () => {
   try {
-    const { data, headers } = await axios.get(
-      `/api/products?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
+    const response = await axios.get(
+      `${url}/api/products/`
     );
-    return { data, headers };
+   
+    return response.data?.products
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
@@ -58,19 +59,20 @@ export const updateProduct = async ({ updatedData, slug, token }) => {
   }
 };
 
-export const createProduct = async ({ token }) => {
+export const createProduct = async ( formData ) => {
   try {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     };
-
-    const { data } = await axios.post(`/api/products`, {}, config);
+   console.log(formData)
+    const { data } = await axios.post(`${url}/api/products/`, formData,config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
+    console.log(error)
     throw new Error(error.message);
   }
 };

@@ -1,12 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 // import { useSelector } from "react-redux";
 import {
   getSingleCategory,
   updateCategory,
+  createCategory,
 } from "../../../services/index/postCategories";
+import Dropzone from "react-dropzone";
+import { BsFillArrowUpCircleFill } from "react-icons/bs";
 
 const EditCategories = () => {
   const queryClient = useQueryClient();
@@ -14,30 +17,45 @@ const EditCategories = () => {
   const { slug } = useParams();
   // const userState = useSelector((state) => state.user);
 
+  const isEditMode = Boolean(slug);
+
   // State for all fields
-  const [categoryTitle, setCategoryTitle] = useState("Sample Category Title");
-  const [description, setDescription] = useState("Sample Description");
-  const [createdAt, setCreatedAt] = useState("2024-06-18T15:50:36.589403+05:30");
+  const [categoryTitle, setCategoryTitle] = useState(
+    isEditMode ? "Sample Category Title" : ""
+  );
+  const [description, setDescription] = useState(
+    isEditMode ? "Sample Description" : ""
+  );
+  const [createdAt, setCreatedAt] = useState(
+    isEditMode ? "2024-06-18T15:50:36.589403+05:30" : new Date().toISOString()
+  );
   const [status, setStatus] = useState("Active");
   const [visibility, setVisibility] = useState(true);
 
-  // Fetching single category (You can modify this to use actual data)
-  const { isLoading, isError } = useQuery({
+  // Fetching single category (only in edit mode)
+  const {data, isLoading, isError } = useQuery({
     queryFn: () => getSingleCategory({ slug }),
     queryKey: ["categories", slug],
     onSuccess: (data) => {
-      setCategoryTitle(data?.title || "Sample Category Title");
+   
+     
+      
+    },
+    enabled: isEditMode, // Only fetch when in edit mode
+  
+  });
+ useEffect(()=> {
+  setCategoryTitle(data?.name || "Sample Category Title");
       setDescription(data?.description || "Sample Description");
       setCreatedAt(data?.created_at || "2024-06-18T15:50:36.589403+05:30");
-      setStatus(data?.status || "Active");
-      setVisibility(data?.visibility || true);
-    },
-    refetchOnWindowFocus: false,
-  });
+ },[data])
 
   const images = [
-     "/media/category_images/Canvas%20Paintings/canvas1.webp","/media/category_images/Canvas%20Paintings/canvas2.webp","/media/category_images/Canvas%20Paintings/canvas3.webp"
-  ]
+    "/media/category_images/Canvas%20Paintings/canvas1.webp",
+    "/media/category_images/Canvas%20Paintings/canvas2.webp",
+    "/media/category_images/Canvas%20Paintings/canvas3.webp",
+  ];
+
   // Mutation for updating category
   const { mutate: mutateUpdateCategory, isLoading: isLoadingUpdateCategory } =
     useMutation({
@@ -53,7 +71,36 @@ const EditCategories = () => {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries(["categories", slug]);
-        toast.success("Category is updated");
+        toast.success("Category updated successfully!");
+        navigate(`/admin/categories/manage/edit/${data._id}`, {
+          replace: true,
+        });
+      },
+      onError: (error) => {
+        toast.error(error.message);
+        console.log(error);
+      },
+    });
+const [files, setFiles] = useState([null, null, null]);
+const [previews, setPreviews] = useState([null, null, null]);
+const handleFileChange = (acceptedFiles, index) => {
+  const updatedFiles = [...files];
+  updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone
+  setFiles(updatedFiles);
+
+  const updatedPreviews = [...previews];
+  updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
+  setPreviews(updatedPreviews);
+};
+  // Mutation for adding category
+  const { mutate: mutateAddCategory, isLoading: isLoadingAddCategory } =
+    useMutation({
+      mutationFn: (formData) => {
+        return createCategory(formData);
+      },
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["categories"]);
+        toast.success("Category added successfully!");
         navigate(`/admin/categories/manage/edit/${data._id}`, {
           replace: true,
         });
@@ -64,120 +111,150 @@ const EditCategories = () => {
       },
     });
 
-  // Handle Update Category Function
-  const handleUpdateCategory = () => {
-    if (!categoryTitle || !description) return;
+  // Handle Submit Function for both Add and Update
+  const handleSubmit = (e) => {
+   e.preventDefault();
+
+  const formData = new FormData();
+  
+  // Append product details to formData
+  formData.append("name", categoryTitle);
+
+  formData.append("description", description); // Ensure the key matches
+
+  
+  // Append image files
+  files.forEach(file => {
+    if (file) {
+      formData.append("images", file); // Ensure the key matches
+    }
+  });
+
+  // Log FormData content to verify
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
+
+  if (isEditMode) {
     mutateUpdateCategory({
-      title: categoryTitle,
+      updatedData: formData,
       slug,
-      description,
-      status,
-      visibility,
-      // token: userState.userInfo.token,
     });
-  };
+  } else {
+    mutateAddCategory(
+      formData,
+    );
+  }
+};
+
 
   return (
     <div className="col-span-4 py-8">
-      <h4 className="text-lg leading-tight">Update Category</h4>
-      <div className="d-form-control w-full mt-6">
-                        <div className="mt-2">
-          <h5 className="text-lg leading-tight">Manage Images</h5>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 mt-2">
-            {images.map((image) => (
-              <div key={image.imageId} className="relative">
-                <img
-                  src={`${import.meta.env.VITE_APP_URL}${image}`} // Construct full image URL
-                  alt={`Category image for ${categoryTitle}`}
-                  className="w-24 h-auto object-cover rounded-md"
-                />
-                <button
-                  onClick={() => handleImageDelete(image.imageId)}
-                  className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full p-1"
-                  // disabled={isDeletingImage} // Disable button while deleting
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-          </div>
-          {/* File Input for New Image */}
-          <input
-            type="file"
-            accept="image/*"
-            // onChange={handleImageChange}
-            className="mt-4"
-          />
-          <button
-            // onClick={handleImageUpload}
-            // disabled={!newImage || isUploadingImage} // Disable button if no file or during upload
-            className="w-fit mt-3 bg-blue-500 text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            Upload New Image
-          </button>
+      <h4 className="text-lg leading-tight">
+        {isEditMode ? "Update Category" : "Add New Category"}
+      </h4>
+      <form onSubmit={handleSubmit} className="d-form-control w-full mt-6">
+        {/* {isEditMode && ( */}
+          <div className="flex md:col-span-2 flex-col gap-2 ">
+            <label className="mb-2">
+              Category Images:
+            </label>
+            
+        <div className="flex md:flex-row flex-col ">
+        {[0, 1, 2].map((index) => (
+  <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
+    <Dropzone
+      onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
+      accept="image/*"
+    >
+      {({ getRootProps, getInputProps }) => (
+        <div
+          {...getRootProps({
+            className: `${
+              previews[index] ? "bg-white" : "bg-black/20"
+            } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
+          })}
+        >
+          <input {...getInputProps()} />
+          {previews[index] ? (
+            <img
+              src={previews[index]}
+              alt={`Preview ${index + 1}`}
+              className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
+            />
+          ) : (
+            <div className="p-3">
+              <BsFillArrowUpCircleFill
+                style={{
+                  fontSize: "20px",
+                  marginBottom: "10px",
+                  color: "black",
+                }}
+                className="w-full flex mx-auto"
+              />
+              <p className="text-center text-black font-medium">
+                Drag and drop an image here, or click to select file
+              </p>
+            </div>
+          )}
         </div>
-          <div className="flex flex-col mt-4 gap-y-2">
+      )}
+    </Dropzone>
+  </div>
+))}
+</div>
+
+       </div>
+        {/* )} */}
+
+        <div className="flex flex-col mt-4 gap-y-2">
           <label>Category title: </label>
-        <input
-          value={categoryTitle}
-          className="d-input d-input-bordered  border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"
-          onChange={(e) => setCategoryTitle(e.target.value)}
-          placeholder="Category Title"
-        />
+          <input
+            value={categoryTitle}
+            className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"
+            onChange={(e) => setCategoryTitle(e.target.value)}
+            placeholder="Category Title"
+          />
         </div>
 
         <div className="flex flex-col mt-4 gap-y-2">
-           <label>Description: </label>
-        <textarea
-          value={description}
- className="d-input d-input-bordered  border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
-        />
-        </div>
-       
-
-        {/* Created At Field (Display Only, Non-editable) */}
-        <div className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-emerald-600 font-medium font-roboto text-dark-hard mt-4">
-          Created At: {new Date(createdAt).toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })}
-        </div>
-
-        {/* Status Field (Dropdown Selection) */}
-        <div>
-          <select
-          value={status}
-          className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard mt-4"
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-        </div>
-
-        {/* Visibility Field (Checkbox) */}
-        <label className="flex items-center mt-4">
-          <input
-            type="checkbox"
-            checked={visibility}
-            onChange={(e) => setVisibility(e.target.checked)}
-            className="mr-2"
+          <label>Description: </label>
+          <textarea
+            value={description}
+            className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
           />
-          Visibility
-        </label>
+        </div>
+        <ToastContainer/>
+        {/* Created At Field (Display Only, Non-editable in edit mode) */}
+        {isEditMode && (
+          <div className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-emerald-600 font-medium font-roboto text-dark-hard mt-4">
+            Created At: {new Date(createdAt).toLocaleDateString("en-US", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
+        )}
 
-        {/* Update Button */}
+        
+
+        {/* Update/Add Button */}
         <button
-          disabled={isLoadingUpdateCategory || isLoading || isError}
-          type="button"
-          onClick={handleUpdateCategory}
+          disabled={
+            isLoadingUpdateCategory ||
+            isLoadingAddCategory ||
+            isLoading ||
+            isError
+          }
+          type="submit"
+          
           className="w-fit mt-3 bg-green-500 text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          Update Category
+          {isEditMode ? "Update Category" : "Add Category"}
         </button>
-      </div>
+      </form>
     </div>
   );
 };

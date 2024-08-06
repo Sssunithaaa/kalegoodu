@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"; // Import useQueryClient
 import { toast } from "react-toastify";
 import {
@@ -45,33 +45,8 @@ const Categories = () => {
     }
   }, [categoriesData, imagesData]);
 
-  // Create category mutation
-  const { mutate: mutateCreateCategory, isLoading: isLoadingCreateCategory } =
-    useMutation({
-      mutationFn: ({ token, title }) => {
-        return createCategory({
-          token,
-          title,
-        });
-      },
-      
-        onSuccess: () => {
-          // queryClient.invalidateQueries(["categories"]);
-          toast.success("Category is created");
-        },
-        onError: (error) => {
-          toast.error(error.message);
-          console.log(error);
-        },
-      
-});
 
-  const handleCreateCategory = () => {
-    mutateCreateCategory({
-      // token: userState.userInfo.token,
-      title: categoryTitle,
-    });
-  };
+  
 
   // Delete category mutation
   const { mutate: deleteCategoryMutation, isLoading: isLoadingDeleteData } =
@@ -90,22 +65,18 @@ const Categories = () => {
   const deleteDataHandler = (categoryId) => {
     deleteCategoryMutation(categoryId);
   };
+  const navigate = useNavigate()
 
   return (
     <div className="grid grid-cols-12 gap-x-4 overflow-x-auto mx-auto w-full">
       <div className="col-span-4 py-8 mx-auto">
         <h4 className="text-lg leading-tight text-center">Add New Category</h4>
         <div className="d-form-control w-full mt-6">
-          <input
-            value={categoryTitle}
-            className="d-input placeholder:text-center d-input-bordered border-slate-300 !outline-slate-300 text-xl font-medium font-roboto text-dark-hard"
-            onChange={(e) => setCategoryTitle(e.target.value)}
-            placeholder="Category title"
-          />
+         
           <button
-            disabled={isLoadingCreateCategory}
+       
             type="button"
-            onClick={handleCreateCategory}
+              onClick={()=>navigate("/admin/categories/add")}
             className="w-fit mt-3 bg-green-500 mx-auto text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
           >
             Add Category
@@ -120,7 +91,7 @@ const Categories = () => {
           // searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
           // searchKeywordOnChangeHandler={searchKeywordHandler}
           // searchKeyword={searchKeyword}
-          tableHeaderTitleList={["Title", "Created At", "Images", ""]}
+          tableHeaderTitleList={["Name","Description", "Created At", "Images", ""]}
           isLoading={isLoading}
           isFetching={isFetching}
           data={combinedData}
@@ -135,6 +106,13 @@ const Categories = () => {
                 <div className="flex items-center">
                   <p className="text-gray-900 whitespace-no-wrap">
                     {category.name}
+                  </p>
+                </div>
+              </td>
+              <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                <div className="flex items-center">
+                  <p className="text-gray-900 whitespace-no-wrap">
+                    {category.description}
                   </p>
                 </div>
               </td>

@@ -6,12 +6,18 @@ import styled from "styled-components";
 import ModalCard from "./ModalCard";
 
 import { img1, img2, img3 } from '../assets/images';
+import { useQuery } from '@tanstack/react-query';
+import { getAllProducts } from '../services/index/products';
 
-const ProductCarousel = ({products}) => {
+const ProductCarousel = ({}) => {
  
+  
 
-
- 
+   const {data:products,isLoading,isError} = useQuery({
+    queryKey:["products"],
+    queryFn: getAllProducts
+   })
+   console.log(products)
 
   const settings = {
     dots: true,
@@ -43,12 +49,12 @@ const ProductCarousel = ({products}) => {
       },
     ],
   };
-
+  console.log(products?.products)
   return (
     <div className="px-10 mx-auto my-5 relative">
       <Slider {...settings}>
-        {products.map((product) => (
-          <div key={product.id}  >
+        {products?.map((product) => (
+          <div key={product.product_id}  >
             <ModalCard product={product} />
           </div>
         ))}

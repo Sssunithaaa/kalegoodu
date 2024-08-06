@@ -42,9 +42,11 @@ const App = () => {
           <Route index element={<Admin />} />
           <Route path="products/manage" element={<ManagePosts />} />
           <Route path="products/manage/edit/:slig" element={<EditPost/>}/>
+           <Route path="products/add" element={<EditPost/>}/>
           <Route path="banner" element={<Banner />} />
           <Route path="categories/manage" element={<Categories />} />
           <Route path="categories/manage/edit/:slug" element={<EditCategories />} />
+          <Route path="categories/add" element={<EditCategories />} />
         </Route>
       </Routes>
       </MainLayout>

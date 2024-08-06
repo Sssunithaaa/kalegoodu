@@ -2,13 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { toast } from "react-toastify";
-import CreatableSelect from 'react-select/creatable';
-import { getSingleProduct, updateProduct } from "../../../services/index/products";
+import { toast, ToastContainer } from "react-toastify";
+import CreatableSelect from "react-select/creatable";
+import {
+  getSingleProduct,
+  updateProduct,
+  createProduct,
+} from "../../../services/index/products"; // Make sure to import the createProduct service
 import { getAllCategories } from "../../../services/index/postCategories";
-import { categoryToOption, filterCategories } from "../../../utils/multiSelectTagUtils";
-import { stables } from "../../../constants";
+import {
+  categoryToOption,
+  filterCategories,
+} from "../../../utils/multiSelectTagUtils";
+import Dropzone from "react-dropzone";
+import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import "react-toastify/dist/ReactToastify.css";
+import AddImage from "./AddImage";
 
 const promiseOptions = async (inputValue) => {
   const { data: categoriesData } = await getAllCategories();
@@ -19,31 +28,42 @@ const EditPost = () => {
   const { slug } = useParams(); // Get the slug from URL params
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  
+
   const [categories, setCategories] = useState([]); // Categories state
   const [name, setName] = useState(""); // name state
   const [tags, setTags] = useState([]); // Tags state
-  const [discountedPrice, setDiscountPrice] = useState(slug); // Slug state
+  const [discountedPrice, setDiscountPrice] = useState(""); // Slug state
   const [price, setPrice] = useState(""); // price state
   const [description, setDescription] = useState(""); // description content state
 
+  const isEditMode = !!slug; // Determine if we are in edit mode
 
   // Fetching post details with react-query
-  const { data } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryFn: () => getSingleProduct({ slug }),
     queryKey: ["blog", slug],
     onSuccess: (data) => {
-      
-      setCategories(product?.categories.map((item) => item._id));
+      setCategories(
+        product?.categories.map((item) => ({
+          value: item._id,
+          label: item.name,
+        }))
+      );
       setName(product?.name);
-      setTags(product?.tags);
+      setTags(
+        product?.tags.map((tag) => ({
+          value: tag._id,
+          label: tag.name,
+        }))
+      );
       setDescription(product?.description);
       setPrice(product?.price); // Set price from sample data
+      setDiscountPrice(product?.discounted_price);
     },
+    enabled: isEditMode, // Only run the query if we are in edit mode
     refetchOnWindowFocus: false, // Do not refetch on window focus
   });
-  const isLoading = false;
-  const isError=false;
+
   // Mutation for updating post details
   const {
     mutate: mutateUpdatePostDetail,
@@ -52,7 +72,7 @@ const EditPost = () => {
     mutationFn: ({ updatedData, slug, token }) => {
       return updateProduct({
         updatedData,
-      
+
         token,
       });
     },
@@ -68,21 +88,41 @@ const EditPost = () => {
     },
   });
 
+  // Mutation for adding new product details
+  const {
+    mutate: mutateAddPostDetail,
+    isLoading: isLoadingAddPostDetail,
+  } = useMutation({
+    mutationFn: (formData) => {
+      return createProduct(
+        formData,
+      );
+    },
+    onSuccess: (data) => {
+      toast.success("Product added successfully");
+      navigate(`/admin/products/manage/edit/${data.slug}`, { replace: true });
+    },
+    onError: (error) => {
+      toast.error("Error adding product: " + error.message);
+      console.log(error);
+    },
+  });
+
   const [newImage, setNewImage] = useState(null); // State for the new image file
 
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  setNewImage(file);
-};
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setNewImage(file);
+  };
 
-// Handle image upload
-const handleImageUpload = async () => {
-  if (!newImage) return;
+  // Handle image upload
+  const handleImageUpload = async () => {
+    if (!newImage) return;
 
-  const formData = new FormData();
-  formData.append("image", newImage);
+    const formData = new FormData();
+    formData.append("image", newImage);
 
-  // try {
+    // try {
     // // Replace with your upload service or API call
     // const response = await fetch("/api/upload", {
     //   method: "POST",
@@ -91,8 +131,10 @@ const handleImageUpload = async () => {
 
     // const result = await response.json();
     // if (result.success) {
-      // Update product data with new image
-      const updatedImages = [...product.images, {
+    // Update product data with new image
+    const updatedImages = [
+      ...product.images,
+      {
         product_image_id: 3, // Assuming response provides imageId
         product: product.product_id,
         product_name: product.name,
@@ -100,22 +142,23 @@ const handleImageUpload = async () => {
         alt_text: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      }];
+      },
+    ];
 
-      // Update the state or make a mutation to update product
-      // // Assuming you have a function to update the product
-      // await updateProduct({ ...product, images: updatedImages });
+    // Update the state or make a mutation to update product
+    // // Assuming you have a function to update the product
+    // await updateProduct({ ...product, images: updatedImages });
 
-      // Reset the new image state
-      setNewImage(null);
-      toast.success("Image uploaded successfully");
+    // Reset the new image state
+    setNewImage(null);
+    toast.success("Image uploaded successfully");
     // } else {
     //   toast.error("Failed to upload image");
     // }
-  // } catch (error) {
-  //   toast.error("Error uploading image: " + error.message);
-  // }
-};
+    // } catch (error) {
+    //   toast.error("Error uploading image: " + error.message);
+    // }
+  };
 
   // Handle image deletion
   const handleDeleteImage = () => {
@@ -124,16 +167,26 @@ const handleImageUpload = async () => {
       setPhoto(null);
     }
   };
-
+  
   // Determine if post data is loaded
   let isPostDataLoaded = !isLoading && !isError;
   useEffect(() => {
-    setCategories(product?.categories.map((category)=>({value: category.category_id,label: category.name}))); // Use categoryToOption
-    setTags(product?.sale_types.map((tag) => ({ value: tag.sale_type_id, label: tag.name })))
-    setPrice(product?.price);
-    setDescription(product?.short_description)
-    setName(product?.name)
-    setDiscountPrice(product?.discounted_price)
+    setCategories(
+      isEditMode ? product?.categories.map((category) => ({
+        value: category.category_id,
+        label: category.name,
+      })) : []
+    ); // Use categoryToOption
+    setTags(
+      isEditMode ? product?.sale_types.map((tag) => ({
+        value: tag.sale_type_id,
+        label: tag.name,
+      })) : []
+    );
+    setPrice(isEditMode ? product?.price : 0);
+    setDescription(isEditMode ? product?.short_description : "");
+    setName(isEditMode ? product?.name : "");
+    setDiscountPrice(isEditMode ? product?.discounted_price : 0);
   }, []);
 
   const product = {
@@ -141,7 +194,7 @@ const handleImageUpload = async () => {
     name: "Glided Plume Metal Wall Art",
     price: "Rs. 7999",
     discounted_price: "0",
-    short_description: "A Wall art filled with Featers",
+    short_description: "A Wall art filled with Feathers",
     categories: [
       {
         category_id: 2,
@@ -166,7 +219,8 @@ const handleImageUpload = async () => {
         product_image_id: 1,
         product: 1,
         product_name: "Glided Plume Metal Wall Art",
-        image: "/media/product_images/Glided%20Plume%20Metal%20Wall%20Art/metalwall1.webp",
+        image:
+          "/media/product_images/Glided%20Plume%20Metal%20Wall%20Art/metalwall1.webp",
         alt_text: null,
         created_at: "2024-06-18T15:58:10.981199+05:30",
         updated_at: "2024-06-18T15:58:10.981199+05:30",
@@ -175,7 +229,8 @@ const handleImageUpload = async () => {
         product_image_id: 2,
         product: 1,
         product_name: "Glided Plume Metal Wall Art",
-        image: "/media/product_images/Glided%20Plume%20Metal%20Wall%20Art/metalwall11.webp",
+        image:
+          "/media/product_images/Glided%20Plume%20Metal%20Wall%20Art/metalwall11.webp",
         alt_text: null,
         created_at: "2024-06-18T15:58:10.988638+05:30",
         updated_at: "2024-06-18T15:58:10.988638+05:30",
@@ -183,145 +238,238 @@ const handleImageUpload = async () => {
     ],
     comments: [],
     created_at: "2024-06-18T15:58:10.966381+05:30",
-    updated_at: "2024-07-22T12:12:55.092995+05:30",
+    updated_at: "2024-07-22T12:12:55.618867+05:30",
+  };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  
+  // Append product details to formData
+  formData.append("name", name);
+  formData.append("price", price);
+  formData.append("discounted_price", discountedPrice);
+  formData.append("short_description", description); // Ensure the key matches
+
+  // Append categories and sale_types (tags)
+  categories.forEach(category => formData.append("categories", category.value));
+  tags.forEach(tag => formData.append("sale_types", tag.value));
+
+  // Append image files
+  files.forEach(file => {
+    if (file) {
+      formData.append("images", file); // Ensure the key matches
+    }
+  });
+
+  // Log FormData content to verify
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
+
+  if (isEditMode) {
+    mutateUpdatePostDetail({
+      updatedData: formData,
+      slug,
+    });
+  } else {
+    mutateAddPostDetail(
+      formData,
+    );
+  }
+};
+
+
+  // Handle post image change
+  const handlePostImageChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
+const [files, setFiles] = useState([null, null, null]);
+const [previews, setPreviews] = useState([null, null, null]);
+const handleFileChange = (acceptedFiles, index) => {
+  const updatedFiles = [...files];
+  updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone
+  setFiles(updatedFiles);
+
+  const updatedPreviews = [...previews];
+  updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
+  setPreviews(updatedPreviews);
+};
+
+
+  const handleImageUploadClick = (e) => {
+    e.preventDefault();
+    handleImageUpload(); // Call image upload handler
   };
 
   return (
-    <div>
-      {isLoading ? (
-        <div>Loading...</div> // Simple loading message
-      ) : isError ? (
-        <div>Couldn't fetch the post detail</div> // Simple error message
-      ) : (
-        <section className="container mx-auto max-w-5xl">
-          <div className="bg-white rounded-lg p-5">
-            <div className="flex justify-between items-center">
-              <h1 className="font-bold text-2xl text-gray-700">Edit Post</h1>
-              <Link
-                to="/admin/products/manage"
-                className="px-4 py-2 text-gray-100 bg-gray-800 rounded-md"
-              >
-                All Posts
-              </Link>
-            </div>
-
-            {/* Image Upload Section */}
-                       <div className="my-4">
-          <h5 className="text-lg leading-tight">Manage Images</h5>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 mt-2">
-            {product?.images.map((image) => (
-              <div key={image.product_image_id} className="relative">
-                <img
-                  src={`${import.meta.env.VITE_APP_URL}${image.image}`} // Construct full image URL
-                  alt={`Product image for ${image.product_name}`}
-                  className="w-24 h-auto object-cover rounded-md"
-                />
-                <button
-                  onClick={() => handleImageDelete(image.product_image_id)}
-                  className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full p-1"
-                  // disabled={isDeletingImage} // Disable button while deleting
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+    <section className=" p-4 mt-3">
+      <div className="flex flex-wrap justify-between gap-3">
+        <Link
+          to="/admin/posts/manage"
+          className="btn btn-outline-dark bg-blue-500 px-2 py-1 rounded-md"
+        >
+          Manage Posts
+        </Link>
+      </div>
+      <ToastContainer/>
+      {isLoading && <p>Loading...</p>} {/* Show loading message */}
+      {isError && <p>Something went wrong!</p>} {/* Show error message */}
+      {isPostDataLoaded && (
+        <form
+          onSubmit={handleSubmit}
+          className="md:grid flex flex-col md:grid-cols-2 gap-3 mt-3"
+        >
+          {/* Form for post details */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="name" className="">
+              Product Name:
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Product Name"
+              required
+            />
           </div>
-          {/* File Input for New Image */}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="mt-4"
-          />
-          <button
-            onClick={handleImageUpload}
-            // disabled={!newImage || isUploadingImage} // Disable button if no file or during upload
-            className="w-fit mt-3 bg-blue-500 text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            Upload New Image
-          </button>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="categories" className="">
+              Categories:
+            </label>
+            <Select
+              id="categories"
+              isMulti
+              name="categories"
+              value={categories}
+              onChange={setCategories}
+              defaultOptions
+              loadOptions={promiseOptions}
+              isSearchable
+              placeholder="Select or type categories"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="tags" className="">
+              Tags:
+            </label>
+            <CreatableSelect
+              isMulti
+              name="tags"
+              options={tags}
+              onChange={setTags}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select or create tags"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="price" className="">
+              Price:
+            </label>
+            <input
+              type="number"
+              id="price"
+              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Price"
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="discountedPrice" className="">
+              Discounted Price:
+            </label>
+            <input
+              type="number"
+              id="discountedPrice"
+              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+              value={discountedPrice}
+              onChange={(e) => setDiscountPrice(e.target.value)}
+              placeholder="Discounted Price"
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2 md:col-span-2">
+            <label htmlFor="description" className="">
+              Description:
+            </label>
+            <textarea
+              id="description"
+              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Product Description"
+              required
+            />
+          </div>
+          <div className="flex md:col-span-2 flex-col gap-2 ">
+            <label className="">
+              Product Images:
+            </label>
+            
+        <div className="flex md:flex-row flex-col ">
+        {[0, 1, 2].map((index) => (
+  <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
+    <Dropzone
+      onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
+      accept="image/*"
+    >
+      {({ getRootProps, getInputProps }) => (
+        <div
+          {...getRootProps({
+            className: `${
+              previews[index] ? "bg-white" : "bg-black/40"
+            } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
+          })}
+        >
+          <input {...getInputProps()} />
+          {previews[index] ? (
+            <img
+              src={previews[index]}
+              alt={`Preview ${index + 1}`}
+              className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
+            />
+          ) : (
+            <div className="p-3">
+              <BsFillArrowUpCircleFill
+                style={{
+                  fontSize: "20px",
+                  marginBottom: "10px",
+                  color: "black",
+                }}
+                className="w-full flex mx-auto"
+              />
+              <p className="text-center text-black font-semibold">
+                Drag and drop an image here, or click to select file
+              </p>
+            </div>
+          )}
         </div>
-            {/* Product Information Section */}
-            <div className="grid grid-cols-2 gap-5">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">Product Name</h2>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">Price</h2>
-                <input
-                  type="text"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                />
-              </div>
-               <div>
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">Discount Price</h2>
-                <input
-                  type="text"
-                  value={discountedPrice}
-                  onChange={(e) => setDiscountPrice(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                />
-              </div>
-               
-            </div>
-
-            {/* Category Selection Section */}
-<div className="mt-5">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Categories</h2>
-  <CreatableSelect
-    isMulti
-    value={categories}
-    onChange={(newValue) => setCategories(newValue.map((item) => ({ value: item.value, label: item.label })))}
-    options={product.categories.map((category) => ({ value: category.category_id, label: category.name }))}
-    placeholder="Select or create categories"
-  />
-</div>
-
-            {/* Tags Input Section */}
-<div className="mt-5">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Tags</h2>
-  <CreatableSelect
-    isMulti
-    value={tags}
-    onChange={(newValue) => setTags(newValue.map((item) => ({ value: item.value, label: item.label })))}
-    options={product.sale_types.map((tag) => ({ value: tag.sale_type_id, label: tag.name }))}
-    placeholder="Select or create tags"
-  />
-</div>
-
-
-            {/* Description Textarea Section */}
-            <div className="mt-5">
-              <h2 className="text-xl font-semibold text-gray-700 mb-4">Description</h2>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2 h-48"
-              ></textarea>
-            </div>
-
-            {/* Update Post Button */}
-            <div className="mt-5 flex justify-end">
-              <button
-                // onClick={handleUpdatePost}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                disabled={isLoadingUpdatePostDetail}
-              >
-                {isLoadingUpdatePostDetail ? "Updating..." : "Update Post"}
-              </button>
-            </div>
-          </div>
-        </section>
       )}
-    </div>
+    </Dropzone>
+  </div>
+))}
+</div>
+
+       </div>
+              
+          <div className="md:col-span-2 flex justify-end">
+            <button
+              type="submit"
+              className="btn btn-outline-dark bg-blue-500 px-4 py-2 rounded-md"
+              disabled={isLoadingUpdatePostDetail || isLoadingAddPostDetail}
+            >
+              {isEditMode ? "Update Product" : "Add Product"}
+            </button>
+          </div>
+        </form>
+      )}
+    </section>
   );
 };
 

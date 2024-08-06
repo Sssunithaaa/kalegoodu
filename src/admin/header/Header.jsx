@@ -110,7 +110,8 @@ const Header = () => {
                 setActiveNavName={setActiveNavName}
               >
                 <Link to="/admin/products/manage">Manage all products</Link>
-                <button
+                <Link
+                to="/admin/products/add"
                   // disabled={isLoadingCreatePost}
                   className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
                   // onClick={() =>
@@ -118,7 +119,7 @@ const Header = () => {
                   // }
                 >
                   Add New Product
-                </button>
+                </Link>
                 {/* <Link to="/admin/categories/manage">Categories</Link> */}
               </NavItemCollapse>
 

@@ -14,22 +14,30 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
     background-color: #9e7f6b; /* Slightly darker color */
   }
 `;
+
+const url = import.meta.env.VITE_APP_URL
 const ModalCard = ({ product }) => {
-    const { addToCart,toggleCart } = useContext(CartContext);
-  const [quantity,setQuantity] = useState(1);
+    const { addToCart, toggleCart } = useContext(CartContext);
+  const [quantity, setQuantity] = useState(1);
+
   const handleAddToCart = () => {
-    addToCart({...product,quantity});
-   toggleCart()
-  window.scrollTo(0,0)
+    addToCart({ ...product, quantity });
+    toggleCart();
+    window.scrollTo(0, 0);
   };
-   const navigate = useNavigate()
+  console.log(product)
+  const navigate = useNavigate();
+
+  // Select the first image in the product.images array, or use a placeholder if none are available
+  const productImage = product.images.length > 0 ? `${url}${product.images[0].image}` : 'placeholder-image-url';
+  console.log(productImage)
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer mx-2">
-     <div onClick={()=> navigate(`/products/${product.name}`)}>
-       <img src={product.img} alt={product.name} className="w-full h-72 object-cover rounded-lg mb-4" />
-      <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-      <p className="text-gray-600">₹ {product.price}</p>
-     </div>
+    <div className="bg-white h-86 p-4 rounded-lg shadow-md cursor-pointer mx-2">
+      <div onClick={() => navigate(`/products/${product.name}`)}>
+        <img src={productImage} alt={product.name} className="w-full h-72 object-cover rounded-lg mb-4" />
+        <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+        <p className="text-gray-600">₹ {product.price}</p>
+      </div>
       <Button onClick={handleAddToCart} className='text-[16px]'>Add to cart</Button>
     </div>
   );

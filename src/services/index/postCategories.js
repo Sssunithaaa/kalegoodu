@@ -49,17 +49,17 @@ export const deleteCategory = async ({ slug, token }) => {
   }
 };
 
-export const createCategory = async ({ token, title }) => {
+export const createCategory = async (formData) => {
   try {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
       },
     };
 
     const { data } = await axios.post(
-      `/api/post-categories`,
-      { title },
+      `${url}/api/add_category/`,
+      formData,
       config
     );
     return data;
@@ -93,8 +93,9 @@ export const updateCategory = async ({ token, title, slug }) => {
 
 export const getSingleCategory = async ({ slug }) => {
   try {
-    const { data } = await axios.get(`/api/post-categories/${slug}`);
-    return data;
+    const { data } = await axios.get(`${url}/api/categories/${slug}/`);
+    
+    return data?.category;
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
