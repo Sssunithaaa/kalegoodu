@@ -1,4 +1,5 @@
 // Breadcrumbs.jsx
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
@@ -14,14 +15,15 @@ const BreadcrumbList = styled.ul`
   flex-direction: row;
   padding: 0;
   margin: 0;
-  margin-left:10px;
-  font-family:  'Amiri', serif;
+  margin-left: 10px;
+  font-family: 'Amiri', serif;
 `;
 
 const BreadcrumbItem = styled.li`
   display: flex;
   align-items: center;
- margin-left:2px;
+  margin-left: 2px;
+
   &:not(:last-child)::after {
     content: '>';
     margin: 0 0.5rem;
@@ -33,27 +35,31 @@ const BreadcrumbLink = styled(Link)`
   text-decoration: none;
   color: #949494;
   font-weight: bold;
-
- 
 `;
 
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
-
+  console.log(pathnames)
   return (
     <BreadcrumbNav>
       <BreadcrumbList>
-      
-          <div className='text-black lg:mt-0  opacity-80 text-[16px] font-roboto md:text-[16px] mr-[8px]' to="/"><Link to="/">Home&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp; </Link></div>
-   
+        <div className="text-black lg:mt-0 opacity-80 text-[16px] font-roboto md:text-[16px] mr-[8px]" to="/">
+          <Link to="/">Home&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;</Link>
+        </div>
+
         {pathnames.map((value, index) => {
+           const displayValue = decodeURIComponent(value).replace(/%20/g, '-');
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+
+          if(Number.isInteger(displayValue)){
+            return null
+          } 
           return (
             <div key={index} className="text-black opacity-80 text-[16px] font-roboto md:text-[16px]">
-          <Link to={to}>{value}</Link>
-          {index !== pathnames.length - 1 && <span className="px-3">&gt;</span>}
-        </div>
+              <Link to={to}>{displayValue}</Link>
+              {index !== pathnames.length - 1 && <span className="px-3">&gt;</span>}
+            </div>
           );
         })}
       </BreadcrumbList>

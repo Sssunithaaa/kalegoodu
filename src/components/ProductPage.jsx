@@ -4,41 +4,30 @@ import { DetailsSection, Slider } from './ProductCards';
 
 import '../App.css';
 import { img17, img18, img19, img20 } from '../assets/images'
+import { useQuery } from '@tanstack/react-query';
+import { getSingleProduct } from '../services/index/products';
+
 const thumbnails = [
   img17, img18, img19, img20
 ];
 function ProductPage() {
   const [cartCounter, setCartCounter] = useState(1);
-  const [product, setProduct] = useState(null);
-  const { slug } = useParams();
 
-  const productt = {
-  "brand": "Kalegoodu",
-  "name": "Flower pot",
-  "description": "Enhance your home with this exquisite flower pot, showcasing a blend of modern elegance and timeless beauty that complements any decor.",
-  "price": 125.00,
-  "discount": 50,
-  "originalPrice": 250.00,
- 
-}
+  const { id } = useParams();
+  console.log(id)
+  const { data: product, isLoading, error } = useQuery({
+  queryKey: ["products", id],
+  queryFn: () => getSingleProduct(id), // Pass a function reference
+});
+  const images = product?.images?.map((image)=>image.image)
+  
+  
+  
  useEffect(()=> {
   window.scrollTo(0,0)
  },[])
 
-  useEffect(() => {
-    // Fetch product data based on the slug
-    const fetchProduct = async () => {
-      try {
-        const response = await fetch(`/api/products/${slug}`);
-        const data = await response.json();
-        setProduct(data);
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      }
-    };
-
-    fetchProduct();
-  }, [slug]);
+ 
 
   return (
     <div className="overflow-y-hidden">
@@ -47,10 +36,10 @@ function ProductPage() {
       </div> */}
       <div className="font-kumbhsans md:max-w-[80%] md:mx-auto md:px-4 pt-[50px] md:pt-[0]">
         <div className="flex flex-col md:flex-row lg:items-start md:px-0 md:gap-6 md:py-20 items-center md:justify-center lg:px-14 lg:gap-16">
-          {!product ? (
+          {true ? (
             <>
-              <Slider images={thumbnails} />
-              <DetailsSection product={productt} cartCounter={cartCounter} setCartCounter={setCartCounter} />
+              <Slider images={images} />
+              <DetailsSection product={product} cartCounter={cartCounter} setCartCounter={setCartCounter} />
             </>
           ) : (
             <div>Loading...</div>

@@ -42,12 +42,12 @@ const MainPage = () => {
         <Title>Trendiest new arrivals</Title>
         <ProductCarousel products={products} />
       </div>
-      <div>
+      <div className='mt-6'>
         <Title>Best Sellers</Title>
         {/* <TiledCarousel /> Add the TiledCarousel component */}
          <ProductCarousel products={products} />
       </div>
-      <div>
+      <div className='mt-6'>
         <Testimonials />
       </div>
       <div>

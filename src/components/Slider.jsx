@@ -17,7 +17,6 @@ const ProductCarousel = ({}) => {
     queryKey:["products"],
     queryFn: getAllProducts
    })
-   console.log(products)
 
   const settings = {
     dots: true,
@@ -49,7 +48,6 @@ const ProductCarousel = ({}) => {
       },
     ],
   };
-  console.log(products?.products)
   return (
     <div className="px-10 mx-auto my-5 relative">
       <Slider {...settings}>

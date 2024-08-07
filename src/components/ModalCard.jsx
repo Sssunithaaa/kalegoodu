@@ -25,17 +25,19 @@ const ModalCard = ({ product }) => {
     toggleCart();
     window.scrollTo(0, 0);
   };
-  console.log(product)
   const navigate = useNavigate();
 
-  // Select the first image in the product.images array, or use a placeholder if none are available
+ 
   const productImage = product.images.length > 0 ? `${url}${product.images[0].image}` : 'placeholder-image-url';
-  console.log(productImage)
+   const displayValue = product?.name.replaceAll( " ","-");
+   console.log(displayValue)
+
   return (
     <div className="bg-white h-86 p-4 rounded-lg shadow-md cursor-pointer mx-2">
-      <div onClick={() => navigate(`/products/${product.name}`)}>
+
+      <div onClick={() => navigate(`/products/${product?.product_id}/${displayValue}`)}>
         <img src={productImage} alt={product.name} className="w-full h-72 object-cover rounded-lg mb-4" />
-        <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+        <h3 className="text-lg font-semibold h-12 mb-2">{product.name}</h3>
         <p className="text-gray-600">₹ {product.price}</p>
       </div>
       <Button onClick={handleAddToCart} className='text-[16px]'>Add to cart</Button>

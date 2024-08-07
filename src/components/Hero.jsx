@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { img21, img22, img23 } from '../assets/images'; // Import your images
 
+// Keyframes for slide animation
 const slide = keyframes`
   0% { transform: translateX(0); }
   33% { transform: translateX(0); }
@@ -11,6 +11,7 @@ const slide = keyframes`
   100% { transform: translateX(-200%); }
 `;
 
+// Hero section styling
 const HeroSection = styled.div`
   display: flex;
   justify-content: center;
@@ -27,25 +28,27 @@ const HeroSection = styled.div`
   }
 `;
 
+// Image slider styling
 const ImageSlider = styled.div`
   display: flex;
   position: absolute;
-  width: 300%;
+  width: ${({ imageCount }) => `${100 * imageCount}%`}; // Dynamically set width based on image count
   animation: ${slide} 18s linear infinite;
 `;
 
+// Individual image wrapper styling
 const ImageWrapper = styled.div`
   flex: 1 0 100%;
   height: 90vh;
-  background-size: contain; /* Or use 'contain' depending on your preference */
+  background-size: cover; // Ensure images cover the wrapper
   background-position: center;
- 
+
   @media (max-width: 768px) {
-   max-height: 85vh;
-    // padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    max-height: 85vh;
   }
 `;
 
+// Content styling for hero section
 const HeroContent = styled.div`
   max-width: 600px;
   z-index: 1;
@@ -55,6 +58,7 @@ const HeroContent = styled.div`
   }
 `;
 
+// Title styling
 const HeroTitle = styled.h1`
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -66,6 +70,7 @@ const HeroTitle = styled.h1`
   }
 `;
 
+// Subtitle styling
 const HeroSubtitle = styled.p`
   font-size: 1.5rem;
   margin-bottom: 2rem;
@@ -76,12 +81,13 @@ const HeroSubtitle = styled.p`
   }
 `;
 
+// Button styling
 const HeroButton = styled.a`
   display: inline-block;
   padding: 0.75rem 1.5rem;
   font-size: 1.25rem;
   color: #fff;
-  background-color: #ff6347; /* Customize your button color */
+  background-color: #ff6347;
   border: none;
   border-radius: 5px;
   text-decoration: none;
@@ -98,13 +104,41 @@ const HeroButton = styled.a`
   }
 `;
 
+// Hero component
 const Hero = () => {
+  // State to store banner images
+  const [images, setImages] = useState([]);
+  const baseUrl = import.meta.env.VITE_APP_URL;
+  // Fetch banner images from API
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/api/banner_images/`);
+        const data = await response.json();
+        const bannerImages = data.banner_images.map(image => ({
+          ...image,
+          image: baseUrl + image.image // Concatenate base URL with image path
+        }));
+        setImages(bannerImages);
+        console.log(bannerImages)
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
   return (
     <HeroSection>
-      <ImageSlider>
-        <ImageWrapper style={{ backgroundImage: `url(${img21})` }} />
-        <ImageWrapper style={{ backgroundImage: `url(${img22})` }} />
-        <ImageWrapper style={{ backgroundImage: `url(${img23})` }} />
+      <ImageSlider imageCount={images.length}>
+        {/* Map over images to create ImageWrapper components */}
+        {images.map((img, index) => (
+          <ImageWrapper
+            key={index}
+            style={{ backgroundImage: `url(${img.image})` }}
+          />
+        ))}
       </ImageSlider>
       <HeroContent>
         <HeroTitle>Transform Your Space</HeroTitle>

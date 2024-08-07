@@ -14,9 +14,10 @@ export const getAllProducts = async () => {
   }
 };
 
-export const getSingleProduct = async ({ slug }) => {
+export const getSingleProduct = async (id) => {
   try {
-    const response = await axios.get(`${url}/api/products/${slug}/`);
+    const response = await axios.get(`${url}/api/products/${id}/`);
+ 
     return response.data.product;
   } catch (error) {
     if (error.response && error.response.data.message)
