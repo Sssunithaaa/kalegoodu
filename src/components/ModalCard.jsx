@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import {img1} from '../assets/images'
 const Button = styled.button`
   width: 100%;
   height: 45px;
@@ -28,9 +29,9 @@ const ModalCard = ({ product }) => {
   const navigate = useNavigate();
 
  
-  const productImage = product.images.length > 0 ? `${url}${product.images[0].image}` : 'placeholder-image-url';
+  const productImage = product?.images?.length > 0 ? `${url}${product?.images[0]?.image}` : img1;
    const displayValue = product?.name.replaceAll( " ","-");
-   console.log(displayValue)
+ 
 
   return (
     <div className="bg-white h-86 p-4 rounded-lg shadow-md cursor-pointer mx-2">

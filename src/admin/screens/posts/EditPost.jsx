@@ -80,7 +80,7 @@ const EditPost = () => {
       setPreviews(
         product.images?.map((image) => `${BURL}${image.image}`) // Assuming image.image is a URL string
       );
-      console.log(previews)
+
     }
   }, [product]);
 
@@ -104,7 +104,7 @@ const EditPost = () => {
     },
     onError: (error) => {
       toast.error("Error updating post: " + error.message); // Show error toast
-      console.log(error);
+
     },
   });
 
@@ -124,7 +124,7 @@ const EditPost = () => {
     },
     onError: (error) => {
       toast.error("Error adding product: " + error.message);
-      console.log(error);
+     
     },
   });
 
@@ -159,11 +159,13 @@ const handleSubmit = async (e) => {
   const categoryObjects = categories.map(category => (1));
 
   formData.append("categories", JSON.stringify(categoryObjects));
-
-  // Append sale_types (tags) as JSON
+  // formData.append("category",1)
+  
+  
   const tagObjects = tags.map(tag => (1));
 
   formData.append("sale_types", JSON.stringify(tagObjects));
+  // formData.append("sale_type",1)
 
   // Append image files
   files.forEach(file => {

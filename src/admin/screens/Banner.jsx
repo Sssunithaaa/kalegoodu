@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
-import { img1, img10, img2 } from '../../assets/images';
-import Title from '../../components/Title';
 
+import styled from 'styled-components';
+import { useQuery } from '@tanstack/react-query';
+import Dropzone from "react-dropzone";
+import { BsFillArrowUpCircleFill } from "react-icons/bs";
+import axios from 'axios';
 const AdminContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,75 +51,127 @@ const Button = styled.button`
   }
 `;
 
-const DeleteButton = styled.button`
-  padding: 0.3rem 1rem;
-  background-color: #ff6347;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px 0;
-  &:hover {
-    background-color: #ff4500;
-  }
-`;
+
 
 const Banner = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [images, setImages] = useState([img1,img10,img2]);
+   const [files, setFiles] = useState([null, null, null]);
+  const [previews, setPreviews] = useState([null, null, null]);
+
+  const handleFileChange = (acceptedFiles, index) => {
+    const updatedFiles = [...files];
+    updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone
+    setFiles(updatedFiles);
+
+    const updatedPreviews = [...previews];
+    updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
+    setPreviews(updatedPreviews);
+  };
+
+  const baseUrl = import.meta.env.VITE_APP_URL;
+  const { data: banner, isLoading, isError } = useQuery({
+    queryKey: ['banner'],
+    queryFn: async () => {
+      const response = await fetch(`${baseUrl}/api/banner_images/`);
+      const data = await response.json();
+      return data;
+    },
+  });
 
   useEffect(() => {
-    // Fetch images from the backend
-    axios.get('/api/images')
-      .then(response => {
-        // setImages(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching images:', error);
-      });
-  }, []);
+    if (banner) {
+      const bannerImages = banner.banner_images.map((image) => ({
+        ...image,
+        image: baseUrl + image.image, // Concatenate base URL with image path
+      }));
+      setPreviews(bannerImages.map((image) => image.image)); // Update previews with URLs
+    }
+  }, [banner]);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleUpload = () => {
-    if (!selectedFile) return;
+  const handleUpload = async (e) => {
+    e.preventDefault();
 
     const formData = new FormData();
-    formData.append('image', selectedFile);
-
-    axios.post('/api/upload', formData)
-      .then(response => {
-        console.log('File uploaded successfully:', response.data);
-        setImages([...images, response.data.imageUrl]); // Assuming the response contains the image URL
-      })
-      .catch(error => {
-        console.error('Error uploading file:', error);
-      });
-  };
-
-  const handleDelete = (image) => {
-    // Implement delete functionality here
-    console.log('Delete image:', image);
+    
+    
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+      files.forEach(async (file) => {
+      if (file) {
+        console.log(file)
+        formData.append('title',"Sample image")
+        formData.append('image', file); 
+        const response = await axios.post(
+        `${baseUrl}/api/banner_images/`,
+        formData,
+        config
+      );
+      console.log(response.data);
+      }
+    });
+      
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <AdminContainer>
-      <Title>Upload New Image</Title>
-      <FileInputContainer>
-        <FileInput type="file" onChange={handleFileChange} />
-      </FileInputContainer>
-      <Button onClick={handleUpload}>Upload</Button>
-      <h2 className="mt-5 text-[18px]">Uploaded Images</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {images.map((image, index) => (
-          <div key={index} style={{ textAlign: 'center' }}>
-            <ImagePreview src={image} alt={`Uploaded ${index + 1}`} />
-            <DeleteButton onClick={() => handleDelete(image)}>Delete</DeleteButton>
+      <form onSubmit={handleUpload}>
+        <div className="flex md:col-span-2  flex-col gap-2 ">
+          <label className="text-lg">Product Images:</label>
+
+          <div className="flex md:flex-row flex-col ">
+            {[0, 1, 2].map((index) => (
+              <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
+                <Dropzone
+                  onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
+                  accept="image/*"
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      {...getRootProps({
+                        className: `${
+                          previews[index] ? 'bg-white' : 'bg-black/20'
+                        } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
+                      })}
+                    >
+                      <input {...getInputProps()} />
+                      {previews[index] ? (
+                        <img
+                          src={previews[index]}  // Correct src attribute
+                          alt={`Preview ${index + 1}`}
+                          className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
+                        />
+                      ) : (
+                        <div className="p-3">
+                          <BsFillArrowUpCircleFill
+                            style={{
+                              fontSize: '16px',
+                              marginBottom: '10px',
+                              color: 'black',
+                            }}
+                            className="w-full flex mx-auto"
+                          />
+                          <p className="text-center text-black font-medium">
+                            Drag and drop an image here, or click to select file
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </Dropzone>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+         <div className='flex mx-auto'>
+           <Button type="submit">Upload Images</Button>
+         </div>
+        </div>
+      </form>
     </AdminContainer>
   );
 };

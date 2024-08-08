@@ -14,7 +14,7 @@ function ProductPage() {
   const [cartCounter, setCartCounter] = useState(1);
 
   const { id } = useParams();
-  console.log(id)
+  
   const { data: product, isLoading, error } = useQuery({
   queryKey: ["products", id],
   queryFn: () => getSingleProduct(id), // Pass a function reference

@@ -13,22 +13,22 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
   ];
 
   const handleOnSearch = (string, results) => {
-    console.log(string, results);
+
   };
 
   const handleOnHover = (result) => {
-    console.log(result);
+   
   };
   const navigate = useNavigate()
   const handleOnSelect = (item) => {
-    console.log(item);
+   
     toggleSearchbar();
     navigate(`/product/${item.name}`)
 
   };
 
   const handleOnFocus = () => {
-    console.log('Focused');
+
   };
 
   const formatResult = (item) => {

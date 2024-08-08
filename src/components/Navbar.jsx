@@ -22,7 +22,7 @@ const navButtons = [
   { name: "Contact us", href: "/contact-us" },
   // { name: "About us", href: "/about-us" }
 ];
-
+const baseUrl = import.meta.env.VITE_APP_URL
 const SideBar = ({ isCartVisible, toggleCart }) => {
   const { cartItems, removeFromCart } = useContext(CartContext);
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
             <>
               {cartItems.map(item => (
                 <div key={item.id} className="flex justify-between items-center border-b py-4">
-                  <img src={item.img} alt={item.name} className="w-24 h-24 object-cover" />
+                  <img src={baseUrl+item.images[0].image} alt={item.name} className="w-24 h-24 object-cover" />
                   <div className="ml-4 flex-1">
                     <h2 className="text-md text-left font-bold">{item.name}</h2>
                     <div className="flex items-center">

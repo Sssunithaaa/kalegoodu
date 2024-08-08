@@ -30,7 +30,7 @@ export const useDataTable = ({
       },
       onError: (error) => {
         toast.error(error.message);
-        console.log(error);
+    
       },
     });
 

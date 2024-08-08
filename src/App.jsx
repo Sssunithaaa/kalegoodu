@@ -14,15 +14,16 @@ import ScrollToTop from './components/ScrollToTop';
 import ManagePosts from './admin/screens/posts/ManagePosts';
 import Banner from './admin/screens/Banner';
 import AboutUs from './components/AboutUs';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
+
 import EditPost from './admin/screens/posts/EditPost';
+import ManageComments from './admin/screens/comments/ManageComments';
+import ManageSaleType from './admin/screens/saletypes/ManageSaleType';
 
 // Load your publishable key from your Stripe account
-const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
+// const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
 const App = () => {
   return (
-    <Elements stripe={stripePromise}>
+    // <Elements stripe={stripePromise}>
       <div>
       <ScrollToTop />
       <MainLayout>
@@ -30,7 +31,7 @@ const App = () => {
         {/* Non-admin routes with MainLayout */}
         <Route>
           <Route path="/" element={<MainPage />} />
-          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<Products />} />
           <Route path="/products/:id/:name" element={<ProductPage />} />
           
           <Route path="/checkout" element={<CheckOut />} />
@@ -40,6 +41,8 @@ const App = () => {
         {/* Admin routes with AdminLayout */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
+          <Route path='sale-types/manage' element={<ManageSaleType/>}/>
+          <Route path='comments/manage' element={<ManageComments/>}/>
           <Route path="products/manage" element={<ManagePosts />} />
           <Route path="products/manage/edit/:slug" element={<EditPost/>}/>
            <Route path="products/add" element={<EditPost/>}/>
@@ -51,7 +54,7 @@ const App = () => {
       </Routes>
       </MainLayout>
     </div>
-    </Elements>
+    // </Elements>
   );
 };
 

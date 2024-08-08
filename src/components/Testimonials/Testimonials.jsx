@@ -1,7 +1,8 @@
 import React from 'react';
 import Masonry from 'react-masonry-css';
 import Testimonial from './Testimonial';
-
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 const testimonialsData = [
   {
     text: "Laborum quis quam. Dolorum et ut quod quia. Voluptas numquam delectus nihil. Aut enim doloremque et ipsam.",
@@ -60,19 +61,29 @@ const Testimonials = () => {
     1100: 2,
     700: 1
   };
+  const baseUrl = import.meta.env.VITE_APP_URL
+ const {data,isLoading} = useQuery({
+  queryKey: ["comments"],
+  queryFn: async () => {
+    const response = await axios.get(`${baseUrl}/api/comments/`);
+    
+    return response.data?.comments
+  }
+ })
+
 
   return (
     // <div>
      <div className="bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12"> 
       <div className="container mx-auto px-4">
         <h2 className="text-4xl font-bold text-center text-black mb-2">Testimonials</h2>
-        <p className="text-xl text-center text-gray-600 mb-2">We have worked with thousands of amazing people</p>
+        <p className="text-xl text-center text-grsay-600 mb-2">We have worked with thousands of amazing people</p>
         <Masonry
           breakpointCols={breakpointColumnsObj}
           className="flex -ml-4"
           columnClassName="pl-4 bg-clip-padding"
         >
-          {testimonialsData.map((testimonial, index) => (
+          {data?.map((testimonial, index) => (
             <Testimonial key={index} {...testimonial} />
           ))}
         </Masonry>

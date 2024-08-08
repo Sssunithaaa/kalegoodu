@@ -76,12 +76,12 @@ const EditCategories = () => {
       },
       onError: (error) => {
         toast.error(error.message);
-        console.log(error);
+       
       },
     });
 const [files, setFiles] = useState([null, null, null]);
 const [previews, setPreviews] = useState([null, null, null]);
-console.log(files)
+
 const handleFileChange = (acceptedFiles, index) => {
   const updatedFiles = [...files];
   updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone
@@ -106,7 +106,7 @@ const handleFileChange = (acceptedFiles, index) => {
       },
       onError: (error) => {
         toast.error(error.message);
-        console.log(error);
+     
       },
     });
 

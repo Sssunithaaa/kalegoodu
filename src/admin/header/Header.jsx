@@ -131,6 +131,22 @@ const Header = () => {
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
+              <NavItem
+                title="Sale Types"
+                link="/admin/sale-types/manage"
+                icon={<MdDashboard className="text-xl" />}
+                name="sale-types"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              />
+              <NavItem
+                title="Testimonials"
+                link="/admin/comments/manage"
+                icon={<MdDashboard className="text-xl" />}
+                name="comments"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              />
             </div>
           </div>
         </div>

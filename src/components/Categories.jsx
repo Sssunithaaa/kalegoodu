@@ -21,16 +21,17 @@ const Categories = () => {
   };
 
   const handleCategoryClick = (category) => {
-    navigate(`/products/?category=${category.name}`);
+    const url = category.name.replaceAll(" ","-")
+    navigate(`/products/${category?.category_id}/?category=${url}`);
   };
 
-  // Function to get a random image based on the current day
+
   const getDailyRandomImage = (images) => {
     const currentDate = new Date();
-    const dayOfYear = Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 0)) / 86400000); // Get the day of the year
-    const randomIndex = dayOfYear % images.length; // Use modulo to cycle through images
+    const dayOfYear = Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 0)) / 86400000); 
+    const randomIndex = dayOfYear % images.length; 
     
-    return images[randomIndex].image;
+    return images? images[randomIndex]?.image : null;
   };
   const url = import.meta.env.VITE_APP_URL
   return (

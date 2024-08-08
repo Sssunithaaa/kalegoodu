@@ -57,7 +57,7 @@ const ManageProducts = () => {
   const isLoading = false;
    const isFetching = false;
     const isLoadingDeleteData = false;
-    console.log(products)
+  
   return (
     <DataTable
       pageTitle="Manage Products"

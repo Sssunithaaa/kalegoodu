@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import ReactSlider from 'react-slider';
-import { img, img1, img2, img3, img4 } from '../assets/images';
+
+
 import { Box, TextField, InputAdornment } from '@mui/material';
-const Sidebar = () => {
+const Sidebar = ({setSprice,setEprice}) => {
   
 
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -16,21 +16,21 @@ const Sidebar = () => {
     );
   };
 
-  const handlePriceChange = (newRange) => {
-    setPriceRange(newRange);
-  };
+ 
 
   const handlePriceInputChange = (e, index) => {
     const value = parseInt(e.target.value, 10);
     setPriceRange((prev) => {
       const newRange = [...prev];
       newRange[index] = value;
+      setSprice(newRange[0]);
+    setEprice(newRange[1])
       return newRange;
     });
   };
 
   return (
-    <div className="flex flex-col p-4 w-64">
+    <div className="flex flex-col z-30 p-4 w-64">
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-2">Filter</h3>
         <div className="mb-4">

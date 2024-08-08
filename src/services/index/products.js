@@ -67,13 +67,14 @@ export const createProduct = async ( formData ) => {
         'Content-Type': 'multipart/form-data',
       },
     };
-   console.log(formData)
-    const { data } = await axios.post(`${url}/api/products/`, formData,config);
+   
+    const { data } = await axios.post(`${url}/api/add_product/`, formData,config);
+    
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
-    console.log(error)
+    
     throw new Error(error.message);
   }
 };

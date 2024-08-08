@@ -5,7 +5,7 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    console.log('ScrollToTop triggered');
+    
     setTimeout(() => {
       window.scrollTo(0, 0);
       document.documentElement.scrollTop = 0; // For most browsers

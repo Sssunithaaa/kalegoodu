@@ -18,11 +18,12 @@ export default function ProductCard({product}) {
     addToCart({...product,quantity})
     setIsCartVisible(true);
   }
+  const baseUrl = import.meta.env.VITE_APP_URL
   return (
     <Card className="w-full max-w-[22rem] shadow-lg">
       <CardHeader className="p-0" floated={false} color="blue-gray">
         <img
-          src={product.img}
+          src={baseUrl + product.images[0]?.image}
           alt="ui/ux review check"
           className="w-full h-full p-0"
         />
@@ -44,7 +45,7 @@ export default function ProductCard({product}) {
         </IconButton>
       </CardHeader>
       <CardBody className="py-4">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 h-20 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray" className="font-medium">
             {product.name}
           </Typography>
@@ -64,7 +65,7 @@ export default function ProductCard({product}) {
                 clipRule="evenodd"
               />
             </svg>
-            {product.rating}
+            {product?.rating ? 5 : 5}
           </Typography>
         </div>
         {/* <Typography color="black">

@@ -40,7 +40,7 @@ const BreadcrumbLink = styled(Link)`
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
-  console.log(pathnames)
+ 
   return (
     <BreadcrumbNav>
       <BreadcrumbList>
@@ -52,7 +52,7 @@ const Breadcrumbs = () => {
            const displayValue = decodeURIComponent(value).replace(/%20/g, '-');
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
 
-          if(Number.isInteger(displayValue)){
+          if(Number.isInteger(Number(displayValue))){
             return null
           } 
           return (

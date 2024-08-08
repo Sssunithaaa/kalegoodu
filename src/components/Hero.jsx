@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-
+import { useQuery } from '@tanstack/react-query';
 // Keyframes for slide animation
 const slide = keyframes`
   0% { transform: translateX(0); }
@@ -40,6 +40,7 @@ const ImageSlider = styled.div`
 const ImageWrapper = styled.div`
   flex: 1 0 100%;
   height: 90vh;
+  background-repeat: no-repeat;
   background-size: cover; // Ensure images cover the wrapper
   background-position: center;
 
@@ -110,33 +111,31 @@ const Hero = () => {
   const [images, setImages] = useState([]);
   const baseUrl = import.meta.env.VITE_APP_URL;
   // Fetch banner images from API
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/api/banner_images/`);
+  
+  const {data: banner,isLoading,isError} = useQuery({
+    queryKey: ["banner"],
+    queryFn:async ()=> {
+   const response = await fetch(`${baseUrl}/api/banner_images/`);
         const data = await response.json();
-        const bannerImages = data.banner_images.map(image => ({
+        return data
+        
+    }
+  })
+  useEffect(()=> {
+    const bannerImages = banner?.banner_images?.map(image => ({
           ...image,
-          image: baseUrl + image.image // Concatenate base URL with image path
+          image: baseUrl + image?.image // Concatenate base URL with image path
         }));
         setImages(bannerImages);
-        console.log(bannerImages)
-      } catch (error) {
-        console.error('Error fetching images:', error);
-      }
-    };
-
-    fetchImages();
-  }, []);
-
+  },[banner])
   return (
     <HeroSection>
-      <ImageSlider imageCount={images.length}>
+      <ImageSlider imageCount={images?.length}>
         {/* Map over images to create ImageWrapper components */}
-        {images.map((img, index) => (
+        {images?.map((img, index) => (
           <ImageWrapper
             key={index}
-            style={{ backgroundImage: `url(${img.image})` }}
+            style={{ backgroundImage: `url(${img?.image})` }}
           />
         ))}
       </ImageSlider>
