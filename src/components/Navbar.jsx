@@ -25,16 +25,16 @@ const navButtons = [
 
 const baseUrl = import.meta.env.VITE_APP_URL
 const SideBar = ({ isCartVisible, toggleCart }) => {
-  const { cartItems, removeFromCart } = useContext(CartContext);
+  const { cartItems, removeFromCart,increaseQuantity,decreaseQuantity ,cartItemCount,cartTotal} = useContext(CartContext);
   const navigate = useNavigate();
 
   return (
     <div
-      className={`fixed top-0 right-0 sm:w-[400px] w-full md:max-w-[450px] bg-white h-full shadow-md transition-transform transform z-[10000001] ${
+      className={`fixed top-0 right-0 overflow-y-auto sm:w-[400px] w-full md:max-w-[450px] bg-white h-full shadow-md transition-transform transform z-[10000001] ${
         isCartVisible ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
-      <div className="p-4">
+      <div className="p-4 overflow-y-auto">
         <button className="text-2xl mb-4" onClick={toggleCart}>
           &times;
         </button>
@@ -55,21 +55,21 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
                     <div className="flex items-center">
                       <span className="text-gray-500">Quantity</span>
                       <div className="flex items-center ml-2 border px-2 py-1">
-                        <button className="text-md">{"<"}</button>
+                        <button className="text-md" onClick={()=>decreaseQuantity(item.product_id)}>{"<"}</button>
                         <span className="mx-2 text-left">{item.quantity}</span>
-                        <button className="text-md">{">"}</button>
+                        <button className="text-md" onClick={()=>increaseQuantity(item.product_id)}>{">"}</button>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-md font-semibold">€{item.price}</p>
-                    <button onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-700">&times;</button>
+                    <p className="text-md font-semibold">₹{item.price}</p>
+                    <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 hover:text-red-700">&times;</button>
                   </div>
                 </div>
               ))}
               <div className="border-t py-4 flex justify-between items-center">
                 <span className="text-md font-bold">TOTAL:</span>
-                <span className="text-md font-bold">₹1858</span>
+                <span className="text-md font-bold">₹{cartTotal}</span>
               </div>
               <button onClick={() => {
                 toggleCart();
