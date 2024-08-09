@@ -21,7 +21,7 @@ const DataTable = ({
       <h1 className="text-2xl font-semibold">{pageTitle}</h1>
 
       <div className="w-full px-4 mx-auto">
-        <div className="py-8">
+        <div className="pt-8">
           <div className="flex flex-row justify-between w-full mb-1 sm:mb-0">
             <h2 className="text-2xl leading-tight">{dataListName}</h2>
             <div className="text-end">
@@ -82,14 +82,13 @@ const DataTable = ({
                   )}
                 </tbody>
               </table>
-              {!isLoading && (
+              {/* {!isLoading && (
                 <Pagination
                   onPageChange={(page) => setCurrentPage(page)}
                   currentPage={currentPage}
                   totalPageCount={5}
-                  // totalPageCount={JSON.parse(headers?.["x-totalpagecount"])}
                 />
-              )}
+              )} */}
             </div>
           </div>
         </div>

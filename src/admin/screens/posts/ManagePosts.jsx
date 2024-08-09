@@ -1,64 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from '../../DataTable';
-import { useDataTable } from '../../hooks/useDataTable';
-import { deleteProduct } from '../../../services/index/products'; 
-import axios from 'axios';
 
-const API_URL = 'https://kalegoodupractice.pythonanywhere.com/api'; // Base URL
+import axios from 'axios';
+import Pagination from '../../../components/Pagination';
+import { useQuery } from '@tanstack/react-query';
+import { getAllProducts } from '../../../services/index/products';
 
 const ManageProducts = () => {
-  // const {
-  //   currentPage,
-  //   searchKeyword,
-  //   isLoading,
-  //   isFetching,
-  //   isLoadingDeleteData,
-  //   queryClient,
-  //   searchKeywordHandler,
-  //   submitSearchKeywordHandler,
-  //   deleteDataHandler,
-  //   setCurrentPage,
-  // } = useDataTable();
 
-  const [products, setProducts] = useState([]);
-  const [images, setImages] = useState([]);
+ const baseUrl = import.meta.env.VITE_APP_URL;
 
-  useEffect(() => {
-    // Fetch products and images from the API
-    const fetchData = async () => {
-      try {
-        const [productResponse, imageResponse] = await Promise.all([
-          axios.get(`${API_URL}/products/`),
-          axios.get(`${API_URL}/product_images/`),
-        ]);
 
-        const { products } = productResponse.data;
-        const { product_images } = imageResponse.data;
+  const [products,setProducts] = useState([])
+const PAGE_SIZE = 5;
 
-        // Map images to products
-        const productsWithImages = products.map((product) => {
-          const productImages = product_images.filter(
-            (image) => image.product === product.product_id
-          );
-          return { ...product, images: productImages };
-        });
-
-        setProducts(productsWithImages);
-        setImages(product_images);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(1);
+    const {data,isLoading} = useQuery({
+    queryKey: ["products"],
+    queryFn: getAllProducts
+  })
+  
+  useEffect(()=> {
+    setProducts(data)
+  },[data])
+ 
   const url = import.meta.env.VITE_APP_URL
-  const isLoading = false;
+  
    const isFetching = false;
     const isLoadingDeleteData = false;
+  const totalPages = Math.ceil(products?.length / PAGE_SIZE);
+
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedData = products?.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   
   return (
+    <div className='overflow-y-auto'>
     <DataTable
       pageTitle="Manage Products"
       dataListName="Products"
@@ -73,13 +55,13 @@ const ManageProducts = () => {
       // setCurrentPage={setCurrentPage}
       // currentPage={currentPage}
     >
-      {products.map((product) => (
+      {paginatedData?.map((product) => (
         <tr key={product.product_id}>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex items-center">
               <div className="flex flex-wrap gap-x-3">
                 {
-                  product.images.map((image)=> (
+                  product?.images.map((image)=> (
                    
                   <img
                     src={
@@ -165,6 +147,10 @@ const ManageProducts = () => {
         </tr>
       ))}
     </DataTable>
+    {!isLoading && <Pagination  onPageChange={handlePageChange}
+          currentPage={currentPage}
+          totalPageCount={totalPages}/>}
+    </div>
   );
 };
 

@@ -18,6 +18,7 @@ import AboutUs from './components/AboutUs';
 import EditPost from './admin/screens/posts/EditPost';
 import ManageComments from './admin/screens/comments/ManageComments';
 import ManageSaleType from './admin/screens/saletypes/ManageSaleType';
+import AddTestimonialForm from './admin/screens/comments/AddComment';
 
 // Load your publishable key from your Stripe account
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
@@ -43,6 +44,7 @@ const App = () => {
           <Route index element={<Admin />} />
           <Route path='sale-types/manage' element={<ManageSaleType/>}/>
           <Route path='comments/manage' element={<ManageComments/>}/>
+            <Route path='comments/add' element={<AddTestimonialForm/>}/>
           <Route path="products/manage" element={<ManagePosts />} />
           <Route path="products/manage/edit/:slug" element={<EditPost/>}/>
            <Route path="products/add" element={<EditPost/>}/>

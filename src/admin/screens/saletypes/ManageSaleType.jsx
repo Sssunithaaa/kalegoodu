@@ -1,13 +1,34 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import DataTable from '../../DataTable'
 import { useQuery } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
+import AddSaleTypeDialog from './AddSaleType'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import Pagination from '../../../components/Pagination'
+const Button = styled.button`
+  width: 200px;
+  height: 45px;
+  background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 79.6476490172856% 29.76095796117111%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 80.73001484309323% 71.025398036287%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 74.71274406155253% 92.17335404339366%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 41.223261123520594% 30.917984618376227%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 37.9520129096355% 60.069337551017334%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 67.69235280932718% 23.91998376199933%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 93.68255347726229% 18.89111181278711%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 13.215737665881534% 45.21500942396648%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 61.18443079724643% 88.41983116607912%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 10.575958325731749% 96.72193910560092%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 75.42341628599371% 53.31130723888271%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%);
+  background-color: #4CAF50;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #45a049;
+  }
+`;
 const ManageSaleType = () => {
+   const [sales,setSales] = useState([])
       const baseUrl = import.meta.env.VITE_APP_URL
+      const PAGE_SIZE = 5;
+
+  const [currentPage, setCurrentPage] = useState(1);
  const {data,isLoading,isFetching} = useQuery({
   queryKey: ["saletypes"],
   queryFn: async () => {
@@ -16,6 +37,48 @@ const ManageSaleType = () => {
     return response.data?.sale_types
   }
  })
+ useEffect(()=> {
+  setSales(data)
+ },[data])
+ const [searchKeyword, setSearchKeyword] = useState("");
+
+const searchKeywordOnChangeHandler = (event) => {
+  setSearchKeyword(event.target.value);
+};
+const searchKeywordOnSubmitHandler = (event) => {
+  event.preventDefault();
+  
+
+  if (!searchKeyword || searchKeyword.trim() === "") {
+
+    setSales(sales);
+  } else {
+
+    const filteredSales = sales.filter((sale) =>
+      sale.name.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+    setSales(filteredSales);
+  }
+};
+
+
+
+ const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Handle opening the dialog
+  const handleOpenDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // Handle closing the dialog
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  // Callback when form is submitted successfully
+  const handleFormSubmit = () => {
+    console.log("Sale type added successfully!");
+  };
    const { mutate: deleteSaletypeMutation, isLoading: isLoadingDeleteData } =
     useMutation({
       mutationFn: async ()=> {
@@ -30,21 +93,42 @@ const ManageSaleType = () => {
         console.error("Error deleting sale type:", error.message);
       },
 });
+const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
+
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedData = sales?.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   return (
     <div>
+        <div>
+      <Button onClick={handleOpenDialog}>
+        Add New Sale Type
+      </Button>
+      <AddSaleTypeDialog
+        open={dialogOpen}
+        handleClose={handleCloseDialog}
+        onSubmit={handleFormSubmit}
+      />
+    </div>
        <DataTable
-          pageTitle="Sale types"
+          pageTitle=""
           dataListName="Sale types"
           searchInputPlaceHolder="Sale type..."
-         
+          searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
+          searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
           tableHeaderTitleList={["Name", ""]}
+          searchKeyword={searchKeyword}
           isLoading={isLoading}
           isFetching={isFetching}
           data={data}
           
         >
-             {data?.map((sale)=>(
-        <tr>
+             {paginatedData?.map((sale)=>(
+        <tr key={sale.sale_type_id}>
              <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                 <div className="flex items-center">
                   <p className="text-gray-900 whitespace-no-wrap">
@@ -76,6 +160,11 @@ const ManageSaleType = () => {
               </tr>
              ))}
             </DataTable> 
+            {!isLoading && (
+              <Pagination onPageChange={handlePageChange}
+          currentPage={currentPage}
+          totalPageCount={totalPages}/>
+            )}
     </div>
   )
 }

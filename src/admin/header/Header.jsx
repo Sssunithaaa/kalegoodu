@@ -139,14 +139,27 @@ const Header = () => {
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
-              <NavItem
+             
+               <NavItemCollapse
                 title="Testimonials"
-                link="/admin/comments/manage"
                 icon={<MdDashboard className="text-xl" />}
-                name="comments"
+                name="Testimonials"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
-              />
+              >
+                <Link to="/admin/comments/manage">Manage all testimonials</Link>
+                <Link
+                to="/admin/comments/add"
+                  // disabled={isLoadingCreatePost}
+                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                  // onClick={() =>
+                  //   handleCreateNewPost({ token: userState.userInfo.token })
+                  // }
+                >
+                  Add New Testimonial
+                </Link>
+                {/* <Link to="/admin/categories/manage">Categories</Link> */}
+              </NavItemCollapse>
             </div>
           </div>
         </div>
