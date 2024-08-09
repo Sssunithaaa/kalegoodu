@@ -23,7 +23,7 @@ export default function ProductCard({product}) {
     <Card className="w-full max-w-[22rem] shadow-lg">
       <CardHeader className="p-0" floated={false} color="blue-gray">
         <img
-          src={baseUrl + product.images[0]?.image}
+          src={baseUrl + product?.images[0]?.image}
           alt="ui/ux review check"
           className="w-full h-full p-0"
         />

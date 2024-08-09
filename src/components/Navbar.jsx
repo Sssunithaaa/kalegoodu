@@ -43,7 +43,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
             <>
               {cartItems.map(item => (
                 <div key={item.id} className="flex justify-between items-center border-b py-4">
-                  <img src={baseUrl+item.images[0].image} alt={item.name} className="w-24 h-24 object-cover" />
+                  <img src={baseUrl+item?.images[0]?.image} alt={item.name} className="w-24 h-24 object-cover" />
                   <div className="ml-4 flex-1">
                     <h2 className="text-md text-left font-bold">{item.name}</h2>
                     <div className="flex items-center">

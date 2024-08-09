@@ -10,9 +10,12 @@ const FoundersImage = styled.img`
 
 const AboutUs = () => {
   return (
-    <div className="about-us-container p-6 md:p-12">
-      <div className="about-us-section text-center mb-12">
-        <h1 className="about-us-heading text-2xl font-bold mb-4">About Us</h1>
+    <div className="about-us-container p-6 md:p-6">
+      <div>
+        <h1 className="about-us-heading text-2xl text-center font-bold mb-4">About Us</h1>
+      </div>
+      {/* <div className="about-us-section text-center mb-12">
+        
         <p className="about-us-paragraph max-w-lg flex mx-auto text-md md:text-lg text-gray-700">
 Welcome to Kalegoodu, your premier destination for all things home decor. We are passionate about helping you transform your living spaces into beautiful, functional, and comfortable environments that reflect your unique style and personality. 
 
@@ -20,8 +23,8 @@ At Kalegoodu, we are committed to providing you with the very best in home decor
 
 
 Thank you for choosing Kalegoodu as your trusted source for home decor. We are honored to be a part of your journey in creating a space that brings joy, comfort, and beauty to your everyday life.        </p>
-      </div>
-      <div className="founders-section mt-20 flex flex-col md:flex-row justify-center items-center text-center">
+      </div> */}
+      <div className="founders-section mt-12 flex flex-col md:flex-row justify-center items-center text-center">
        
         <div className="founders-content flex flex-col md:flex-row justify-center items-center">
           <FoundersImage src={img19} alt="Founder 1" />

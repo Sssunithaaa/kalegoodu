@@ -47,12 +47,13 @@ const MainPage = () => {
         {/* <TiledCarousel /> Add the TiledCarousel component */}
          <ProductCarousel products={products} />
       </div>
-      <div className='mt-6'>
-        <Testimonials />
-      </div>
-      <div>
+       <div>
         <AboutUs />
       </div>
+      <div className='mb-6'>
+        <Testimonials />
+      </div>
+     
       <div className='hover:cursor-pointer' onClick={()=> navigate("/admin")}>
         <Title >Admin</Title>
       </div>
