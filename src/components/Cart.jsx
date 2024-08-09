@@ -25,7 +25,7 @@ const Cart = () => {
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
       {cartItems.map(item => (
         <div key={item.id} className="flex justify-between items-center border-b py-4">
-          <img src={item.image} alt={item.name} className="w-24 h-24 object-cover" />
+          <img src={item?.image} alt={item.name} className="w-24 h-24 object-cover" />
           <div className="ml-4 flex-1">
             <h2 className="text-lg font-bold">{item.name}</h2>
             <div className="flex items-center">
