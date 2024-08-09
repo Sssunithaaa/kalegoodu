@@ -56,13 +56,13 @@ const Header = () => {
   // };
 
   return (
-    <header className="flex h-fit z-[100001] w-full items-center justify-between p-4 lg:h-full lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0">
+    <header className="flex h-fit z-[100001] w-full items-center justify-between p-4 md:h-full md:max-w-[300px] md:flex-col md:items-start md:justify-start md:p-0">
       {/* logo */}
       <Link to="/">
-        {/* <img src={images.Logo} alt="logo" className="w-16 lg:hidden" /> */}
+        {/* <img src={images.Logo} alt="logo" className="w-16 md:hidden" /> */}
       </Link>
     
-      <div className="cursor-pointer lg:hidden">
+      <div className="cursor-pointer md:hidden">
         {isMenuActive ? (
           <AiOutlineClose className="w-6 h-6" onClick={toggleMenuHandler} />
         ) : (
@@ -71,14 +71,14 @@ const Header = () => {
       </div>
       {/* sidebar container */}
       {isMenuActive && (
-        <div className="fixed inset-0 lg:static lg:h-full lg:w-full">
+        <div className="fixed inset-0 md:static md:h-full md:w-full">
           {/* underlay */}
           <div
-            className="fixed inset-0 bg-black opacity-50 lg:hidden"
+            className="fixed inset-0 bg-black opacity-50 md:hidden"
             onClick={toggleMenuHandler}
           />
           {/* sidebar */}
-          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 lg:static lg:h-full lg:w-full lg:p-6">
+          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 md:static md:h-full md:w-full md:p-6">
             <Link to="/">
               {/* <img src={images.Logo} alt="logo" className="w-16" /> */}
             </Link>

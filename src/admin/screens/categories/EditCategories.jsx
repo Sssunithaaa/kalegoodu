@@ -100,9 +100,7 @@ const handleFileChange = (acceptedFiles, index) => {
       onSuccess: (data) => {
         queryClient.invalidateQueries(["categories"]);
         toast.success("Category added successfully!");
-        navigate(`/admin/categories/manage/edit/${data._id}`, {
-          replace: true,
-        });
+      
       },
       onError: (error) => {
         toast.error(error.message);

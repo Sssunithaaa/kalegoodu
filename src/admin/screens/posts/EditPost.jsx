@@ -25,26 +25,41 @@ const promiseOptions = async (inputValue) => {
 };
 
 const EditPost = () => {
-  const { slug } = useParams(); // Get the slug from URL params
+  const { slug } = useParams(); 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const [categories, setCategories] = useState([]); // Categories state
-  const [name, setName] = useState(""); // name state
-  const [tags, setTags] = useState([]); // Tags state
-  const [discountedPrice, setDiscountPrice] = useState(""); // Slug state
-  const [price, setPrice] = useState(""); // price state
-  const [description, setDescription] = useState(""); // description content state
+  const [categories, setCategories] = useState([]); 
+  const [name, setName] = useState(""); 
+  const [tags, setTags] = useState([]);
+  const [discountedPrice, setDiscountPrice] = useState(""); 
+  const [price, setPrice] = useState(""); 
+  const [description, setDescription] = useState(""); 
 
-  const isEditMode = Boolean(slug); // Determine if we are in edit mode
+  const isEditMode = Boolean(slug); 
+   const { data: categoriesData, isLoadingg, isFetching } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getAllCategories 
+});
+const baseUrl = import.meta.env.VITE_APP_URL
+ const {data:saleTypesData} = useQuery({
+  queryKey: ["saletypes"],
+  queryFn: async () => {
+    const response = await axios.get(`${baseUrl}/api/sale_types/`);
   
-  // Fetching post details with react-query
+    return response.data?.sale_types
+  },
+  onError: (error)=> {
+    console.log(error)
+  }
+ })
+ 
   const { data:product, isLoading, isError } = useQuery({
     queryFn: () => getSingleProduct({ slug }),
     queryKey: ["blog", slug],
    
-    enabled: isEditMode, // Only run the query if we are in edit mode
-    refetchOnWindowFocus: false, // Do not refetch on window focus
+    enabled: isEditMode, 
+    refetchOnWindowFocus: false, 
   });
    const BURL = import.meta.env.VITE_APP_URL;
   useEffect(() => {
@@ -83,6 +98,22 @@ const EditPost = () => {
 
     }
   }, [product]);
+  useEffect(()=> {
+      setCategories(
+        categoriesData?.categories?.map((item) => ({
+          value: item.category_id,
+          label: item.name,
+        }))
+      )
+
+      setTags(
+        saleTypesData?.map((tag) => ({
+          value: tag.sale_type_id,
+          label: tag.name,
+        }))
+      );
+      
+  },[categoriesData,saleTypesData])
 
   // Mutation for updating post details
   const {
@@ -156,13 +187,13 @@ const handleSubmit = async (e) => {
   formData.append("short_description", description); // Ensure the key matches
 
   // Append categories as a JSON array of objects
-  const categoryObjects = categories.map(category => (1));
+  const categoryObjects = categories.map(category => category.value);
 
   formData.append("categories", JSON.stringify(categoryObjects));
   // formData.append("category",1)
   
   
-  const tagObjects = tags.map(tag => (1));
+  const tagObjects = tags.map(tag => tag.value);
 
   formData.append("sale_types", JSON.stringify(tagObjects));
   // formData.append("sale_type",1)
@@ -210,7 +241,7 @@ const handleFileChange = (acceptedFiles, index) => {
   
 
   return (
-    <section className=" p-4 mt-3">
+    <section className="w-full p-4 mt-3">
       <div className="flex flex-wrap justify-between gap-3">
         <Link
           to="/admin/products/manage"
@@ -225,7 +256,7 @@ const handleFileChange = (acceptedFiles, index) => {
       {isPostDataLoaded && (
         <form
           onSubmit={handleSubmit}
-          className="md:grid flex flex-col md:grid-cols-2 gap-3 mt-3"
+          className="md:grid flex w-full flex-col md:grid-cols-2 gap-3 mt-3"
         >
           {/* Form for post details */}
           <div className="flex flex-col gap-2">
@@ -250,8 +281,16 @@ const handleFileChange = (acceptedFiles, index) => {
              <CreatableSelect
               isMulti
               name="categories"
-              options={categories}
-              onChange={setCategories}
+              options={categoriesData?.categories?.map((category)=>(
+                {
+                  value: category.category_id,
+                  label: category.name
+                }
+              ))}
+              value={categories}
+               onChange={(selectedOptions) => {
+    setCategories(selectedOptions); // Update with only selected options
+  }}
               loadOptions={promiseOptions}
               className="basic-multi-select"
               classNamePrefix="select"
@@ -260,17 +299,21 @@ const handleFileChange = (acceptedFiles, index) => {
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="tags" className="">
-              Tags:
+              Sale type:
             </label>
-            <CreatableSelect
-              isMulti
-              name="tags"
-              options={tags}
-              onChange={setTags}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              placeholder="Select or create tags"
-            />
+          
+<CreatableSelect
+  id="tags"
+  isMulti
+  options={saleTypesData?.map((saleType) => ({
+    value: saleType.sale_type_id,
+    label: saleType.name,
+  }))} // Map options correctly
+  value={tags}
+  onChange={(selectedOptions) => {
+    setTags(selectedOptions); // Update with only selected options
+  }}
+/>
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="price" className="">

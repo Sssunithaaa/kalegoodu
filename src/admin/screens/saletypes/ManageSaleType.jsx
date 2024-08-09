@@ -29,7 +29,7 @@ const ManageSaleType = () => {
       const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
- const {data,isLoading,isFetching} = useQuery({
+ const {data=[],isLoading,isFetching} = useQuery({
   queryKey: ["saletypes"],
   queryFn: async () => {
     const response = await axios.get(`${baseUrl}/api/sale_types/`);
@@ -54,7 +54,7 @@ const searchKeywordOnSubmitHandler = (event) => {
     setSales(sales);
   } else {
 
-    const filteredSales = sales.filter((sale) =>
+    const filteredSales = sales?.filter((sale) =>
       sale.name.toLowerCase().includes(searchKeyword.toLowerCase())
     );
     setSales(filteredSales);

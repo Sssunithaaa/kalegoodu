@@ -9,38 +9,36 @@ import { getAllProducts } from '../../../services/index/products';
 
 const ManageProducts = () => {
 
- const baseUrl = import.meta.env.VITE_APP_URL;
+ 
 
 
-  const [products,setProducts] = useState([])
+ 
 const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
-    const {data,isLoading} = useQuery({
+    const {data=[],isLoading} = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts
   })
   
-  useEffect(()=> {
-    setProducts(data)
-  },[data])
+ 
  
   const url = import.meta.env.VITE_APP_URL
   
    const isFetching = false;
     const isLoadingDeleteData = false;
-  const totalPages = Math.ceil(products?.length / PAGE_SIZE);
+  const totalPages = Math.ceil(data?.length / PAGE_SIZE);
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = products?.slice(startIndex, endIndex);
+  const paginatedData = data?.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
   
   return (
-    <div className='overflow-y-auto'>
+    <div className='overflow-y-auto overflow-x-auto w-full'>
     <DataTable
       pageTitle="Manage Products"
       dataListName="Products"
@@ -51,7 +49,7 @@ const PAGE_SIZE = 5;
       tableHeaderTitleList={["Images", "Name", "Description", "Price", "Discount Price", "Categories", "Sale Type"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
-      data={products}
+      data={paginatedData}
       // setCurrentPage={setCurrentPage}
       // currentPage={currentPage}
     >

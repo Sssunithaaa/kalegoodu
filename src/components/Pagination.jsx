@@ -16,8 +16,7 @@ const Pagination = ({
   if (currentPage === 0 || paginationRange?.length < 2) {
     return null;
   }
-console.log(paginationRange);
-console.log(currentPage);
+
 
   const onNext = () => {
     onPageChange(currentPage + 1);

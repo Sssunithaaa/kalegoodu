@@ -2,48 +2,68 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"; // Import useQueryClient
 import { toast } from "react-toastify";
 import {
-  createCategory,
+  
   deleteCategory,
   getAllCategories,
-  getCategoryImages,
+  
 } from "../../../services/index/postCategories";
 import DataTable from "../../DataTable";
 import { useState, useEffect } from "react";
-
+import styled from 'styled-components'
+import Pagination from '../../../components/Pagination'
+const Button = styled.button`
+  width: 200px;
+  height: 45px;
+  background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 79.6476490172856% 29.76095796117111%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 80.73001484309323% 71.025398036287%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 74.71274406155253% 92.17335404339366%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 41.223261123520594% 30.917984618376227%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 37.9520129096355% 60.069337551017334%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 67.69235280932718% 23.91998376199933%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 93.68255347726229% 18.89111181278711%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 13.215737665881534% 45.21500942396648%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 61.18443079724643% 88.41983116607912%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 10.575958325731749% 96.72193910560092%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 75.42341628599371% 53.31130723888271%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%);
+  background-color: #4CAF50;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #45a049;
+  }
+`;
 const Categories = () => {
-  const [categoryTitle, setCategoryTitle] = useState("");
-  const [combinedData, setCombinedData] = useState([]);
-  const queryClient = useQueryClient(); // Use queryClient for invalidation
 
-  // Fetch categories using react-query
-  const { data: categoriesData, isLoading, isFetching } = useQuery({
+  const [categories, setCategories] = useState([]);
+  const queryClient = useQueryClient(); 
+ const PAGE_SIZE = 5;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data=[], isLoading, isFetching } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories // Pass the function directly without parentheses
 });
+ useEffect(()=> {
+  setCategories(data?.categories)
+ })
+ 
+const [searchKeyword, setSearchKeyword] = useState("");
 
-  // Fetch images using react-query
-  const { data: imagesData } = useQuery({
-    queryKey: ["categoriesImages"],
-    queryFn: getCategoryImages // Pass the function directly without parentheses
-});
+const searchKeywordOnChangeHandler = (event) => {
+  setSearchKeyword(event.target.value);
+};
+const searchKeywordOnSubmitHandler = (event) => {
+  event.preventDefault();
+ 
 
-  useEffect(() => {
-    if (categoriesData && imagesData) {
-      const combined = categoriesData.categories.map((category) => {
-        // Filter images by category_id
-        const categoryImages = imagesData.filter(
-          (image) => image.category === category.category_id
-        );
+  if (!searchKeyword || searchKeyword.trim() === "") {
 
-        // Return a new object with combined data
-        return {
-          ...category,
-          images: categoryImages,
-        };
-      });
-      setCombinedData(combined);
-    }
-  }, [categoriesData, imagesData]);
+    setCategories(categories);
+  } else {
+
+    const filteredcategories = categories?.filter((category) =>
+      category.name.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+   
+    setCategories(filteredcategories);
+    
+  }
+};
+
+ 
 
 
   
@@ -66,41 +86,47 @@ const Categories = () => {
     deleteCategoryMutation(categoryId);
   };
   const navigate = useNavigate()
+const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
 
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedData = categories?.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   return (
-    <div className="grid grid-cols-12 gap-x-4 overflow-x-auto mx-auto w-full">
-      <div className="col-span-4 py-8 mx-auto">
-        <h4 className="text-lg leading-tight text-center">Add New Category</h4>
-        <div className="d-form-control w-full mt-6">
-         
-          <button
+    <div className="flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">
+
+      <div className=" mx-auto">
+        
        
-            type="button"
+         
+          <Button
+       
+           
               onClick={()=>navigate("/admin/categories/add")}
-            className="w-fit mt-3 bg-green-500 mx-auto text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
+            
           >
             Add Category
-          </button>
-        </div>
+          </Button>
+      
       </div>
       <div className="col-span-8 mx-auto">
         <DataTable
           pageTitle=""
           dataListName="Categories"
           searchInputPlaceHolder="Category title..."
-          // searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
-          // searchKeywordOnChangeHandler={searchKeywordHandler}
-          // searchKeyword={searchKeyword}
-          tableHeaderTitleList={["Name","Description", "Created At", "Images", ""]}
+          searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
+          searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
+          searchKeyword={searchKeyword}
+          tableHeaderTitleList={["Name","Description",  "Images", ""]}
           isLoading={isLoading}
           isFetching={isFetching}
-          data={combinedData}
-          // setCurrentPage={setCurrentPage}
-          // currentPage={currentPage}
-          // headers={categoriesData?.headers}
-          // userState={userState}
+          data={data}
+         
         >
-          {combinedData?.map((category) => (
+          {paginatedData?.map((category) => (
             <tr key={category.category_id}>
               <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                 <div className="flex items-center">
@@ -116,15 +142,7 @@ const Categories = () => {
                   </p>
                 </div>
               </td>
-              <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                <p className="text-gray-900 whitespace-no-wrap">
-                  {new Date(category.created_at).toLocaleDateString("en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </p>
-              </td>
+             
               <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                 <div className="flex md:flex-row flex-col gap-x-2 gap-y-2">
                   {category?.images.map((image) => (
@@ -161,7 +179,13 @@ const Categories = () => {
             </tr>
           ))}
         </DataTable>
+        {!isLoading && (
+              <Pagination onPageChange={handlePageChange}
+          currentPage={currentPage}
+          totalPageCount={totalPages}/>
+            )}
       </div>
+
     </div>
   );
 };
