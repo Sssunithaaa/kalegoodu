@@ -32,15 +32,11 @@ export const getCategoryImages = async () => {
   }
 };
 
-export const deleteCategory = async ({ slug, token }) => {
+export const deleteCategory = async (id) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+    
 
-    const { data } = await axios.delete(`/api/post-categories/${slug}`, config);
+    const { data } = await axios.delete(`${url}/api/category/${id}/delete/`);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)

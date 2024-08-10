@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"; // Import useQueryClient
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import {
   
   deleteCategory,
@@ -32,7 +32,7 @@ const Categories = () => {
  const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
-  const { data=[], isLoading, isFetching } = useQuery({
+  const { data=[], isLoading, isFetching,refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories // Pass the function directly without parentheses
 });
@@ -69,22 +69,23 @@ const searchKeywordOnSubmitHandler = (event) => {
   
 
   // Delete category mutation
-  const { mutate: deleteCategoryMutation, isLoading: isLoadingDeleteData } =
-    useMutation({
-      mutationFn: deleteCategory, 
-      onSuccess: () => {
-        toast.success("Category deleted successfully");
-        queryClient.invalidateQueries(["categories"]);
-      },
-      onError: (error) => {
-        toast.error("Failed to delete category");
-        console.error("Error deleting category:", error.message);
-      },
+const { mutate: deleteCategoryMutation, isLoading: isLoadingDeleteData } = useMutation({
+  mutationFn: (categoryId) => deleteCategory(categoryId), 
+  onSuccess: () => {
+    toast.success("Category deleted successfully");
+    queryClient.invalidateQueries(["categories"]);
+    refetch()
+  },
+  onError: (error) => {
+    toast.error("Failed to delete category");
+    console.error("Error deleting category:", error.message);
+  },
 });
 
-  const deleteDataHandler = (categoryId) => {
-    deleteCategoryMutation(categoryId);
-  };
+const deleteDataHandler = (categoryId) => {
+  deleteCategoryMutation(categoryId);
+};
+
   const navigate = useNavigate()
 const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
 
@@ -112,6 +113,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
           </Button>
       
       </div>
+      <ToastContainer/>
       <div className="col-span-8 mx-auto">
         <DataTable
           pageTitle=""
@@ -161,10 +163,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
                   type="button"
                   className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
                   onClick={() => {
-                    deleteDataHandler({
-                      slug: category.category_id,
-                      // token: userState.userInfo.token,
-                    });
+                    deleteDataHandler(category.category_id);
                   }}
                 >
                   Delete

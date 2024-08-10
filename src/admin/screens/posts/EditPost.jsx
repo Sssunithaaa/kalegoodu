@@ -42,11 +42,11 @@ const EditPost = () => {
     queryFn: getAllCategories 
 });
 const baseUrl = import.meta.env.VITE_APP_URL
- const {data:saleTypesData} = useQuery({
+ const {data:saleTypesData,isFetching:isFetchingg} = useQuery({
   queryKey: ["saletypes"],
   queryFn: async () => {
     const response = await axios.get(`${baseUrl}/api/sale_types/`);
-    console.log("Hiii")
+    
     console.log(response)
     return response.data?.sale_types
   },
@@ -54,6 +54,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     console.log(error)
   }
  }) 
+ console.log(isFetchingg)
 
  
  

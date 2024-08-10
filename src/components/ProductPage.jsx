@@ -3,19 +3,16 @@ import { useParams } from 'react-router-dom';
 import { DetailsSection, Slider } from './ProductCards';
 
 import '../App.css';
-import { img17, img18, img19, img20 } from '../assets/images'
 import { useQuery } from '@tanstack/react-query';
 import { getSingleProduct } from '../services/index/products';
 
-const thumbnails = [
-  img17, img18, img19, img20
-];
+
 function ProductPage() {
   const [cartCounter, setCartCounter] = useState(1);
 
   const { id } = useParams();
   
-  const { data: product, isLoading, error } = useQuery({
+  const { data: product, isLoading } = useQuery({
   queryKey: ["products", id],
   queryFn: () => getSingleProduct(id), // Pass a function reference
 });
