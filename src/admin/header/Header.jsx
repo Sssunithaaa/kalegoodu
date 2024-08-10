@@ -56,7 +56,7 @@ const Header = () => {
   // };
 
   return (
-    <header className="flex h-fit z-[100001] w-full items-center justify-between p-4 md:h-full md:max-w-[300px] md:flex-col md:items-start md:justify-start md:p-0">
+    <header className="flex h-fit z-[1001] w-full items-center justify-between p-4 md:h-full md:max-w-[300px] md:flex-col md:items-start md:justify-start md:p-0">
       {/* logo */}
       <Link to="/">
         {/* <img src={images.Logo} alt="logo" className="w-16 md:hidden" /> */}

@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { img17, img18, img19, img20 } from "../../assets/images";
 
-const thumbnails = [img17, img18, img19, img20];
 
-export function Carousel({images, children: slides, autoSlide = false, autoSlideInterval = 3000 }) {
+export function Carousel({ images, children: slides, autoSlide = false, autoSlideInterval = 3000 }) {
   const [curr, setCurr] = useState(0);
 
   const prev = () => setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
   const next = () => setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
-  const baseUrl = import.meta.env.VITE_APP_URL
+  const baseUrl = import.meta.env.VITE_APP_URL;
+
   useEffect(() => {
     if (!autoSlide) return;
     const slideInterval = setInterval(next, autoSlideInterval);
@@ -29,25 +28,29 @@ export function Carousel({images, children: slides, autoSlide = false, autoSlide
             onClick={prev}
             className="bg-white rounded-full p-3 md:hidden"
           >
-            <img className="h-[10px] w-[10px]" src="./images/icon-previous.svg" alt="" />
+            <img className="h-[10px] w-[10px]" src="./images/icon-previous.svg" alt="Previous" />
           </button>
           <button
             onClick={next}
             className="bg-white rounded-full p-3 md:hidden"
           >
-            <img className="h-[10px] w-[10px]" src="./images/icon-next.svg" alt="" />
+            <img className="h-[10px] w-[10px]" src="./images/icon-next.svg" alt="Next" />
           </button>
         </div>
       </div>
-      <div className="hidden md:flex md:mx-auto w-[500px] gap-8 mt-8  h-auto">
+      <div className="hidden md:flex md:mx-auto w-[500px] gap-8 mt-8 h-auto">
         {images?.map((t, i) => (
           <div
             key={i}
             onClick={() => setCurr(i)}
-            className="hover:cursor-pointer w-[400px] focus:opacity-20 rounded-xl"
+            className={`hover:cursor-pointer focus:opacity-20 rounded-xl ${images.length === 1 ? 'mx-auto w-[200px]' : 'w-[400px]'}`}
           >
             <div className={`rounded-xl ${curr === i && "border-2 border-orange"}`}>
-              <img className={`rounded-xl ${curr === i && "opacity-40"} h-auto w-[400px]`} src={baseUrl+t} alt="" />
+              <img 
+                className={`rounded-xl ${curr === i && "opacity-40"} ${images?.length === 1 ? "w-[200px]" : "w-full"} h-auto  object-contain`} 
+                src={baseUrl + t} 
+                alt={`Image ${i + 1}`} 
+              />
             </div>
           </div>
         ))}

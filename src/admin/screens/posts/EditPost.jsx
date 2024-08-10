@@ -25,7 +25,7 @@ const promiseOptions = async (inputValue) => {
 };
 
 const EditPost = () => {
-  const { slug } = useParams(); 
+  const { id } = useParams(); 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const EditPost = () => {
   const [price, setPrice] = useState(""); 
   const [description, setDescription] = useState(""); 
 
-  const isEditMode = Boolean(slug); 
+  const isEditMode = Boolean(id); 
    const { data: categoriesData, isLoadingg, isFetching } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories 
@@ -46,26 +46,30 @@ const baseUrl = import.meta.env.VITE_APP_URL
   queryKey: ["saletypes"],
   queryFn: async () => {
     const response = await axios.get(`${baseUrl}/api/sale_types/`);
-  
+    console.log("Hiii")
+    console.log(response)
     return response.data?.sale_types
   },
   onError: (error)=> {
     console.log(error)
   }
- })
+ }) 
+
+ 
  
   const { data:product, isLoading, isError } = useQuery({
-    queryFn: () => getSingleProduct({ slug }),
-    queryKey: ["blog", slug],
+    queryFn: () => getSingleProduct({ id }),
+    queryKey: ["product", id],
    
     enabled: isEditMode, 
     refetchOnWindowFocus: false, 
   });
+ 
    const BURL = import.meta.env.VITE_APP_URL;
   useEffect(() => {
     if (product) {
       setCategories(
-        product.categories.map((item) => ({
+        product?.categories.map((item) => ({
           value: item.category_id,
           label: item.name,
         }))
@@ -74,7 +78,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       setName(product.name);
 
       setTags(
-        product.sale_types.map((tag) => ({
+        product?.sale_types?.map((tag) => ({
           value: tag.sale_type_id,
           label: tag.name,
         }))
@@ -82,10 +86,10 @@ const baseUrl = import.meta.env.VITE_APP_URL
 
       setDescription(product.short_description);
 
-      setPrice(product.price); // Set price from sample data
+      setPrice(product.price); 
 
       setDiscountPrice(product.discounted_price);
-      // Set files and previews
+  
       const initialFiles = product.images.map((image) => {
         const fileName = image.image.split("/").pop(); // Extract the file name from the URL
         return new File([], fileName, { type: "image/jpeg" }); // Creating a placeholder file
@@ -99,7 +103,8 @@ const baseUrl = import.meta.env.VITE_APP_URL
     }
   }, [product]);
   useEffect(()=> {
-      setCategories(
+     if(!isEditMode){
+       setCategories(
         categoriesData?.categories?.map((item) => ({
           value: item.category_id,
           label: item.name,
@@ -112,6 +117,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
           label: tag.name,
         }))
       );
+     }
       
   },[categoriesData,saleTypesData])
 
@@ -120,18 +126,18 @@ const baseUrl = import.meta.env.VITE_APP_URL
     mutate: mutateUpdatePostDetail,
     isLoading: isLoadingUpdatePostDetail,
   } = useMutation({
-    mutationFn: ({ updatedData, slug, token }) => {
+    mutationFn: ({ updatedData, id, token }) => {
       return updateProduct({
         updatedData,
-
-        token,
+        id,
+        
       });
     },
     onSuccess: (data) => {
       // Invalidate queries to refetch updated post data
-      queryClient.invalidateQueries(["blog", slug]);
+      queryClient.invalidateQueries(["product", id]);
       toast.success("Post is updated successfully"); // Show success toast
-      navigate(`/admin/posts/manage/edit/${data.slug}`, { replace: true }); // Navigate to updated post
+      navigate(`/admin/posts/manage/edit/${data.id}`, { replace: true }); // Navigate to updated post
     },
     onError: (error) => {
       toast.error("Error updating post: " + error.message); // Show error toast
@@ -139,7 +145,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     },
   });
 
-  // Mutation for adding new product details
+
   const {
     mutate: mutateAddPostDetail,
     isLoading: isLoadingAddPostDetail,
@@ -151,7 +157,6 @@ const baseUrl = import.meta.env.VITE_APP_URL
     },
     onSuccess: (data) => {
       toast.success("Product added successfully");
-      // navigate(`/admin/products/manage/edit/${data.slug}`, { replace: true });
     },
     onError: (error) => {
       toast.error("Error adding product: " + error.message);
@@ -161,7 +166,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
 
 
  
-  // Handle image deletion
+
   const handleDeleteImage = () => {
     if (window.confirm("Do you want to delete your post picture?")) {
       setInitialPhoto(null);
@@ -184,43 +189,38 @@ const handleSubmit = async (e) => {
   formData.append("name", name);
   formData.append("price", price);
   formData.append("discounted_price", discountedPrice);
-  formData.append("short_description", description); // Ensure the key matches
+  formData.append("short_description", description); 
 
   // Append categories as a JSON array of objects
   const categoryObjects = categories.map(category => category.value);
-
   formData.append("categories", JSON.stringify(categoryObjects));
-  // formData.append("category",1)
-  
   
   const tagObjects = tags.map(tag => tag.value);
-
   formData.append("sale_types", JSON.stringify(tagObjects));
-  // formData.append("sale_type",1)
 
-  // Append image files
-  files.forEach(file => {
+  // Append existing images with potential updates (image or alt_text)
+  files.forEach((file, index) => {
     if (file) {
-      formData.append("images", file); // Ensure the key matches
+      formData.append(`images[${index}]`, file);
     }
-  });
+  });  
+  
 
-  // Log FormData content to verify
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
+  const newImages = files.filter(file => file && !previews.includes(URL.createObjectURL(file)));
+  newImages.forEach(file => {
+    formData.append('new_images', file);
+  });
 
   if (isEditMode) {
     mutateUpdatePostDetail({
       updatedData: formData,
-      slug,
+      id,
     });
   } else {
-    mutateAddPostDetail(
-      formData,
-    );
+    mutateAddPostDetail(formData);
   }
 };
+
 
 
 

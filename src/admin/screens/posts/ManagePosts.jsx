@@ -6,6 +6,7 @@ import axios from 'axios';
 import Pagination from '../../../components/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../../../services/index/products';
+import { toast, ToastContainer } from 'react-toastify';
 
 const ManageProducts = () => {
 
@@ -16,7 +17,7 @@ const ManageProducts = () => {
 const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
-    const {data=[],isLoading} = useQuery({
+    const {data=[],isLoading,refetch,isFetching} = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts
   })
@@ -25,7 +26,7 @@ const PAGE_SIZE = 5;
  
   const url = import.meta.env.VITE_APP_URL
   
-   const isFetching = false;
+   
     const isLoadingDeleteData = false;
   const totalPages = Math.ceil(data?.length / PAGE_SIZE);
 
@@ -36,6 +37,15 @@ const PAGE_SIZE = 5;
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  const deleteDataHandler=async (id)=> {
+    try {
+      await axios.delete(`${url}/api/product/${id}/delete/`)
+      toast.success("Product deleted successfully")
+      refetch()
+    } catch (error) {
+      toast.error("Failed to delete product!! Try again!!")
+    }
+  }
   
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
@@ -53,6 +63,7 @@ const PAGE_SIZE = 5;
       // setCurrentPage={setCurrentPage}
       // currentPage={currentPage}
     >
+      <ToastContainer/>
       {paginatedData?.map((product) => (
         <tr key={product.product_id}>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
@@ -127,10 +138,10 @@ const PAGE_SIZE = 5;
               type="button"
               className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={() => {
-                deleteDataHandler({
-                  slug: product.slug, // Make sure the slug field is correctly used here
-                  token: userState.userInfo.token, // Ensure token handling is implemented
-                });
+                deleteDataHandler(
+                   product.product_id, // Make sure the slug field is correctly used here
+                 
+                );
               }}
             >
               Delete

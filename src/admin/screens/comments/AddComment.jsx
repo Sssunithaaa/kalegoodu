@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../../../services/index/products';
 import styled from 'styled-components'
+import { useParams } from 'react-router-dom';
 
 const Button = styled.button`
   width: 200px;
@@ -32,7 +33,15 @@ const AddTestimonialForm = () => {
   const [text, setText] = useState('');
   const [rating, setRating] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const {id} = useParams()
+  const {data:comment,isFetching} = useQuery({
+    queryKey: ["comment",id],
+    queryFn: async ()=> {
+      const response = await axios.get(`${baseUrl}/api/comments/${id}/`);
+      return response.data.comment
+    }
+  })
+  const isEditMode = Boolean(id)
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -40,19 +49,32 @@ const AddTestimonialForm = () => {
     try {
      const selectedProduct = products.find((product) => product.product_id === parseInt(productId));
 
-      await axios.post(`${baseUrl}/api/comments/`, {
+      if(isEditMode){
+        await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
         product_name: selectedProduct ? selectedProduct.name : '',
         product: parseInt(productId),
         user_name: userName,
         text,
         rating,
       });
-
+      toast.success('Testimonial Updated successfully!');
+      } else {
+        await axios.post(`${baseUrl}/api/comments/`, {
+        product_name: selectedProduct ? selectedProduct.name : '',
+        product: parseInt(productId),
+        user_name: userName,
+        text,
+        rating,
+      });
       toast.success('Testimonial added successfully!');
       setProductId('')
       setUserName('');
       setText('');
       setRating(1);
+      }
+
+      
+      
     } catch (error) {
       toast.error('Failed to add testimonial');
       console.log('Error adding testimonial:', error);
@@ -64,10 +86,18 @@ const AddTestimonialForm = () => {
     queryKey: ["products"],
     queryFn: getAllProducts
   })
+  useEffect(()=> {
+   if(comment){
+     setProductId(comment?.product);
+    setUserName(comment?.user_name);
+    setText(comment?.text);
+    setRating(comment?.rating)
+   }
+  },[comment])
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
-      <h2 className="text-2xl font-semibold mb-4">Add Testimonial</h2>
+      <h2 className="text-2xl font-semibold mb-4">{isEditMode ? "Update Testimonials" : "Add Testimonial"}</h2>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
         <ToastContainer/>
         <div className="mb-4">
@@ -133,7 +163,7 @@ const AddTestimonialForm = () => {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Submitting...' : 'Add Testimonial'}
+          {isSubmitting ? 'Submitting...' : isEditMode ? "Update Testimonial" : 'Add Testimonial'}
         </Button>
       </form>
     </div>

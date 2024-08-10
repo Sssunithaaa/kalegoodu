@@ -9,8 +9,8 @@ export const DetailedProduct = ({ product }) => {
       </p>
       <div className='flex items-center justify-between md:flex-col md:items-start mt-2'>
         <div className='flex gap-4 items-center'>
-          <span className='font-bold text-2xl'>₹ {product?.price}</span>
-          <span className='bg-pale-orange text-orange font-bold text-sm px-2 rounded-md'>{product?.discounted_price}%</span>
+          <span className='font-bold text-2xl'>₹ {product?.discounted_price}</span>
+          <span className='bg-pale-orange text-orange font-bold text-sm px-2 rounded-md'>{product?.discounted_price / product?.price}%</span>
         </div>
         <span className='text-grayish-blue text-sm font-bold'><del>₹ {product?.price}</del></span>
       </div>

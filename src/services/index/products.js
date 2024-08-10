@@ -14,10 +14,11 @@ export const getAllProducts = async () => {
   }
 };
 
-export const getSingleProduct = async (id) => {
+export const getSingleProduct = async ({id}) => {
   try {
+    console.log(id)
     const response = await axios.get(`${url}/api/products/${id}/`);
- 
+    console.log(response.data)
     return response.data.product;
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -43,17 +44,19 @@ export const deleteProduct = async ({ slug, token }) => {
   }
 };
 
-export const updateProduct = async ({ updatedData, slug, token }) => {
+export const updateProduct = async ({ updatedData, id }) => {
   try {
-    const config = {
+   const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     };
 
-    const { data } = await axios.put(`/api/products/${slug}`, updatedData, config);
-    return data;
+    const response = await axios.put(`${url}/api/update_full_product/${id}/`, updatedData, config);
+    console.log(response)
+    return response.data;
   } catch (error) {
+    console.log(error)
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);

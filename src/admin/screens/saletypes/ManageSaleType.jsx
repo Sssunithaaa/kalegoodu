@@ -3,10 +3,10 @@ import DataTable from '../../DataTable'
 import { useQuery } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 import AddSaleTypeDialog from './AddSaleType'
-import { Link } from 'react-router-dom'
+
 import styled from 'styled-components'
 import Pagination from '../../../components/Pagination'
 const Button = styled.button`
@@ -29,7 +29,7 @@ const ManageSaleType = () => {
       const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
- const {data=[],isLoading,isFetching} = useQuery({
+ const {data=[],isLoading,isFetching,refetch} = useQuery({
   queryKey: ["saletypes"],
   queryFn: async () => {
     const response = await axios.get(`${baseUrl}/api/sale_types/`);
@@ -37,6 +37,12 @@ const ManageSaleType = () => {
     return response.data?.sale_types
   }
  })
+ const [selectedSaleType, setSelectedSaleType] = useState(null);
+
+const handleEditClick = (saleType) => {
+  setSelectedSaleType(saleType);
+  handleOpenDialog();
+};
  useEffect(()=> {
   setSales(data)
  },[data])
@@ -73,26 +79,14 @@ const searchKeywordOnSubmitHandler = (event) => {
   // Handle closing the dialog
   const handleCloseDialog = () => {
     setDialogOpen(false);
+    refetch()
   };
 
   // Callback when form is submitted successfully
   const handleFormSubmit = () => {
     console.log("Sale type added successfully!");
   };
-   const { mutate: deleteSaletypeMutation, isLoading: isLoadingDeleteData } =
-    useMutation({
-      mutationFn: async ()=> {
-        const response = await axios.get("")
-      }, 
-      onSuccess: () => {
-        toast.success("Sale type deleted successfully");
-        queryClient.invalidateQueries(["saletypes"]);
-      },
-      onError: (error) => {
-        toast.error("Failed to delete sale type");
-        console.error("Error deleting sale type:", error.message);
-      },
-});
+   
 const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
@@ -102,18 +96,32 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  const deleteDataHandler = async ({ saleTypeId }) => {
+  try {
+    await axios.delete(`${baseUrl}/api/sale_type/${saleTypeId}/delete/`);
+    toast.success("Sale type deleted successfully");
+    refetch()
+    queryClient.invalidateQueries(["saletypes"]);
+  } catch (error) {
+    toast.error("Failed to delete sale type");
+    console.error("Error deleting sale type:", error.message);
+  }
+};
+
   return (
     <div>
         <div>
       <Button onClick={handleOpenDialog}>
         Add New Sale Type
       </Button>
-      <AddSaleTypeDialog
-        open={dialogOpen}
-        handleClose={handleCloseDialog}
-        onSubmit={handleFormSubmit}
-      />
+     <AddSaleTypeDialog
+  open={dialogOpen}
+  handleClose={handleCloseDialog}
+  onSubmit={handleFormSubmit}
+  editSaleType={selectedSaleType}
+/>
     </div>
+    <ToastContainer/>
        <DataTable
           pageTitle=""
           dataListName="Sale types"
@@ -137,25 +145,21 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
                 </div>
               </td>
                <td className="px-5 py-5 gap-y-4 text-sm bg-white border-b border-gray-200 space-x-5">
-                <button
-                  disabled={isLoadingDeleteData}
-                  type="button"
-                  className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-                  onClick={() => {
-                    deleteDataHandler({
-                      slug: sale.sale_type_id,
-                      // token: userState.userInfo.token,
-                    });
-                  }}
-                >
-                  Delete
-                </button>
-                <Link
-                  to={`/admin/categories/manage/edit/${sale.sale_type_id}`}
-                  className="text-green-600 hover:text-green-900"
-                >
-                  Edit
-                </Link>
+               <button
+  type="button"
+  className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+  onClick={() => deleteDataHandler({ saleTypeId: sale.sale_type_id })}
+>
+  Delete
+</button>
+
+               <button
+  onClick={() => handleEditClick(sale)}
+  className="text-green-600 hover:text-green-900"
+>
+  Edit
+</button>
+
               </td>  
               </tr>
              ))}

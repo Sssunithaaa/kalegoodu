@@ -44,12 +44,13 @@ const EditCategories = () => {
     enabled: isEditMode, // Only fetch when in edit mode
   
   });
+  const baseUrl = import.meta.env.VITE_APP_URL
  useEffect(()=> {
   setCategoryTitle(data?.name || "Sample Category Title");
       setDescription(data?.description || "Sample Description");
       setCreatedAt(data?.created_at || "2024-06-18T15:50:36.589403+05:30");
-      data?.images?.map((image)=>console.log(image)) 
-      setFiles(data?.images?.map((image)=>image?.image) || [null,null,null])
+      
+      setPreviews(data?.images?.map((image)=>baseUrl+image?.image) || [null,null,null])
  },[data])
  
   
@@ -224,7 +225,7 @@ const handleFileChange = (acceptedFiles, index) => {
           />
         </div>
         <ToastContainer/>
-        {/* Created At Field (Display Only, Non-editable in edit mode) */}
+        {/* Created At Field (Display Only, Non-editable in edit mode)
         {isEditMode && (
           <div className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-emerald-600 font-medium font-roboto text-dark-hard mt-4">
             Created At: {new Date(createdAt).toLocaleDateString("en-US", {
@@ -233,7 +234,7 @@ const handleFileChange = (acceptedFiles, index) => {
               year: "numeric",
             })}
           </div>
-        )}
+        )} */}
 
         
 

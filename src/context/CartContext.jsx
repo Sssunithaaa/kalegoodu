@@ -4,7 +4,6 @@ import React, { createContext, useState, useEffect } from 'react';
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  // Initialize cartItems state with data from localStorage or empty array
   const [cartItems, setCartItems] = useState(() => {
     const storedCartItems = localStorage.getItem('cartItems');
     return storedCartItems ? JSON.parse(storedCartItems) : [];
@@ -14,9 +13,9 @@ export const CartProvider = ({ children }) => {
 
   const [paymentMethod, setPaymentMethod] = useState('upi');
 
-  // Function to add item to cart
+  
   const addToCart = (item) => {
-    console.log(item)
+    
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.product_id === item.product_id);
       if (existingItem) {

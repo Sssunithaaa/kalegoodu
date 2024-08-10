@@ -1,16 +1,15 @@
 import React from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
-import { img1,img2,img3 } from '../assets/images';
-import { useNavigate } from 'react-router-dom';
-const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
-  
-    let items = [
-    { id: 1, name: 'Product-1', price: 658, rating: 4, description: 'Description for Product 1', img: img1 },
-    { id: 2, name: 'Product-2', price: 758, rating: 5, description: 'Description for Product 2', img: img2 },
-    { id: 3, name: 'Product-3', price: 858, rating: 3, description: 'Description for Product 3', img: img3 },
-   
 
-  ];
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getAllProducts } from '../services/index/products';
+const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
+   const baseUrl = import.meta.env.VITE_APP_URL
+   const {data=[],isLoading,isFetching}=useQuery({
+    queryKey:["products"],
+    queryFn: getAllProducts
+   }) 
 
   const handleOnSearch = (string, results) => {
 
@@ -23,7 +22,8 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
   const handleOnSelect = (item) => {
    
     toggleSearchbar();
-    navigate(`/product/${item.name}`)
+    const url = item?.name.replaceAll(" ","-")
+    navigate(`/products/${item.product_id}/${url}`)
 
   };
 
@@ -35,7 +35,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
     return (
       <>
      <div className='flex flex-row gap-x-4'>
-      <img src={item.img} alt={item.name} style={{ width: '50px'}}/>
+      <img src={baseUrl+item?.images?.[0]?.image} alt={item.name} style={{ width: '50px'}}/>
       <div>
                 <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
         <span style={{ display: 'block', textAlign: 'left' }}>Rs. {item.price}</span>
@@ -51,7 +51,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
   return (
     <div className='md:top-24 top-0 w-[80%] md:w-[50%]' style={{ position: 'relative', zIndex: 49,marginInline:'auto',marginBlock:'10px',borderRadius:'0px' }}>
       <ReactSearchAutocomplete
-        items={items}
+        items={data}
         onSearch={handleOnSearch}
         onHover={handleOnHover}
         onSelect={handleOnSelect}

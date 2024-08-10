@@ -44,9 +44,10 @@ const App = () => {
           <Route index element={<Admin />} />
           <Route path='sale-types/manage' element={<ManageSaleType/>}/>
           <Route path='comments/manage' element={<ManageComments/>}/>
+          <Route path='comments/manage/edit/:id' element={<AddTestimonialForm/>}/>
             <Route path='comments/add' element={<AddTestimonialForm/>}/>
           <Route path="products/manage" element={<ManagePosts />} />
-          <Route path="products/manage/edit/:slug" element={<EditPost/>}/>
+          <Route path="products/manage/edit/:id" element={<EditPost/>}/>
            <Route path="products/add" element={<EditPost/>}/>
           <Route path="banner" element={<Banner />} />
           <Route path="categories/manage" element={<Categories />} />

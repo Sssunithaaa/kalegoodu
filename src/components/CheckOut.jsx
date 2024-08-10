@@ -4,12 +4,12 @@ import Navbar from './Navbar';
 import ParallaxSection from './Parralax';
 
 const CheckOut = () => {
-  const { cartItems, paymentMethod, setPaymentMethod, cartTotal, increaseQuantity, decreaseQuantity, removeItem } = useContext(CartContext);
+  const { cartItems, paymentMethod, setPaymentMethod, cartTotal, increaseQuantity, decreaseQuantity, removeFromCart } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
 
   useEffect(() => {
     let totalPrice = 0;
-    cartItems.forEach((item) => {
+    cartItems?.forEach((item) => {
       totalPrice += item.price * item.quantity;
     });
     setTotal(totalPrice);
@@ -64,7 +64,7 @@ const CheckOut = () => {
     </tr>
   </thead> */}
   <tbody className="bg-white divide-y divide-gray-200">
-    {cartItems.map((item) => (
+    {cartItems?.map((item) => (
       <tr key={item.product_id}>
         <td className="px-3 py-5 text-sm">
           <div className="flex items-center gap-x-3">
@@ -96,7 +96,7 @@ const CheckOut = () => {
         </td>
         <td className="px-3 py-5 text-sm">
           <button
-            onClick={() => removeItem(item.id)}
+            onClick={() => removeFromCart(item.product_id)}
             className="text-red-500"
           >
             Remove

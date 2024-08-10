@@ -3,7 +3,7 @@ import DataTable from '../../DataTable';
 import Pagination from '../../../components/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const ManageComments = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
 
-  const { data = [], isLoading, isFetching } = useQuery({
+  const { data = [], isLoading, isFetching,refetch } = useQuery({
     queryKey: ['comments'],
     queryFn: async () => {
       const response = await axios.get(`${baseUrl}/api/comments/`);
@@ -31,6 +31,15 @@ const ManageComments = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  const handleDelete=async (id)=> {
+    try {
+      await axios.delete(`${baseUrl}/api/comment/${id}/delete/`);
+      toast.success("Testimonial deleted successfully!!")
+      refetch()
+    } catch (error) {
+      toast.error("Couldn't delete testimonial")
+    }
+  }
 
   return (
     <div>
@@ -48,6 +57,7 @@ const ManageComments = () => {
           searchKeywordOnSubmitHandler(e, data, searchKeyword)
         }
       >
+        <ToastContainer/>
         {paginatedData.map((comment) => (
           <tr key={comment.comment_id}>
             <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
@@ -82,9 +92,7 @@ const ManageComments = () => {
               <button
                 type="button"
                 className="text-red-600 hover:text-red-900"
-                onClick={() => {
-                  // handle delete
-                }}
+                onClick={()=>handleDelete(comment?.comment_id)}
               >
                 Delete
               </button>
