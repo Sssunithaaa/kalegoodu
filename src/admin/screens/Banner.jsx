@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery,useQueryClient,useMutation } from '@tanstack/react-query';
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 const AdminContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -51,23 +52,25 @@ const Button = styled.button`
   }
 `;
 
-
-
+const DeleteButton = styled.button`
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block:5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #c0392b;
+  }
+`;
 const Banner = () => {
-   const [files, setFiles] = useState([null, null, null]);
+  const [files, setFiles] = useState([null, null, null]);
   const [previews, setPreviews] = useState([null, null, null]);
 
-  const handleFileChange = (acceptedFiles, index) => {
-    const updatedFiles = [...files];
-    updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone
-    setFiles(updatedFiles);
-
-    const updatedPreviews = [...previews];
-    updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
-    setPreviews(updatedPreviews);
-  };
-
   const baseUrl = import.meta.env.VITE_APP_URL;
+
   const { data: banner, isLoading, isError } = useQuery({
     queryKey: ['banner'],
     queryFn: async () => {
@@ -81,18 +84,32 @@ const Banner = () => {
     if (banner) {
       const bannerImages = banner.banner_images.map((image) => ({
         ...image,
-        image: baseUrl + image.image, // Concatenate base URL with image path
+        image: baseUrl + image.image,
       }));
-      setPreviews(bannerImages.map((image) => image.image)); // Update previews with URLs
+
+      const updatedPreviews = [null, null, null];
+      bannerImages.forEach((image, index) => {
+        updatedPreviews[index] = image.image;
+      });
+      setPreviews(updatedPreviews);
     }
   }, [banner]);
+
+  const handleFileChange = (acceptedFiles, index) => {
+    const updatedFiles = [...files];
+    updatedFiles[index] = acceptedFiles[0];
+    setFiles(updatedFiles);
+
+    const updatedPreviews = [...previews];
+    updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
+    setPreviews(updatedPreviews);
+  };
 
   const handleUpload = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    
-    
+
     try {
       const config = {
         headers: {
@@ -100,30 +117,41 @@ const Banner = () => {
         },
       };
       files.forEach(async (file) => {
-      if (file) {
-        console.log(file)
-        formData.append('title',"Sample image")
-        formData.append('image', file); 
-        const response = await axios.post(
-        `${baseUrl}/api/banner_images/`,
-        formData,
-        config
-      );
-      console.log(response.data);
-      }
-    });
-      
+        if (file) {
+          formData.append('title', "Sample image");
+          formData.append('image', file);
+          const response = await axios.post(
+            `${baseUrl}/api/banner_images/`,
+            formData,
+            config
+          );
+          
+          toast.success("Image uploaded successfully!!")
+        }
+      });
+
     } catch (error) {
-      console.log(error);
+      toast.error("Couldn't upload image")
+    }
+  };
+
+  const handleDelete = async (bannerImageId) => {
+    try {
+      await axios.delete(`${baseUrl}/api/banner_image/${bannerImageId}/delete/`);
+      queryClient.invalidateQueries(["banner"]);
+      toast.success("Image deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete image");
+      console.error("Error deleting image:", error.message);
     }
   };
 
   return (
     <AdminContainer>
+      <ToastContainer />
       <form onSubmit={handleUpload}>
         <div className="flex md:col-span-2  flex-col gap-2 ">
           <label className="text-lg">Product Images:</label>
-
           <div className="flex md:flex-row flex-col ">
             {[0, 1, 2].map((index) => (
               <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
@@ -141,11 +169,18 @@ const Banner = () => {
                     >
                       <input {...getInputProps()} />
                       {previews[index] ? (
-                        <img
-                          src={previews[index]}  // Correct src attribute
-                          alt={`Preview ${index + 1}`}
-                          className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
-                        />
+                        <div>
+                          <img
+                            src={previews[index]}
+                            alt={`Preview ${index + 1}`}
+                            className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
+                          />
+                          {banner?.banner_images[index] && (
+                            <DeleteButton onClick={() => handleDelete(banner.banner_images[index].banner_image_id)}>
+                              Delete
+                            </DeleteButton>
+                          )}
+                        </div>
                       ) : (
                         <div className="p-3">
                           <BsFillArrowUpCircleFill
@@ -167,9 +202,9 @@ const Banner = () => {
               </div>
             ))}
           </div>
-         <div className='flex mx-auto'>
-           <Button type="submit">Upload Images</Button>
-         </div>
+          <div className="flex mx-auto">
+            <Button type="submit">Upload Images</Button>
+          </div>
         </div>
       </form>
     </AdminContainer>

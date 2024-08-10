@@ -59,7 +59,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
  
  
   const { data:product, isLoading, isError } = useQuery({
-    queryFn: () => getSingleProduct({ id }),
+    queryFn: () => getSingleProduct(id),
     queryKey: ["product", id],
    
     enabled: isEditMode, 
