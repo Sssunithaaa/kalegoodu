@@ -2,19 +2,13 @@ import React, { useState } from 'react';
 
 
 import { Box, TextField, InputAdornment } from '@mui/material';
-const Sidebar = ({setSprice,setEprice}) => {
+import { Button } from '@material-tailwind/react';
+const Sidebar = ({setSprice,setEprice,setKeyword,searchKeywordOnSubmitHandler}) => {
   
 
-  const [selectedTypes, setSelectedTypes] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 100]);
 
-  const handleTypeChange = (type) => {
-    setSelectedTypes((prev) =>
-      prev.includes(type)
-        ? prev.filter((t) => t !== type)
-        : [...prev, type]
-    );
-  };
+ 
 
  
 
@@ -23,14 +17,17 @@ const Sidebar = ({setSprice,setEprice}) => {
     setPriceRange((prev) => {
       const newRange = [...prev];
       newRange[index] = value;
-      setSprice(newRange[0]);
-    setEprice(newRange[1])
+      
       return newRange;
     });
   };
+  const submitPriceInputChange = ()=> {
+    setSprice(priceRange[0]);
+    setEprice(priceRange[1])
+  }
 
   return (
-    <div className="flex flex-col z-30 p-4 w-64">
+    <div className="flex flex-col z-[20] p-4 w-64">
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-2">Filter</h3>
         <div className="mb-4">
@@ -39,6 +36,7 @@ const Sidebar = ({setSprice,setEprice}) => {
             <input
               type="text"
               id="search"
+              onChange={(e)=>setKeyword(e.target.value)}
               className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Search..."
             />
@@ -58,6 +56,8 @@ const Sidebar = ({setSprice,setEprice}) => {
               </svg>
             </div>
           </div>
+              <Button onClick={searchKeywordOnSubmitHandler} className='my-2 text-md py-2 flex mx-auto'>Apply</Button>
+
         </div>
 
         
@@ -98,6 +98,7 @@ const Sidebar = ({setSprice,setEprice}) => {
         fullWidth
       />
     </Box>
+    <Button onClick={submitPriceInputChange} className='my-4 text-md py-2 flex mx-auto'>Apply</Button>
         </div>
       </div>
     </div>

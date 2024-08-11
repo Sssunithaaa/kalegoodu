@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
-import { useQuery,useQueryClient,useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import axios from 'axios';

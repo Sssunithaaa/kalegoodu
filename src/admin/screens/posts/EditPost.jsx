@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import Select from "react-select";
+
 import { toast, ToastContainer } from "react-toastify";
 import CreatableSelect from "react-select/creatable";
 import {
@@ -11,19 +11,32 @@ import {
 } from "../../../services/index/products"; // Make sure to import the createProduct service
 import { getAllCategories } from "../../../services/index/postCategories";
 import {
-  categoryToOption,
+  
   filterCategories,
 } from "../../../utils/multiSelectTagUtils";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import "react-toastify/dist/ReactToastify.css";
-import AddImage from "./AddImage";
+import styled from 'styled-components';
+import axios from "axios";
 
 const promiseOptions = async (inputValue) => {
   const { data: categoriesData } = await getAllCategories();
   return filterCategories(inputValue, categoriesData);
 };
-
+const DeleteButton = styled.button`
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block:5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #c0392b;
+  }
+`;
 const EditPost = () => {
   const { id } = useParams(); 
   const queryClient = useQueryClient();
@@ -47,18 +60,18 @@ const baseUrl = import.meta.env.VITE_APP_URL
   queryFn: async () => {
     const response = await axios.get(`${baseUrl}/api/sale_types/`);
     
-    console.log(response)
+  
     return response.data?.sale_types
   },
   onError: (error)=> {
     console.log(error)
   }
  }) 
- console.log(isFetchingg)
+ 
 
  
  
-  const { data:product, isLoading, isError } = useQuery({
+  const { data:product, isLoading, isError,refetch } = useQuery({
     queryFn: () => getSingleProduct(id),
     queryKey: ["product", id],
    
@@ -168,12 +181,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
 
  
 
-  const handleDeleteImage = () => {
-    if (window.confirm("Do you want to delete your post picture?")) {
-      setInitialPhoto(null);
-      setPhoto(null);
-    }
-  };
+
   
   // Determine if post data is loaded
   let isPostDataLoaded = !isLoading && !isError;
@@ -202,7 +210,7 @@ const handleSubmit = async (e) => {
   // Append existing images with potential updates (image or alt_text)
   files.forEach((file, index) => {
     if (file) {
-      formData.append(`images[${index}]`, file);
+      formData.append(`images`, file);
     }
   });  
   
@@ -211,7 +219,9 @@ const handleSubmit = async (e) => {
   newImages.forEach(file => {
     formData.append('new_images', file);
   });
-
+  for(let [key,value] of formData){
+    console.log(key+" "+value)
+  }
   if (isEditMode) {
     mutateUpdatePostDetail({
       updatedData: formData,
@@ -238,7 +248,17 @@ const handleFileChange = (acceptedFiles, index) => {
   setPreviews(updatedPreviews);
 };
 
-
+ const handleDelete = async (productImageId) => {
+    try {
+      await axios.delete(`${baseUrl}/api/product_image/${productImageId}/delete/`);
+      // queryClient.invalidateQueries(["banner"]);
+      toast.success("Image deleted successfully");
+      refetch()
+    } catch (error) {
+      toast.error("Failed to delete image");
+      console.error("Error deleting image:", error.message);
+    }
+  };
   
 
   return (
@@ -379,11 +399,14 @@ const handleFileChange = (acceptedFiles, index) => {
         >
           <input {...getInputProps()} />
           {previews[index] ? (
+            <div>
             <img
               src={previews[index]}
               alt={`Preview ${index + 1}`}
               className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
             />
+           
+            </div>
           ) : (
             <div className="p-3">
               <BsFillArrowUpCircleFill
@@ -402,6 +425,11 @@ const handleFileChange = (acceptedFiles, index) => {
         </div>
       )}
     </Dropzone>
+      {product?.images[index] && (
+                            <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
+                              Delete
+                            </DeleteButton>
+                          )}
   </div>
 ))}
 </div>

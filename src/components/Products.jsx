@@ -8,6 +8,7 @@ import { IoFilter } from 'react-icons/io5';
 import { BiSort } from 'react-icons/bi';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { getAllProducts } from '../services/index/products';
 
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -16,11 +17,13 @@ const Products = () => {
   const [sortOption, setSortOption] = useState('dateNewToOld');
   const [sPrice, setSprice] = useState(null);
   const [ePrice, setEprice] = useState(null);
+  const [keyword, setKeyword] = useState(null);
   const [sort, setSort] = useState(false);
-
+  
   const baseUrl = import.meta.env.VITE_APP_URL;
 
   const { id } = useParams();
+  const categoryMode = Boolean(id)
 
   // Fetching products from API
   const { data: productss } = useQuery({
@@ -29,14 +32,22 @@ const Products = () => {
       const response = await axios.get(`${baseUrl}/api/products_by_category/${id}`);
       return response.data.products;
     },
+    enabled: categoryMode
+  });
+   const { data } = useQuery({
+    queryKey: ['products'],
+    queryFn: getAllProducts
   });
 
   // Update products when data is fetched
   useEffect(() => {
-    if (productss) {
+    if (categoryMode) {
       setProducts(productss);
+    } else {
+      setProducts(data)
     }
-  }, [productss]);
+  }, [productss,data]);
+
 
   // Derived state for sorting
   const sortedProducts = useMemo(() => {
@@ -79,6 +90,25 @@ const Products = () => {
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
+  const searchKeywordOnSubmitHandler = (event) => {
+  event.preventDefault();
+  
+
+  if (!keyword || keyword.trim() === "") {
+    if(categoryMode){
+      setProducts(productss)
+    } else {
+      setProducts(data)
+    }
+    
+  } else {
+
+    const filteredProducts = products?.filter((product) =>
+      product.name.toLowerCase().includes(keyword.toLowerCase())
+    );
+    setProducts(filteredProducts);
+  }
+};
 
   return (
     <div className="w-screen">
@@ -111,13 +141,13 @@ const Products = () => {
               showSidebar ? 'translate-x-0' : '-translate-x-full'
             } transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:w-64`}
           >
-            <Sidebar onCategorySelect={setSelectedCategory} setSprice={setSprice} setEprice={setEprice} />
+            <Sidebar onCategorySelect={setSelectedCategory} setSprice={setSprice} setEprice={setEprice} setKeyword={setKeyword} searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler} />
           </div>
           <div className="flex-1 p-4">
             <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
               <h1
                 onClick={toggleSidebar}
-                className="lg:hidden text-2xl flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold mb-4 ml-[5%]"
+                className="lg:hidden text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold mb-4 ml-[5%]"
               >
                 Filter<span>
                   <IoFilter />
@@ -125,7 +155,7 @@ const Products = () => {
               </h1>
               <h1
                 onClick={() => setSort(!sort)}
-                className="text-2xl flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold mb-4 ml-[5%]"
+                className="text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold mb-4 ml-[5%]"
               >
                 Sort by<span>
                   <BiSort />
