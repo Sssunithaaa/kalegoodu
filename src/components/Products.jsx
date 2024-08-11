@@ -51,7 +51,7 @@ const Products = () => {
 
   // Derived state for sorting
   const sortedProducts = useMemo(() => {
-    let sorted = [...products];
+    let sorted = products ? [...products] : [];
     switch (sortOption) {
       case 'dateNewToOld':
         sorted.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
