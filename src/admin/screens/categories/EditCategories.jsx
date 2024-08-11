@@ -10,30 +10,38 @@ import {
 } from "../../../services/index/postCategories";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
-
+import styled from "styled-components";
+const DeleteButton = styled.button`
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block:5px;
+  
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #c0392b;
+  }
+`;
 const EditCategories = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  
   const { slug } = useParams();
-  // const userState = useSelector((state) => state.user);
 
   const isEditMode = Boolean(slug);
 
-  // State for all fields
   const [categoryTitle, setCategoryTitle] = useState(
     isEditMode ? "Sample Category Title" : ""
   );
   const [description, setDescription] = useState(
     isEditMode ? "Sample Description" : ""
   );
-  const [createdAt, setCreatedAt] = useState(
-    isEditMode ? "2024-06-18T15:50:36.589403+05:30" : new Date().toISOString()
-  );
-  const [status, setStatus] = useState("Active");
-  const [visibility, setVisibility] = useState(true);
+
 
   // Fetching single category (only in edit mode)
-  const {data, isLoading, isError } = useQuery({
+  const {data, isLoading, isError,refetch } = useQuery({
     queryFn: () => getSingleCategory({ slug }),
     queryKey: ["categories", slug],
     onSuccess: (data) => {
@@ -48,7 +56,6 @@ const EditCategories = () => {
  useEffect(()=> {
   setCategoryTitle(data?.name || "Sample Category Title");
       setDescription(data?.description || "Sample Description");
-      setCreatedAt(data?.created_at || "2024-06-18T15:50:36.589403+05:30");
       
       setPreviews(data?.images?.map((image)=>baseUrl+image?.image) || [null,null,null])
  },[data])
@@ -58,22 +65,16 @@ const EditCategories = () => {
   // Mutation for updating category
   const { mutate: mutateUpdateCategory, isLoading: isLoadingUpdateCategory } =
     useMutation({
-      mutationFn: ({ title, slug, description, token }) => {
+      mutationFn: ({updatedData,slug}) => {
         return updateCategory({
-          title,
-          slug,
-          description,
-          status,
-          visibility,
-          token,
+         updatedData,
+          slug
         });
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries(["categories", slug]);
         toast.success("Category updated successfully!");
-        navigate(`/admin/categories/manage/edit/${data._id}`, {
-          replace: true,
-        });
+        
       },
       onError: (error) => {
         toast.error(error.message);
@@ -122,12 +123,20 @@ const handleFileChange = (acceptedFiles, index) => {
 
   
   // Append image files
-  files.forEach(file => {
+ if(!isEditMode){
+   files.forEach(file => {
     if (file) {
       formData.append("images", file); // Ensure the key matches
     }
   });
+ }
+const newImages = files ? files.filter(file => file && file.hasOwnProperty('path')) : [];
 
+if (newImages.length > 0) {
+  newImages.forEach(file => {
+    formData.append('new_images', file);
+  });
+}
   // Log FormData content to verify
   for (let [key, value] of formData.entries()) {
     console.log(key, value);
@@ -135,7 +144,7 @@ const handleFileChange = (acceptedFiles, index) => {
 
   if (isEditMode) {
     mutateUpdateCategory({
-      updatedData: formData,
+       updatedData:  formData,
       slug,
     });
   } else {
@@ -144,7 +153,18 @@ const handleFileChange = (acceptedFiles, index) => {
     );
   }
 };
-
+ const handleDelete = async (categoryImageId) => {
+    try {
+      await axios.delete(`${baseUrl}/api/category_image/${categoryImageId}/delete/`);
+      // queryClient.invalidateQueries(["banner"]);
+      toast.success("Image deleted successfully");
+      refetch()
+    } catch (error) {
+      toast.error("Failed to delete image");
+      console.error("Error deleting image:", error.message);
+    }
+  };
+  
 
   return (
     <div className="col-span-4 py-8">
@@ -160,7 +180,7 @@ const handleFileChange = (acceptedFiles, index) => {
             
         <div className="flex md:flex-row flex-col ">
         {[0, 1, 2].map((index) => (
-  <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
+  <div key={index} className="mx-auto w-[100%] content-center p-2 rounded-md">
     <Dropzone
       onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
       accept="image/*"
@@ -170,7 +190,7 @@ const handleFileChange = (acceptedFiles, index) => {
           {...getRootProps({
             className: `${
               previews[index] ? "bg-white" : "bg-black/20"
-            } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
+            } dropzone grid content-center h-full mx-auto lg:w-[80%] rounded-xl`,
           })}
         >
           <input {...getInputProps()} />
@@ -178,7 +198,7 @@ const handleFileChange = (acceptedFiles, index) => {
             <img
               src={previews[index]}
               alt={`Preview ${index + 1}`}
-              className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
+              className="w-[90%] h-auto  rounded-lg content-center mx-auto"
             />
           ) : (
             <div className="p-3">
@@ -198,6 +218,11 @@ const handleFileChange = (acceptedFiles, index) => {
         </div>
       )}
     </Dropzone>
+     {data?.images[index] && (
+                            <DeleteButton  type="button" onClick={() => handleDelete(data?.images[index]?.category_image_id)}>
+                              Delete
+                            </DeleteButton>
+                          )}
   </div>
 ))}
 </div>
@@ -205,7 +230,7 @@ const handleFileChange = (acceptedFiles, index) => {
        </div>
         {/* )} */}
 
-        <div className="flex flex-col mt-4 gap-y-2">
+        <div className="flex flex-col mt-6 gap-y-2">
           <label>Category title: </label>
           <input
             value={categoryTitle}

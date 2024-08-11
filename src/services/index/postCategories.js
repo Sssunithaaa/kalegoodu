@@ -66,20 +66,20 @@ export const createCategory = async (formData) => {
   }
 };
 
-export const updateCategory = async ({ token, title, slug }) => {
+export const updateCategory = async ({ updatedData, slug }) => {
   try {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
       },
     };
 
-    const { data } = await axios.put(
-      `/api/post-categories/${slug}`,
-      { title },
+    const response = await axios.put(
+      `${url}/api/update_full_category/${slug}/`,
+      updatedData,
       config
     );
-    return data;
+    return response.data;
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);

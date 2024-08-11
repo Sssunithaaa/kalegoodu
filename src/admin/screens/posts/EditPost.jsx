@@ -40,7 +40,7 @@ const DeleteButton = styled.button`
 const EditPost = () => {
   const { id } = useParams(); 
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  
 
   const [categories, setCategories] = useState([]); 
   const [name, setName] = useState(""); 
@@ -104,11 +104,11 @@ const baseUrl = import.meta.env.VITE_APP_URL
 
       setDiscountPrice(product.discounted_price);
   
-      const initialFiles = product.images.map((image) => {
-        const fileName = image.image.split("/").pop(); // Extract the file name from the URL
-        return new File([], fileName, { type: "image/jpeg" }); // Creating a placeholder file
-      });
-      setFiles(initialFiles);
+      // const initialFiles = product.images.map((image) => {
+      //   const fileName = image.image.split("/").pop(); // Extract the file name from the URL
+      //   return new File([], fileName, { type: "image/jpeg" }); // Creating a placeholder file
+      // });
+      // setFiles(initialFiles);
       
       setPreviews(
         product.images?.map((image) => `${BURL}${image.image}`) // Assuming image.image is a URL string
@@ -140,18 +140,18 @@ const baseUrl = import.meta.env.VITE_APP_URL
     mutate: mutateUpdatePostDetail,
     isLoading: isLoadingUpdatePostDetail,
   } = useMutation({
-    mutationFn: ({ updatedData, id, token }) => {
+    mutationFn: ({ updatedData, id }) => {
       return updateProduct({
         updatedData,
-        id,
+        id
         
       });
     },
     onSuccess: (data) => {
       // Invalidate queries to refetch updated post data
       queryClient.invalidateQueries(["product", id]);
-      toast.success("Post is updated successfully"); // Show success toast
-      navigate(`/admin/posts/manage/edit/${data.id}`, { replace: true }); // Navigate to updated post
+      toast.success("Product is updated successfully"); // Show success toast
+      // navigate(`/admin/posts/manage/edit/${data?.product?.product_id}`, { replace: true }); // Navigate to updated post
     },
     onError: (error) => {
       toast.error("Error updating post: " + error.message); // Show error toast
@@ -207,20 +207,33 @@ const handleSubmit = async (e) => {
   const tagObjects = tags.map(tag => tag.value);
   formData.append("sale_types", JSON.stringify(tagObjects));
 
-  // Append existing images with potential updates (image or alt_text)
-  files.forEach((file, index) => {
+  
+  if(!isEditMode){
+    files.forEach((file, index) => {
     if (file) {
       formData.append(`images`, file);
     }
-  });  
+  }); 
+  } 
   
+ 
+const newImages = files ? files.filter(file => file && file.hasOwnProperty('path')) : [];
 
-  const newImages = files.filter(file => file && !previews.includes(URL.createObjectURL(file)));
+if (newImages.length > 0) {
   newImages.forEach(file => {
     formData.append('new_images', file);
   });
-  for(let [key,value] of formData){
-    console.log(key+" "+value)
+}
+
+
+
+
+console.log(newImages);
+
+
+
+  for(let [key,value] of formData.entries()){
+    console.log(key,value)
   }
   if (isEditMode) {
     mutateUpdatePostDetail({
