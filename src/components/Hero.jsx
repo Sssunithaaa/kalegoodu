@@ -24,7 +24,7 @@ const HeroSection = styled.div`
   padding: 0 20px;
 
   @media (max-width: 768px) {
-    height: 80vh;
+    height: 77vh;
   }
 `;
 
