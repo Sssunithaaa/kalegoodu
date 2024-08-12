@@ -46,14 +46,14 @@ const CheckOut = () => {
   const baseUrl = import.meta.env.VITE_APP_URL
   return (
     <div>
-      <div className="lg:mt-5">
+      {/* <div className="lg:mt-5">
         <ParallaxSection />
-      </div>
+      </div> */}
       <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mt-4 ml-[8%]">Your Order</h1>
+        <h1 className="text-2xl font-bold mt-4 ml-[8%]">Your Cart</h1>
 
-        <div className="bg-white shadow-md rounded-lg p-3 mb-6">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white shadow-lg rounded-lg p-3 mb-6">
+          <table className="min-w-full divide-y divide-gray-500">
   {/* <thead className="bg-gray-50">
     <tr>
       <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
@@ -63,19 +63,34 @@ const CheckOut = () => {
       <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
     </tr>
   </thead> */}
-  <tbody className="bg-white divide-y divide-gray-200">
+  <tbody className="bg-white divide-y divide-gray-300">
     {cartItems?.map((item) => (
       <tr key={item.product_id}>
         <td className="px-3 py-5 text-sm">
-          <div className="flex items-center gap-x-3">
+          <div className="flex  gap-x-3">
             <img src={baseUrl + item.images[0]?.image} alt="" className="h-20 w-auto" />
           </div>
         </td>
         <td className="px-3 py-5 text-sm">
-          <span>{item.name}</span>
-        </td>
-        <td className="px-3 py-5 text-sm">
-          <div className="flex justify-center items-center gap-x-3">
+         <div className=' flex flex-col gap-y-3 justify-start'>
+           <div>
+            <span className='uppercase'>{item.name}</span>
+          </div>
+          <div>
+          <p className="text-gray-900 whitespace-no-wrap">
+              {item.discounted_price !== '0' ? (
+                <>
+                  <span className="line-through text-gray-500">
+                    {item.price}
+                  </span>
+                  <span className="text-red-600"> {item.discounted_price}</span>
+                </>
+              ) : (
+                item.price
+              )}
+            </p>
+        </div>
+          <div className="flex justify-start items-center gap-x-3">
             <button
               onClick={() => decreaseQuantity(item.product_id)}
               className="bg-gray-300 text-black py-1 px-2 rounded-lg"
@@ -90,16 +105,19 @@ const CheckOut = () => {
               +
             </button>
           </div>
+          <div>
+            <span>Rs {item.price * item.quantity}</span>
+          </div>
+         </div>
         </td>
-        <td className="px-1 py-5 text-sm">
-          <span>₹ {item.price * item.quantity}</span>
-        </td>
+       
+        
         <td className="px-3 py-5 text-sm">
           <button
             onClick={() => removeFromCart(item.product_id)}
             className="text-red-500"
           >
-            Remove
+           &times; 
           </button>
         </td>
       </tr>

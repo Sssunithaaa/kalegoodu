@@ -2,7 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getAllCategories } from '../services/index/postCategories';
+import styled from 'styled-components';
+const ImageWrapper = styled.img`
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  object-cover: cover;
+  margin: 0 auto;
+  transition: transform 0.3s ease-in-out;
 
+  ${(props) => props.hovered && `
+    transform: scale(1.1);
+  `}
+`;
 const Categories = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
@@ -44,7 +56,7 @@ const Categories = () => {
           onMouseLeave={handleMouseLeave}
           onClick={() => handleCategoryClick(category)}
         >
-          <img
+          <ImageWrapper
             src={`${url}${getDailyRandomImage(category.images)}`} // Add base URL to image path
             alt={category.name}
             className={`w-40 h-40 rounded-full object-cover mx-auto ${hoveredCategory === category.category_id ? 'transform scale-110 ease-in-out duration-300' : ''}`}
