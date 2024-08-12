@@ -112,7 +112,7 @@ const CheckOut = () => {
         </td>
        
         
-        <td className="px-3 py-5 text-sm">
+        <td className="px-3 py-5 text-lg">
           <button
             onClick={() => removeFromCart(item.product_id)}
             className="text-red-500"

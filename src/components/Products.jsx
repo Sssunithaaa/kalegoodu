@@ -9,7 +9,27 @@ import { BiSort } from 'react-icons/bi';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getAllProducts } from '../services/index/products';
+import styled from 'styled-components';
 
+const BackgroundImageWrapper = styled.div`
+  width: 100%;
+  height: 500px;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url(${props => props.imgUrl});
+
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-weight: 600;
+    color: #e91e63; /* text-pink-700 */
+    font-size: 27px;
+  }
+`;
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -112,7 +132,8 @@ const Products = () => {
 
   return (
     <div className="w-screen">
-      <div
+      <BackgroundImageWrapper imgUrl={img11}>
+        {/* <div
         className="w-full h-[500px] text-center"
         style={{
           backgroundImage: `url(${img11})`,
@@ -120,11 +141,12 @@ const Products = () => {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
-      >
+      > */}
         <div className="flex h-full font-semibold text-pink-700 text-[27px] w-full justify-center items-center">
           SHOP NOW
         </div>
-      </div>
+      {/* </div> */}
+      </BackgroundImageWrapper>
       <div className="flex flex-col md:mx-[40px] relative">
         <div className="h-[120px] p-10">
           <h1 className="text-[30px] font-semibold">{selectedCategory} Products</h1>

@@ -56,7 +56,7 @@ const Sidebar = ({setSprice,setEprice,setKeyword,searchKeywordOnSubmitHandler}) 
               </svg>
             </div>
           </div>
-              <Button onClick={searchKeywordOnSubmitHandler} className='my-2 text-md py-2 flex mx-auto'>Apply</Button>
+              <Button onClick={searchKeywordOnSubmitHandler} className='my-2 text-md py-2 flex mx-auto'>Search</Button>
 
         </div>
 

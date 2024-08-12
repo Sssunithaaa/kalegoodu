@@ -9,7 +9,7 @@ import { img1, img2, img3 } from '../assets/images';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 
-const ProductCarousel = ({}) => {
+const ProductCarousel = ({saleType}) => {
  
   
 
@@ -17,7 +17,11 @@ const ProductCarousel = ({}) => {
     queryKey:["products"],
     queryFn: getAllProducts
    })
-
+   const bestSellerMode = Boolean(saleType)
+   const filteredProducts = bestSellerMode 
+    ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
+    : products;
+    
   const settings = {
     dots: true,
     infinite: true,
@@ -51,7 +55,7 @@ const ProductCarousel = ({}) => {
   return (
     <div className="px-10 mx-auto my-5 relative">
       <Slider {...settings}>
-        {products?.map((product) => (
+        {filteredProducts?.map((product) => (
           <div key={product.product_id}  >
             <ModalCard product={product} />
           </div>

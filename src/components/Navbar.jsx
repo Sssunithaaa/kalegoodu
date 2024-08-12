@@ -13,11 +13,11 @@ import SearchBar from '../searchbar/SearchBar';
 
 const navButtons = [
    { name: "Shop all", href: "/products" },
-  { name: "Kitchen decor", href: "/kitchen-decor" },
+  { name: "Kitchen decor", href: "/products/5/?category=kitchen-decor" },
  
-  { name: "Living room decor", href: "/living-room" },
-  { name: "Office decor", href: "/office-decor" },
-  { name: "Gifting combos", href: "/gifting-combos" },
+  { name: "Living room decor", href: "/products/6/?category=living-room" },
+  { name: "Office decor", href: "/products/7/?category=office-decor" },
+  { name: "Gifting combos", href: "/products/8/?category=gifting-combos" },
   {name: "Workshop",href:"/workshop"},
   { name: "Contact us", href: "/contact-us" },
   // { name: "About us", href: "/about-us" }

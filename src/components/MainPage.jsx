@@ -13,6 +13,7 @@ import { img1, img2, img3, img14 } from '../assets/images';
 import Testimonials from './Testimonials/Testimonials';
 import AboutUs from './AboutUs';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 const MainPage = () => {
   
@@ -28,6 +29,7 @@ const MainPage = () => {
 
   ]);
   const navigate = useNavigate()
+  
 
   return (
     <div>
@@ -45,7 +47,7 @@ const MainPage = () => {
       <div className='my-6'>
         <Title>Best Sellers</Title>
         {/* <TiledCarousel /> Add the TiledCarousel component */}
-         <ProductCarousel products={products} />
+         <ProductCarousel products={products} saleType="Best Seller"/>
       </div>
        <div>
         <AboutUs />
