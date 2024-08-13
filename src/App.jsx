@@ -19,6 +19,9 @@ import EditPost from './admin/screens/posts/EditPost';
 import ManageComments from './admin/screens/comments/ManageComments';
 import ManageSaleType from './admin/screens/saletypes/ManageSaleType';
 import AddTestimonialForm from './admin/screens/comments/AddComment';
+import ContactUs from './components/ContactUs';
+import TermsAndConditions from './components/TermsAndConditions';
+import Refund from './components/Refund';
 
 // Load your publishable key from your Stripe account
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
@@ -38,6 +41,9 @@ const App = () => {
           
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/About-Us" element={<AboutUs />} />
+           <Route path="/Contact-Us" element={<ContactUs />} />
+           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+           <Route path="/returns-and-refund" element={<Refund />} />
         </Route>
 
         {/* Admin routes with AdminLayout */}
