@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCard({ product }) {
   const { addToCart, setIsCartVisible } = useContext(CartContext);
@@ -24,10 +25,12 @@ export default function ProductCard({ product }) {
   const discountPercentage = hasDiscount
     ? Math.round(((product?.price - product?.discounted_price) / product?.price) * 100)
     : 0;
+  const navigate = useNavigate()
+     const displayValue = product?.name.replaceAll( " ","-");
 
   return (
     <Card className="w-full max-w-[22rem] shadow-lg">
-      <CardHeader className="p-0" floated={false} color="blue-gray">
+      <CardHeader onClick={() => navigate(`/products/${product?.product_id}/${displayValue}`)}  className="p-0" floated={false} color="blue-gray">
         <img
           src={baseUrl + product?.images[0]?.image}
           alt={product?.name}
@@ -36,7 +39,7 @@ export default function ProductCard({ product }) {
         <div className="absolute inset-0 h-72 w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
       </CardHeader>
 
-      <CardBody className="pb-2 p-[10px] px-[26px]">
+      <CardBody onClick={() => navigate(`/products/${product?.product_id}/${displayValue}`)} className="hover:cursor-pointer pb-2 p-[10px] px-[26px]">
         <div className="mb-[2px] h-16 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray" className="font-medium ">
             {product?.name}

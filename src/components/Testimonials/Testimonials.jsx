@@ -1,90 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import Testimonial from './Testimonial';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-const testimonialsData = [
-  {
-    text: "Laborum quis quam. Dolorum et ut quod quia. Voluptas numquam delectus nihil. Aut enim doloremque et ipsam.",
-    name: "Leslie Alexander",
-    username: "lesliealexander",
-    avatar: "https://via.placeholder.com/150",
-  },
-  {
-    text: "Integer id nunc sit semper purus. Bibendum at lacus ut arcu blandit montes vitae auctor libero. Hac condimentum dignissim nibh vulputate ut nunc. Amet nibh orci mi venenatis blandit vel et proin. Non hendrerit in vel ac diam.",
-    name: "Brenna Goyette",
-    username: "brennagoyette",
-    avatar: "https://via.placeholder.com/150",
-    logo: "https://via.placeholder.com/50"
-  },
-  {
-    text: "Molestias ea earum quos nostrum doloremque sed. Quaerat quasi aut velit incidunt excepturi rerum voluptatem minus harum.",
-    name: "Leonard Krasner",
-    username: "leonardkrasner",
-    avatar: "https://via.placeholder.com/150",
-  },
-  {
-    text: "Quia dolorem qui et. Atque quo aliquid sit eos officia. Dolores similique laboriosam quaerat cupiditate.",
-    name: "Michael Foster",
-    username: "michaelfoster",
-    avatar: "https://via.placeholder.com/150",
-  },
-  {
-    text: "Aut reprehenderit voluptatem eum asperiores beatae id. Iure molestiae ipsam ut officia rem nulla blanditiis.",
-    name: "Lindsay Walton",
-    username: "lindsaywalton",
-    avatar: "https://via.placeholder.com/150",
-  },
-  {
-    text: "Voluptas quos itaque ipsam in voluptatem est. Iste eos blanditiis repudiandae. Earum deserunt enim molestiae ipsum perferendis recusandae saepe corrupti.",
-    name: "Tom Cook",
-    username: "tomcook",
-    avatar: "https://via.placeholder.com/150",
-  },
-   {
-    text: "Aut reprehenderit voluptatem eum asperiores beatae id. Iure molestiae ipsam ut officia rem nulla blanditiis.",
-    name: "Lindsay Walton",
-    username: "lindsaywalton",
-    avatar: "https://via.placeholder.com/150",
-  },
-  {
-    text: "Voluptas quos itaque ipsam in voluptatem est. Iste eos blanditiis repudiandae. Earum deserunt enim molestiae ipsum perferendis recusandae saepe corrupti.",
-    name: "Tom Cook",
-    username: "tomcook",
-    avatar: "https://via.placeholder.com/150",
-  },
-];
 
-const Testimonials = () => {
+const Testimonials = ({ comments }) => {
   const breakpointColumnsObj = {
     default: 4,
     1100: 2,
-    700: 1
+    700: 1,
   };
-  const baseUrl = import.meta.env.VITE_APP_URL
- const {data,isLoading} = useQuery({
-  queryKey: ["comments"],
-  queryFn: async () => {
-    const response = await axios.get(`${baseUrl}/api/comments/`);
-    
-    return response.data?.comments
-  }
- })
+  const baseUrl = import.meta.env.VITE_APP_URL;
 
+  const { data, isLoading } = useQuery({
+    queryKey: ['comments'],
+    queryFn: async () => {
+      const response = await axios.get(`${baseUrl}/api/comments/`);
+      return response.data?.comments;
+    },
+  });
+
+  const [reviews, setReviews] = useState([]);
+  const [productMode, setProductMode] = useState(false);
+
+  useEffect(() => {
+    if (comments) {
+      setReviews(comments);
+      setProductMode(true);
+    } else {
+      setReviews(data);
+    }
+  }, [comments, data]);
+
+  const averageRating = reviews.length
+    ? (reviews.reduce((sum, comment) => sum + comment.rating, 0) / reviews.length).toFixed(1)
+    : 'No ratings yet';
+
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className={i <= rating ? 'text-yellow-500' : 'text-gray-300'}>
+          ★
+        </span>
+      );
+    }
+    return stars;
+  };
 
   return (
-    // <div>
-     <div className="bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12"> 
+    <div className={`${productMode ? '' : 'bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12'}`}>
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center text-black mb-2">Testimonials</h2>
-        <p className="text-xl text-center text-grsay-600 mb-2">We have worked with thousands of amazing people</p>
+        <h2 className="text-3xl font-medium text-center text-black mb-2">
+          {productMode ? reviews.length === 0 ? 'No reviews yet' : 'Reviews' : 'Testimonials'}
+        </h2>
+        {productMode && reviews.length > 0 && (
+          <div className="text-center text-gray-600 mb-4">
+            <div className="text-xl">{averageRating} / 5.0</div>
+            <div className="text-2xl">{renderStars(Math.round(averageRating))}</div>
+            <div className="text-sm mt-1">{reviews.length} Reviews</div>
+          </div>
+        )}
         <Masonry
           breakpointCols={breakpointColumnsObj}
           className="flex -ml-4"
           columnClassName="pl-4 bg-clip-padding"
         >
-          {data?.map((testimonial, index) => (
-            <Testimonial key={index} {...testimonial} />
+          {reviews?.map((testimonial, index) => (
+            <Testimonial key={index} {...testimonial} productMode={productMode} />
           ))}
         </Masonry>
       </div>

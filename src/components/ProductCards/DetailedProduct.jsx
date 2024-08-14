@@ -5,8 +5,8 @@ export const DetailedProduct = ({ product }) => {
     : 0;
 
   return (
-    <div>
-      <h1 className="font-bold text-3xl mb-4 md:text-3xl md:mb-10 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
+    <div className="px-3">
+      <h1 className="font-bold text-3xl mb-4  md:text-3xl md:mb-10 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
         {product?.name}
       </h1>
       <p className="text-dark-grayish-blue mb-5 text-sm leading-[22px] md:text-base">

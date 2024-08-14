@@ -132,8 +132,8 @@ const Products = () => {
 
   return (
     <div className="w-screen">
-      <BackgroundImageWrapper imgUrl={img11}>
-        {/* <div
+      {/* <BackgroundImageWrapper imgUrl={img11}>
+         <div
         className="w-full h-[500px] text-center"
         style={{
           backgroundImage: `url(${img11})`,
@@ -141,12 +141,12 @@ const Products = () => {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
-      > */}
+      > 
         <div className="flex h-full font-semibold text-pink-700 text-[27px] w-full justify-center items-center">
           SHOP NOW
         </div>
-      {/* </div> */}
-      </BackgroundImageWrapper>
+     
+      </BackgroundImageWrapper> */}
       <div className="flex flex-col md:mx-[40px] relative">
         <div className="h-[120px] p-10">
           <h1 className="text-[30px] font-semibold">{selectedCategory} Products</h1>
