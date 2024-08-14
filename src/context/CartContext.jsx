@@ -64,10 +64,10 @@ export const CartProvider = ({ children }) => {
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   // Calculate total price of items in the cart
-  const cartTotal = cartItems.reduce(
-    (acc, item) => acc + item.discounted_price !== 0 ? item.discounted_price : item.price * item.quantity,
-    0
-  );
+const cartTotal = cartItems.reduce(
+  (acc, item) => acc + (item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity),
+  0
+);
 
   // useEffect to store cart items in localStorage whenever cartItems state changes
   useEffect(() => {

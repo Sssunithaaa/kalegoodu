@@ -79,7 +79,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-md font-semibold">Rs. {item.price}</p>
+                    <p className="text-md font-semibold">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
                     <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 hover:text-red-700">&times;</button>
                   </div>
                 </div>
