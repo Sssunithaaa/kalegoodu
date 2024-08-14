@@ -47,11 +47,11 @@ const Categories = () => {
   };
   const url = import.meta.env.VITE_APP_URL
   return (
-  <div className="grid w-[80%] justify-center my-2 overflow-x-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4  mx-auto">
+  <div className="grid w-[80%] justify-center my-2 overflow-x-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4  mx-auto">
       {data?.categories?.map((category) => (
         <div
           key={category.category_id}
-          className={`m-4 text-center `}
+          className={`mx-4 my-[6px] text-center `}
           onMouseEnter={() => handleMouseEnter(category.category_id)}
           onMouseLeave={handleMouseLeave}
           onClick={() => handleCategoryClick(category)}

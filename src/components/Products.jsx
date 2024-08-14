@@ -43,7 +43,11 @@ const Products = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
 
   const { id,name } = useParams();
-  
+  useEffect(()=> {
+    if(name){
+      setSelectedCategory(name.replaceAll("-"," "))
+    }
+  })
   const categoryMode = Boolean(id)
 
   // Fetching products from API
@@ -149,8 +153,8 @@ const Products = () => {
      
       </BackgroundImageWrapper> */}
       <div className="flex flex-col md:mx-[40px] relative">
-        <div className="h-[120px] p-10">
-          <h1 className="text-[30px] font-semibold">{selectedCategory} Products</h1>
+        <div className=" py-3 px-5">
+          <h1 className="text-3xl font-semibold">{selectedCategory}</h1>
         </div>
         <div className="flex lg:flex-row flex-col">
           <div

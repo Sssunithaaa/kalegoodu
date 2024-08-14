@@ -30,11 +30,11 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
 `;
 const navButtons = [
    { name: "Shop all", href: "/products" },
-  { name: "Kitchen decor", href: "/categories/Kitchen-decor/5" },
+  { name: "Kitchen decor", href: "/Categories/5/Kitchen-Decor" },
  
-  { name: "Living room decor", href: "/categories/Living-room/6" },
-  { name: "Office decor", href: "/categories/Office-decor/7" },
-  { name: "Gifting combos", href: "/categories/Gifting-combos/8" },
+  { name: "Living room decor", href: "/Categories/6/Living-Room-Decor" },
+  { name: "Office decor", href: "/Categories/7/Office-Decor" },
+  { name: "Gifting combos", href: "/Categories/8/Gifting-Combos" },
   {name: "Workshop",href:"/workshop"},
   { name: "Contact us", href: "/contact-us" },
   // { name: "About us", href: "/about-us" }
