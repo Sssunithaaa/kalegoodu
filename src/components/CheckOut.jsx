@@ -38,7 +38,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     message += `\nTotal: Rs. ${total}`;
     console.log(message)
     try {
-      const response = await fetch(`${baseUrl}/api/send-message`, { // Ensure correct URL
+      const response = await fetch(`${baseUrl}/api/send-message/`, { // Ensure correct URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message }),
