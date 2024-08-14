@@ -3,6 +3,7 @@ import Masonry from 'react-masonry-css';
 import Testimonial from './Testimonial';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import Title from '../Title';
 
 const Testimonials = ({ comments }) => {
   const breakpointColumnsObj = {
@@ -51,9 +52,9 @@ const Testimonials = ({ comments }) => {
   return (
     <div className={`${productMode ? '' : 'bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12'}`}>
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-medium text-center text-black mb-2">
+        <Title>
           {productMode ? reviews.length === 0 ? 'No reviews yet' : 'Reviews' : 'Testimonials'}
-        </h2>
+        </Title>
         {productMode && reviews.length > 0 && (
           <div className="text-center text-gray-600 mb-4">
             <div className="text-xl">{averageRating} / 5.0</div>

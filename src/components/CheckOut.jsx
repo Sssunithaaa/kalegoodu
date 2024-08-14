@@ -1,12 +1,27 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { CartContext } from '../context/CartContext';
-import Navbar from './Navbar';
-import ParallaxSection from './Parralax';
+import styled from 'styled-components';
+const Button = styled.button`
+  width: 50%;
+  height: 45px;
+background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 79.6476490172856% 29.76095796117111%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 80.73001484309323% 71.025398036287%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 74.71274406155253% 92.17335404339366%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 41.223261123520594% 30.917984618376227%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 37.9520129096355% 60.069337551017334%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 67.69235280932718% 23.91998376199933%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 93.68255347726229% 18.89111181278711%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 13.215737665881534% 45.21500942396648%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 61.18443079724643% 88.41983116607912%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 10.575958325731749% 96.72193910560092%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 75.42341628599371% 53.31130723888271%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%);
+  margin-top: 10px;
+  border: none;
+  cursor: pointer;
+  display:flex;
+  margin-inline:auto;
+  justify-content:center;
+  align-items:center;
+  border-radius: 5px;
 
+  &:hover {
+    background-color: #9e7f6b; /* Slightly darker color */
+  }
+`;
 const CheckOut = () => {
-  const { cartItems, paymentMethod, setPaymentMethod, cartTotal, increaseQuantity, decreaseQuantity, removeFromCart } = useContext(CartContext);
+  const { cartItems, cartTotal, increaseQuantity, decreaseQuantity, removeFromCart } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
-
+  
   useEffect(() => {
     let totalPrice = 0;
     cartItems?.forEach((item) => {
@@ -14,16 +29,16 @@ const CheckOut = () => {
     });
     setTotal(totalPrice);
   }, [cartItems]);
-
+const baseUrl = import.meta.env.VITE_APP_URL
   const handlePlaceOrder = async () => {
     let message = 'Order Details:\n\n';
     cartItems.forEach((item) => {
       message += `${item.name} × ${item.quantity}: Rs. ${item.price * item.quantity}\n`;
     });
-    message += `\nTotal: Rs. ${total}\n\nPayment Method: ${paymentMethod}`;
-    
+    message += `\nTotal: Rs. ${total}`;
+    console.log(message)
     try {
-      const response = await fetch('http://localhost:3000/send-order', { // Ensure correct URL
+      const response = await fetch(`${baseUrl}/api/send-message`, { // Ensure correct URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message }),
@@ -40,19 +55,15 @@ const CheckOut = () => {
     }
   };
 
-  const handlePaymentMethodChange = (event) => {
-    setPaymentMethod(event.target.value);
-  };
-  const baseUrl = import.meta.env.VITE_APP_URL
+  
+  
   return (
     <div>
-      {/* <div className="lg:mt-5">
-        <ParallaxSection />
-      </div> */}
-     {cartItems.length === 0 ? <div>Your cart is empty</div> :  <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mt-4 ml-[8%]">Your Cart</h1>
+      
+     {cartItems.length === 0 ? <div>Your cart is empty</div> :  <div className="max-w-2xl mx-auto px-4">
+        <h1 className="text-2xl mt-4 font-bold ml-[8%]">Your Cart</h1>
 
-        <div className="bg-white shadow-lg rounded-lg p-3 mb-6">
+        <div className="bg-white shadow-lg rounded-lg p-3 mb-2">
           <table className="min-w-full divide-y divide-gray-500">
  
   <tbody className="bg-white divide-y divide-gray-300">
@@ -129,45 +140,17 @@ const CheckOut = () => {
             <span>Total</span>
             <span>Rs.  {total}</span>
           </div>
-        </div>
-
-        {/* Payment Method Selection */}
-        <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-bold mb-4">Select Payment Method</h2>
-          <div className="flex items-center mb-4">
-            <input
-              type="radio"
-              id="card"
-              name="paymentMethod"
-              value="card"
-              checked={paymentMethod === 'card'}
-              onChange={handlePaymentMethodChange}
-              className="mr-2"
-            />
-            <label htmlFor="card" className="mr-4">
-              Credit/Debit Card
-            </label>
-            <input
-              type="radio"
-              id="upi"
-              name="paymentMethod"
-              value="upi"
-              checked={paymentMethod === 'upi'}
-              onChange={handlePaymentMethodChange}
-              className="mr-2"
-            />
-            <label htmlFor="upi">
-              UPI
-            </label>
-          </div>
-        </div>
-
-        <button
+          <Button
           onClick={handlePlaceOrder}
-          className="bg-yellow-500 text-white py-2 px-4 rounded-lg mt-4"
+        
         >
           Place Order
-        </button>
+        </Button>
+        </div>
+      
+        {/* Payment Method Selection */}
+        
+        
       </div>}
     </div>
   );

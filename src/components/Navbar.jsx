@@ -30,11 +30,11 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
 `;
 const navButtons = [
    { name: "Shop all", href: "/products" },
-  { name: "Kitchen decor", href: "/products/5/?category=kitchen-decor" },
+  { name: "Kitchen decor", href: "/categories/Kitchen-decor/5" },
  
-  { name: "Living room decor", href: "/products/6/?category=living-room" },
-  { name: "Office decor", href: "/products/7/?category=office-decor" },
-  { name: "Gifting combos", href: "/products/8/?category=gifting-combos" },
+  { name: "Living room decor", href: "/categories/Living-room/6" },
+  { name: "Office decor", href: "/categories/Office-decor/7" },
+  { name: "Gifting combos", href: "/categories/Gifting-combos/8" },
   {name: "Workshop",href:"/workshop"},
   { name: "Contact us", href: "/contact-us" },
   // { name: "About us", href: "/about-us" }
@@ -90,7 +90,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
               </div>
               <Button onClick={() => {
                 toggleCart();
-                navigate("/checkout");
+                navigate("/Checkout");
               }} className='font-medium'>
                 Proceed to checkout
               </Button>
@@ -153,132 +153,58 @@ const MegaMenu = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="">
-      <div className={`${display} border-b-2 md:static mt-0 w-full m-0 bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  z-[10001]`}>
-        <div className="flex flex-row flex-wrap justify-between items-center my-0 mx-auto w-full px-4 z-50">
-          <div className='flex justify-between sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 md:py-3 w-screen lg:w-auto'>
+   <div className="">
+      <div className={`${display} md:static mt-0 w-full m-0 bg-white z-[10001]`}>
+        <div className="flex justify-between items-center my-0 mx-auto w-full px-4 z-50">
+          <div className='flex justify-between sm:py-3 xs:py-6 py-4 md:py-4 md:pt-0 w-screen md:w-auto'>
             <div className='flex flex-row items-center gap-x-4'>
-              <div className='md:hidden mt-1'>
-               <button className="text-2xl">
-                {isMenuVisible ? 
-                  <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : 
-                  <HiMenuAlt3 size={20} onClick={handleMenuToggle} />
-                }
-              </button>
+             <div className='lg:hidden mt-1'>
+            <button className="text-2xl">
+              {isMenuVisible ? 
+                <RiCloseLargeLine size={20} onClick={handleMenuToggleOff} /> : 
+                <HiMenuAlt3 size={20} onClick={handleMenuToggle} />
+              }
+            </button>
+          </div>
+           <div className='hover:cursor-pointer' onClick={() => navigate("/")}>
+            <Title>KALEGOODU</Title>
+          </div>
             </div>
-            <div className='hover:cursor-pointer' onClick={() => navigate("/")}>
-              <Title>KALEGOODU</Title>
-            </div>
-            </div>
-            <div className='flex lg:hidden flex-row gap-x-5 justify-center items-center'>
-              <button className="text-2xl" onClick={toggleSearchbar}>
-                <CiSearch size={20} />
-              </button>
-              <div className="relative">
-                <button className="text-2xl relative" onClick={toggleCart}>
-                  <HiOutlineShoppingBag size={24} />
-                  {cartItemCount > 0 && (
-                    <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                      {cartItemCount}
-                    </span>
-                  )}
-                </button>
-              </div>
-             
-            </div>
+              <div className='flex md:hidden flex-row gap-x-5 justify-center items-center'>
+          <button className="text-2xl" onClick={toggleSearchbar}>
+            <CiSearch size={20} />
+          </button>
+          <div className="relative">
+            <button className="text-2xl relative" onClick={toggleCart}>
+              <HiOutlineShoppingBag size={24} />
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
           </div>
           {isMenuVisible && (
             <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block md:flex md:w-auto md:order-1`}>
               <ul className="flex flex-col mt-4 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
                 {navButtons.map((item, index) =>
-                  !item.hasDropdown ? (
-                    <li id="nav" onClick={() => navigate(item.href)} key={index} className='relative py-3 px-3 hover:cursor-pointer transition-all duration-500'>
+                 
+                    <li id="nav" onClick={() => navigate(item.href)} key={index} className='md:flex md:mx-auto py-3 px-3 hover:cursor-pointer transition-all duration-500'>
                       <div className="block py-2 px-3 text-gray-900 md:p-0" aria-current="page">
                         <span className='hover:text-black hover:font-semibold'>{item.name}</span>
                       </div>
             <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
           </li>
-        ) : (
-          <li
-            key={index}
-            className='relative py-3 px-3 transition-all duration-500'
-            onMouseEnter={() => setIsDropdownVisible(true)}
-            onMouseLeave={() => setIsDropdownVisible(false)}
-          >
-  <button
-    id="mega-menu-full-cta-image-button"
-    data-collapse-toggle="mega-menu-full-image-dropdown"
-    className={`flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 hover:text-orange md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 uppercase dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700`}
-  >
-    {item.name}
-    <svg className="w-2.5 h-2.5 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-    </svg>
-  </button>
-  {isDropdownVisible && (
-    <div
-    id="mega-menu-full-image-dropdown"
-    className={`lg:absolute mt-4 z-[100001] bg-white border-gray-200 shadow-sm border-y transition-max-height duration-1000 ease-in-out ${
-      isDropdownVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-    } overflow-hidden`}
-  >
-    <div className="grid max-w-screen-xl grid-cols-2 gap-x-5 px-6 py-3 mx-auto text-sm text-gray-500 dark:text-gray-400 md:grid-cols-3 lg:px-10 lg:py-5 lg:gap-x-10">
-      <ul className="mb-4 space-y-4 md:mb-0 md:block" aria-labelledby="mega-menu-full-image-button">
-        <li>
-          <a href="#" className="hover:underline hover:text-orange">
-            Online Stores
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:underline hover:text-orange">
-            Segmentation
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:underline hover:text-orange">
-            Marketing CRM
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:underline hover:text-orange">
-            Online Stores
-          </a>
-        </li>
-      </ul>
-      <ul className="mb-4 space-y-4 md:mb-0">
-        <li>
-          <a href="#" className="hover:underline hover:text-orange">
-            Our Blog
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:underline hover:text-orange">
-            Terms & Conditions
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
-            License
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
-            Resources
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  )}
-</li>
-)
+      
 )}
-<li className='hidden lg:block py-3'>
+<li className=' block py-3'>
 <button onClick={toggleSearchbar}>
 <CiSearch size={20} />
 </button>
 </li>
-<li className='hidden lg:block py-3'>
+<li className=' block py-3'>
 <div className="relative">
 <button className="text-2xl relative" onClick={toggleCart}>
 <HiOutlineShoppingBag size={24} />
@@ -316,6 +242,7 @@ const MegaMenu = () => {
 
      
     </div>
+
   );
 };
 

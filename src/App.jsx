@@ -38,12 +38,13 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<Products />} />
           <Route path="/products/:id/:name" element={<ProductPage />} />
+          <Route path="/categories/:id/:name/" element={<Products />} />
           
-          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/Checkout" element={<CheckOut />} />
           <Route path="/About-Us" element={<AboutUs />} />
            <Route path="/Contact-Us" element={<ContactUs />} />
-           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-           <Route path="/returns-and-refund" element={<Refund />} />
+           <Route path="/Terms-and-conditions" element={<TermsAndConditions />} />
+           <Route path="/Returns-and-refund" element={<Refund />} />
         </Route>
 
         {/* Admin routes with AdminLayout */}

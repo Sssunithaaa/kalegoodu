@@ -42,7 +42,8 @@ const Products = () => {
   
   const baseUrl = import.meta.env.VITE_APP_URL;
 
-  const { id } = useParams();
+  const { id,name } = useParams();
+  
   const categoryMode = Boolean(id)
 
   // Fetching products from API

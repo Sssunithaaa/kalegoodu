@@ -36,11 +36,11 @@ const MainPage = () => {
       <div className="w-full">
         <Hero />
       </div>
-      <div className="my-10">
+      <div className="my-6">
         <Title>Shop by collection</Title>
         <Categories />
       </div>
-      <div className="w-full my-10">
+      <div className="w-full my-6">
         <Title>Trendiest new arrivals</Title>
         <ProductCarousel products={products} />
       </div>
@@ -49,10 +49,12 @@ const MainPage = () => {
         {/* <TiledCarousel /> Add the TiledCarousel component */}
          <ProductCarousel products={products} saleType="Best Seller"/>
       </div>
-       <div>
+       <div className='my-6'>
+        <Title>About us</Title>
         <AboutUs />
       </div>
       <div className='my-6'>
+      
         <Testimonials />
       </div>
      

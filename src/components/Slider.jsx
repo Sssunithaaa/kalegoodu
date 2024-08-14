@@ -53,7 +53,7 @@ const ProductCarousel = ({saleType}) => {
     ],
   };
   return (
-    <div className="px-10 mx-auto my-5 relative">
+    <div className="px-10 mx-auto my-2 relative">
       <Slider {...settings}>
         {filteredProducts?.map((product) => (
           <div key={product.product_id}  >

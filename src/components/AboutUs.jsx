@@ -10,10 +10,8 @@ const FoundersImage = styled.img`
 
 const AboutUs = () => {
   return (
-    <div className="about-us-container p-6 md:p-6">
-      <div>
-        <h1 className="about-us-heading text-2xl text-center font-bold mb-4">About Us</h1>
-      </div>
+    <div className="about-us-container px-6 md:px-6">
+      
       {/* <div className="about-us-section text-center mb-12">
         
         <p className="about-us-paragraph max-w-lg flex mx-auto text-md md:text-lg text-gray-700">
@@ -24,14 +22,14 @@ At Kalegoodu, we are committed to providing you with the very best in home decor
 
 Thank you for choosing Kalegoodu as your trusted source for home decor. We are honored to be a part of your journey in creating a space that brings joy, comfort, and beauty to your everyday life.        </p>
       </div> */}
-      <div className="founders-section mt-12 flex flex-col md:flex-row justify-center items-center text-center">
+      <div className="founders-section my-2 flex flex-col md:flex-row justify-center items-center text-center">
        
         <div className="founders-content flex flex-col md:flex-row justify-center items-center">
           <FoundersImage src={img19} alt="Founder 1" />
          
           
         </div>
-         <div className="founder-description text-lg md:text-xl text-gray-700 text-left max-w-lg mb-8 md:mb-0 md:ml-8">
+         <div className="founder-description text-lg md:text-xl text-gray-700 text-left max-w-lg md:mb-0 md:ml-8">
             <h3 className="md:text-lg text-md font-bold mb-2">HELLO,<br/> From the Founders</h3>
 <p className='text-md md:text-lg mx-w-lg'>
     "We believe that a home should be a true reflection of one's personality, a sanctuary where comfort and happiness abound, embracing both the little joys and the grand milestones of life.

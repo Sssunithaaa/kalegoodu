@@ -34,7 +34,7 @@ const Categories = () => {
 
   const handleCategoryClick = (category) => {
     const url = category.name.replaceAll(" ","-")
-    navigate(`/products/${category?.category_id}/?category=${url}`);
+    navigate(`/categories/${category?.category_id}/${url}`);
   };
 
 
@@ -47,7 +47,7 @@ const Categories = () => {
   };
   const url = import.meta.env.VITE_APP_URL
   return (
-    <div className="flex justify-center overflow-x-auto flex-wrap w-full">
+  <div className="grid w-[80%] justify-center my-2 overflow-x-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4  mx-auto">
       {data?.categories?.map((category) => (
         <div
           key={category.category_id}
