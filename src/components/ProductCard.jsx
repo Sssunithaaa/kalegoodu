@@ -5,55 +5,43 @@ import {
   CardFooter,
   Typography,
   Button,
-  Tooltip,
   IconButton,
 } from "@material-tailwind/react";
-import { MdEventAvailable } from "react-icons/md";
-import { CartContext } from "../context/CartContext";
 import { useContext } from "react";
-export default function ProductCard({product}) {
-  const {addToCart,setIsCartVisible} = useContext(CartContext);
-  const quantity=1;
-  const handleCartClick=()=> {
-    addToCart({...product,quantity})
+import { CartContext } from "../context/CartContext";
+
+export default function ProductCard({ product }) {
+  const { addToCart, setIsCartVisible } = useContext(CartContext);
+  const quantity = 1;
+
+  const handleCartClick = () => {
+    addToCart({ ...product, quantity });
     setIsCartVisible(true);
-  }
-  const baseUrl = import.meta.env.VITE_APP_URL
+  };
+
+  const baseUrl = import.meta.env.VITE_APP_URL;
+  const hasDiscount = product?.discounted_price > 0;
+  const discountPercentage = hasDiscount
+    ? Math.round(((product?.price - product?.discounted_price) / product?.price) * 100)
+    : 0;
+
   return (
     <Card className="w-full max-w-[22rem] shadow-lg">
-      <CardHeader className="p-0 " floated={false} color="blue-gray">
-  <img
-    src={baseUrl + product?.images[0]?.image}
-    alt="ui/ux review check"
-    className="w-full h-72 object-cover p-0"
-  />
-  <div className="absolute inset-0  h-72 w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
-  {/* <IconButton
-    size="sm"
-    color="red"
-    variant="text"
-    className="!absolute top-4 right-4 rounded-full"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="h-6 w-6"
-    >
-      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-    </svg>
-  </IconButton> */}
-</CardHeader>
+      <CardHeader className="p-0" floated={false} color="blue-gray">
+        <img
+          src={baseUrl + product?.images[0]?.image}
+          alt={product?.name}
+          className="w-full h-72 object-cover p-0"
+        />
+        <div className="absolute inset-0 h-72 w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
+      </CardHeader>
 
-      <CardBody className="pb-4 p-4 px-4">
-        <div className="mb-3 h-16 flex items-center justify-between">
-          <Typography variant="h5" color="blue-gray" className="font-medium">
-            {product.name}
+      <CardBody className="pb-2 p-[10px] px-[26px]">
+        <div className="mb-[2px] h-16 flex items-center justify-between">
+          <Typography variant="h5" color="blue-gray" className="font-medium ">
+            {product?.name}
           </Typography>
-          <Typography
-            color="blue-gray"
-            className="flex items-center gap-1.5 font-normal"
-          >
+          <Typography color="blue-gray" className="flex items-center gap-1.5 font-normal">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -69,16 +57,25 @@ export default function ProductCard({product}) {
             {product?.rating ? 5 : 5}
           </Typography>
         </div>
-        {/* <Typography color="black">
-          Enter a freshly updated and thoughtfully furnished peaceful home
-          surrounded by ancient trees, stone walls, and open meadows.
-        </Typography> */}
-        <Typography className="my-2">
-          <strong className="text-black py-3">₹ {product.price}</strong>
-        </Typography>
-        
+
+        <div className="my-[2px]">
+          {hasDiscount ? (
+            <div className="flex items-center gap-2">
+              <p className="text-black py-1 text-md">Rs. {product?.discounted_price}</p>
+              <Typography color="red" className="text-sm">
+                <del>Rs. {product?.price}</del>
+              </Typography>
+              <Typography className="text-green-700 font-bold text-sm">
+                {discountPercentage}% off
+              </Typography>
+            </div>
+          ) : (
+            <p className="text-gray-900 py-1 text-md">Rs. {product?.price}</p>
+          )}
+        </div>
       </CardBody>
-      <CardFooter className="py-0 mb-3">
+
+      <CardFooter className="py-0 mb-3 pb-[2px]">
         <Button onClick={handleCartClick} size="lg" className="py-2" fullWidth={true}>
           Add to cart
         </Button>

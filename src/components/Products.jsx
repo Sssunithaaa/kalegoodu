@@ -153,7 +153,7 @@ const Products = () => {
         </div>
         <div className="flex lg:flex-row flex-col">
           <div
-            className={`fixed inset-0 bg-gray-800 bg-opacity-40 z-30 ${
+            className={`fixed inset-0 bg-gray-800 bg-opacity-40 z-40 ${
               showSidebar ? 'block' : 'hidden'
             }`}
             onClick={toggleSidebar}

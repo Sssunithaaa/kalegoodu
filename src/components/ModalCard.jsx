@@ -34,14 +34,30 @@ const ModalCard = ({ product }) => {
  
 
   return (
-    <div className="bg-white h-86 p-4 rounded-lg shadow-md cursor-pointer mx-2">
-
+     <div className="bg-white h-86 p-4 rounded-lg shadow-md cursor-pointer mx-2">
       <div onClick={() => navigate(`/products/${product?.product_id}/${displayValue}`)}>
-        <img src={productImage} alt={product.name} className="w-full h-72 object-cover rounded-lg mb-4" />
+        <img
+          src={productImage}
+          alt={product.name}
+          className="w-full h-72 object-cover rounded-lg mb-4"
+        />
         <h3 className="text-lg font-semibold h-12 mb-2">{product.name}</h3>
-        <p className="text-gray-600">₹ {product.price}</p>
+        
+        <div className="flex items-center mb-2">
+          {product.discounted_price > 0 && (
+            <>
+              <p className=" line-through text-gray-900 mr-2 ">Rs. {product.price}</p>
+              <p className=" text-green-700 font-semibold">Rs. {product.discounted_price}</p>
+            </>
+          )}
+          {product.discounted_price === 0 && (
+            <p className="text-green-700 font-semibold">Rs. {product.price}</p>
+          )}
+        </div>
       </div>
-      <Button onClick={handleAddToCart} className='text-[16px]'>Add to cart</Button>
+      <Button onClick={handleAddToCart} className="text-[16px]">
+        Add to cart
+      </Button>
     </div>
   );
 };
