@@ -32,8 +32,8 @@ const Testimonials = ({ comments }) => {
     }
   }, [comments, data]);
 
-  const averageRating = reviews.length
-    ? (reviews.reduce((sum, comment) => sum + comment.rating, 0) / reviews.length).toFixed(1)
+  const averageRating = reviews?.length
+    ? (reviews?.reduce((sum, comment) => sum + comment.rating, 0) / reviews.length).toFixed(1)
     : 'No ratings yet';
 
   const renderStars = (rating) => {
