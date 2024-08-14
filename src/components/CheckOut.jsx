@@ -10,7 +10,7 @@ const CheckOut = () => {
   useEffect(() => {
     let totalPrice = 0;
     cartItems?.forEach((item) => {
-      totalPrice += item.price * item.quantity;
+      totalPrice += item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity;
     });
     setTotal(totalPrice);
   }, [cartItems]);
@@ -18,9 +18,9 @@ const CheckOut = () => {
   const handlePlaceOrder = async () => {
     let message = 'Order Details:\n\n';
     cartItems.forEach((item) => {
-      message += `${item.name} × ${item.quantity}: ₹${item.price * item.quantity}\n`;
+      message += `${item.name} × ${item.quantity}: Rs. ${item.price * item.quantity}\n`;
     });
-    message += `\nTotal: ₹${total}\n\nPayment Method: ${paymentMethod}`;
+    message += `\nTotal: Rs. ${total}\n\nPayment Method: ${paymentMethod}`;
     
     try {
       const response = await fetch('http://localhost:3000/send-order', { // Ensure correct URL
@@ -49,20 +49,12 @@ const CheckOut = () => {
       {/* <div className="lg:mt-5">
         <ParallaxSection />
       </div> */}
-      <div className="max-w-2xl mx-auto p-4">
+     {cartItems.length === 0 ? <div>Your cart is empty</div> :  <div className="max-w-2xl mx-auto p-4">
         <h1 className="text-2xl font-bold mt-4 ml-[8%]">Your Cart</h1>
 
         <div className="bg-white shadow-lg rounded-lg p-3 mb-6">
           <table className="min-w-full divide-y divide-gray-500">
-  {/* <thead className="bg-gray-50">
-    <tr>
-      <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Price</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-    </tr>
-  </thead> */}
+ 
   <tbody className="bg-white divide-y divide-gray-300">
     {cartItems?.map((item) => (
       <tr key={item.product_id}>
@@ -76,20 +68,23 @@ const CheckOut = () => {
            <div>
             <span className='uppercase'>{item.name}</span>
           </div>
-          <div>
-          <p className="text-gray-900 whitespace-no-wrap">
-              {item.discounted_price !== '0' ? (
-                <>
-                  <span className="line-through text-gray-500">
-                    {item.price}
-                  </span>
-                  <span className="text-red-600"> {item.discounted_price}</span>
-                </>
-              ) : (
-                item.price
-              )}
-            </p>
-        </div>
+            <div>
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            {item.discounted_price !== 0 ? (
+                              <>
+                                <span className="line-through text-gray-500">
+                                  Rs. {item.price}&nbsp;
+                                </span>
+                                <span className="text-red-600">
+                                  {'  '}
+                                  Rs. {item.discounted_price}
+                                </span>
+                              </>
+                            ) : (
+                              <>Rs. {item.price}</>
+                            )}
+                          </p>
+                        </div>
           <div className="flex justify-start items-center gap-x-3">
             <button
               onClick={() => decreaseQuantity(item.product_id)}
@@ -106,7 +101,7 @@ const CheckOut = () => {
             </button>
           </div>
           <div>
-            <span>Rs {item.price * item.quantity}</span>
+            <span>Rs {item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price* item.quantity}</span>
           </div>
          </div>
         </td>
@@ -132,7 +127,7 @@ const CheckOut = () => {
           </div>
           <div className="flex justify-between font-bold text-lg mt-4">
             <span>Total</span>
-            <span>₹ {total}</span>
+            <span>Rs.  {total}</span>
           </div>
         </div>
 
@@ -173,7 +168,7 @@ const CheckOut = () => {
         >
           Place Order
         </button>
-      </div>
+      </div>}
     </div>
   );
 };

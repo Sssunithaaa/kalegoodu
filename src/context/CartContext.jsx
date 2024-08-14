@@ -65,7 +65,7 @@ export const CartProvider = ({ children }) => {
 
   // Calculate total price of items in the cart
   const cartTotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + item.discounted_price !== 0 ? item.discounted_price : item.price * item.quantity,
     0
   );
 
