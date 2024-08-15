@@ -50,8 +50,8 @@ const Testimonials = ({ comments }) => {
   };
 
   return (
-    <div className={`${productMode ? '' : 'bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12'}`}>
-      <div className="container mx-auto px-4">
+    <div className={`${productMode ? 'w-full max-w-full' : 'bg-gradient-to-r w-full max-w-full from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12'}`}>
+      <div className=" mx-auto px-4">
         <Title>
           {productMode ? reviews.length === 0 ? 'No reviews yet' : 'Reviews' : 'Testimonials'}
         </Title>

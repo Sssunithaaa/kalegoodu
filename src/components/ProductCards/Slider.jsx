@@ -1,12 +1,11 @@
 import { Carousel } from './Carousel';
 
-
 export const Slider = ({ images }) => {
-  const baseUrl = import.meta.env.VITE_APP_URL
+  const baseUrl = import.meta.env.VITE_APP_URL;
   return (
-    <div className="relative md:w-auto md:h-full md:max-w-[500px]">
+    <div className="relative md:w-auto md:h-full md:max-w-[400px]">
       <Carousel images={images}>
-        {images && images?.map((image, index) => (
+        {images?.map((image, index) => (
           <img
             className="object-cover"
             key={index}
@@ -18,3 +17,4 @@ export const Slider = ({ images }) => {
     </div>
   );
 };
+
