@@ -56,7 +56,7 @@ const Testimonials = ({ comments }) => {
           {productMode ? reviews.length === 0 ? 'No reviews yet' : 'Reviews' : 'Testimonials'}
         </Title>
         {productMode && reviews.length > 0 && (
-          <div className="text-center text-gray-600 mb-4">
+          <div className="text-center text-gray-600">
             <div className="text-xl">{averageRating} / 5.0</div>
             <div className="text-2xl">{renderStars(Math.round(averageRating))}</div>
             <div className="text-sm mt-1">{reviews.length} Reviews</div>

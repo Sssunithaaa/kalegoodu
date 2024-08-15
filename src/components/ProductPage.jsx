@@ -46,7 +46,7 @@ function ProductPage() {
           </div>
           )}
         </div>
-        <div>
+        <div className='my-2'>
              <Testimonials comments={product?.comments || []} /> {/* Pass the comments to the Reviews component */}
         </div>
       </div>

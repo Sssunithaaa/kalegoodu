@@ -40,15 +40,15 @@ export const CTASection = ({ product, cartCounter, setCartCounter }) => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center gap-x-4 md:flex-row'>
+    <div className='flex flex-col justify-center items-center mx-4 px-4 gap-x-4 md:flex-row'>
       {/* Amount required */}
-      <div className='flex w-full bg-light-grayish-blue justify-between items-center px-6 py-2 rounded-xl
+      <div className='flex w-full bg-gray-50 justify-between items-center px-6 py-2 rounded-xl
         md:w-1/4 md:mt-0'>
         {/* Minus button */}
         <div>
           <button 
             onClick={removeProduct}
-            className='font-bold text-green-700 text-2xl pb-1'
+            className='font-bold text-gray-700 text-2xl pb-1'
           >
             -
           </button>
@@ -63,7 +63,7 @@ export const CTASection = ({ product, cartCounter, setCartCounter }) => {
         <div>
           <button 
             onClick={addProduct}  
-            className='font-bold text-green-700 text-2xl w-[1rem] pb-1'
+            className='font-bold text-gray-700 text-2xl w-[1rem] pb-1'
           >
             +
           </button>

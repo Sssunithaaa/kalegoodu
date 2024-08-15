@@ -194,14 +194,13 @@ const MegaMenu = () => {
           </div>
           {isMenuVisible && (
             <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block md:flex md:w-auto md:order-1`}>
-              <ul className="flex flex-col mt-2 uppercase text-[15px] font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+              <ul className="flex flex-col mt-2 uppercase text-[16px]  font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
                 {navButtons.map((item, index) =>
                  
                     <li id="nav" onClick={() => {navigate(item.href)}} key={index} className='md:flex md:mx-auto  py-3 px-3 hover:cursor-pointer transition-all duration-500'>
                       <div className="md:flex md:mx-auto block py-2 px-3 text-gray-900 md:p-0" aria-current="page">
                         <span className='hover:text-black text-center hover:font-semibold'>{item.name}</span>
                       </div>
-            <div className="absolute left-0 right-0 bottom-0 h-[4px] bg-orange scale-x-0 transform transition-transform duration-300 origin-bottom-left hover:scale-x-100"></div>
           </li>
       
 )}

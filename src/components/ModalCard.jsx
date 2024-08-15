@@ -34,14 +34,16 @@ const ModalCard = ({ product }) => {
  
 
   return (
-     <div className="bg-white h-86 p-2  rounded-lg shadow-md cursor-pointer mx-2">
+     <div className="bg-white p-2  rounded-lg shadow-md cursor-pointer mx-2">
       <div onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}>
         <img
           src={productImage}
           alt={product.name}
           className="w-full h-72 object-cover mb-4"
         />
-        <h3 className="text-lg font-semibold h-12 my-2">{product.name}</h3>
+        <div className='mx-3'>
+          
+<h3 className="text-lg font-semibold my-2">{product.name}</h3>
         
         <div className="flex items-center mb-2">
           {product.discounted_price > 0 && (
@@ -54,10 +56,12 @@ const ModalCard = ({ product }) => {
             <p className="text-green-700 font-semibold">Rs. {product.price}</p>
           )}
         </div>
-      </div>
-      <Button onClick={handleAddToCart} className="text-[16px]">
+         <Button onClick={handleAddToCart} className="text-[16px]">
         Add to cart
       </Button>
+        </div>
+      </div>
+     
     </div>
   );
 };

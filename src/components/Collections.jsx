@@ -93,7 +93,7 @@ const Collections = () => {
 
   return (
     <div className='flex flex-wrap justify-center items-center px-[10%] mx-auto gap-x-10'>
-      {categories.map((category, index) => (
+      {categories?.map((category, index) => (
         <CollectionCard key={category.category_id}>
           
           <ImageContainer>
