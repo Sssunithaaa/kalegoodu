@@ -36,7 +36,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       message += `${item.name} × ${item.quantity}: Rs. ${item.price * item.quantity}\n`;
     });
     message += `\nTotal: Rs. ${total}`;
-    console.log(message)
+    
     try {
       const response = await fetch(`${baseUrl}/api/send-message/`, { // Ensure correct URL
         method: 'POST',
@@ -48,10 +48,10 @@ const baseUrl = import.meta.env.VITE_APP_URL
         console.log('Order sent successfully!');
         // Perform actions after successful order placement
       } else {
-        console.error('Failed to send order');
+        console.log(error);
       }
     } catch (error) {
-      console.error('Error sending order:', error);
+      console.log('Error sending order:', error);
     }
   };
 
@@ -67,7 +67,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
           <table className="min-w-full divide-y divide-gray-500">
  
   <tbody className="bg-white divide-y divide-gray-300">
-    {cartItems?.map((item) => (
+    {cartItems.length !== 0 && cartItems?.map((item) => (
       <tr key={item.product_id}>
         <td className="px-3 py-5 text-sm">
           <div className="flex  gap-x-3">

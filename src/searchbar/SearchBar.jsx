@@ -23,7 +23,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
    
     toggleSearchbar();
     const url = item?.name.replaceAll(" ","-")
-    navigate(`/products/${item.product_id}/${url}`)
+    navigate(`/Products/${item.product_id}/${url}`)
 
   };
 

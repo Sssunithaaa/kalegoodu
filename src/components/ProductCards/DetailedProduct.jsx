@@ -4,14 +4,20 @@ export const DetailedProduct = ({ product }) => {
     ? Math.round(((product?.price - product?.discounted_price) / product?.price) * 100)
     : 0;
 
+  // Split the short description into paragraphs
+  const paragraphs = product?.short_description.split('\r\n').filter(Boolean);
+
   return (
     <div className="">
       <h1 className="font-bold text-3xl mb-4  md:text-3xl md:mb-10 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
         {product?.name}
       </h1>
-      <p className="text-dark-grayish-blue mb-5 text-sm leading-[22px] md:text-base">
-        {product?.short_description}
-      </p>
+      {/* Render each paragraph with line spacing */}
+      <div className="text-dark-grayish-blue mb-5 text-sm leading-[22px] md:text-base space-y-4">
+        {paragraphs.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
+        ))}
+      </div>
       <div className="flex items-center justify-between md:flex-col md:items-start mt-2">
         {hasDiscount ? (
           <>

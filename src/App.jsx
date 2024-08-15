@@ -36,11 +36,11 @@ const App = () => {
         {/* Non-admin routes with MainLayout */}
         <Route>
           <Route path="/" element={<MainPage />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<Products />} />
-          <Route path="/products/:id/:name" element={<ProductPage />} />
-          <Route path="/categories/:id/:name/" element={<Products />} />
-           <Route path="/categories" element={<Collections />} />
+          <Route path="/Products" element={<Products />} />
+          <Route path="/Products/:id" element={<Products />} />
+          <Route path="/Products/:id/:name" element={<ProductPage />} />
+          <Route path="/Categories/:id/:name/" element={<Products />} />
+           <Route path="/Categories" element={<Collections />} />
           <Route path="/Checkout" element={<CheckOut />} />
           <Route path="/About-Us" element={<AboutUs />} />
            <Route path="/Contact-Us" element={<ContactUs />} />

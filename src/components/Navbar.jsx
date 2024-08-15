@@ -29,14 +29,14 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
   }
 `;
 const navButtons = [
-   { name: "Shop all", href: "/products" },
+   { name: "Shop all", href: "/Products" },
   { name: "Kitchen decor", href: "/Categories/5/Kitchen-Decor" },
  
   { name: "Living room decor", href: "/Categories/6/Living-Room-Decor" },
   { name: "Office decor", href: "/Categories/7/Office-Decor" },
   { name: "Gifting combos", href: "/Categories/8/Gifting-Combos" },
-  {name: "Workshop",href:"/workshop"},
-  { name: "Contact us", href: "/contact-us" },
+  {name: "Workshop",href:"/Workshop"},
+  { name: "Contact us", href: "/Contact-us" },
   // { name: "About us", href: "/about-us" }
 ];
 
@@ -160,9 +160,9 @@ const MegaMenu = () => {
 
   return (
    <div className="navbar">
-      <div className={`${display} md:static  mt-0 w-full m-0 bg-white z-[10001]`}>
-        <div className="flex md:flex-row flex-col  justify-between items-center my-0 mx-auto w-full  z-50">
-          <div className='flex justify-between px-4 sm:py-3 xs:py-6 py-4 md:py-4 md:pt-0 w-screen md:w-auto'>
+      <div className={`${display} md:static  w-full  bg-white z-[10001]`}>
+        <div className="flex md:flex-row flex-col  justify-between mb-2 my-auto mx-auto w-full  z-50">
+          <div className='flex justify-between px-4  sm:py-3 xs:py-6 py-4 md:py-4 md:pt-0 w-screen md:w-auto'>
             <div className='flex flex-row items-center gap-x-4'>
              <div className='lg:hidden mt-1'>
             <button className="text-2xl">
@@ -176,7 +176,7 @@ const MegaMenu = () => {
             <Title>KALEGOODU</Title>
           </div>
             </div>
-              <div className='flex md:hidden flex-row gap-x-5 justify-center items-center'>
+              <div className='flex md:hidden flex-row gap-x-5 mr-2 justify-center items-center'>
           <button className="text-2xl" onClick={toggleSearchbar}>
             <CiSearch size={20} />
           </button>
@@ -205,12 +205,12 @@ const MegaMenu = () => {
           </li>
       
 )}
-<li className='hidden sm:block py-3'>
+<li className='hidden md:block py-3'>
 <button onClick={toggleSearchbar}>
 <CiSearch size={20} />
 </button>
 </li>
-<li className='hidden sm:block py-3'>
+<li className='hidden md:block py-3 mr-3'>
 <div className="relative">
 <button className="text-2xl relative" onClick={toggleCart}>
 <HiOutlineShoppingBag size={24} />

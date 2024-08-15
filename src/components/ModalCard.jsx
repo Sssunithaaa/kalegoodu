@@ -35,7 +35,7 @@ const ModalCard = ({ product }) => {
 
   return (
      <div className="bg-white h-86 p-2  rounded-lg shadow-md cursor-pointer mx-2">
-      <div onClick={() => navigate(`/products/${product?.product_id}/${displayValue}`)}>
+      <div onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}>
         <img
           src={productImage}
           alt={product.name}
