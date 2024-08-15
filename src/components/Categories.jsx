@@ -34,7 +34,7 @@ const Categories = () => {
 
   const handleCategoryClick = (category) => {
     const url = category.name.replaceAll(" ","-")
-    navigate(`/categories/${category?.category_id}/${url}`);
+    navigate(`/Categories/${category?.category_id}/${url}`);
   };
 
 

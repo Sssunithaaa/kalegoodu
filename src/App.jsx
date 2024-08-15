@@ -22,6 +22,7 @@ import AddTestimonialForm from './admin/screens/comments/AddComment';
 import ContactUs from './components/ContactUs';
 import TermsAndConditions from './components/TermsAndConditions';
 import Refund from './components/Refund';
+import Collections from './components/Collections';
 
 // Load your publishable key from your Stripe account
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
@@ -39,7 +40,7 @@ const App = () => {
           <Route path="/products/:id" element={<Products />} />
           <Route path="/products/:id/:name" element={<ProductPage />} />
           <Route path="/categories/:id/:name/" element={<Products />} />
-          
+           <Route path="/categories" element={<Collections />} />
           <Route path="/Checkout" element={<CheckOut />} />
           <Route path="/About-Us" element={<AboutUs />} />
            <Route path="/Contact-Us" element={<ContactUs />} />

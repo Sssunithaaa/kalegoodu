@@ -16,7 +16,7 @@ const HeroSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 81vh;
+  height: calc(95vh - var(--navbar-height) - var(--marquee-height));
   overflow: hidden;
   position: relative;
   color: #fff;
@@ -24,9 +24,10 @@ const HeroSection = styled.div`
   padding: 0 20px;
 
   @media (max-width: 768px) {
-    height: 77vh;
+    height: calc(100vh - var(--navbar-height-mobile) - var(--marquee-height-mobile));
   }
 `;
+
 
 // Image slider styling
 const ImageSlider = styled.div`

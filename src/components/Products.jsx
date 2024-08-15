@@ -32,7 +32,7 @@ const BackgroundImageWrapper = styled.div`
 `;
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All Products');
   const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState('dateNewToOld');
   const [sPrice, setSprice] = useState(null);

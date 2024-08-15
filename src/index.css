@@ -13,6 +13,17 @@
   margin-left: clamp(1rem, 3.5vw, 5rem);
 }
 
+:root {
+  --navbar-height: 84px;
+  /* Replace with your actual navbar height */
+  --marquee-height: 24px;
+  /* Replace with your actual marquee height */
+  --navbar-height-mobile: 70px;
+  /* Adjust for mobile screens */
+  --marquee-height-mobile: 20px;
+  /* Adjust for mobile screens */
+}
+
 html,
 body {
   margin: 0;
@@ -132,7 +143,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 4px;
+
     background-color: rgba(136, 0, 136, 0);
     transform: scaleX(0);
     transform-origin: bottom left;
@@ -143,6 +154,19 @@ body {
     transform: scaleX(1);
     color: rgba(136, 0, 136, 0);
   }
+}
+
+.navbar {
+  height: var(--navbar-height);
+
+  @media (max-width: 768px) {
+    height: var(--navbar-height-mobile);
+  }
+}
+
+.marquee {
+  height: var(--marquee-height);
+  /* other marquee styles */
 }
 
 @keyframes marquee {

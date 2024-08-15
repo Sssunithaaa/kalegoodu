@@ -56,7 +56,7 @@ const ProductCarousel = ({saleType}) => {
     <div className="px-10 mx-auto my-2 relative">
       <Slider {...settings}>
         {filteredProducts?.map((product) => (
-          <div key={product.product_id}  >
+          <div className='px-2' key={product.product_id}  >
             <ModalCard product={product} />
           </div>
         ))}
