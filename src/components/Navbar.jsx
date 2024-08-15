@@ -120,7 +120,12 @@ const MegaMenu = () => {
   const [display, setDisplay] = useState("static");
 
   const toggleSearchbar = () => {
+  
     setIsSearchBarVisible(!isSearchBarVisible);
+    if(!isSearchBarVisible){
+      setDisplay("static")
+    }
+
   };
 
   const handleMenuToggle = () => {
@@ -132,6 +137,7 @@ const MegaMenu = () => {
     setIsMenuVisible(false);
     setDisplay("static");
   };
+  
 
   useEffect(() => {
     const handleResize = () => {

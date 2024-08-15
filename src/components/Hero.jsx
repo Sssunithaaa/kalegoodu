@@ -24,7 +24,7 @@ const HeroSection = styled.div`
   padding: 0 20px;
 
   @media (max-width: 768px) {
-    height: calc(100vh - var(--navbar-height-mobile) - var(--marquee-height-mobile));
+    height: calc(95vh - var(--navbar-height-mobile) - var(--marquee-height-mobile));
   }
 `;
 
