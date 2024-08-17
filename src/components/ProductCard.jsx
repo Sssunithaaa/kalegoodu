@@ -27,12 +27,17 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
 `;
 
 export default function ProductCard({ product,productMode, size,height }) {
-  const { addToCart, setIsCartVisible } = useContext(CartContext);
+  const { addToCart, setIsCartVisible,setLoading } = useContext(CartContext);
   const quantity = 1;
 
   const handleCartClick = () => {
     addToCart({ ...product, quantity });
-    setIsCartVisible(true);
+    setLoading(true);
+    setTimeout(()=> {
+      setLoading(false)
+      setIsCartVisible(true);
+    },1000)
+    
   };
 
   const baseUrl = import.meta.env.VITE_APP_URL;

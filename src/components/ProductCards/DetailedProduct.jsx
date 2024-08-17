@@ -7,7 +7,7 @@ export const DetailedProduct = ({ product }) => {
   const paragraphs = product?.short_description.split('\r\n').filter(Boolean);
 
   return (
-    <div className=" justify-center w-[100%] items-start md:px-4  md:mx-4 px-[20px] gap-x-4 flex flex-col">
+    <div className=" justify-center w-[100%]  items-start md:px-4  md:mx-4 px-[28px] gap-x-4 flex flex-col">
       <h1 className="font-bold text-3xl mb-2 md:text-3xl md:mb-10 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
         {product?.name}
       </h1>

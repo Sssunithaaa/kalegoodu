@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { img1, img12 } from '../assets/images';
+import { useNavigate } from 'react-router-dom';
 
 // Keyframes for slide animation
 const slide = keyframes`
@@ -154,7 +155,7 @@ const Hero = () => {
       setImages(bannerImages);
     }
   }, [banner, baseUrl]);
-
+  const navigate = useNavigate()
   return (
     <HeroSection>
       {isLoading ? (
@@ -175,7 +176,7 @@ const Hero = () => {
       {!isLoading && <HeroContent>
         <HeroTitle>Transform Your Space</HeroTitle>
         <HeroSubtitle>Discover the best home decor ideas to beautify your home.</HeroSubtitle>
-        <HeroButton href="#shop-now">Shop Now</HeroButton>
+        <HeroButton onClick={()=>navigate("/products")}>Shop Now</HeroButton>
       </HeroContent>}
     </HeroSection>
   );
