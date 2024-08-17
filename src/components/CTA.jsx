@@ -1,9 +1,9 @@
 import React from 'react'
-import Title from './Title'
+
 
 const CTA = () => {
   return (
-    <section class="py-10 bg-white w-screen sm:pt-16 lg:pt-24">
+    <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-4">
         <div class="flex lg:flex-row justify-normal flex-col gap-x-10">
             <div class="lg:pr-8 mx-auto sm:mx-auto mb-7 md:ml-[10%]">

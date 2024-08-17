@@ -78,6 +78,7 @@ const Products = () => {
       default:
         break;
     }
+    setSort(false)
     return sorted;
   }, [sortOption, products]);
 
@@ -201,7 +202,7 @@ const Products = () => {
                 <ClipLoader color="#36d7b7" size={50} />
               </div>
             ) : (
-              <div className="w-full mx-2 md:mx-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-x-4 px-2 gap-y-4">
+              <div className="w-full mx-2 mb-2 md:mx-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-x-4 px-2 gap-y-4">
                 {filteredProducts?.map((product, index) => (
                   <ProductCard key={product.product_id} index={index} product={product} />
                 ))}

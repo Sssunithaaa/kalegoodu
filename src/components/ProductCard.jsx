@@ -70,12 +70,12 @@ export default function ProductCard({ product, index }) {
         className="hover:cursor-pointer pb-2 p-[10px] px-[20px]"
       >
         <div className="mb-[2px] flex items-center justify-between">
-          <Typography color="blue-gray" className="font-medium text-[15px] md:text-[20px] md:text-md">
+          <Typography color="blue-gray" className="font-medium text-[15px] md:text-[16px]">
             {product?.name}
           </Typography>
         </div>
 
-        <div className="">
+        <div className="h-10">
           {hasDiscount ? (
             <div className="flex flex-col text-[15px]">
               <Typography color="red">
@@ -89,7 +89,7 @@ export default function ProductCard({ product, index }) {
         </div>
       </CardBody>
 
-     <CardFooter className="py-0  px-0 p-0 mb-2 w-full flex justify-center">
+     <CardFooter className="py-0 bottom-0 px-0 p-0 mb-2 w-full flex justify-center">
         <Button className="h-[30px] w-[100%] mx-2 md:h-[45px]" onClick={handleCartClick}>Add to cart</Button>
       </CardFooter>
     </Card>

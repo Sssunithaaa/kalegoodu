@@ -82,7 +82,7 @@ const Header = () => {
             <Link to="/">
               {/* <img src={images.Logo} alt="logo" className="w-16" /> */}
             </Link>
-            <h4 className="mt-10 font-bold text-[#C7C7C7]">MAIN MENU</h4>
+            <h4 onClick={()=>navigate("/")} className="mt-10 font-bold text-[#C7C7C7]">Kalegoodu</h4>
             {/* menu items */}
             <div className="mt-6 flex flex-col gap-y-[0.563rem]">
               <NavItem
