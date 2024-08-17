@@ -38,9 +38,9 @@ const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSu
     setSprice(priceRange[0]);
     setEprice(priceRange[1])
     setPrice(true)
-    setTimeout(()=> {
-      toggleSidebar()
-    },1000)
+     if(window.innerWidth <= 768){
+        toggleSidebar()
+      }
   }
 
 

@@ -56,7 +56,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
           &times;
         </button>
         <div className="text-center">
-          <h2 className="text-xl font-semibold">Shopping Cart</h2>
+          <h2 className="text-[24px] font-semibold">Shopping Cart</h2>
           {cartItems && cartItems.length > 0 ? (
             <>
               {cartItems.map(item => (
@@ -68,25 +68,25 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
 />
 
                   <div className="ml-4 flex-1">
-                    <h2 className="text-lg text-left font-bold">{item.name}</h2>
+                    <h2 className="text-[16px] text-left font-bold">{item.name}</h2>
                     <div className="flex items-center">
                       <span className="text-gray-500">Quantity</span>
                       <div className="flex items-center ml-2 border px-2 py-1">
-                        <button className="text-lg" onClick={()=>decreaseQuantity(item.product_id)}>{"<"}</button>
+                        <button className="text-[16px]" onClick={()=>decreaseQuantity(item.product_id)}>{"<"}</button>
                         <span className="mx-2 text-left">{item.quantity}</span>
-                        <button className="text-lg" onClick={()=>increaseQuantity(item.product_id)}>{">"}</button>
+                        <button className="text-[16px]" onClick={()=>increaseQuantity(item.product_id)}>{">"}</button>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-semibold">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
+                    <p className="text-[16px] font-semibold">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
                     <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 hover:text-red-700">&times;</button>
                   </div>
                 </div>
               ))}
               <div className="border-t py-4 flex justify-between items-center">
-                <span className="text-lg font-bold">TOTAL:</span>
-                <span className="text-lg font-bold">Rs. {cartTotal}</span>
+                <span className="text-[16px] font-bold">TOTAL:</span>
+                <span className="text-[16px] font-bold">Rs. {cartTotal}</span>
               </div>
               <Button onClick={() => {
                 toggleCart();
@@ -176,14 +176,16 @@ const MegaMenu = () => {
               }
             </button>
           </div>
-           <div className='hover:cursor-pointer flex ' onClick={() => navigate("/")}>
+           <div className='hover:cursor-pointer ' onClick={() => navigate("/")}>
             <Title>KALEGOODU</Title>
           </div>
             </div>
               <div className='flex lg:hidden flex-row gap-x-5 mr-2 justify-center items-center'>
-          <button className="text-2xl" onClick={toggleSearchbar}>
+          <div>
+            <button className="text-2xl" onClick={toggleSearchbar}>
             <CiSearch size={20} />
           </button>
+          </div>
           <div className="relative">
             <button className="text-2xl relative" onClick={toggleCart}>
               <HiOutlineShoppingBag size={24} />
@@ -215,12 +217,12 @@ const MegaMenu = () => {
   </li>
 )}
 
-<li className='hidden lg:block py-3'>
+<li className='hidden lg:block py-3 mt-2'>
 <button onClick={toggleSearchbar}>
 <CiSearch size={20} />
 </button>
 </li>
-<li className='hidden lg:block py-3 mr-3'>
+<li className='hidden lg:block py-3 mr-3 mt-2'>
 <div className="relative">
 <button className="text-2xl relative" onClick={toggleCart}>
 <HiOutlineShoppingBag size={24} />
@@ -242,7 +244,7 @@ const MegaMenu = () => {
 <SideBar isCartVisible={isCartVisible} toggleCart={toggleCart} />
 {(isCartVisible || isSearchBarVisible || (isMenuVisible && screenSize !== "large")) && (
   <div
-    className="fixed inset-0 z-40 bg-black opacity-50"
+    className="fixed inset-0 z-[10001] bg-black opacity-50"
     onClick={() => {
       if (isCartVisible) {
         toggleCart();

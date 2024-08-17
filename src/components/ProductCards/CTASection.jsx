@@ -1,5 +1,5 @@
 // CTASection.js
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../../context/CartContext';
 import styled from 'styled-components';
 const Button = styled.button`
@@ -17,7 +17,7 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
 `;
 export const CTASection = ({ product, cartCounter, setCartCounter }) => {
   const [productCounter, setProductCounter] = useState(0);
-  const { addToCart, setIsCartVisible } = useContext(CartContext);
+  const { addToCart, setIsCartVisible,setLoading } = useContext(CartContext);
 
   const addProduct = () => setProductCounter(prev => prev + 1);
   const removeProduct = () => setProductCounter(prev => (prev > 0 ? prev - 1 : 0));
@@ -37,6 +37,13 @@ export const CTASection = ({ product, cartCounter, setCartCounter }) => {
     
     // Reset product counter
     setProductCounter(0);
+    setLoading(true);
+     setTimeout(()=> {
+      setLoading(false)
+     },1000)
+    setTimeout(()=> {
+      setIsCartVisible(true)
+    },1000)
   };
 
   return (

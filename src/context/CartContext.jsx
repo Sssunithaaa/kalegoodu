@@ -61,14 +61,16 @@ export const CartProvider = ({ children }) => {
   };
 
   // Calculate total number of items in the cart
-  const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  // const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+   const cartItemCount = cartItems?.length
+  console.log(cartItems?.length)
 
   // Calculate total price of items in the cart
 const cartTotal = cartItems.reduce(
   (acc, item) => acc + (item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity),
   0
 );
-
+  const [loading, setLoading] = useState(false)
   // useEffect to store cart items in localStorage whenever cartItems state changes
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -89,6 +91,8 @@ const cartTotal = cartItems.reduce(
         isCartVisible,
         setIsCartVisible,
         toggleCart,
+        loading,
+        setLoading
       }}
     >
       {children}

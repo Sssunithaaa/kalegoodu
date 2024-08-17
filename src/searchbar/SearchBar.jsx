@@ -49,7 +49,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
   }
  
   return (
-    <div className='md:top-24 top-0 w-[80%] md:w-[50%]' style={{ position: 'relative', zIndex: 49,marginInline:'auto',marginBlock:'10px',borderRadius:'0px' }}>
+    <div className='md:top-24 top-0 w-[80%] z-[1000001] md:w-[50%]' style={{ position: 'relative',marginInline:'auto',marginBlock:'10px',borderRadius:'0px' }}>
       <ReactSearchAutocomplete
         items={data}
         onSearch={handleOnSearch}

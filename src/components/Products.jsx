@@ -8,6 +8,8 @@ import { BiSort } from 'react-icons/bi';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getAllProducts } from '../services/index/products';
+import { ClipLoader } from 'react-spinners';
+import FullPageLoader from './FullPageLoader';
 
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -19,9 +21,8 @@ const Products = () => {
   const [price, setPrice] = useState(false);
   const [keyword, setKeyword] = useState(null);
   const [sort, setSort] = useState(false);
-  
-  const baseUrl = import.meta.env.VITE_APP_URL;
 
+  const baseUrl = import.meta.env.VITE_APP_URL;
   const { id, name } = useParams();
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const Products = () => {
   const categoryMode = Boolean(id);
 
   // Fetching products from API
-  const { data: productss } = useQuery({
+  const { data: productss, isLoading, isFetching } = useQuery({
     queryKey: ['productsByCategory', id],
     queryFn: async () => {
       const response = await axios.get(`${baseUrl}/api/products_by_category/${id}`);
@@ -42,18 +43,14 @@ const Products = () => {
     enabled: categoryMode
   });
 
-  const { data } = useQuery({
+  const { data, isLoading: pLoading, isFetching: pFetching } = useQuery({
     queryKey: ['products'],
     queryFn: getAllProducts
   });
 
   // Update products when data is fetched
   useEffect(() => {
-    if (categoryMode) {
-      setProducts(productss);
-    } else {
-      setProducts(data);
-    }
+    setProducts(categoryMode ? productss : data);
   }, [productss, data, categoryMode]);
 
   // Derived state for sorting
@@ -94,26 +91,22 @@ const Products = () => {
     return sortedProducts;
   }, [sPrice, ePrice, sortedProducts]);
 
-  // Handle price filter display
+  // Handle price filter reset
   useEffect(() => {
     if (!price) {
-      setProducts(data);
+      setProducts(categoryMode ? productss : data);
     }
-  }, [price, data]);
+  }, [price, data, productss, categoryMode]);
 
   const toggleSidebar = () => {
-    setShowSidebar(!showSidebar);
+    setShowSidebar((prev) => !prev);
   };
 
   const searchKeywordOnSubmitHandler = (event) => {
     event.preventDefault();
 
     if (!keyword || keyword.trim() === "") {
-      if (categoryMode) {
-        setProducts(productss);
-      } else {
-        setProducts(data);
-      }
+      setProducts(categoryMode ? productss : data);
     } else {
       const regex = new RegExp(keyword.split('').join('.*'), 'i');
       const filteredProducts = products?.filter((product) =>
@@ -121,6 +114,12 @@ const Products = () => {
       );
       setProducts(filteredProducts);
     }
+
+    setTimeout(() => {
+      if(window.innerWidth <= 768){
+        toggleSidebar()
+      }
+    }, 1000);
   };
   
   return (
@@ -130,12 +129,12 @@ const Products = () => {
           <h1 className="text-3xl font-semibold">{selectedCategory}</h1>
         </div>
         <div className="flex lg:flex-row flex-col">
-          <div
-            className={`fixed inset-0 bg-gray-800 bg-opacity-40 z-40 ${
-              showSidebar ? 'block' : 'hidden'
-            }`}
-            onClick={toggleSidebar}
-          ></div>
+          {showSidebar && (
+            <div
+              className="fixed inset-0 bg-gray-800 bg-opacity-40 z-40"
+              onClick={toggleSidebar}
+            ></div>
+          )}
           <div
             className={`fixed bg-white inset-y-0 left-0 z-40 transform ${
               showSidebar ? 'translate-x-0' : '-translate-x-full'
@@ -156,7 +155,7 @@ const Products = () => {
               <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
                 <h1
                   onClick={toggleSidebar}
-                  className="lg:hidden text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold  ml-[5%]"
+                  className="lg:hidden text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[5%]"
                 >
                   Filter<span>
                     <IoFilter />
@@ -164,7 +163,7 @@ const Products = () => {
                 </h1>
                 <h1
                   onClick={() => setSort(!sort)}
-                  className="text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold  ml-[5%]"
+                  className="text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[5%]"
                 >
                   Sort by<span>
                     <BiSort />
@@ -197,11 +196,17 @@ const Products = () => {
                 </div>
               )}
             </div>
-            <div className="w-full mx-2 md:mx-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-x-4 px-2 gap-y-4">
-              {filteredProducts?.map((product, index) => (
-                <ProductCard key={product.product_id} index={index} product={product} />
-              ))}
-            </div>
+            {isLoading || pLoading || isFetching || pFetching ? (
+              <div className="flex h-full justify-center items-center">
+                <ClipLoader color="#36d7b7" size={50} />
+              </div>
+            ) : (
+              <div className="w-full mx-2 md:mx-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-x-4 px-2 gap-y-4">
+                {filteredProducts?.map((product, index) => (
+                  <ProductCard key={product.product_id} index={index} product={product} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

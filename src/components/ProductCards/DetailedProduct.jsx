@@ -21,8 +21,8 @@ export const DetailedProduct = ({ product }) => {
                 {discountPercentage}%
               </span>
             </div>
-            <span className="text-grayish-blue text-md font-bold">
-              <del>₹ {product?.price}</del>
+            <span className="text-grayish-blue ml-2 md:ml-0 text-md font-bold">
+              <del>Rs. {product?.price}</del>
             </span>
           </>
         ) : (

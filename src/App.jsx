@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './components/MainPage';
 import Products from './components/Products';
@@ -8,7 +8,7 @@ import AdminLayout from './admin/AdminLayout';
 import Admin from './admin/Admin';
 import Categories from './admin/screens/categories/Categories';
 import EditCategories from './admin/screens/categories/EditCategories';
-import ProductCarouselAdmin from './admin/screens/Carousel';
+
 import MainLayout from './components/MainComponents/MainLayout';
 import ScrollToTop from './components/ScrollToTop';
 import ManagePosts from './admin/screens/posts/ManagePosts';
@@ -23,14 +23,18 @@ import ContactUs from './components/ContactUs';
 import TermsAndConditions from './components/TermsAndConditions';
 import Refund from './components/Refund';
 import Collections from './components/Collections';
+import { CartContext } from './context/CartContext';
+import FullPageLoader from './components/FullPageLoader';
 
 // Load your publishable key from your Stripe account
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
 const App = () => {
+  const {loading,setIsLoading} = useContext(CartContext)
   return (
     // <Elements stripe={stripePromise}>
       <div>
       <ScrollToTop />
+      {loading && <FullPageLoader/>}
       <MainLayout>
       <Routes>
         {/* Non-admin routes with MainLayout */}

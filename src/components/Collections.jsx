@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import FullPageLoader from './FullPageLoader';
 
 const CollectionCard = styled.div`
  
@@ -92,7 +93,7 @@ const Collections = () => {
     });
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <FullPageLoader/>;
   if (isError) return <div>Error fetching data</div>;
 
   return (
