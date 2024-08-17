@@ -151,7 +151,7 @@ const Products = () => {
               searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
             />
           </div>
-          <div className="flex-1 p-2 mx-auto">
+          <div className="flex-1 p-2">
             <div className="flex flex-col justify-start mb-2">
               <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
                 <h1
@@ -192,12 +192,12 @@ const Products = () => {
                 )}
               </div>
               {price && sPrice !== null && ePrice !== null && (
-                <div className="flex md:w-[15%] w-[40%] my-2 md:ml-[2%] ml-[5%] bg-dark-grayish-blue text-white text-sm px-2 py-2 rounded">
+                <div className="flex md:w-[20%] lg:w-[15%] w-[40%] my-2 md:ml-[2%] ml-[5%] bg-dark-grayish-blue text-white text-sm px-2 py-2 rounded">
                   Rs. {sPrice} - Rs. {ePrice} <span className="ml-auto hover:cursor-pointer" onClick={() => {setPrice(false);setEprice(null)}}>&times;</span>
                 </div>
               )}
             </div>
-            <div className="w-full mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-x-4 px-2 gap-y-4">
+            <div className="w-full mx-2 md:mx-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-x-4 px-2 gap-y-4">
               {filteredProducts?.map((product, index) => (
                 <ProductCard key={product.product_id} index={index} product={product} />
               ))}

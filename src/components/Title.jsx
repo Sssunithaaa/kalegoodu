@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Title = ({ children }) => {
+const Title = ({ children ,font}) => {
   return (
-    <h2 className="heading text-2xl md:text-lg mb-2 text-center font-bold uppercase text-heading">
+    <h2 className={`heading ${font} md:text-lg text-center font-bold  text-heading`}>
       {children}
     </h2>
   );

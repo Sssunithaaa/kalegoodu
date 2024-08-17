@@ -38,10 +38,14 @@ function ProductPage() {
       <div className=" lg:max-w-[80%] md:max-w-[100%] md:mx-auto md:px-4 pt-[20px] md:pt-[0]">
         <div className="flex flex-col md:flex-row md:items-start md:px-0 md:gap-6 md:py-20 items-center md:justify-center">
           {!isLoading ? (
-            <div className='flex flex-col md:flex-row '>
-              <Slider images={images} />
+            <div className='flex flex-col md:flex-row gap-x-4 '>
+              <div className='md:w-[50%]'>
+                <Slider images={images} />
+              </div>
               {/* <VideoPlayer  url={`https://www.youtube.com/watch?v=snYu2JUqSWs`}/> */}
-              <DetailsSection product={product} cartCounter={cartCounter} setCartCounter={setCartCounter} />
+              <div className='md:w-[50%] md:mt-0 mt-4'>
+                <DetailsSection product={product} cartCounter={cartCounter} setCartCounter={setCartCounter} />
+              </div>
             </div>
           ) : (
              <div className="flex justify-center items-center">
@@ -49,7 +53,7 @@ function ProductPage() {
           </div>
           )}
         </div>
-        <div className='my-2'>
+        <div className='mt-4'>
              <Testimonials comments={product?.comments || []} /> {/* Pass the comments to the Reviews component */}
         </div>
       </div>

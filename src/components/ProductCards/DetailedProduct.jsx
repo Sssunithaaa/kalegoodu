@@ -7,15 +7,15 @@ export const DetailedProduct = ({ product }) => {
   const paragraphs = product?.short_description.split('\r\n').filter(Boolean);
 
   return (
-    <div className="md:px-2 lg:px-6 px-6 flex flex-col justify-center items-start w-full">
+    <div className=" justify-center w-[100%] items-start md:px-4  md:mx-4 px-[20px] gap-x-4 flex flex-col">
       <h1 className="font-bold text-3xl mb-2 md:text-3xl md:mb-10 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
         {product?.name}
       </h1>
 
-      <div className="flex items-center justify-between my-2 md:flex-col md:items-start">
+      <div className="flex items-start justify-between my-2 md:flex-col md:items-start">
         {hasDiscount ? (
           <>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-4 items-start">
               <span className="font-bold text-xxl">Rs. {product?.discounted_price}</span>
               <span className="bg-pale-orange text-green-700 font-bold text-md px-2 rounded-md">
                 {discountPercentage}%
@@ -26,7 +26,7 @@ export const DetailedProduct = ({ product }) => {
             </span>
           </>
         ) : (
-          <span className="font-bold text-xxl">Rs. {product?.price}</span>
+          <span className="font-bold items-start text-xxl">Rs. {product?.price}</span>
         )}
       </div>
 

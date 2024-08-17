@@ -61,7 +61,7 @@ const Categories = () => {
         alt={category.name}
         className={`md:w-36 w-32 md:h-36 h-32 rounded-full object-cover mx-auto ${hoveredCategory === category.category_id ? 'transform scale-110 ease-in-out duration-300' : ''}`}
       />
-      <div className="mt-2 text-[#1d1D1D] font-medium">{category.name}</div>
+      <div className="mt-2 text-[#1d1D1D] text-[15px] md:text-[16px] font-medium">{category.name}</div>
     </div>
   ))}
 </div>

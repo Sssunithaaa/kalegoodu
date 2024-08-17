@@ -6,9 +6,9 @@ import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 const CollectionCard = styled.div`
  
   overflow: hidden;
-  padding: 16px;
+  padding-top: 4px;
   text-align: center;
-  margin: 16px 0;
+  
 `;
 
 const ImageContainer = styled.div`
@@ -21,6 +21,10 @@ const CarouselImage = styled.img`
   width: 300px;
   height: 300px;
   object-fit: cover;
+   @media (max-width: 768px) {
+    width: 250px;
+    height:250px;
+  }
   
 `;
 
@@ -93,14 +97,14 @@ const Collections = () => {
 
   return (
     <div className='flex flex-wrap justify-center items-center px-[10%] mx-auto gap-x-10'>
-      {categories?.map((category, index) => (
+      {categories && categories?.map((category, index) => (
         <CollectionCard key={category.category_id}>
           
           <ImageContainer>
             <LeftArrow onClick={() => handlePrevImage(index)}>
               <AiOutlineLeft />
             </LeftArrow>
-            {category.images.map((image, imgIndex) => (
+            {category?.images.map((image, imgIndex) => (
               <CarouselImage
                 key={image.category_image_id}
                 src={`${baseUrl}${image.image}`}
@@ -112,7 +116,7 @@ const Collections = () => {
               <AiOutlineRight />
             </RightArrow>
           </ImageContainer>
-          <h2 className='my-3 text-lg font-semibold text-gray-800'>{category.name}</h2>
+          <h2 className='my-3 text-lg font-semibold text-gray-900'>{category.name}</h2>
           
         </CollectionCard>
       ))}

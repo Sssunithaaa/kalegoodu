@@ -36,7 +36,7 @@ const ModalCard = ({ product }) => {
  
 
   return (
-    <div className="bg-white p-2 rounded-lg shadow-md cursor-pointer mx-2">
+    <div className="modal bg-white p-2 rounded-lg shadow-md cursor-pointer mx-2">
       <div onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}>
         <LazyLoadImage
           src={productImage}
@@ -45,16 +45,16 @@ const ModalCard = ({ product }) => {
           placeholderSrc={img1} // Low-quality placeholder or any default image
           className="w-full h-64 p-2 object-cover "
         />
-        <div className="mx-3">
-          <h3 className="text-lg font-medium my-2">{product.name}</h3>
+        <div className="mx-3 text-[15px] md:text-[16px]">
+          <h3 className=" font-medium my-2">{product.name}</h3>
           <div className="flex items-center mb-2">
             {product.discounted_price > 0 ? (
               <>
                 <p className="line-through text-gray-900 mr-2">Rs. {product.price}</p>
-                <p className="text-green-700 font-semibold">Rs. {product.discounted_price}</p>
+                <p className="text-green-700 font-medium">Rs. {product.discounted_price}</p>
               </>
             ) : (
-              <p className="text-green-700 font-semibold">Rs. {product.price}</p>
+              <p className="text-green-700 font-medium">Rs. {product.price}</p>
             )}
           </div>
           <Button onClick={handleAddToCart} className="text-[16px]">

@@ -133,8 +133,12 @@ const MegaMenu = () => {
     setDisplay("fixed");
   };
 
-  const handleMenuToggleOff = () => {
-    setIsMenuVisible(false);
+  const handleMenuToggleOff = (redirect) => {
+   
+    
+    if(redirect && window.innerWidth <=768){
+       setIsMenuVisible(false)
+    }
     setDisplay("static");
   };
   
@@ -161,9 +165,9 @@ const MegaMenu = () => {
   return (
    <div className="navbar">
       <div className={`${display} lg:static  w-full  bg-white z-[10001]`}>
-        <div className="flex lg:flex-row flex-col  justify-between mb-2 my-auto mx-auto w-full  z-50">
-          <div className='flex justify-between px-4  sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 w-screen lg:w-auto'>
-            <div className='flex flex-row items-center gap-x-4'>
+        <div className="flex lg:flex-row flex-col  justify-between items-center mx-auto w-full  z-50">
+          <div className='flex justify-between px-4  sm:py-3 xs:py-6 py-4 lg:py-4 w-screen lg:w-auto'>
+            <div className='flex flex-row items-center justify-center gap-x-4'>
              <div className='lg:hidden mt-1'>
             <button className="text-2xl">
               {isMenuVisible ? 
@@ -172,7 +176,7 @@ const MegaMenu = () => {
               }
             </button>
           </div>
-           <div className='hover:cursor-pointer' onClick={() => navigate("/")}>
+           <div className='hover:cursor-pointer flex ' onClick={() => navigate("/")}>
             <Title>KALEGOODU</Title>
           </div>
             </div>
@@ -194,16 +198,23 @@ const MegaMenu = () => {
           </div>
           {isMenuVisible && (
             <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block lg:flex lg:w-auto lg:order-1`}>
-              <ul className="flex flex-col mt-2 uppercase text-[16px]  font-medium lg:flex-row lg:mt-0 lg:space-x-8 rtl:space-x-reverse">
-                {navButtons.map((item, index) =>
-                 
-                    <li id="nav" onClick={() => {navigate(item.href)}} key={index} className='lg:flex lg:mx-auto  py-3 px-3 hover:cursor-pointer transition-all duration-500'>
-                      <div className="lg:flex lg:mx-auto block py-2 px-3 text-gray-900 lg:p-0" aria-current="page">
-                        <span className='hover:text-black text-center hover:font-semibold'>{item.name}</span>
-                      </div>
-          </li>
-      
+              <ul className="flex flex-col mt-2  md:text-[18px]  font-medium lg:flex-row lg:mt-0 lg:space-x-8 rtl:space-x-reverse">
+              {navButtons.map((item, index) =>
+  <li 
+    id="nav" 
+    onClick={() => {
+      navigate(item.href);
+      handleMenuToggleOff(true); // Close the menu
+    }} 
+    key={index} 
+    className='lg:flex lg:mx-auto py-3 px-3 hover:cursor-pointer transition-all duration-500'
+  >
+    <div className="lg:flex lg:mx-auto block pb-2 lg:pb-2 lg:pt-2 px-3 text-gray-900 lg:p-0" aria-current="page">
+      <span className='hover:text-black text-center hover:font-semibold'>{item.name}</span>
+    </div>
+  </li>
 )}
+
 <li className='hidden lg:block py-3'>
 <button onClick={toggleSearchbar}>
 <CiSearch size={20} />
