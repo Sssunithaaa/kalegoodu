@@ -26,7 +26,7 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
   }
 `;
 
-export default function ProductCard({ product,padding, size,height }) {
+export default function ProductCard({ product,productMode, size,height }) {
   const { addToCart, setIsCartVisible } = useContext(CartContext);
   const quantity = 1;
 
@@ -43,8 +43,8 @@ export default function ProductCard({ product,padding, size,height }) {
   const navigate = useNavigate();
   const displayValue = product?.name.replaceAll(" ", "-");
  return (
-    <div className="">
-      <Card className={`w-full max-w-[${size === "10rem" ? "10rem" : "12rem"}] my-2 md:max-w-[14rem] lg:max-w-[18rem] shadow-lg`}>
+    
+      <Card className={`w-full max-w-[${productMode ? "11rem" : "12rem"}] my-2 md:max-w-[14rem] lg:max-w-[18rem] shadow-lg`}>
       <CardHeader
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
         className="p-0 mx-2 rounded-none relative"
@@ -54,7 +54,7 @@ export default function ProductCard({ product,padding, size,height }) {
         <img
           src={baseUrl + product?.images[0]?.image}
           alt={product?.name}
-          className={`w-full h-${height === 48 ? "48" : "52"} md:h-64 object-cover p-0`}
+          className={`w-full h-${productMode ? "48" : "52"} md:h-64 object-cover p-0`}
         />
         <div className="absolute inset-0 h-64 w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
 
@@ -93,6 +93,6 @@ export default function ProductCard({ product,padding, size,height }) {
         <Button className="h-[30px] w-[100%] mx-2 md:h-[45px]" onClick={handleCartClick}>Add to cart</Button>
       </CardFooter>
     </Card>
-    </div>
+   
   );
 }

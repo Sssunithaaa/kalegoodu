@@ -58,7 +58,7 @@ const ProductCarousel = ({saleType}) => {
       <Slider {...settings}>
         {filteredProducts?.map((product) => (
           <div className='px-2' key={product.product_id}  >
-            <ProductCard size="12rem" padding="py-2 my-2" height="52" product={product} />
+            <ProductCard  padding="py-2 my-2"  product={product} />
           </div>
         ))}
       </Slider>
