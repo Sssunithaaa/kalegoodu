@@ -164,7 +164,7 @@ const MegaMenu = () => {
 
   return (
    <div className="navbar">
-      <div className={`${display} lg:static  w-full  bg-white z-[10001]`}>
+      <div className={`${display} lg:static  w-full  bg-white z-[100001]`}>
         <div className="flex lg:flex-row flex-col  justify-between items-center mx-auto w-full  z-50">
           <div className='flex justify-between px-4  sm:py-3 xs:py-6 py-4 lg:py-4 w-screen lg:w-auto'>
             <div className='flex flex-row items-center justify-center gap-x-4'>
