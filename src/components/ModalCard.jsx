@@ -2,10 +2,12 @@ import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import {img1} from '../assets/images'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css'; // Optional blur effect
+import { img1 } from '../assets/images';
 const Button = styled.button`
   width: 100%;
-  height: 45px;
+  height: 40px;
 background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 79.6476490172856% 29.76095796117111%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 80.73001484309323% 71.025398036287%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 74.71274406155253% 92.17335404339366%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 41.223261123520594% 30.917984618376227%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 37.9520129096355% 60.069337551017334%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 67.69235280932718% 23.91998376199933%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 93.68255347726229% 18.89111181278711%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 13.215737665881534% 45.21500942396648%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 61.18443079724643% 88.41983116607912%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 10.575958325731749% 96.72193910560092%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 75.42341628599371% 53.31130723888271%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%);
   margin-top: 10px;
   border: none;
@@ -34,34 +36,32 @@ const ModalCard = ({ product }) => {
  
 
   return (
-     <div className="bg-white p-2  rounded-lg shadow-md cursor-pointer mx-2">
+    <div className="bg-white p-2 rounded-lg shadow-md cursor-pointer mx-2">
       <div onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}>
-        <img
+        <LazyLoadImage
           src={productImage}
           alt={product.name}
-          className="w-full h-72 object-cover mb-4"
+          effect="blur" // This adds a blur effect while loading
+          placeholderSrc={img1} // Low-quality placeholder or any default image
+          className="w-full h-64 p-2 object-cover "
         />
-        <div className='mx-3'>
-          
-<h3 className="text-lg font-semibold my-2">{product.name}</h3>
-        
-        <div className="flex items-center mb-2">
-          {product.discounted_price > 0 && (
-            <>
-              <p className=" line-through text-gray-900 mr-2 ">Rs. {product.price}</p>
-              <p className=" text-green-700 font-semibold">Rs. {product.discounted_price}</p>
-            </>
-          )}
-          {product.discounted_price === 0 && (
-            <p className="text-green-700 font-semibold">Rs. {product.price}</p>
-          )}
-        </div>
-         <Button onClick={handleAddToCart} className="text-[16px]">
-        Add to cart
-      </Button>
+        <div className="mx-3">
+          <h3 className="text-lg font-medium my-2">{product.name}</h3>
+          <div className="flex items-center mb-2">
+            {product.discounted_price > 0 ? (
+              <>
+                <p className="line-through text-gray-900 mr-2">Rs. {product.price}</p>
+                <p className="text-green-700 font-semibold">Rs. {product.discounted_price}</p>
+              </>
+            ) : (
+              <p className="text-green-700 font-semibold">Rs. {product.price}</p>
+            )}
+          </div>
+          <Button onClick={handleAddToCart} className="text-[16px]">
+            Add to cart
+          </Button>
         </div>
       </div>
-     
     </div>
   );
 };

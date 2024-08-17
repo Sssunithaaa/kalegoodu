@@ -13,6 +13,7 @@ export default {
       
       colors: {
           'primary': "#1565D8",
+          "heading":"1D1D1D",
         'orange' : '#B59460',
         'pale-orange' : 'hsl(25, 100%, 94%)',
         'dark-blue' : 'hsl(220, 13%, 13%)',

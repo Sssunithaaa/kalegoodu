@@ -3,11 +3,11 @@ import ReactPlayer from 'react-player';
 
 const VideoPlayer = ({ url }) => {
   
-    const driveUrl = "https://drive.google.com/uc?export=download&id=1fWFmoxY78LhYmsD6yWCuzQQD5fz5QOHi"
+    // const driveUrl = "https://drive.google.com/uc?export=download&id=1fWFmoxY78LhYmsD6yWCuzQQD5fz5QOHi"
   return (
-    <div className="video-player">
+    <div className="video-player my-5 px-5">
       <ReactPlayer
-        url={driveUrl}
+        url={url}
         controls
        
         width="100%"

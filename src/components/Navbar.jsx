@@ -47,7 +47,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 overflow-y-auto sm:w-[400px] w-full md:max-w-[450px] bg-white h-full shadow-md transition-transform transform z-[10000001] ${
+      className={`fixed top-0 right-0 overflow-y-auto sm:w-[400px] w-full lg:max-w-[450px] bg-white h-full shadow-lg transition-transform transform z-[10000001] ${
         isCartVisible ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -68,25 +68,25 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
 />
 
                   <div className="ml-4 flex-1">
-                    <h2 className="text-md text-left font-bold">{item.name}</h2>
+                    <h2 className="text-lg text-left font-bold">{item.name}</h2>
                     <div className="flex items-center">
                       <span className="text-gray-500">Quantity</span>
                       <div className="flex items-center ml-2 border px-2 py-1">
-                        <button className="text-md" onClick={()=>decreaseQuantity(item.product_id)}>{"<"}</button>
+                        <button className="text-lg" onClick={()=>decreaseQuantity(item.product_id)}>{"<"}</button>
                         <span className="mx-2 text-left">{item.quantity}</span>
-                        <button className="text-md" onClick={()=>increaseQuantity(item.product_id)}>{">"}</button>
+                        <button className="text-lg" onClick={()=>increaseQuantity(item.product_id)}>{">"}</button>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-md font-semibold">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
+                    <p className="text-lg font-semibold">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
                     <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 hover:text-red-700">&times;</button>
                   </div>
                 </div>
               ))}
               <div className="border-t py-4 flex justify-between items-center">
-                <span className="text-md font-bold">TOTAL:</span>
-                <span className="text-md font-bold">Rs. {cartTotal}</span>
+                <span className="text-lg font-bold">TOTAL:</span>
+                <span className="text-lg font-bold">Rs. {cartTotal}</span>
               </div>
               <Button onClick={() => {
                 toggleCart();
@@ -160,9 +160,9 @@ const MegaMenu = () => {
 
   return (
    <div className="navbar">
-      <div className={`${display} md:static  w-full  bg-white z-[10001]`}>
-        <div className="flex md:flex-row flex-col  justify-between mb-2 my-auto mx-auto w-full  z-50">
-          <div className='flex justify-between px-4  sm:py-3 xs:py-6 py-4 md:py-4 md:pt-0 w-screen md:w-auto'>
+      <div className={`${display} lg:static  w-full  bg-white z-[10001]`}>
+        <div className="flex lg:flex-row flex-col  justify-between mb-2 my-auto mx-auto w-full  z-50">
+          <div className='flex justify-between px-4  sm:py-3 xs:py-6 py-4 lg:py-4 lg:pt-0 w-screen lg:w-auto'>
             <div className='flex flex-row items-center gap-x-4'>
              <div className='lg:hidden mt-1'>
             <button className="text-2xl">
@@ -176,7 +176,7 @@ const MegaMenu = () => {
             <Title>KALEGOODU</Title>
           </div>
             </div>
-              <div className='flex md:hidden flex-row gap-x-5 mr-2 justify-center items-center'>
+              <div className='flex lg:hidden flex-row gap-x-5 mr-2 justify-center items-center'>
           <button className="text-2xl" onClick={toggleSearchbar}>
             <CiSearch size={20} />
           </button>
@@ -193,23 +193,23 @@ const MegaMenu = () => {
         </div>
           </div>
           {isMenuVisible && (
-            <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block md:flex md:w-auto md:order-1`}>
-              <ul className="flex flex-col mt-2 uppercase text-[16px]  font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+            <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block lg:flex lg:w-auto lg:order-1`}>
+              <ul className="flex flex-col mt-2 uppercase text-[16px]  font-medium lg:flex-row lg:mt-0 lg:space-x-8 rtl:space-x-reverse">
                 {navButtons.map((item, index) =>
                  
-                    <li id="nav" onClick={() => {navigate(item.href)}} key={index} className='md:flex md:mx-auto  py-3 px-3 hover:cursor-pointer transition-all duration-500'>
-                      <div className="md:flex md:mx-auto block py-2 px-3 text-gray-900 md:p-0" aria-current="page">
+                    <li id="nav" onClick={() => {navigate(item.href)}} key={index} className='lg:flex lg:mx-auto  py-3 px-3 hover:cursor-pointer transition-all duration-500'>
+                      <div className="lg:flex lg:mx-auto block py-2 px-3 text-gray-900 lg:p-0" aria-current="page">
                         <span className='hover:text-black text-center hover:font-semibold'>{item.name}</span>
                       </div>
           </li>
       
 )}
-<li className='hidden md:block py-3'>
+<li className='hidden lg:block py-3'>
 <button onClick={toggleSearchbar}>
 <CiSearch size={20} />
 </button>
 </li>
-<li className='hidden md:block py-3 mr-3'>
+<li className='hidden lg:block py-3 mr-3'>
 <div className="relative">
 <button className="text-2xl relative" onClick={toggleCart}>
 <HiOutlineShoppingBag size={24} />

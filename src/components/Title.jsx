@@ -2,7 +2,7 @@ import React from 'react';
 
 const Title = ({ children }) => {
   return (
-    <h2 className="text-2xl md:text-2xl mb-2 text-center font-semibold text-gray-900 tracking-wide">
+    <h2 className="heading text-2xl md:text-lg mb-2 text-center font-bold uppercase text-heading">
       {children}
     </h2>
   );

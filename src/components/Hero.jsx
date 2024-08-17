@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
+import { img1, img12 } from '../assets/images';
+
 // Keyframes for slide animation
 const slide = keyframes`
   0% { transform: translateX(0); }
@@ -28,7 +30,6 @@ const HeroSection = styled.div`
   }
 `;
 
-
 // Image slider styling
 const ImageSlider = styled.div`
   display: flex;
@@ -37,13 +38,16 @@ const ImageSlider = styled.div`
   animation: ${slide} 18s linear infinite;
 `;
 
-// Individual image wrapper styling
+// Individual image wrapper styling with lazy loading and placeholder
 const ImageWrapper = styled.div`
   flex: 1 0 100%;
   height: 90vh;
   background-repeat: no-repeat;
   background-size: cover; // Ensure images cover the wrapper
   background-position: center;
+  background-image: ${({ loaded, src, placeholder }) => (loaded ? `url(${src})` : `url(${placeholder})`)};
+  filter: ${({ loaded }) => (loaded ? 'none' : 'blur(5px)')}; // Add blur effect until the image is loaded
+  transition: filter 0.3s ease;
 
   @media (max-width: 768px) {
     max-height: 85vh;
@@ -106,45 +110,73 @@ const HeroButton = styled.a`
   }
 `;
 
+// LazyImage component for lazy loading with placeholder
+const LazyImage = ({ src, placeholder, ...props }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => setLoaded(true);
+  }, [src]);
+
+  return (
+    <ImageWrapper
+      src={src}
+      placeholder={placeholder}
+      loaded={loaded}
+      {...props}
+    />
+  );
+};
+
 // Hero component
 const Hero = () => {
-  // State to store banner images
   const [images, setImages] = useState([]);
   const baseUrl = import.meta.env.VITE_APP_URL;
+
   // Fetch banner images from API
-  
-  const {data: banner,isLoading,isError} = useQuery({
+  const { data: banner, isLoading } = useQuery({
     queryKey: ["banner"],
-    queryFn:async ()=> {
-   const response = await fetch(`${baseUrl}/api/banner_images/`);
-        const data = await response.json();
-        return data
-        
+    queryFn: async () => {
+      const response = await fetch(`${baseUrl}/api/banner_images/`);
+      const data = await response.json();
+      return data;
     }
-  })
-  useEffect(()=> {
-    const bannerImages = banner?.banner_images?.map(image => ({
-          ...image,
-          image: baseUrl + image?.image // Concatenate base URL with image path
-        }));
-        setImages(bannerImages);
-  },[banner])
+  });
+
+  useEffect(() => {
+    if (banner?.banner_images) {
+      const bannerImages = banner.banner_images.map(image => ({
+        ...image,
+        image: baseUrl + image.image // Concatenate base URL with image path
+      }));
+      setImages(bannerImages);
+    }
+  }, [banner, baseUrl]);
+
   return (
     <HeroSection>
-      <ImageSlider imageCount={images?.length}>
-        {/* Map over images to create ImageWrapper components */}
-        {images?.map((img, index) => (
-          <ImageWrapper
-            key={index}
-            style={{ backgroundImage: `url(${img?.image})` }}
-          />
-        ))}
-      </ImageSlider>
-      <HeroContent>
+      {isLoading ? (
+        // Show placeholder if images are still loading
+        <ImageWrapper placeholder={img12} />
+      ) : (
+        <ImageSlider imageCount={images.length}>
+          {/* Map over images to create LazyImage components */}
+          {images.map((img, index) => (
+            <LazyImage
+              key={index}
+              src={img.image}
+              placeholder="path/to/placeholder/image.jpg" // Add placeholder image path
+            />
+          ))}
+        </ImageSlider>
+      )}
+      {!isLoading && <HeroContent>
         <HeroTitle>Transform Your Space</HeroTitle>
         <HeroSubtitle>Discover the best home decor ideas to beautify your home.</HeroSubtitle>
         <HeroButton href="#shop-now">Shop Now</HeroButton>
-      </HeroContent>
+      </HeroContent>}
     </HeroSection>
   );
 };
