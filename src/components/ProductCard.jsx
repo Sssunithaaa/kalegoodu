@@ -26,7 +26,7 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
   }
 `;
 
-export default function ProductCard({ product, index }) {
+export default function ProductCard({ product, size,height }) {
   const { addToCart, setIsCartVisible } = useContext(CartContext);
   const quantity = 1;
 
@@ -44,7 +44,7 @@ export default function ProductCard({ product, index }) {
   const displayValue = product?.name.replaceAll(" ", "-");
 
  return (
-    <Card className="w-full max-w-[10rem] md:max-w-[14rem] lg:max-w-[18rem] shadow-lg">
+    <Card className={`w-full max-w-[${size}] py-2 my-2 md:max-w-[14rem] lg:max-w-[18rem] shadow-lg`}>
       <CardHeader
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
         className="p-0 mx-2 rounded-none relative"
@@ -54,7 +54,7 @@ export default function ProductCard({ product, index }) {
         <img
           src={baseUrl + product?.images[0]?.image}
           alt={product?.name}
-          className="w-full h-48 md:h-64 object-cover p-0"
+          className={`w-full h-{${height}} md:h-64 object-cover p-0`}
         />
         <div className="absolute inset-0 h-64 w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
 
@@ -69,10 +69,10 @@ export default function ProductCard({ product, index }) {
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
         className="hover:cursor-pointer pb-2 p-[10px] px-[20px]"
       >
-        <div className="mb-[2px] flex items-center justify-between">
-          <Typography color="blue-gray" className="font-medium text-[15px] md:text-[16px]">
+        <div className="mb-[2px] flex h-10 items-center justify-between">
+          <p color="blue-gray" className="font-medium text-[15px] md:text-[16px]">
             {product?.name}
-          </Typography>
+          </p>
         </div>
 
         <div className="h-10">

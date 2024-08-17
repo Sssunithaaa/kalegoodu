@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import FullPageLoader from './FullPageLoader';
+import { getAllCategories } from '../services/index/postCategories';
+import { useNavigate } from 'react-router-dom';
 
 const CollectionCard = styled.div`
- 
   overflow: hidden;
   padding-top: 4px;
   text-align: center;
-  
 `;
 
 const ImageContainer = styled.div`
@@ -22,11 +22,10 @@ const CarouselImage = styled.img`
   width: 300px;
   height: 300px;
   object-fit: cover;
-   @media (max-width: 768px) {
+  @media (max-width: 768px) {
     width: 250px;
-    height:250px;
+    height: 250px;
   }
-  
 `;
 
 const ArrowButton = styled.button`
@@ -55,21 +54,17 @@ const RightArrow = styled(ArrowButton)`
 `;
 
 const Collections = () => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(null);
   const baseUrl = import.meta.env.VITE_APP_URL;
-  
+  const navigate = useNavigate(); // Move useNavigate hook outside any function
   const { data, isLoading, isError } = useQuery({
     queryKey: ['categories'],
-    queryFn: async () => {
-      const response = await fetch(`${baseUrl}/api/categories/`);
-      const data = await response.json();
-      return data.categories;
-    },
+    queryFn: getAllCategories
   });
 
   useEffect(() => {
     if (data) {
-      setCategories(data);
+      setCategories(data?.categories);
     }
   }, [data]);
 
@@ -93,34 +88,46 @@ const Collections = () => {
     });
   };
 
-  if (isLoading) return <FullPageLoader/>;
+  if (!Array.isArray(categories)) {
+    return <div>No categories available</div>;
+  }
+  if (isLoading) return <FullPageLoader />;
   if (isError) return <div>Error fetching data</div>;
 
+  const handleCategoryClick = (category) => {
+    const url = category?.name?.replaceAll(' ', '-');
+    navigate(`/Categories/${category?.category_id}/${url}`);
+  };
+
   return (
-    <div className='flex flex-wrap justify-center items-center px-[10%] mx-auto gap-x-10'>
-      {categories && categories?.map((category, index) => (
-        <CollectionCard key={category.category_id}>
-          
-          <ImageContainer>
-            <LeftArrow onClick={() => handlePrevImage(index)}>
-              <AiOutlineLeft />
-            </LeftArrow>
-            {category?.images.map((image, imgIndex) => (
-              <CarouselImage
-                key={image.category_image_id}
-                src={`${baseUrl}${image.image}`}
-                alt={image.alt_text || category.name}
-                style={{ display: imgIndex === 0 ? 'block' : 'none' }}
-              />
-            ))}
-            <RightArrow onClick={() => handleNextImage(index)}>
-              <AiOutlineRight />
-            </RightArrow>
-          </ImageContainer>
-          <h2 className='my-3 text-lg font-semibold text-gray-900'>{category.name}</h2>
-          
-        </CollectionCard>
-      ))}
+    <div className="flex flex-wrap justify-center items-center px-[10%] mx-auto gap-x-10">
+      {categories &&
+        categories.map((category, index) => (
+          <CollectionCard key={category.category_id}>
+            <ImageContainer>
+              <LeftArrow onClick={() => handlePrevImage(index)}>
+                <AiOutlineLeft />
+              </LeftArrow>
+              {category?.images.map((image, imgIndex) => (
+                <CarouselImage
+                  key={image.category_image_id}
+                  src={`${baseUrl}${image.image}`}
+                  alt={image.alt_text || category.name}
+                  style={{ display: imgIndex === 0 ? 'block' : 'none' }}
+                />
+              ))}
+              <RightArrow onClick={() => handleNextImage(index)}>
+                <AiOutlineRight />
+              </RightArrow>
+            </ImageContainer>
+            <h2
+              onClick={() => handleCategoryClick(category)} // Fix: Pass function as a callback
+              className="my-3 hover:cursor-pointer text-lg font-semibold text-gray-900"
+            >
+              {category.name}
+            </h2>
+          </CollectionCard>
+        ))}
     </div>
   );
 };

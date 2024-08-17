@@ -8,6 +8,7 @@ import ModalCard from "./ModalCard";
 import { img1, img2, img3 } from '../assets/images';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
+import ProductCard from './ProductCard';
 
 const ProductCarousel = ({saleType}) => {
  
@@ -53,11 +54,11 @@ const ProductCarousel = ({saleType}) => {
     ],
   };
   return (
-    <div className="px-10 mx-auto my-2 relative">
+    <div className="px-10 mx-auto relative">
       <Slider {...settings}>
         {filteredProducts?.map((product) => (
           <div className='px-2' key={product.product_id}  >
-            <ModalCard product={product} />
+            <ProductCard size="12rem" height="52" product={product} />
           </div>
         ))}
       </Slider>
