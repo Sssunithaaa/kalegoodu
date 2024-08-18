@@ -54,7 +54,7 @@ export default function ProductCard({ product,productMode, size,height }) {
  return (
     
 <Card
-  className={`w-full my-2  mx-0 shadow-lg ${productMode ? 'max-w-[11rem] xs:max-w-[10rem] ys:max-w-[11rem] zs:max-w-[12rem]' : 'max-w-[13rem]'}  md:max-w-[14rem] ws:max-w-[17rem] lg:max-w-[19rem]'`}
+  className={`w-full my-2  mx-0 shadow-lg ${productMode ? 'max-w-[11rem] xs:max-w-[10rem] ys:max-w-[11rem] zs:max-w-[12rem]' : 'max-w-[20rem]'}  md:max-w-[14rem] ws:max-w-[17rem] lg:max-w-[19rem]'`}
 >      <CardHeader
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
         className="p-0 mx-[2px] rounded-none relative"
