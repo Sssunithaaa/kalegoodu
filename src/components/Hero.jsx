@@ -26,8 +26,9 @@ const HeroSection = styled.div`
   text-align: center;
   padding: 0 20px;
 
+
   @media (max-width: 768px) {
-    height: calc(90vh - var(--navbar-height-mobile) - var(--marquee-height-mobile));
+    height: calc(88vh - var(--navbar-height-mobile) - var(--marquee-height-mobile));
   }
 `;
 
@@ -43,9 +44,9 @@ const ImageSlider = styled.div`
 const ImageWrapper = styled.div`
   flex: 1 0 100%;
   height: 90vh;
-  background-repeat: no-repeat;
-  background-size: cover; // Ensure images cover the wrapper
-  background-position: center;
+  // background-repeat: no-repeat;
+ background-size: contain;
+background-position: center;
   background-image: ${({ loaded, src, placeholder }) => (loaded ? `url(${src})` : `url(${placeholder})`)};
   filter: ${({ loaded }) => (loaded ? 'none' : 'blur(5px)')}; // Add blur effect until the image is loaded
   transition: filter 0.3s ease;
