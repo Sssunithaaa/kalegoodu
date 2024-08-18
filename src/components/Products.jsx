@@ -202,11 +202,11 @@ const Products = () => {
                 <ClipLoader color="#36d7b7" size={50} />
               </div>
             ) : (
- <div className="flex xs:mx-2 ys:mx-auto zs:mx-2 ws:mx-auto w-full">
+ <div className="flex mx-auto w-full">
   <div className={`grid gap-2 md:gap-3 
     ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
     ${filteredProducts?.length === 2 ? "grid-cols-2" : "xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} 
-    w-full mx-auto ml-2 md:mx-4`}>
+    w-full mx-auto md:mx-4`}>
     {filteredProducts?.map((product, index) => (
       <ProductCard productMode={true} height="48" key={product.product_id} index={index} product={product} />
     ))}
