@@ -251,7 +251,7 @@ const MegaMenu = () => {
       } else if (isSearchBarVisible) {
         toggleSearchbar();
       } else if (isMenuVisible && screenSize !== "large") {
-        handleMenuToggleOff();
+        handleMenuToggleOff(true);
       }
     }}
   />

@@ -16,7 +16,7 @@ export function Carousel({ images, children: slides, autoSlide = false, autoSlid
 
   return (
     <div className="flex flex-col">
-      <div className="overflow-hidden relative max-w-[350px] lg:w-[500px] lg:max-w-[500px] md:max-h-[500px] w-full mx-auto md:h-auto md:rounded-2xl">
+      <div className="overflow-hidden relative max-w-[320px] lg:w-[500px] lg:max-w-[500px] md:max-h-[500px] w-full mx-auto md:h-auto md:rounded-2xl">
         <div
           className="flex transition-transform ease-out duration-500"
           style={{ transform: `translateX(-${curr * 100}%)` }}

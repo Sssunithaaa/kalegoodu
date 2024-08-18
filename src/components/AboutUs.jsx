@@ -29,7 +29,7 @@ Thank you for choosing Kalegoodu as your trusted source for home decor. We are h
          
           
         </div>
-         <div className="founder-description flex flex-col justify-start items-start text-lg px-4 md:w-[50%] md:text-lg text-gray-700 text-left  ">
+         <div className="founder-description flex flex-col justify-start items-start text-lg px-2 md:w-[50%] md:text-lg text-gray-700 text-left  ">
             <h3 className="md:text-lg text-md font-bold mb-2">HELLO,<br/> From the Founders</h3>
 <p className='text-md md:text-lg mx-w-lg'>
     "We believe that a home should be a true reflection of one's personality, a sanctuary where comfort and happiness abound, embracing both the little joys and the grand milestones of life.
