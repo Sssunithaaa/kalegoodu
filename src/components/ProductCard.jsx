@@ -49,7 +49,7 @@ export default function ProductCard({ product,productMode, size,height }) {
   const displayValue = product?.name.replaceAll(" ", "-");
  return (
     
-      <Card className={`w-full max-w-[${productMode ? "11rem" : "12rem"}] my-2 md:max-w-[14rem] lg:max-w-[18rem] shadow-lg`}>
+      <Card className={`w-full max-w-[${productMode ? "10rem" : "12rem"}] my-2 md:max-w-[14rem] lg:max-w-[18rem] shadow-lg`}>
       <CardHeader
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
         className="p-0 mx-2 rounded-none relative"
