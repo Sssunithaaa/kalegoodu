@@ -24,6 +24,10 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
   &:hover {
     background-color: #9e7f6b; /* Slightly darker color */
   }
+    
+@media (max-width: 1024px) {
+height: 35px;
+}
 `;
 
 export default function ProductCard({ product,productMode, size,height }) {
@@ -49,17 +53,18 @@ export default function ProductCard({ product,productMode, size,height }) {
   const displayValue = product?.name.replaceAll(" ", "-");
  return (
     
-      <Card className={`w-full max-w-[${productMode ? "10rem" : "12rem"}] my-2 md:max-w-[14rem] lg:max-w-[18rem] shadow-lg`}>
-      <CardHeader
+<Card
+  className={`w-full my-2  mx-0 shadow-lg ${productMode ? 'max-w-[11rem] xs:max-w-[10rem] ys:max-w-[11rem] zs:max-w-[12rem]' : 'max-w-[13rem]'}  md:max-w-[14rem] ws:max-w-[17rem] lg:max-w-[19rem]'`}
+>      <CardHeader
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
-        className="p-0 mx-2 rounded-none relative"
+        className="p-0 mx-[2px] rounded-none relative"
         floated={false}
         color="blue-gray"
       >
         <img
           src={baseUrl + product?.images[0]?.image}
           alt={product?.name}
-          className={`w-full h-${productMode ? "48" : "52"} md:h-64 object-cover p-0`}
+          className={`w-full h-${productMode ? "50" : "52"} md:h-64 object-cover p-0`}
         />
         <div className="absolute inset-0 h-64 w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
 
@@ -80,7 +85,7 @@ export default function ProductCard({ product,productMode, size,height }) {
           </p>
         </div>
 
-        <div className="h-10">
+        <div className="h-10 flex items-center">
           {hasDiscount ? (
             <div className="flex flex-col text-[15px]">
               <Typography color="red">

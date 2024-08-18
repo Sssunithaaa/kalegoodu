@@ -27,7 +27,13 @@ export default {
       },
       backgroundImage: {
         "hero":"url(C:\\Users\\VINUTHA R\\Desktop\\kalegoodu\\src\\assets\\hero.jpg)"
-      }
+      },
+      screens: {
+        'xs': '343px', // For small devices like Galaxy S8+
+        'ys' : '390px',
+        'zs' : '412px',
+        'ws' : '1024px'
+      },
     },
   },
   plugins: [ require("daisyui")],

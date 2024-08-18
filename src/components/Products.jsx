@@ -125,7 +125,7 @@ const Products = () => {
   
   return (
     <div className="w-screen">
-      <div className="flex flex-col md:mx-[20px] relative">
+      <div className="flex flex-col lg:mx-[20px] relative">
         <div className="py-3 px-5">
           <h1 className="text-3xl font-semibold">{selectedCategory}</h1>
         </div>
@@ -202,11 +202,23 @@ const Products = () => {
                 <ClipLoader color="#36d7b7" size={50} />
               </div>
             ) : (
-              <div className="w-full mx-2 mb-2 md:mx-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-x-4 px-2 gap-y-4">
-                {filteredProducts?.map((product, index) => (
-                  <ProductCard productMode={true} height="48" key={product.product_id} index={index} product={product} />
-                ))}
-              </div>
+ <div className="flex  mx-auto w-full">
+  <div className={`grid gap-2 md:gap-3 
+    ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
+    ${filteredProducts?.length === 2 ? "grid-cols-2" : "xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} 
+    w-full mx-auto md:mx-4`}>
+    {filteredProducts?.map((product, index) => (
+      <ProductCard productMode={true} height="48" key={product.product_id} index={index} product={product} />
+    ))}
+  </div>
+</div>
+
+
+
+
+
+
+
             )}
           </div>
         </div>
