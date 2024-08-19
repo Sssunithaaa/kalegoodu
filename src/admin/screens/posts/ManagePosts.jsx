@@ -56,7 +56,7 @@ const PAGE_SIZE = 5;
       // searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
       // searchKeywordOnChangeHandler={searchKeywordHandler}
       // searchKeyword={searchKeyword}
-      tableHeaderTitleList={["Images", "Name", "Description", "Price", "Discount Price", "Categories", "Sale Type"," "]}
+      tableHeaderTitleList={["Images", "Name",  "Price", "Discount Price", "Categories", "Sale Type"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
@@ -66,7 +66,7 @@ const PAGE_SIZE = 5;
       <ToastContainer/>
       {paginatedData?.map((product) => (
         <tr key={product.product_id}>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <div className="flex items-center">
               <div className="flex flex-wrap gap-x-3">
                 {
@@ -79,7 +79,7 @@ const PAGE_SIZE = 5;
                         : 'path/to/sampleProductImage' // Replace with your sample image path
                     }
                     alt={product.name}
-                    className="mx-auto object-cover rounded-lg w-10 aspect-square"
+                    className="mx-auto object-cover rounded-lg w-10 md:w-6 aspect-square"
                   />
               
                   ))
@@ -88,16 +88,16 @@ const PAGE_SIZE = 5;
              
             </div>
           </td>
-         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+         <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{product.name}</p>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{product.short_description}</p>
-          </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          </td> */}
+          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{product.price}</p>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">
               {product.discounted_price !== '0' ? (
                 <>
@@ -111,7 +111,7 @@ const PAGE_SIZE = 5;
               )}
             </p>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">
               {product.categories.length > 0
                 ? product.categories
@@ -120,7 +120,7 @@ const PAGE_SIZE = 5;
                 : "Uncategorized"}
             </p>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <div className="flex gap-x-2">
               {product.sale_types.length > 0
                 ? product.sale_types.map((sale_type, index) => (
@@ -132,8 +132,9 @@ const PAGE_SIZE = 5;
                 : "No tags"}
             </div>
           </td>
-          <td className="px-5 flex flex-row py-14  text-sm bg-white border-b border-gray-200 space-x-5">
-            <button
+          <td className="px-5 py-5 text-md bg-white border-b border-gray-200 ">
+            <div className='flex flex-row gap-x-5'>
+              <button
               disabled={isLoadingDeleteData}
               type="button"
               className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
@@ -152,6 +153,7 @@ const PAGE_SIZE = 5;
             >
               Edit
             </Link>
+            </div>
           </td>
         </tr>
       ))}

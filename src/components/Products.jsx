@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Sidebar from './SideBar';
 import ProductCard from './ProductCard';
 import { FormControl, Select, MenuItem } from '@mui/material';
@@ -24,12 +24,14 @@ const Products = () => {
 
   const baseUrl = import.meta.env.VITE_APP_URL;
   const { id, name } = useParams();
-
+  const location = useLocation()
   useEffect(() => {
     if (name) {
       setSelectedCategory(name.replaceAll("-", " "));
+    } else {
+      setSelectedCategory("All Products")
     }
-  }, [name]);
+  }, [name,location]);
 
   const categoryMode = Boolean(id);
 
@@ -124,7 +126,7 @@ const Products = () => {
   };
   
   return (
-    <div className="w-screen">
+    <div className="w-screen mb-10">
       <div className="flex flex-col lg:mx-[20px] relative">
         <div className="py-3 px-5">
           <h1 className="text-3xl font-semibold">{selectedCategory}</h1>

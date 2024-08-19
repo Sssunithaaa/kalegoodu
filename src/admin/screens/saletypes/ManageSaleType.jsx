@@ -137,14 +137,14 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
         >
              {paginatedData?.map((sale)=>(
         <tr key={sale.sale_type_id}>
-             <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
                 <div className="flex items-center">
                   <p className="text-gray-900 whitespace-no-wrap">
                     {sale.name}
                   </p>
                 </div>
               </td>
-               <td className="px-5 py-5 gap-y-4 text-sm bg-white border-b border-gray-200 space-x-5">
+               <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
                <button
   type="button"
   className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"

@@ -383,7 +383,7 @@ const handleFileChange = (acceptedFiles, index) => {
             </label>
             <textarea
               id="description"
-              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+              className="ring-1 ring-slate-300 rounded-md px-2 py-6 focus:outline-blue-500 bg-white"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Product Description"

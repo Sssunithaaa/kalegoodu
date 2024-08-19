@@ -130,14 +130,14 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
         >
           {paginatedData?.map((category) => (
             <tr key={category.category_id}>
-              <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+              <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
                 <div className="flex items-center">
                   <p className="text-gray-900 whitespace-no-wrap">
                     {category.name}
                   </p>
                 </div>
               </td>
-              <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+              <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
                 <div className="flex items-center">
                   <p className="text-gray-900 whitespace-no-wrap">
                     {category.description}
@@ -145,7 +145,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
                 </div>
               </td>
              
-              <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+              <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
                 <div className="flex md:flex-row flex-col gap-x-2 gap-y-2">
                   {category?.images.map((image) => (
                     <img
@@ -157,7 +157,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
                   ))}
                 </div>
               </td>
-              <td className="px-5 py-5 gap-y-4 text-sm bg-white border-b border-gray-200 space-x-5">
+              <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
                 <button
                   disabled={isLoadingDeleteData}
                   type="button"
@@ -179,9 +179,11 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
           ))}
         </DataTable>
         {!isLoading && (
-              <Pagination onPageChange={handlePageChange}
+              <div className="flex mx-auto">
+                <Pagination onPageChange={handlePageChange}
           currentPage={currentPage}
           totalPageCount={totalPages}/>
+              </div>
             )}
       </div>
 

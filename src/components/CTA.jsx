@@ -1,9 +1,11 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 
 const CTA = () => {
+    const navigate = useNavigate()
   return (
-    <section class="py-4 bottom-0 left-0 right-0 bg-white w-screen sm:pt-16 md:pt-24">
+    <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-4">
         <div class="flex lg:flex-row justify-center flex-col gap-x-10">
             <div class="lg:pr-8 mx-auto sm:mx-auto mb-7 md:ml-[10%]">
@@ -75,16 +77,16 @@ const CTA = () => {
                 <p class="text-sm font-semibold tracking-widest text-gray-700 uppercase">Help</p>
 
                 <ul class="mt-6 space-y-4">
-                    <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Returns and Refunds policy </a>
+                    <li onClick={()=>navigate("/Returns-and-Refund")}>
+                        <a  title="" class="flex text-base hover:cursor-pointer text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Returns and Refunds policy </a>
                     </li>
 
-                    <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Delivery Details </a>
+                    <li onClick={()=>navigate("/Delivery-Details")}>
+                        <a  title="" class="flex text-base hover:cursor-pointer text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Delivery Details </a>
                     </li>
 
-                    <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Terms & Conditions </a>
+                    <li onClick={()=>navigate("/Terms-and-Conditions")}>
+                        <a  title="" class="flex text-base hover:cursor-pointer text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Terms & Conditions </a>
                     </li>
 
                     
@@ -96,7 +98,7 @@ const CTA = () => {
 
         <hr class=" mb-10 border-gray-200" />
 
-        <p class="text-sm text-center text-gray-600">© Copyright 2021, All Rights Reserved by Postcraft</p>
+        <p class="text-sm text-center text-gray-600">© Copyright 2024, All Rights Reserved by Kalegoodu</p>
     </div>
 </section>
 

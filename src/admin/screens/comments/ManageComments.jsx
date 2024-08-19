@@ -60,35 +60,35 @@ const ManageComments = () => {
         <ToastContainer/>
         {paginatedData.map((comment) => (
           <tr key={comment.comment_id}>
-            <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <div className="flex items-center">
                 <p className="text-gray-900 whitespace-no-wrap">
                   {comment.product_name}
                 </p>
               </div>
             </td>
-            <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <div className="flex items-center">
                 <p className="text-gray-900 whitespace-no-wrap">
                   {comment.user_name}
                 </p>
               </div>
             </td>
-            <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <div className="flex items-center">
                 <p className="text-gray-900 whitespace-no-wrap">
                   {comment.text}
                 </p>
               </div>
             </td>
-            <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <div className="flex items-center">
                 <p className="text-gray-900 flex flex-row gap-x-3 my-auto whitespace-no-wrap">
                   {comment.rating} <FaStar className="text-yellow-500" />
                 </p>
               </div>
             </td>
-            <td className="px-5 py-5 gap-y-4 text-sm bg-white border-b border-gray-200 space-x-5">
+            <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
               <button
                 type="button"
                 className="text-red-600 hover:text-red-900"
