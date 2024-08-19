@@ -151,7 +151,7 @@ const Products = () => {
               searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
             />
           </div>
-          <div className="flex-1 p-2">
+          <div className="flex-1 mx-auto p-2">
             <div className="flex flex-col justify-start mb-2">
               <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
                 <h1
@@ -202,16 +202,17 @@ const Products = () => {
                 <ClipLoader color="#36d7b7" size={50} />
               </div>
             ) : (
- <div className="flex mx-auto w-full">
-  <div className={`grid gap-2 md:gap-3 
+<div className="flex w-full mx-auto md:px-4">
+  <div className={`inline-grid gap-3 mx-auto md:gap-3 
     ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
     ${filteredProducts?.length === 2 ? "grid-cols-2" : "xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} 
-    w-full mx-auto md:mx-4`}>
+    w-full `}>
     {filteredProducts?.map((product, index) => (
-      <ProductCard productMode={true} height="48" key={product.product_id} index={index} product={product} />
+      <ProductCard productMode={true} index={index} len={filteredProducts?.length} height="48" key={product.product_id}  product={product} />
     ))}
   </div>
 </div>
+
 
 
 

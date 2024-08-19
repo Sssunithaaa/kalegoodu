@@ -1,4 +1,4 @@
-import Pagination from '../components/Pagination'
+import Button from "../components/Button";
 
 const DataTable = ({
   pageTitle,
@@ -39,12 +39,12 @@ const DataTable = ({
                     value={searchKeyword}
                   />
                 </div>
-                <button
-                  className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200"
+                <Button
+                  className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-green-600 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200"
                   type="submit"
                 >
                   Filter
-                </button>
+                </Button>
               </form>
             </div>
           </div>

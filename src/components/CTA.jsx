@@ -3,9 +3,9 @@ import React from 'react'
 
 const CTA = () => {
   return (
-    <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
+    <section class="py-4 bottom-0 left-0 right-0 bg-white w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-4">
-        <div class="flex lg:flex-row justify-normal flex-col gap-x-10">
+        <div class="flex lg:flex-row justify-center flex-col gap-x-10">
             <div class="lg:pr-8 mx-auto sm:mx-auto mb-7 md:ml-[10%]">
 
               <span className="text-2xl md:text-3xl text-center font-semibold text-gray-800 tracking-wide">Kalegoodu</span>
@@ -94,7 +94,7 @@ const CTA = () => {
 
         </div>
 
-        <hr class="mt-16 mb-10 border-gray-200" />
+        <hr class=" mb-10 border-gray-200" />
 
         <p class="text-sm text-center text-gray-600">© Copyright 2021, All Rights Reserved by Postcraft</p>
     </div>
