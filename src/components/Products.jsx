@@ -127,8 +127,8 @@ const Products = () => {
   
   return (
     <div className="w-screen mb-10">
-      <div className="flex flex-col lg:mx-[20px] relative">
-        <div className="py-3 px-5">
+      <div className="flex flex-col lg:mx-[20px] px-1 lg:px-0 relative">
+        <div className="py-1 px-3">
           <h1 className="text-3xl font-semibold">{selectedCategory}</h1>
         </div>
         <div className="flex lg:flex-row flex-col">
@@ -154,11 +154,11 @@ const Products = () => {
             />
           </div>
           <div className="flex-1 mx-auto p-2">
-            <div className="flex flex-col justify-start mb-2">
+            <div className="flex flex-col justify-start">
               <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
                 <h1
                   onClick={toggleSidebar}
-                  className="lg:hidden text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[7%]"
+                  className="lg:hidden text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[3%]"
                 >
                   Filter<span>
                     <IoFilter />
@@ -166,7 +166,7 @@ const Products = () => {
                 </h1>
                 <h1
                   onClick={() => setSort(!sort)}
-                  className="text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[7%]"
+                  className="text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[3%]"
                 >
                   Sort by<span>
                     <BiSort />
@@ -204,8 +204,8 @@ const Products = () => {
                 <ClipLoader color="#36d7b7" size={50} />
               </div>
             ) : (
-<div className="flex w-full mx-auto md:px-4">
-  <div className={`inline-grid gap-3 mx-auto md:gap-3 
+<div className="flex w-full mx-auto md:px-2">
+  <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
     ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
     ${filteredProducts?.length === 2 ? "grid-cols-2" : "xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} 
     w-full `}>
