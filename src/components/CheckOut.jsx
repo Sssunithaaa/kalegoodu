@@ -61,7 +61,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
   return (
     <div>
       
-     {cartItems.length === 0 ? <div className='flex flex-col h-full my-auto justify-center mx-[40%] items-center text-xl'><span>Your cart is empty</span><Button onClick={()=>navigate("/products")}>Start shopping</Button></div> :  <div className="max-w-2xl mx-auto px-4">
+     {cartItems.length === 0 ? <div className='flex flex-col h-full py-[50%] lg:py-20 justify-center mx-[10%] md:mx-[40%] items-center text-xl'><span>Your cart is empty</span><Button onClick={()=>navigate("/products")}>Start shopping</Button></div> :  <div className="max-w-2xl mx-auto px-4">
         <h1 className="text-2xl mt-4 font-bold ml-[8%]">Your Cart</h1>
 
         <div className="bg-white shadow-lg rounded-lg p-3 mb-2">
