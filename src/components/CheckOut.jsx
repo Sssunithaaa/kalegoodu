@@ -70,9 +70,9 @@ const baseUrl = import.meta.env.VITE_APP_URL
   <tbody className="bg-white divide-y divide-gray-300">
     {cartItems.length !== 0 && cartItems?.map((item) => (
       <tr key={item.product_id}>
-        <td className="px-3 py-5 text-sm">
-          <div className="flex  gap-x-3">
-            <img src={baseUrl + item.images[0]?.image} alt="" className="h-20 w-auto" />
+        <td className="mx-auto py-5 text-sm">
+          <div className="">
+            <img src={baseUrl + item.images[0]?.image} alt="" className="h-auto md:w-32 w-[80%] flex mx-auto" />
           </div>
         </td>
         <td className="px-3 py-5 text-sm">

@@ -3,9 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import styled from "styled-components";
-import ModalCard from "./ModalCard";
 
-import { img1, img2, img3 } from '../assets/images';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';

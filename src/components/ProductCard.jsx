@@ -4,18 +4,19 @@ import {
   CardBody,
   CardFooter,
   Typography,
-  
   IconButton,
 } from "@material-tailwind/react";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import {VideoPlayer} from "./Video";
+
 const Button = styled.button`
   width: 100%;
   height: 45px;
-background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 79.6476490172856% 29.76095796117111%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 80.73001484309323% 71.025398036287%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 74.71274406155253% 92.17335404339366%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 41.223261123520594% 30.917984618376227%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 37.9520129096355% 60.069337551017334%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 67.69235280932718% 23.91998376199933%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 93.68255347726229% 18.89111181278711%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 13.215737665881534% 45.21500942396648%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 61.18443079724643% 88.41983116607912%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 10.575958325731749% 96.72193910560092%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 75.42341628599371% 53.31130723888271%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%);
+  background-image: radial-gradient(at 19.8% 35.0%, hsla(64.4, 83.2%, 74.3%, 1) 0%, hsla(64.4, 83.2%, 74.3%, 0) 100%),
+    radial-gradient(at 79.6% 29.8%, hsla(140.5, 43.2%, 82.7%, 1) 0%, hsla(140.5, 43.2%, 82.7%, 0) 100%),
+    radial-gradient(at 80.7% 71.0%, hsla(113.6, 77.2%, 62.2%, 1) 0%, hsla(113.6, 77.2%, 62.2%, 0) 100%);
   margin-top: 0px;
   border: none;
   color: black;
@@ -24,24 +25,23 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
   &:hover {
     background-color: #9e7f6b; /* Slightly darker color */
   }
-    
-@media (max-width: 1024px) {
-height: 35px;
-}
+
+  @media (max-width: 1024px) {
+    height: 35px;
+  }
 `;
 
-export default function ProductCard({ product,productMode, index,len }) {
-  const { addToCart, setIsCartVisible,setLoading } = useContext(CartContext);
+export default function ProductCard({ product, productMode, index, len }) {
+  const { addToCart, setIsCartVisible, setLoading } = useContext(CartContext);
   const quantity = 1;
 
   const handleCartClick = () => {
     addToCart({ ...product, quantity });
     setLoading(true);
-    setTimeout(()=> {
-      setLoading(false)
+    setTimeout(() => {
+      setLoading(false);
       setIsCartVisible(true);
-    },1000)
-    
+    }, 1000);
   };
 
   const baseUrl = import.meta.env.VITE_APP_URL;
@@ -51,28 +51,34 @@ export default function ProductCard({ product,productMode, index,len }) {
     : 0;
   const navigate = useNavigate();
   const displayValue = product?.name.replaceAll(" ", "-");
- return (
-    
-<Card
-  className={`w-full my-1 py-1 mx-auto lg:mx-2 shadow-lg ${productMode ? 'max-w-[11rem] xs:max-w-[10rem] ys:max-w-[11rem] zs:max-w-[12rem]' : 'max-w-[20rem]'}  md:max-w-[14rem] ws:max-w-[17rem] lg:max-w-[19rem]'`}
->      <CardHeader
+
+  return (
+    <Card
+      className={`w-full h-auto my-1 py-1 mx-auto shadow-lg ${
+        productMode ? 'max-w-[11rem]' : 'max-w-[20rem]'
+      } md:max-w-[26rem] lg:max-w-[19rem]`}
+    >
+      <CardHeader
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
         className="p-0 mx-[2px] rounded-none relative"
         floated={false}
         color="blue-gray"
       >
-        <img
-          src={baseUrl + product?.images[0]?.image}
-          alt={product?.name}
-          className={`w-full h-${productMode ? "50" : "52"} md:h-64 object-cover p-0`}
-        />
-        <div className="absolute inset-0 h-64 w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
-
-        {hasDiscount && (
-          <div className="absolute bottom-0 left-0 bg-red-500 text-white text-sm px-2 py-1 rounded">
-            {discountPercentage}% OFF
-          </div>
-        )}
+        <div className="w-full h-full relative">
+          <img
+            src={baseUrl + product?.images[0]?.image}
+            alt={product?.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            style={{ borderRadius: '0' }}
+          />
+          <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
+          {hasDiscount && (
+            <div className="absolute bottom-0 left-0 bg-red-500 text-white text-sm px-2 py-1 rounded">
+              {discountPercentage}% OFF
+            </div>
+          )}
+        </div>
       </CardHeader>
 
       <CardBody
@@ -80,7 +86,7 @@ export default function ProductCard({ product,productMode, index,len }) {
         className="hover:cursor-pointer pb-2 p-[10px] px-[20px]"
       >
         <div className="mb-[2px] flex h-12 items-center justify-between">
-          <p color="blue-gray" className="font-medium text-[15px] md:text-[16px]">
+          <p color="blue-gray" className="font-medium my-2 text-[15px] md:text-[16px]">
             {product?.name}
           </p>
         </div>
@@ -99,10 +105,11 @@ export default function ProductCard({ product,productMode, index,len }) {
         </div>
       </CardBody>
 
-     <CardFooter className="py-0 bottom-0 px-0 p-0 mb-2 w-full flex justify-center">
-        <Button className="h-[30px] w-[100%] mx-2 md:h-[45px]" onClick={handleCartClick}>Add to cart</Button>
+      <CardFooter className="py-0 bottom-0 px-0 p-0 mb-2 w-full flex justify-center">
+        <Button className="h-[30px] w-[100%] mx-2 md:h-[45px]" onClick={handleCartClick}>
+          Add to cart
+        </Button>
       </CardFooter>
     </Card>
-   
   );
 }

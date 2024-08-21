@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useMemo,useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getAllCategories } from '../services/index/postCategories';
@@ -45,31 +45,29 @@ const Categories = () => {
     queryKey: ["categories"],
     queryFn: getAllCategories
   });
+const [hoveredCategory, setHoveredCategory] = useState(null);
 
-  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const url = useMemo(() => import.meta.env.VITE_APP_URL, []);
 
-  const handleMouseEnter = (categoryId) => {
+  const handleMouseEnter = useCallback((categoryId) => {
     setHoveredCategory(categoryId);
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setHoveredCategory(null);
-  };
+  }, []);
 
-  const handleCategoryClick = (category) => {
+  const handleCategoryClick = useCallback((category) => {
     const url = category.name.replaceAll(" ", "-");
     navigate(`/Categories/${category?.category_id}/${url}`);
-  };
+  }, [navigate]);
 
-  const getDailyRandomImage = (images) => {
-    const currentDate = new Date();
-    const dayOfYear = Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 0)) / 86400000); 
-    const randomIndex = dayOfYear % images.length; 
-    
-    return images ? images[randomIndex]?.image : null;
-  };
-
-  const url = import.meta.env.VITE_APP_URL;
+  // const getDailyRandomImage = useMemo(() => (images) => {
+  //   const currentDate = new Date();
+  //   const dayOfYear = Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 0)) / 86400000); 
+  //   const randomIndex = dayOfYear % images.length; 
+  //   return images ? images[randomIndex]?.image : null;
+  // }, []);
  
   return (
     <div className="grid md:w-[90%] lg:w-[80%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-4 mx-auto">
@@ -79,7 +77,7 @@ const Categories = () => {
         </div>
       ) : (
         data?.categories?.map((category) => (
-          <figure
+          <div
             key={category.category_id}
             className={`md:mx-4 mx-2 my-[6px] text-center `}
             onMouseEnter={() => handleMouseEnter(category.category_id)}
@@ -87,7 +85,7 @@ const Categories = () => {
             onClick={() => handleCategoryClick(category)}
           >
             <LazyLoadImage
-              src={`${url}${getDailyRandomImage(category.images)}`}
+              src={`${url}${category?.images[0]?.image}`}
               alt={category.name}
               placeholderSrc={img28} // Add your grey placeholder image path here
               wrapperClassName={`md:w-36 w-32 md:h-36 h-32 rounded-full object-cover mx-auto`}
@@ -98,7 +96,7 @@ const Categories = () => {
             <div className="mt-2 text-[#1d1D1D] text-[15px] md:text-[16px] font-medium">
               {category.name}
             </div>
-          </figure>
+          </div>
         ))
       )}
     </div>
