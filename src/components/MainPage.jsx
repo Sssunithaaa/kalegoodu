@@ -6,6 +6,7 @@ import Title from './Title';
 
 import { img1, img2, img3 } from '../assets/images';
 import ClipLoader from 'react-spinners/ClipLoader';
+import FullPageLoader from './FullPageLoader';
 
 // Lazy load components
 const ProductCarousel = React.lazy(() => import('./Slider'));
@@ -31,7 +32,7 @@ const MainPage = () => {
       <div className="w-full">
         <Hero />
       </div>
-      <Suspense fallback={<ClipLoader color="#36d7b7" size={50} />}>
+      <Suspense fallback={<FullPageLoader/>}>
         <div className="my-6">
           <Title>Shop by collection</Title>
           <Categories />

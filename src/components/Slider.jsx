@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import styled from "styled-components";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
 
-const ProductCarousel = ({saleType}) => {
- 
+const ProductCarousel = ({ saleType }) => {
+  const { data: products,isLoading, isError } = useQuery({
+    queryKey: ["products"],
+    queryFn: getAllProducts
+  });
   
 
-   const {data:products,isLoading,isError} = useQuery({
-    queryKey:["products"],
-    queryFn: getAllProducts
-   })
-   const bestSellerMode = Boolean(saleType)
-   const filteredProducts = bestSellerMode 
+  const bestSellerMode = Boolean(saleType);
+  const filteredProducts = bestSellerMode 
     ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
     : products;
-    
+
   const settings = {
     dots: true,
     infinite: true,
@@ -51,16 +52,27 @@ const ProductCarousel = ({saleType}) => {
       },
     ],
   };
+
   return (
     <div className="px-10 mx-auto relative">
-      <Slider {...settings}>
-        {filteredProducts?.map((product) => (
-          <div className='px-2' key={product.product_id}  >
-            <ProductCard  padding="py-2 my-2"  product={product} />
-          </div>
-        ))}
-      </Slider>
-     
+      {isLoading ? (
+        <SkeletonContainer>
+          {[...Array(5)].map((_, index) => (
+            <SkeletonCard key={index}>
+              <Skeleton height={230} />
+              <Skeleton count={2} />
+            </SkeletonCard>
+          ))}
+        </SkeletonContainer>
+      ) : (
+        <Slider {...settings}>
+          {filteredProducts?.map((product) => (
+            <div className='px-2' key={product.product_id}>
+              <ProductCard padding="py-2 my-2" product={product} />
+            </div>
+          ))}
+        </Slider>
+      )}
     </div>
   );
 };
@@ -73,7 +85,7 @@ const Arrow = styled.div`
   width: 50px;
   height: 50px;
   font-size: 30px;
-  color: #000000;
+  color: black !important;
   cursor: pointer;
   z-index: 2;
   &:hover {
@@ -87,7 +99,7 @@ const SampleNextArrow = (props) => {
     <Arrow
       className={className}
       onClick={onClick}
-      style={{ ...style, right: '-50px' }} // Adjust the position
+      style={{ ...style, right: '-30px' }}
     >
       &#8250;
     </Arrow>
@@ -100,11 +112,21 @@ const SamplePrevArrow = (props) => {
     <Arrow
       className={className}
       onClick={onClick}
-      style={{ ...style,left: '-50px' }} // Adjust the position
+      style={{ ...style, left: '-30px' }}
     >
       &#8249;
     </Arrow>
   );
 };
+
+const SkeletonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const SkeletonCard = styled.div`
+  flex: 1;
+  padding: 10px;
+`;
 
 export default ProductCarousel;

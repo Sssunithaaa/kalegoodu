@@ -4,7 +4,8 @@ import Testimonial from './Testimonial';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Title from '../Title';
-
+import styled from 'styled-components';
+import Skeleton from 'react-loading-skeleton';
 const Testimonials = ({ comments }) => {
   const breakpointColumnsObj = {
     default: 4,
@@ -13,13 +14,14 @@ const Testimonials = ({ comments }) => {
   };
   const baseUrl = import.meta.env.VITE_APP_URL;
 
-  const { data, isLoading } = useQuery({
+  const { data ,isLoading} = useQuery({
     queryKey: ['comments'],
     queryFn: async () => {
       const response = await axios.get(`${baseUrl}/api/comments/`);
       return response.data?.comments;
     },
   });
+  
 
   const [reviews, setReviews] = useState([]);
   const [productMode, setProductMode] = useState(false);
@@ -48,7 +50,16 @@ const Testimonials = ({ comments }) => {
     }
     return stars;
   };
+const SkeletonContainer = styled.div`
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: space-between;
+`;
 
+const SkeletonCard = styled.div`
+  flex: 1;
+  padding: 10px;
+`;
   return (
     <div className={`${productMode ? 'w-full max-w-full' : 'bg-gradient-to-r w-full max-w-full from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12'}`}>
       <div className=" mx-auto px-4">
@@ -62,15 +73,22 @@ const Testimonials = ({ comments }) => {
             <div className="text-sm mt-1">{reviews.length} Reviews</div>
           </div>
         )}
-        <Masonry
+        {isLoading ? <SkeletonContainer>
+          {[...Array(2)].map((_, index) => (
+            <SkeletonCard key={index}>
+              <Skeleton height={200} />
+              
+            </SkeletonCard>
+          ))}
+        </SkeletonContainer> : <Masonry
           breakpointCols={breakpointColumnsObj}
           className="flex -ml-4"
           columnClassName="pl-4 bg-clip-padding"
         >
-          {reviews?.map((testimonial, index) => (
+          { reviews?.map((testimonial, index) => (
             <Testimonial key={index} {...testimonial} productMode={productMode} />
           ))}
-        </Masonry>
+        </Masonry>}
       </div>
     </div>
   );
