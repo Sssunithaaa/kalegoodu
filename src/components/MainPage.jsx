@@ -28,28 +28,28 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <div className="w-full">
+    <div className='scroll-container'>
+      <div className="scroll-section w-full">
         <Hero />
       </div>
       <Suspense fallback={<FullPageLoader/>}>
-        <div className="my-6">
+        <div className="scroll-section my-6">
           <Title>Shop by collection</Title>
           <Categories />
         </div>
-        <div className="w-full my-6">
+        <div className="scroll-section w-full my-6">
           <Title>Trendiest new arrivals</Title>
           <ProductCarousel products={products} />
         </div>
-        <div className='w-full my-6 '>
+        <div className='scroll-section w-full my-6 '>
           <Title>Best Sellers</Title>
           <ProductCarousel products={products} saleType="Best Seller" />
         </div>
-        <div className='my-6'>
+        <div className='scroll-section my-6'>
           <Title>About us</Title>
           <AboutUs />
         </div>
-        <div className='my-6'>
+        <div className='scroll-section my-6'>
           <Testimonials />
         </div>
       </Suspense>
