@@ -9,8 +9,8 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getAllProducts } from '../services/index/products';
 import { ClipLoader } from 'react-spinners';
-import FullPageLoader from './FullPageLoader';
-
+import styled from 'styled-components';
+import Skeleton from 'react-loading-skeleton';
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All Products');
@@ -105,6 +105,15 @@ const Products = () => {
     setShowSidebar((prev) => !prev);
   };
 
+const SkeletonCard = styled.div`
+  flex: 1;
+  padding: 10px;
+ 
+
+`;
+
+
+
   const searchKeywordOnSubmitHandler = (event) => {
     event.preventDefault();
 
@@ -153,7 +162,7 @@ const Products = () => {
               searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
             />
           </div>
-          <div className="flex-1 mx-auto p-2">
+          <div className="flex-1 p-2">
             <div className="flex flex-col justify-start">
               <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
                 <h1
@@ -204,16 +213,26 @@ const Products = () => {
                 <ClipLoader color="#36d7b7" size={50} />
               </div>
             ) : (
-<div className="flex w-full mx-auto md:px-2">
-  <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
-    ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
-    ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} 
-    w-full `}>
-    {filteredProducts?.map((product, index) => (
-      <ProductCard productMode={true} index={index} len={filteredProducts?.length} height="48" key={product.product_id}  product={product} />
-    ))}
+
+  <div className="flex w-full  md:px-2">
+    <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
+      ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
+      ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} 
+      w-full`}>
+      {(isLoading || pLoading) ? 
+        [...Array(2)].map((_, index) => (
+        <SkeletonCard key={index}>
+          <Skeleton height={200} />
+          <Skeleton count={2} />
+        </SkeletonCard>
+      )) 
+        : filteredProducts?.map((product, index) => (
+        <ProductCard productMode={true} index={index} len={filteredProducts?.length} height="48" key={product.product_id} product={product} />
+      ))}
+    </div>
   </div>
-</div>
+
+
 
 
 

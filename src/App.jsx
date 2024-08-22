@@ -1,38 +1,38 @@
-import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './components/MainPage';
-import Products from './components/Products';
-import ProductPage from './components/ProductPage';
-import CheckOut from './components/CheckOut';
-import AdminLayout from './admin/AdminLayout';
-import Admin from './admin/Admin';
-import Categories from './admin/screens/categories/Categories';
-import EditCategories from './admin/screens/categories/EditCategories';
-
-import MainLayout from './components/MainComponents/MainLayout';
-import ScrollToTop from './components/ScrollToTop';
-import ManagePosts from './admin/screens/posts/ManagePosts';
-import Banner from './admin/screens/Banner';
-import AboutUs from './components/AboutUs';
-
-import EditPost from './admin/screens/posts/EditPost';
-import ManageComments from './admin/screens/comments/ManageComments';
-import ManageSaleType from './admin/screens/saletypes/ManageSaleType';
-import AddTestimonialForm from './admin/screens/comments/AddComment';
-import ContactUs from './components/ContactUs';
-import TermsAndConditions from './components/TermsAndConditions';
-import Refund from './components/Refund';
-import Collections from './components/Collections';
-import { CartContext } from './context/CartContext';
+import React, { useContext,Suspense,lazy } from 'react';
+import {  Routes, Route } from 'react-router-dom';
 import FullPageLoader from './components/FullPageLoader';
+import { CartContext } from './context/CartContext';
+const MainPage = lazy(() => import('./components/MainPage'));
+const Products = lazy(() => import('./components/Products'));
+const ProductPage = lazy(() => import('./components/ProductPage'));
+const CheckOut = lazy(() => import('./components/CheckOut'));
+const AdminLayout = lazy(() => import('./admin/AdminLayout'));
+const Admin = lazy(() => import('./admin/Admin'));
+const Categories = lazy(() => import('./admin/screens/categories/Categories'));
+const EditCategories = lazy(() => import('./admin/screens/categories/EditCategories'));
+const MainLayout = lazy(() => import('./components/MainComponents/MainLayout'));
+const ScrollToTop = lazy(() => import('./components/ScrollToTop'));
+const ManagePosts = lazy(() => import('./admin/screens/posts/ManagePosts'));
+const Banner = lazy(() => import('./admin/screens/Banner'));
+const AboutUs = lazy(() => import('./components/AboutUs'));
+const EditPost = lazy(() => import('./admin/screens/posts/EditPost'));
+const ManageComments = lazy(() => import('./admin/screens/comments/ManageComments'));
+const ManageSaleType = lazy(() => import('./admin/screens/saletypes/ManageSaleType'));
+const AddTestimonialForm = lazy(() => import('./admin/screens/comments/AddComment'));
+const ContactUs = lazy(() => import('./components/ContactUs'));
+const TermsAndConditions = lazy(() => import('./components/TermsAndConditions'));
+const Refund = lazy(() => import('./components/Refund'));
+const Collections = lazy(() => import('./components/Collections'));
+
 
 // Load your publishable key from your Stripe account
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
 const App = () => {
-  const {loading,setIsLoading} = useContext(CartContext)
+  const {loading} = useContext(CartContext)
   return (
-    // <Elements stripe={stripePromise}>
+  
       <div>
+        <Suspense fallback={<FullPageLoader/>}>
       <ScrollToTop />
       {loading && <FullPageLoader/>}
       <MainLayout>
@@ -69,8 +69,9 @@ const App = () => {
         </Route>
       </Routes>
       </MainLayout>
+      </Suspense>
     </div>
-    // </Elements>
+ 
   );
 };
 
