@@ -34,7 +34,7 @@ const AboutUs = ({ }) => {
           <h3 className="md:text-lg text-md font-bold mb-2">
             {isLoading ? <Skeleton width={200} /> : 'HELLO, From the Founders'}
           </h3>
-          <p className="text-md md:text-lg mx-w-lg">
+          <p className="text-md text-justify md:text-lg mx-w-lg">
             {isLoading ? (
               <Skeleton count={6} />
             ) : (
