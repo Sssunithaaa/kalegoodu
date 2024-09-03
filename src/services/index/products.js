@@ -53,10 +53,10 @@ export const updateProduct = async ({ updatedData, id }) => {
     };
 
     const response = await axios.put(`${url}/api/update_full_product/${id}/`, updatedData, config);
-    console.log(response)
+   
     return response.data;
   } catch (error) {
-    console.log(error)
+   
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);

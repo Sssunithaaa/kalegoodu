@@ -14,7 +14,7 @@ const Testimonials = ({ comments }) => {
   };
   const baseUrl = import.meta.env.VITE_APP_URL;
 
-  const { data ,isLoading} = useQuery({
+  const { data ,isLoading,isLoadingError} = useQuery({
     queryKey: ['comments'],
     queryFn: async () => {
       const response = await axios.get(`${baseUrl}/api/comments/`);
@@ -64,16 +64,16 @@ const SkeletonCard = styled.div`
     <div className={`${productMode ? 'w-full max-w-full' : 'bg-gradient-to-r w-full max-w-full from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12'}`}>
       <div className=" mx-auto px-4">
         <Title>
-          {productMode ? reviews.length === 0 ? 'No reviews yet' : 'Reviews' : 'Testimonials'}
+          {productMode ? reviews.length === 0 ? '' : 'Customers would like to say this about our product' : 'Testimonials'}
         </Title>
-        {productMode && reviews.length > 0 && (
+        {/* {productMode && reviews.length > 0 && (
           <div className="text-center text-gray-600">
             <div className="text-xl">{averageRating} / 5.0</div>
             <div className="text-2xl">{renderStars(Math.round(averageRating))}</div>
             <div className="text-sm mt-1">{reviews.length} Reviews</div>
           </div>
-        )}
-        {isLoading ? <SkeletonContainer>
+        )} */}
+        {isLoading || isLoadingError ? <SkeletonContainer>
           {[...Array(2)].map((_, index) => (
             <SkeletonCard key={index}>
               <Skeleton height={200} />

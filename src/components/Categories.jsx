@@ -35,7 +35,7 @@ const ShinyPlaceholder = styled.div`
 
 const Categories = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading,isLoadingError } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories
   });
@@ -58,7 +58,7 @@ const Categories = () => {
 
   return (
     <div className="grid md:w-[90%] lg:w-[80%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-4 mx-auto">
-      {isLoading ? (
+      {isLoading || isLoadingError ? (
         Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="md:mx-4 mx-2 my-[6px] text-center">
             <ShinyPlaceholder />

@@ -40,9 +40,9 @@ function ProductPage() {
           {!isLoading ? (
             <div className='flex flex-col md:flex-row gap-x-4 '>
               <div className='md:w-[50%]'>
-                <Slider images={images} />
+                <Slider images={images} videoUrl={product?.video_link} />
               </div>
-              {/* <VideoPlayer  url={`https://www.youtube.com/watch?v=snYu2JUqSWs`}/> */}
+            
               <div className='md:w-[50%] md:mt-0 mt-4'>
                 <DetailsSection product={product} cartCounter={cartCounter} setCartCounter={setCartCounter} />
               </div>

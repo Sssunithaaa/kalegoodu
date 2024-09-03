@@ -11,7 +11,7 @@ import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
 
 const ProductCarousel = ({ saleType }) => {
-  const { data: products,isLoading, isError } = useQuery({
+  const { data: products,isLoading, isLoadingError } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts
   });
@@ -53,28 +53,29 @@ const ProductCarousel = ({ saleType }) => {
     ],
   };
 
-  return (
-    <div className="px-10 mx-auto relative">
-      {isLoading ? (
-        <SkeletonContainer>
-          {[...Array(5)].map((_, index) => (
+ return (
+  <div className="px-10 mx-auto relative">
+    <Slider {...settings}>
+      {isLoading || isLoadingError ? (
+        // <SkeletonContainer>
+          [...Array(5)].map((_, index) => (
             <SkeletonCard key={index}>
               <Skeleton height={230} />
               <Skeleton count={2} />
             </SkeletonCard>
-          ))}
-        </SkeletonContainer>
+          ))
+        // </SkeletonContainer>
       ) : (
-        <Slider {...settings}>
-          {filteredProducts?.map((product) => (
-            <div className='px-2' key={product.product_id}>
-              <ProductCard padding="py-2 my-2" product={product} />
-            </div>
-          ))}
-        </Slider>
+        filteredProducts?.map((product) => (
+          <div className='px-2' key={product.product_id}>
+            <ProductCard padding="py-2 my-2" product={product} />
+          </div>
+        ))
       )}
-    </div>
-  );
+    </Slider>
+  </div>
+);
+
 };
 
 const Arrow = styled.div`
@@ -85,7 +86,7 @@ const Arrow = styled.div`
   width: 50px;
   height: 50px;
   font-size: 30px;
-  color: black !important;
+  // color: black !important;
   cursor: pointer;
   z-index: 2;
   &:hover {
@@ -94,12 +95,12 @@ const Arrow = styled.div`
 `;
 
 const SampleNextArrow = (props) => {
-  const { className, onClick, style } = props;
+  const {  onClick } = props;
   return (
     <Arrow
-      className={className}
+      className="text-[#000000]"
       onClick={onClick}
-      style={{ ...style, right: '-30px' }}
+      style={{color:"black" , right: '-50px' }}
     >
       &#8250;
     </Arrow>
@@ -107,12 +108,13 @@ const SampleNextArrow = (props) => {
 };
 
 const SamplePrevArrow = (props) => {
-  const { className, onClick, style } = props;
+  const {  onClick } = props;
   return (
     <Arrow
-      className={className}
+      
+      className="text-[#000000]"
       onClick={onClick}
-      style={{ ...style, left: '-30px' }}
+      style={{color:"black",  left: '-10px' }}
     >
       &#8249;
     </Arrow>
@@ -121,12 +123,26 @@ const SamplePrevArrow = (props) => {
 
 const SkeletonContainer = styled.div`
   display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens */
   justify-content: space-between;
 `;
+
 
 const SkeletonCard = styled.div`
   flex: 1;
   padding: 10px;
+  @media (max-width: 1024px) {
+    flex: 0 0 25%; /* For tablets */
+    max-width: 25%;
+  }
+  @media (max-width: 768px) {
+    flex: 0 0 33.33%; /* For small tablets or large phones */
+    max-width: 33.33%;
+  }
+  @media (max-width: 480px) {
+    flex: 0 0 100%; /* For mobile devices */
+    max-width: 100%;
+  }
 `;
 
 export default ProductCarousel;

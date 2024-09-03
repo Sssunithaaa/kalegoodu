@@ -23,7 +23,9 @@ const ContactUs = lazy(() => import('./components/ContactUs'));
 const TermsAndConditions = lazy(() => import('./components/TermsAndConditions'));
 const Refund = lazy(() => import('./components/Refund'));
 const Collections = lazy(() => import('./components/Collections'));
-
+const ManageAboutUs = lazy(()=> import('./admin/screens/details/AboutUs'))
+const ManageDetails = lazy(()=> import('./admin/screens/details/ManageDetails'))
+const ManageOrders = lazy(()=> import('./admin/screens/orders/ManageOrders'))
 
 // Load your publishable key from your Stripe account
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
@@ -66,6 +68,10 @@ const App = () => {
           <Route path="categories/manage" element={<Categories />} />
           <Route path="categories/manage/edit/:slug" element={<EditCategories />} />
           <Route path="categories/add" element={<EditCategories />} />
+          <Route path="about-us/manage" element={<ManageAboutUs />} />
+          <Route path="details/manage" element={<ManageDetails />} />
+          <Route path="orders/manage" element={<ManageOrders />} />
+          
         </Route>
       </Routes>
       </MainLayout>

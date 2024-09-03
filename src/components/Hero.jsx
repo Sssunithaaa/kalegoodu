@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
-import { img1, img12 } from '../assets/images';
+import { img12, img24 } from '../assets/images';
 import { useNavigate } from 'react-router-dom';
 
 // Keyframes for slide animation
@@ -26,7 +26,6 @@ const HeroSection = styled.div`
   text-align: center;
   padding: 0 20px;
 
-
   @media (max-width: 768px) {
     height: calc(88vh - var(--navbar-height-mobile) - var(--marquee-height-mobile));
   }
@@ -36,21 +35,20 @@ const HeroSection = styled.div`
 const ImageSlider = styled.div`
   display: flex;
   position: absolute;
-  width: ${({ imageCount }) => `${100 * imageCount}%`}; // Dynamically set width based on image count
+  width: ${({ imageCount }) => `${100 * imageCount}%`};
   animation: ${slide} 18s linear infinite;
 `;
 
-// Individual image wrapper styling with lazy loading and placeholder
+// Individual image wrapper styling using background image
 const ImageWrapper = styled.div`
   flex: 1 0 100%;
   height: 90vh;
-  // background-repeat: no-repeat;
- background-size: contain;
-background-position: center;
+  background-size: contain; 
+  background-position: center;
   background-image: ${({ loaded, src, placeholder }) => (loaded ? `url(${src})` : `url(${placeholder})`)};
-  filter: ${({ loaded }) => (loaded ? 'none' : 'blur(5px)')}; // Add blur effect until the image is loaded
+  filter: ${({ loaded }) => (loaded ? 'none' : 'blur(5px)')};
   transition: filter 0.3s ease;
-
+  background-attachment: fixed;
   @media (max-width: 768px) {
     max-height: 85vh;
   }
@@ -134,7 +132,7 @@ const LazyImage = ({ src, placeholder, ...props }) => {
 
 // Hero component
 const Hero = () => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([img24]);  // Start with the static image
   const baseUrl = import.meta.env.VITE_APP_URL;
 
   // Fetch banner images from API
@@ -153,32 +151,36 @@ const Hero = () => {
         ...image,
         image: baseUrl + image.image // Concatenate base URL with image path
       }));
-      setImages(bannerImages);
+      setImages([img24, ...bannerImages]);  // Always keep the static image as the first image
     }
   }, [banner, baseUrl]);
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
+
   return (
     <HeroSection>
       {isLoading ? (
         // Show placeholder if images are still loading
-        <ImageWrapper placeholder={img12} />
+        <ImageWrapper src={img24} placeholder={img12} loaded={true} />
       ) : (
         <ImageSlider imageCount={images.length}>
           {/* Map over images to create LazyImage components */}
           {images.map((img, index) => (
             <LazyImage
               key={index}
-              src={img.image}
-              placeholder="path/to/placeholder/image.jpg" // Add placeholder image path
+              src={img.image || img}  // img.image for dynamic images, img for the static image
+              placeholder="path/to/placeholder/image.jpg"
             />
           ))}
         </ImageSlider>
       )}
-      {!isLoading && <HeroContent>
-        <HeroTitle>Transform Your Space</HeroTitle>
-        <HeroSubtitle>Discover the best home decor ideas to beautify your home.</HeroSubtitle>
-        <HeroButton onClick={()=>navigate("/products")}>Shop Now</HeroButton>
-      </HeroContent>}
+      {!isLoading && (
+        <HeroContent>
+          <HeroTitle>Transform Your Space</HeroTitle>
+          <HeroSubtitle>Discover the best home decor ideas to beautify your home.</HeroSubtitle>
+          <HeroButton onClick={() => navigate("/products")}>Shop Now</HeroButton>
+        </HeroContent>
+      )}
     </HeroSection>
   );
 };

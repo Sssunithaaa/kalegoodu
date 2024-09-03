@@ -13,7 +13,7 @@ import styled from "styled-components";
 
 const Button = styled.button`
   width: 100%;
-  height: 45px;
+  height: 40px;
   background-image: radial-gradient(at 19.8% 35.0%, hsla(64.4, 83.2%, 74.3%, 1) 0%, hsla(64.4, 83.2%, 74.3%, 0) 100%),
     radial-gradient(at 79.6% 29.8%, hsla(140.5, 43.2%, 82.7%, 1) 0%, hsla(140.5, 43.2%, 82.7%, 0) 100%),
     radial-gradient(at 80.7% 71.0%, hsla(113.6, 77.2%, 62.2%, 1) 0%, hsla(113.6, 77.2%, 62.2%, 0) 100%);

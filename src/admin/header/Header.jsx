@@ -139,6 +139,14 @@ const Header = () => {
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
+              <NavItem
+                title="Orders"
+                link="/admin/orders/manage"
+                icon={<MdDashboard className="text-xl" />}
+                name="orders"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              />
              
                <NavItemCollapse
                 title="Testimonials"
@@ -157,6 +165,24 @@ const Header = () => {
                   // }
                 >
                   Add New Testimonial
+                </Link>
+                {/* <Link to="/admin/categories/manage">Categories</Link> */}
+              </NavItemCollapse>
+               <NavItemCollapse
+                title="Details"
+                icon={<MdDashboard className="text-xl" />}
+                name="Details"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              >
+                <Link to="/admin/about-us/manage">About us</Link>
+                <Link
+                to="/admin/details/manage"
+                  // disabled={isLoadingCreatePost}
+                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                  
+                >
+                   Policy, Terms and conditions
                 </Link>
                 {/* <Link to="/admin/categories/manage">Categories</Link> */}
               </NavItemCollapse>

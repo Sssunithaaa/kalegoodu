@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import { CartContext } from '../context/CartContext';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import CustomerDetailsModal from './CustomerDetails';
+import axios from "axios"
 const Button = styled.button`
   width: 50%;
   height: 45px;
@@ -22,7 +24,8 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
 const CheckOut = () => {
   const { cartItems, cartTotal, increaseQuantity, decreaseQuantity, removeFromCart } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
-  
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [customerDetails, setCustomerDetails] = useState(null); 
   useEffect(() => {
     let totalPrice = 0;
     cartItems?.forEach((item) => {
@@ -31,32 +34,50 @@ const CheckOut = () => {
     setTotal(totalPrice);
   }, [cartItems]);
 const baseUrl = import.meta.env.VITE_APP_URL
-  const handlePlaceOrder = async () => {
-    let message = 'Order Details:\n\n';
-    cartItems.forEach((item) => {
-      message += `${item.name} × ${item.quantity}: Rs. ${item.price * item.quantity}\n`;
-    });
-    message += `\nTotal: Rs. ${total}`;
-    
-    try {
-      const response = await fetch(`${baseUrl}/api/send-message/`, { // Ensure correct URL
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
-      });
-
-      if (response.ok) {
-        console.log('Order sent successfully!');
-        // Perform actions after successful order placement
-      } else {
-        console.log(error);
-      }
-    } catch (error) {
-      console.log('Error sending order:', error);
-    }
+   const handlePlaceOrder = async () => {
+    setIsModalOpen(true); // Open the modal when "Place Order" is clicked
   };
- const navigate = useNavigate()
-  
+
+ const handleModalSubmit = async (details) => {
+  setCustomerDetails(details);
+
+  let message = 'Order Details:\n\n';
+  cartItems.forEach((item) => {
+    message += `${item.name} × ${item.quantity}: Rs. ${item.price * item.quantity}\n`;
+  });
+  message += `\nTotal: Rs. ${total}`;
+
+  // Combine order details and customer details
+  const orderPayload = {
+    orderDetails: {
+      items: cartItems.map((item) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        price: item.discounted_price !== 0 ? item.discounted_price : item.price
+      })),
+      total: total,
+      count: cartItems.length
+    },
+    customerDetails: details,
+  };
+  console.log(orderPayload);
+
+  try {
+    // Using Promise.all to handle multiple requests concurrently
+    const [orderResponse, messageResponse] = await Promise.all([
+      axios.post(`${baseUrl}/api/create-order/`, orderPayload),
+      axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
+    ]);
+
+    console.log(orderResponse);
+    console.log(messageResponse);
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+  const navigate = useNavigate();
   
   return (
     <div>
@@ -153,6 +174,11 @@ const baseUrl = import.meta.env.VITE_APP_URL
         
         
       </div>}
+        <CustomerDetailsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleModalSubmit}
+      />
     </div>
   );
 };

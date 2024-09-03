@@ -64,7 +64,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     return response.data?.sale_types
   },
   onError: (error)=> {
-    console.log(error)
+    // console.log(error)
   }
  }) 
  
@@ -97,7 +97,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
           label: tag.name,
         }))
       );
-
+    
       setDescription(product.short_description);
 
       setPrice(product.price); 
@@ -228,13 +228,12 @@ if (newImages.length > 0) {
 
 
 
-console.log(newImages);
 
 
 
-  for(let [key,value] of formData.entries()){
-    console.log(key,value)
-  }
+  // for(let [key,value] of formData.entries()){
+  //   console.log(key,value)
+  // }
   if (isEditMode) {
     mutateUpdatePostDetail({
       updatedData: formData,
@@ -244,7 +243,6 @@ console.log(newImages);
     mutateAddPostDetail(formData);
   }
 };
-
 
 
 
@@ -269,7 +267,7 @@ const handleFileChange = (acceptedFiles, index) => {
       refetch()
     } catch (error) {
       toast.error("Failed to delete image");
-      console.error("Error deleting image:", error.message);
+      // console.error("Error deleting image:", error.message);
     }
   };
   

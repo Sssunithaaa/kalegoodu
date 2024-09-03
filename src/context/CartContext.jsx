@@ -23,7 +23,7 @@ export const CartProvider = ({ children }) => {
           i.product_id === item.product_id ? { ...i, quantity: i.quantity + 1 } : i
         );
       } else {
-        return [...prevItems, { ...item, quantity: 1 }];
+        return [...prevItems, { ...item, quantity: item.quantity }];
       }
     });
   };

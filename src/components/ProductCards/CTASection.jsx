@@ -24,10 +24,12 @@ export const CTASection = ({ product, cartCounter, setCartCounter }) => {
 
   const handleAddToCart = () => {
     // Create a product object to pass to addToCart
+    
     const productDetails = {
       ...product,
       quantity: productCounter,
     };
+  console.log(productDetails)
 
     // Add the product to the cart
     addToCart(productDetails);

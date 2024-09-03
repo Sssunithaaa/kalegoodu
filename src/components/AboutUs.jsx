@@ -2,16 +2,24 @@ import React from 'react';
 import styled from 'styled-components';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { img19 } from '../assets/images';
-
+import { useQuery } from '@tanstack/react-query';
+import { getPageContents } from '../services/index/pageContent';
+ const url = import.meta.env.VITE_APP_URL;
 const FoundersImage = styled.img`
   width: 350px;
   height: auto;
   object-fit: cover;
   margin: 1rem;
 `;
+ 
+const AboutUs = ({ }) => {
+   const {data,isLoading} = useQuery({
+    queryKey: ["page-contents"],
+    queryFn: ()=>getPageContents(),
 
-const AboutUs = ({ isLoading }) => {
+
+  })
+
   return (
     <div className="about-us-container px-6 md:px-6">
       <div className="founders-section my-2 flex flex-col md:flex-row gap-x-4 justify-center items-center text-center">
@@ -19,7 +27,7 @@ const AboutUs = ({ isLoading }) => {
           {isLoading ? (
             <Skeleton width={350} height={350} />
           ) : (
-            <FoundersImage src={img19} alt="Founder 1" loading="lazy" />
+            <FoundersImage src={`${url}/${data[0]?.images[0]?.image}`} alt="Founder 1" loading="lazy" />
           )}
         </div>
         <div className="founder-description flex flex-col justify-start items-start text-lg px-2 md:w-[50%] md:text-lg text-gray-700 text-left">
@@ -30,8 +38,7 @@ const AboutUs = ({ isLoading }) => {
             {isLoading ? (
               <Skeleton count={6} />
             ) : (
-              `"We believe that a home should be a true reflection of one's personality, a sanctuary where comfort and happiness abound, embracing both the little joys and the grand milestones of life.
-              As enthusiasts of home decor, our mission is to offer a wide array of thoughtfully designed products that inspire and make the process of decorating your home both enjoyable and effortless. Our collection spans across various styles and preferences, ensuring that every corner of your home can be a unique expression of your taste."`
+              data[0]?.content
             )}
           </p>
         </div>

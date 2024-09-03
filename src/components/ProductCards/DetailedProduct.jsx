@@ -3,7 +3,6 @@ export const DetailedProduct = ({ product }) => {
   const discountPercentage = hasDiscount
     ? Math.round(((product?.price - product?.discounted_price) / product?.price) * 100)
     : 0;
-
   const paragraphs = product?.short_description.split('\r\n').filter(Boolean);
 
   return (

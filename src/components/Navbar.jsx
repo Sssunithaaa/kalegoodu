@@ -5,7 +5,7 @@ import { CiSearch } from "react-icons/ci";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
 import { img1, img2, logo } from '../assets/images';
-import Title from './Title';
+
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { useStateContext } from '../context/ContextProvider';
@@ -110,10 +110,10 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
 };
 
 const MegaMenu = () => {
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  
   const { screenSize } = useStateContext();
   const [isMenuVisible, setIsMenuVisible] = useState(screenSize === "large");
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
   const { cartItemCount, isCartVisible, toggleCart } = useContext(CartContext);
 
@@ -136,7 +136,7 @@ const MegaMenu = () => {
   const handleMenuToggleOff = (redirect) => {
    
     
-    if(redirect && window.innerWidth <=768){
+    if(redirect && window.innerWidth <=820){
        setIsMenuVisible(false)
     }
     setDisplay("static");
@@ -166,8 +166,8 @@ const MegaMenu = () => {
    <div className="navbar">
       <div className={`${display} lg:static  w-full  bg-white z-[100001]`}>
         <div className="flex lg:flex-row flex-col  justify-between items-center mx-auto w-full  z-50">
-          <div className='flex justify-between px-4  sm:py-3 xs:py-6 py-4 lg:py-4 w-screen lg:w-auto'>
-            <div className='flex flex-row items-center justify-center gap-x-4'>
+          <div className='flex justify-between px-4 py-1 sm:py-3 xs:py-6  w-screen lg:w-auto'>
+            <div className='flex flex-row items-center justify-between  gap-x-4'>
              <div className='lg:hidden mt-1'>
             <button className="text-2xl">
               {isMenuVisible ? 
@@ -176,11 +176,12 @@ const MegaMenu = () => {
               }
             </button>
           </div>
-           <div className='hover:cursor-pointer ' onClick={() => navigate("/")}>
-            <Title>KALEGOODU</Title>
-          </div>
+           
             </div>
-              <div className='flex lg:hidden flex-row gap-x-5 mr-2 justify-center items-center'>
+            <div className='hover:cursor-pointer ' onClick={() => navigate("/")}>
+            <img src={logo} alt="" srcset="" className='w-28' />
+          </div>
+              <div className='flex lg:hidden flex-row space-x-3 justify-center items-center'>
           <div>
             <button className="text-2xl" onClick={toggleSearchbar}>
             <CiSearch size={20} />
@@ -199,8 +200,8 @@ const MegaMenu = () => {
         </div>
           </div>
           {isMenuVisible && (
-            <div id="mega-menu-full-image" className={`items-center justify-between z-40 py-0 w-full block lg:flex lg:w-auto lg:order-1`}>
-              <ul className="flex flex-col mt-2  md:text-[18px]  font-medium lg:flex-row lg:mt-0 lg:space-x-8 rtl:space-x-reverse">
+            <div id="mega-menu-full-image" className={`items-start justify-between z-40 py-0 w-full block lg:flex lg:w-auto`}>
+              <ul className="flex flex-col md:text-[18px]  font-medium lg:flex-row lg:mt-0 lg:space-x-8 rtl:space-x-reverse">
               {navButtons.map((item, index) =>
   <li 
     id="nav" 
@@ -211,13 +212,19 @@ const MegaMenu = () => {
     key={index} 
     className='lg:flex lg:mx-auto py-3 px-3 hover:cursor-pointer transition-all duration-500'
   >
-    <div className="lg:flex lg:mx-auto block pb-2 lg:pb-2 lg:pt-2 px-3 text-gray-900 lg:p-0" aria-current="page">
+    <div className="lg:flex lg:mx-auto block pb-2  px-3 text-gray-900 lg:p-0" aria-current="page">
       <span className='hover:text-black text-center hover:font-semibold'>{item.name}</span>
     </div>
   </li>
 )}
 
-<li className='hidden lg:block py-3 mt-2'>
+
+         </ul>
+       </div>
+
+     )}
+     <div className='flex flex-row gap-x-1 lg:gap-x-5'>
+      <li className='hidden lg:block py-3 mt-2'>
 <button onClick={toggleSearchbar}>
 <CiSearch size={20} />
 </button>
@@ -235,9 +242,7 @@ const MegaMenu = () => {
 
  </div>
            </li>
-         </ul>
-       </div>
-     )}
+     </div>
       </div>
   </div>
        <SearchBar isSearchBarVisible={isSearchBarVisible} toggleSearchbar={toggleSearchbar} />

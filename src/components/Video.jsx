@@ -5,7 +5,7 @@ const VideoPlayer = ({ url }) => {
   
     // const driveUrl = "https://drive.google.com/uc?export=download&id=1fWFmoxY78LhYmsD6yWCuzQQD5fz5QOHi"
   return (
-    <div className="video-player my-5 px-5">
+    <div className="video-player flex mx-auto">
       <ReactPlayer
         url={url}
         controls

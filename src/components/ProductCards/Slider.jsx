@@ -1,11 +1,13 @@
-import { Carousel } from './Carousel';
+import { Carousel } from "./Carousel";
 
-export const Slider = ({ images }) => {
+export const Slider = ({ images, videoUrl }) => {
   const baseUrl = import.meta.env.VITE_APP_URL;
+
   return (
     <div className="relative md:w-auto md:h-full md:max-w-[400px] lg:max-w-[500px]">
-      <Carousel images={images}>
-        {images?.map((image, index) => (
+      <Carousel images={images} videoUrl={videoUrl} autoSlide={false}>
+        {/* Pass images as children */}
+        {images.map((image, index) => (
           <img
             className="object-cover"
             key={index}
@@ -17,4 +19,3 @@ export const Slider = ({ images }) => {
     </div>
   );
 };
-
