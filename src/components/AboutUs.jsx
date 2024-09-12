@@ -21,7 +21,7 @@ const AboutUs = ({ }) => {
   })
 
   return (
-    <div className="about-us-container px-6 md:px-6">
+    <div id="about-us" className="about-us-container px-6 md:px-6">
       <div className="founders-section my-2 flex flex-col md:flex-row gap-x-4 justify-center items-center text-center">
         <div className="founders-content md:w-[50%] flex flex-col px-4 md:flex-row justify-end items-center">
           {isLoading ? (

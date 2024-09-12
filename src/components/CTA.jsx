@@ -8,11 +8,11 @@ const CTA = () => {
     <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-1">
         <div class="flex lg:flex-row justify-center flex-col gap-x-10">
-            <div class="lg:pr-8 mx-auto sm:mx-auto mb-7 md:ml-[10%]">
+            <div class="lg:pr-8 mb-7 ml-[10%]">
 
-              <span className="text-2xl md:text-3xl text-center font-semibold text-gray-800 tracking-wide">Kalegoodu</span>
+              <span className="text-2xl md:text-3xl text-left font-semibold text-gray-800 tracking-wide">Kalegoodu</span>
                 <br/><br/>
-                      <span className="text-lg md:text-3xl text-center font-semibold text-gray-700 tracking-wide">Follow us</span>
+                      <span className="text-lg md:text-3xl text-left font-semibold text-gray-700 tracking-wide">Follow us</span>
 
                 <ul class="flex items-center space-x-3 mt-4">
                     <li>
@@ -52,7 +52,7 @@ const CTA = () => {
                     </li>
                 </ul>
             </div>
-           <div className='flex flex-row justify-center mx-auto md:mt-[0%] mt-[10%] gap-x-[100px] w-[60%]'>
+           <div className='flex flex-row ml-[10%] md:mt-[0%] gap-x-[40px] md:gap-x-[100px] w-[90%]'>
             <div>
                 <p class="text-sm font-semibold tracking-widest text-gray-700 uppercase">MAIN MENU</p>
 

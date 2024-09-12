@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useRef ,useEffect} from "react";
 
 const StateContext = createContext();
 
@@ -18,26 +18,23 @@ export const ContextProvider = ({ children }) => {
   const [isClicked, setIsClicked] = useState(initialState);
 
   useEffect(() => {
-    // Function to update screenSize based on viewport width
+
     const updateScreenSize = () => {
       if (window.innerWidth >= 1024) {
-        setScreenSize("large"); // Large devices (width >= 1024px)
+        setScreenSize("large"); 
       } else {
-        setScreenSize("mobile"); // Mobile devices (width < 1024px)
+        setScreenSize("mobile"); 
       }
     };
 
-    // Initial call to set screenSize
     updateScreenSize();
 
-    // Event listener to update screenSize on window resize
     window.addEventListener("resize", updateScreenSize);
 
-    // Clean-up function to remove event listener on component unmount
     return () => {
       window.removeEventListener("resize", updateScreenSize);
     };
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []); 
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -53,6 +50,37 @@ export const ContextProvider = ({ children }) => {
   const handleClick = (clicked) =>
     setIsClicked({ ...initialState, [clicked]: true });
 
+   const categoriesRef = useRef(null);
+  const newArrivalsRef = useRef(null);
+  const bestSellersRef = useRef(null);
+  const aboutUsRef = useRef(null);
+  const testimonialsRef = useRef(null);
+
+const scrollToSection = (sectionRef) => {
+  const sectionElement = sectionRef.current;
+  const sectionHeight = sectionElement.offsetHeight;
+  const windowHeight = window.innerHeight;
+
+
+  console.log(sectionElement)
+   console.log(sectionHeight)
+    console.log(windowHeight)
+  if (sectionHeight < windowHeight) {
+    const offset = (windowHeight - sectionHeight) / 2;
+    console.log(offset)
+    window.scrollTo({
+      top: sectionElement.offsetTop - offset,
+      behavior: 'smooth',
+    });
+    document.documentElement.scrollTop = sectionElement.offsetTop - offset; // For most browsers
+      document.body.scrollTop = sectionElement.offsetTop - offset;
+  } else {
+    // If the section is taller or equal to the window's height, just scroll to its top
+    sectionElement.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+
   return (
     <StateContext.Provider
       value={{
@@ -62,6 +90,12 @@ export const ContextProvider = ({ children }) => {
         screenSize,
         setScreenSize,
         handleClick,
+        categoriesRef,
+        newArrivalsRef,
+        bestSellersRef,
+        aboutUsRef,
+        testimonialsRef,
+        scrollToSection,
         isClicked,
         initialState,
         setIsClicked,

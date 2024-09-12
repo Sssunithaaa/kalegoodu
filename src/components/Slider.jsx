@@ -9,13 +9,14 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
+import { useStateContext } from '../context/ContextProvider';
 
-const ProductCarousel = ({ saleType }) => {
+const ProductCarousel = ({ saleType,ref }) => {
   const { data: products,isLoading, isLoadingError } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts
   });
-  
+ 
 
   const bestSellerMode = Boolean(saleType);
   const filteredProducts = bestSellerMode 
@@ -54,7 +55,7 @@ const ProductCarousel = ({ saleType }) => {
   };
 
  return (
-  <div className="px-10 mx-auto relative">
+  <div className="px-10 mx-auto flex flex-col relative">
     <Slider {...settings}>
       {isLoading || isLoadingError ? (
         // <SkeletonContainer>
@@ -73,6 +74,7 @@ const ProductCarousel = ({ saleType }) => {
         ))
       )}
     </Slider>
+
   </div>
 );
 

@@ -1,14 +1,19 @@
 import React from 'react';
 import PolicyForm from './AddDetails';
-
+import { useQuery } from '@tanstack/react-query';
+import { getPageContents } from '../../../services/index/pageContent';
 const ManageDetails = () => {
-  console.log("Rendering ManageDetails Component");
-
+  
+    const { data, isLoading } = useQuery({
+    queryKey: ['page-contents'],
+    queryFn: () => getPageContents(),
+  });
   return (
     <div className='flex flex-col lg:flex-row'>
-      <PolicyForm title="Returns and Refunds Policy" endpoint="returns-policy" />
-      <PolicyForm title="Delivery Details" endpoint="delivery-details" />
-      <PolicyForm title="Terms and Conditions" endpoint="terms-conditions" />
+       <PolicyForm title={data?.[1]?.page_name}  data={data?.[1]} id={2}/>
+      <PolicyForm title={data?.[2]?.page_name}   data={data?.[2]} id={3}/>
+      <PolicyForm title={data?.[3]?.page_name} data={data?.[3]} id={8}/>
+     
     </div>
   );
 };

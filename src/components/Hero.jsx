@@ -3,7 +3,8 @@ import styled, { keyframes } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { img12, img24 } from '../assets/images';
 import { useNavigate } from 'react-router-dom';
-
+import { FaAngleDoubleDown } from "react-icons/fa";
+import { useStateContext } from '../context/ContextProvider';
 // Keyframes for slide animation
 const slide = keyframes`
   0% { transform: translateX(0); }
@@ -134,7 +135,7 @@ const LazyImage = ({ src, placeholder, ...props }) => {
 const Hero = () => {
   const [images, setImages] = useState([img24]);  // Start with the static image
   const baseUrl = import.meta.env.VITE_APP_URL;
-
+ 
   // Fetch banner images from API
   const { data: banner, isLoading } = useQuery({
     queryKey: ["banner"],

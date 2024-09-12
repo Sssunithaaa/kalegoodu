@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { img28 } from '../assets/images';
 import { getAllCategories } from '../services/index/postCategories';
+
 const ImageWrapper = styled.div`
   width: 10rem;
   height: 10rem;
@@ -40,6 +41,7 @@ const Categories = () => {
     queryFn: getAllCategories
   });
   const [hoveredCategory, setHoveredCategory] = useState(null);
+ 
 
   const url = useMemo(() => import.meta.env.VITE_APP_URL, []);
 
@@ -57,7 +59,7 @@ const Categories = () => {
   }, [navigate]);
 
   return (
-    <div className="grid md:w-[90%] lg:w-[80%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-4 mx-auto">
+    <div className="grid relative md:w-[90%] lg:w-[80%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-4 mx-auto">
       {isLoading || isLoadingError ? (
         Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="md:mx-4 mx-2 my-[6px] text-center">
@@ -90,6 +92,8 @@ const Categories = () => {
           </div>
         ))
       )}
+      {/* <div className='absolute flex bottom-0 mx-auto hover:cursor-pointer' onClick={()=>scrollToSection(newArrivalsRef)}><FaAngleDoubleDown color='gray'/></div> */}
+
     </div>
   );
 };

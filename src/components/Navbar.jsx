@@ -11,6 +11,7 @@ import { CartContext } from '../context/CartContext';
 import { useStateContext } from '../context/ContextProvider';
 import SearchBar from '../searchbar/SearchBar';
 import styled from 'styled-components';
+import AnchorLink from 'react-anchor-link-smooth-scroll';
 const Button = styled.button`
   width: 100%;
   height: 45px;
@@ -37,6 +38,7 @@ const navButtons = [
   { name: "Gifting combos", href: "/Categories/8/Gifting-Combos" },
   {name: "Workshop",href:"/Workshop"},
   { name: "Contact us", href: "/Contact-us" },
+  {name: "About us",href: "/about-us"}
   // { name: "About us", href: "/about-us" }
 ];
 
@@ -111,7 +113,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
 
 const MegaMenu = () => {
   
-  const { screenSize } = useStateContext();
+  const { screenSize ,aboutUsRef,scrollToSection} = useStateContext();
   const [isMenuVisible, setIsMenuVisible] = useState(screenSize === "large");
 
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
@@ -205,10 +207,8 @@ const MegaMenu = () => {
               {navButtons.map((item, index) =>
   <li 
     id="nav" 
-    onClick={() => {
-      navigate(item.href);
-      handleMenuToggleOff(true); // Close the menu
-    }} 
+    // onClick={() => item.href === "/about-us" ? {scrollToSection(aboutUsRef); handleMenuToggleOff(true);} : navigate("/</ul>")} 
+    onClick={()=>navigate(`${item.href}`)}
     key={index} 
     className='lg:flex lg:mx-auto py-3 px-3 hover:cursor-pointer transition-all duration-500'
   >

@@ -6,6 +6,7 @@ import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
+import { QueryClient } from '@tanstack/react-query';
 const AdminContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -138,7 +139,7 @@ const Banner = () => {
   const handleDelete = async (bannerImageId) => {
     try {
       await axios.delete(`${baseUrl}/api/banner_image/${bannerImageId}/delete/`);
-      queryClient.invalidateQueries(["banner"]);
+      // QueryClient.invalidateQueries(["banner"]);
       toast.success("Image deleted successfully");
     } catch (error) {
       toast.error("Failed to delete image");
@@ -175,11 +176,7 @@ const Banner = () => {
                             alt={`Preview ${index + 1}`}
                             className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
                           />
-                          {banner?.banner_images[index] && (
-                            <DeleteButton onClick={() => handleDelete(banner.banner_images[index].banner_image_id)}>
-                              Delete
-                            </DeleteButton>
-                          )}
+                         
                         </div>
                       ) : (
                         <div className="p-3">
@@ -199,6 +196,11 @@ const Banner = () => {
                     </div>
                   )}
                 </Dropzone>
+                 {banner?.banner_images[index] && (
+                            <DeleteButton onClick={() => handleDelete(banner.banner_images[index].banner_image_id)}>
+                              Delete
+                            </DeleteButton>
+                          )}
               </div>
             ))}
           </div>

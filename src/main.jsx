@@ -13,6 +13,7 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import { BrowserRouter, HashRouter } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop.jsx'
+import 'react-toastify/dist/ReactToastify.css'
 
 const queryClient = new QueryClient({
   defaultOptions: {

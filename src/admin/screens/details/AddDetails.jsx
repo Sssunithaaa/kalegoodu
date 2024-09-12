@@ -1,23 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import Button from '../../../components/Button';
+import { updatePageContent } from '../../../services/index/pageContent';
 
 
-const PolicyForm = ({ title, endpoint }) => {
+const PolicyForm = ({ title,data,id }) => {
   const [text, setText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const baseUrl = import.meta.env.VITE_APP_URL;
-
+  
+ useEffect(()=> {
+  setText(data?.content)
+ },[data])
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-
+  const formData = new FormData();
+    formData.append('page_name', data?.page_name);
+    formData.append('content', text);
     try {
-      await axios.post(`${baseUrl}/api/${endpoint}/`, { text });
+      await updatePageContent(id,formData)
       toast.success(`${title} added successfully!`);
-      setText('');
+     
     } catch (error) {
       toast.error(`Failed to add ${title}`);
       console.error(`Error adding ${title}:`, error);
@@ -42,8 +47,8 @@ const PolicyForm = ({ title, endpoint }) => {
             required
           ></textarea>
         </div>
-        <Button className='py-2' type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : `Add ${title}`}
+        <Button className='py-4 px-2' type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : `Update ${title}`}
         </Button>
       </form>
     </div>

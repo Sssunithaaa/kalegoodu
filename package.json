@@ -26,6 +26,7 @@
     "primereact": "^10.6.6",
     "react": "^18.2.0",
     "react-admin": "^5.0.3",
+    "react-anchor-link-smooth-scroll": "^1.0.12",
     "react-audio-voice-recorder": "^2.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",

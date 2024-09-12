@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { VideoPlayer } from "../Video";
+import VideoPlayer from "../Video";
+
 export function Carousel({
   images = [],
   videoUrl,
@@ -9,7 +10,6 @@ export function Carousel({
 }) {
   const [curr, setCurr] = useState(0);
 
-  // Updated next function to ensure correct looping through slides and video
   const prev = () =>
     setCurr((curr) => (curr === 0 ? slides.length : curr - 1));
   const next = () =>
@@ -28,9 +28,8 @@ export function Carousel({
       <div className="overflow-hidden relative max-w-[350px] lg:w-[500px] lg:max-w-[500px] md:max-w-[400px] w-full mx-auto md:h-auto md:rounded-2xl">
         <div
           className="flex transition-transform ease-out duration-500"
-          style={{ transform: `translateX(-${curr}%)` }}
+          style={{ transform: `translateX(-${curr}%)` }} // Correct translation
         >
-          {/* Render images and video based on curr index */}
           {slides.map((slide, index) => (
             <div
               key={index}
@@ -42,7 +41,7 @@ export function Carousel({
           ))}
           {videoUrl && curr === slides.length && (
             <div className="flex-shrink-0 w-full">
-              <VideoPlayer url={videoUrl} />
+              <VideoPlayer url={`https://youtube.com/embed/${videoUrl.split('v=')[1]}`} />
             </div>
           )}
         </div>
@@ -89,12 +88,11 @@ export function Carousel({
         ))}
         {videoUrl && (
           <div
-            onClick={() => setCurr(slides.length)} // This sets the curr state to the video index
+            onClick={() => setCurr(slides.length)}
             className={`hover:cursor-pointer focus:opacity-20 rounded-xl ${
               curr === slides.length ? "border-2 border-orange" : ""
             }`}
           >
-            {/* Thumbnail placeholder for video */}
             <div className="w-full h-auto bg-gray-200 flex items-center justify-center">
               <span className="text-sm">Video</span>
             </div>

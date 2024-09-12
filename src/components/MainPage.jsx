@@ -1,14 +1,11 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import Hero from './Hero';
 import Title from './Title';
-
 import { img1, img2, img3 } from '../assets/images';
-import ClipLoader from 'react-spinners/ClipLoader';
 import FullPageLoader from './FullPageLoader';
+import {  useStateContext } from '../context/ContextProvider';
 
-// Lazy load components
 const ProductCarousel = React.lazy(() => import('./Slider'));
 const Categories = React.lazy(() => import('./Categories'));
 const Testimonials = React.lazy(() => import('./Testimonials/Testimonials'));
@@ -27,29 +24,42 @@ const MainPage = () => {
 
   const navigate = useNavigate();
 
+  const {categoriesRef,newArrivalsRef,bestSellersRef,aboutUsRef,testimonialsRef} = useStateContext()
+  
+
   return (
     <div className='scroll-container'>
       <div className="scroll-section w-full">
         <Hero />
       </div>
-      <Suspense fallback={<FullPageLoader/>}>
-        <div className="scroll-section my-6">
+      <Suspense fallback={<FullPageLoader />}>
+        <div className="scroll-section my-6" ref={categoriesRef}>
           <Title>Shop by collection</Title>
           <Categories />
         </div>
-        <div className="scroll-section w-full my-6">
-          <Title>Trendiest new arrivals</Title>
-          <ProductCarousel products={products} />
-        </div>
-        <div className='scroll-section w-full my-6 '>
-          <Title>Best Sellers</Title>
-          <ProductCarousel products={products} saleType="Best Seller" />
-        </div>
-        <div className='scroll-section my-6'>
+       <div className="scroll-section w-full my-6" ref={newArrivalsRef}>
+  <div className='relative mx-auto'>
+    <Title>Trendiest new arrivals</Title>
+    <ProductCarousel products={products} />
+    
+   
+  </div>
+</div>
+
+
+        <div className="scroll-section w-full my-6" ref={bestSellersRef}>
+  <div className='relative mx-auto'>
+    <Title>Best Sellers</Title>
+    <ProductCarousel products={products} saleType="Best Seller" />
+    
+  
+  </div>
+</div>     
+        <div className='scroll-section my-6' ref={aboutUsRef}>
           <Title>About us</Title>
           <AboutUs />
         </div>
-        <div className='scroll-section my-6'>
+        <div className='scroll-section my-6' ref={testimonialsRef}>
           <Testimonials />
         </div>
       </Suspense>

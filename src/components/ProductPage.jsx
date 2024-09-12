@@ -7,8 +7,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getSingleProduct } from '../services/index/products';
 import {ClipLoader} from "react-spinners"
 import Testimonials from './Testimonials/Testimonials';
-import ReactPlayer from 'react-player';
-import { VideoPlayer } from './Video';
+import VideoPlayer from './Video';
+// import ReactPlayer from 'react-player';
+// import { VideoPlayer } from './Video';
 
 
 function ProductPage() {
@@ -36,7 +37,9 @@ function ProductPage() {
         <Navbar />
       </div> */}
       <div className=" lg:max-w-[80%] md:max-w-[100%] md:mx-auto md:px-4 pt-[20px] md:pt-[0]">
+        
         <div className="flex flex-col md:flex-row md:items-start md:px-0 md:gap-6 md:py-20 items-center md:justify-center">
+          
           {!isLoading ? (
             <div className='flex flex-col md:flex-row gap-x-4 '>
               <div className='md:w-[50%]'>
@@ -45,14 +48,21 @@ function ProductPage() {
             
               <div className='md:w-[50%] md:mt-0 mt-4'>
                 <DetailsSection product={product} cartCounter={cartCounter} setCartCounter={setCartCounter} />
-              </div>
+                 <div className="flex-shrink-0 h-full px-5 my-5">
+             {product?.video_link && <VideoPlayer url={`https://youtube.com/embed/${product?.video_link?.split('v=')[1]}`} />}
             </div>
+              </div>
+                
+            </div>
+            
           ) : (
              <div className="flex justify-center items-center">
             <ClipLoader color="#36d7b7" loading={isLoading} size={50} />
           </div>
           )}
+         
         </div>
+       
         <div className='mt-4'>
              <Testimonials comments={product?.comments || []} /> {/* Pass the comments to the Reviews component */}
         </div>

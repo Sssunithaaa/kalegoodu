@@ -1,7 +1,7 @@
 import { CTASection } from './CTASection';
 import { DetailedProduct } from './DetailedProduct';
 
-import { VideoPlayer } from '../Video';
+
 export const DetailsSection = ({ product, cartCounter, setCartCounter }) => {
   return (
  <div className='flex flex-col justify-start items-start w-full md:py-0 gap-3 md:w-full md:max-w-[700px]'>
