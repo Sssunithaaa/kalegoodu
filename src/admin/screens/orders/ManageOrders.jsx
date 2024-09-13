@@ -69,31 +69,30 @@ const PAGE_SIZE = 5;
   };
   const [selectedItems, setSelectedItems] = useState({});
 
-const handleCheckboxChange = (orderId, itemId, quantity) => {
-  console.log(quantity)
+const handleCheckboxChange = (orderId, item, quantity) => {
+  console.log(selectedItems)
   setSelectedItems(prevState => {
     const orderSelectedItems = prevState[orderId] || {};
-    
-    // Update or remove items based on quantity
+     console.log(item)
      if(quantity==0){
       return {
-        ...prevState,
-        [orderId] : {
-          ...orderSelectedItems,
-          [itemId] : {quantity:0}
-        }
+      ...prevState,
+      [orderId]: {
+        ...orderSelectedItems,
+        [item.order_item_id]: { product_id: item.product, quantity: 0 }
       }
+    };
      }
-      return {
-        ...prevState,
-        [orderId]: {
-          ...orderSelectedItems,
-          [itemId]: { quantity },
-        },
-      };
+     return {
+      ...prevState,
+      [orderId]: {
+        ...orderSelectedItems,
+        [item.order_item_id]: { product_id: item.product, quantity: quantity }
+      }
+    };
     }
   );
-  console.log(selectedItems[orderId]?.[itemId]?.quantity)
+
 };
 
 const handleInTransit = async (orderId) => {
@@ -102,14 +101,17 @@ const handleInTransit = async (orderId) => {
   if (!itemsToSend || Object.keys(itemsToSend).length === 0) {
     toast.error("No items selected");
     return;
-  }
+  } 
 
-  // Map the items to send
+  // Map the selected items to the format required
   const items = Object.entries(itemsToSend).map(([itemId, item]) => ({
-    product_id: itemId, 
+    product_id: item.product_id, 
     quantity: item.quantity,
   }));
-  console.log(items)
+ console.log({
+      order_id: orderId,
+      items,
+    })
   try {
     await axios.put(`${url}/api/acknowledge_order/`, {
       order_id: orderId,
@@ -121,8 +123,6 @@ const handleInTransit = async (orderId) => {
     toast.error("Failed to update order items. Try again!");
   }
 };
-
-
 
 
   return (
@@ -193,7 +193,7 @@ const handleInTransit = async (orderId) => {
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
       <input
         type="checkbox"
-        onChange={(e) => handleCheckboxChange(order.order_id, item.order_item_id, e.target.checked ? item.quantity : 0)}
+        onChange={(e) => handleCheckboxChange(order.order_id, item, e.target.checked ? item.quantity : 0)}
       />
     </td>
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.product_name}</td>
@@ -203,7 +203,7 @@ const handleInTransit = async (orderId) => {
     type="number"
     value={selectedItems[order.order_id]?.[item.order_item_id]?.quantity === 0 ? 0 : selectedItems[order.order_id]?.[item.order_item_id]?.quantity  || item.quantity}
     className='w-full'
-    onChange={(e) => handleCheckboxChange(order.order_id, item.order_item_id, Number(e.target.value))}
+    onChange={(e) => handleCheckboxChange(order.order_id, item, Number(e.target.value))}
   />
 </td>
 
