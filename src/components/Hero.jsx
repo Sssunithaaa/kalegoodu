@@ -161,15 +161,15 @@ const Hero = () => {
   return (
     <HeroSection>
       {isLoading ? (
-        // Show placeholder if images are still loading
+      
         <ImageWrapper src={img24} placeholder={img12} loaded={true} />
       ) : (
         <ImageSlider imageCount={images.length}>
-          {/* Map over images to create LazyImage components */}
+      
           {images.map((img, index) => (
             <LazyImage
               key={index}
-              src={img.image || img}  // img.image for dynamic images, img for the static image
+              src={img.image || img}  
               placeholder="path/to/placeholder/image.jpg"
             />
           ))}

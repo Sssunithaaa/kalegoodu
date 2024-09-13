@@ -1,6 +1,6 @@
-import Button from "../components/Button";
-
-const DataTable = ({
+import React, { forwardRef } from 'react';
+import Button from '../components/Button';
+const DataTable = forwardRef(({
   pageTitle,
   dataListName,
   searchKeywordOnSubmitHandler,
@@ -15,7 +15,7 @@ const DataTable = ({
   setCurrentPage,
   currentPage,
   headers,
-}) => {
+}, ref) => {
   return (
     <div>
       <h1 className="text-2xl font-semibold">{pageTitle}</h1>
@@ -50,7 +50,7 @@ const DataTable = ({
           </div>
           <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
             <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
-              <table className="min-w-full leading-normal">
+              <table ref={ref} className="min-w-full leading-normal">
                 <thead>
                   <tr>
                     {tableHeaderTitleList.map((title, index) => (
@@ -94,7 +94,7 @@ const DataTable = ({
         </div>
       </div>
     </div>
-  );
-};
+   );
+});
 
 export default DataTable;

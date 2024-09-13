@@ -94,7 +94,22 @@ const AboutUsForm = () => {
   };
 
   const aboutUsData = data?.[0]; // Move it here so it is accessible in JSX
-
+  const handleImageUpload =  async () => {
+    
+    try {
+      const formData = new FormData();
+      formData.append("image",file)
+         const config = {
+      headers: {
+          'Content-Type': 'multipart/form-data',
+      },
+    };
+      const response = await axios.post(`${baseUrl}/api/add_page_image/1/`,formData,config);
+      toast.success(response?.data?.message)
+    } catch (error) {
+      toast.error("Couldn't upload image!! Try again")
+    }
+  }
   return (
     <div className="w-full max-w-md mx-auto mt-8">
       <ToastContainer />
@@ -135,11 +150,11 @@ const AboutUsForm = () => {
               </div>
             )}
           </Dropzone>
-          {aboutUsData?.images?.[0]?.image && (
+          {aboutUsData?.images?.[0]?.image ? (
                       <DeleteButton type='button' onClick={() => handleDelete(aboutUsData?.pagecontent_id)}>
                         Delete
                       </DeleteButton>
-                    )}
+                    ) : file ? <Button type='button' onClick={handleImageUpload}>Upload image</Button> : <div></div>}
         </div>
 
         <div className="mb-4">
