@@ -17,6 +17,9 @@ const Admin = () => {
         <NavItem><Link to="/admin/banner">Manage Banners</Link></NavItem>
         <NavItem><Link to="/admin/categories/manage">Manage Categories</Link></NavItem>
         <NavItem><Link to="/admin/categories/add">Add Category</Link></NavItem>
+        <NavItem><Link to="/admin/workshops/manage">Manage Workshops</Link></NavItem>
+         <NavItem><Link to="/admin/workshops/add">Add Workshop</Link></NavItem>
+          <NavItem><Link to="/admin/orders/manage">Manage orders</Link></NavItem>
         
       </NavList>
       <h1>Website navigation links</h1>

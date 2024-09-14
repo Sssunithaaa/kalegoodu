@@ -36,7 +36,7 @@ const navButtons = [
   { name: "Living room decor", href: "/Categories/6/Living-Room-Decor" },
   { name: "Office decor", href: "/Categories/7/Office-Decor" },
   { name: "Gifting combos", href: "/Categories/8/Gifting-Combos" },
-  {name: "Workshop",href:"/Workshop"},
+  {name: "Workshops",href:"/Workshops"},
   { name: "Contact us", href: "/Contact-us" },
   {name: "About us",href: "/about-us"}
   // { name: "About us", href: "/about-us" }

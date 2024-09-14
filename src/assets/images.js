@@ -23,4 +23,5 @@ import img23 from './23.jpg'
 import logo from './logo.png'
 import img28 from './28.jpg'
 import img24 from './21-size.jpg'
-export {logo,img,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14,img17,img18,img19,img20,img21,img22,img23,img24,img28}
+import ganesh from './ganesh.avif'
+export {logo,img,ganesh,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14,img17,img18,img19,img20,img21,img22,img23,img24,img28}

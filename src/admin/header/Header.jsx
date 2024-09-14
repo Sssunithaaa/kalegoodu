@@ -147,6 +147,24 @@ const Header = () => {
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
+             <NavItemCollapse
+                title="Workshops"
+                icon={<MdDashboard className="text-xl" />}
+                name="Details"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              >
+                <Link to="/admin/workshops/manage">Manage workshops</Link>
+                <Link
+                to="/admin/workshops/add"
+                  // disabled={isLoadingCreatePost}
+                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                  
+                >
+                   Add workshops
+                </Link>
+                {/* <Link to="/admin/categories/manage">Categories</Link> */}
+              </NavItemCollapse>
              
                <NavItemCollapse
                 title="Testimonials"
