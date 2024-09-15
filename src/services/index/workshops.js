@@ -55,7 +55,7 @@ export const createWorkshop = async (formData) => {
   }
 };
 
-export const updateWorkshop = async ({ updatedData, slug }) => {
+export const updateWorkshop = async ({ formData, slug }) => {
   try {
     const config = {
       headers: {
@@ -64,12 +64,13 @@ export const updateWorkshop = async ({ updatedData, slug }) => {
     };
 
     const response = await axios.put(
-      `${url}/api/update_full_category/${slug}/`,
-      updatedData,
+      `${url}/api/update_workshops/${slug}/`,
+      formData,
       config
     );
     return response.data;
   } catch (error) {
+    console.log(error)
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);

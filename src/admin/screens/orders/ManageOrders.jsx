@@ -70,30 +70,25 @@ const PAGE_SIZE = 5;
   const [selectedItems, setSelectedItems] = useState({});
 
 const handleCheckboxChange = (orderId, item, quantity) => {
-  console.log(selectedItems)
   setSelectedItems(prevState => {
     const orderSelectedItems = prevState[orderId] || {};
-     console.log(item)
-     if(quantity==0){
-      return {
-      ...prevState,
-      [orderId]: {
-        ...orderSelectedItems,
-        [item.order_item_id]: { product_id: item.product, quantity: 0 }
-      }
-    };
-     }
-     return {
-      ...prevState,
-      [orderId]: {
-        ...orderSelectedItems,
-        [item.order_item_id]: { product_id: item.product, quantity: quantity }
-      }
-    };
-    }
-  );
 
+    return {
+      ...prevState,
+      [orderId]: {
+        ...orderSelectedItems,
+        [item.order_item_id]: { 
+          product_id: item.product, 
+          quantity: quantity, 
+          order_completed: true // Mark as completed if quantity is 0
+        }
+      }
+    };
+  });
+  
 };
+console.log(selectedItems)
+
 
 const handleInTransit = async (orderId) => {
   const itemsToSend = selectedItems[orderId];
@@ -192,16 +187,20 @@ const handleInTransit = async (orderId) => {
   <tr key={item.order_item_id}>
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
       <input
+        checked={selectedItems[order.order_id]?.[item.order_item_id]?.order_completed  || item.order_completed || false}
         type="checkbox"
+         disabled={item?.order_completed}
         onChange={(e) => handleCheckboxChange(order.order_id, item, e.target.checked ? item.quantity : 0)}
       />
     </td>
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.product_name}</td>
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
  <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
+
   <input
     type="number"
     value={selectedItems[order.order_id]?.[item.order_item_id]?.quantity === 0 ? 0 : selectedItems[order.order_id]?.[item.order_item_id]?.quantity  || item.quantity}
+   
     className='w-full'
     onChange={(e) => handleCheckboxChange(order.order_id, item, Number(e.target.value))}
   />
@@ -221,7 +220,7 @@ const handleInTransit = async (orderId) => {
 </td>
 <td className="px-5 py-5 text-md bg-white border-b border-gray-200 ">
   <Button className='px-5' onClick={() => handleInTransit(order.order_id)}>
-    In Transit
+   {order?.order_completed ? "Success" : "In Transit"}
   </Button>
 </td>
 

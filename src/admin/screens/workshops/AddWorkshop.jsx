@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import styled from "styled-components";
-import { createWorkshop, getSingleWorkshop } from "../../../services/index/workshops";
+import { createWorkshop, getSingleWorkshop, updateWorkshop } from "../../../services/index/workshops";
 import Button from "../../../components/Button";
 
 
@@ -48,6 +48,7 @@ const AddWorkshop = () => {
  setTitle(data?.name || "Sample Title");
       setPlace(data?.place);
        setDate(data?.date || date);
+       setVideoUrl(data?.videos?.[0]?.video_url)
       setDescription(data?.description || "Sample Description");
       setPreviews(data?.images?.map((image) => baseUrl + image?.image) || [null, null, null]);
   },[data])
@@ -72,7 +73,18 @@ const AddWorkshop = () => {
     },
     onError: (error) => {
         console.log(error)
-      toast.error(error.message);
+      toast.error("Couldn't add workshop!!");
+    },
+  });
+   const { mutate: mutateUpdateWorkshop, isLoading: isLoadingUpdateWorkshop } = useMutation({
+    mutationFn: ({formData,slug}) => updateWorkshop({formData,slug}),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["workshops"]);
+      toast.success("Workshop update successfully!");
+    },
+    onError: (error) => {
+        console.log(error)
+      toast.error("Couldn't update workshop!!");
     },
   });
 
@@ -108,7 +120,7 @@ const AddWorkshop = () => {
 
     if (isEditMode) {
       // Handle update logic here
-      //({ updatedData: formData, slug });
+      mutateUpdateWorkshop({ formData, slug });
     } else {
       mutateAddWorkshop(formData);
     }
@@ -235,7 +247,7 @@ const AddWorkshop = () => {
             className="d-button d-button-primary !outline-slate-300 border-2 border-gray-300 w-full py-2"
             disabled={isLoadingAddWorkshop}
           >
-            {isLoadingAddWorkshop ? "Submitting..." : "Submit"}
+            {isLoadingAddWorkshop || isLoadingUpdateWorkshop ? "Submitting..." : isEditMode ? "Update workshop" : "Add workshop"}
           </Button>
         </div>
       </form>
