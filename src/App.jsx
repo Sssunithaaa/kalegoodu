@@ -5,6 +5,8 @@ import { CartContext } from './context/CartContext';
 import WorkshopCarousel from './components/workshops/WorkshopCarousel';
 import AddWorkshop from './admin/screens/workshops/AddWorkshop';
 import ManageWorkshops from './admin/screens/workshops/ManageWorkshops';
+import DeliveryDetails from './components/DeliveryDetails';
+import WorkshopDetailsPage from './components/workshops/WorkshopDetails';
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
 const ProductPage = lazy(() => import('./components/ProductPage'));
@@ -53,9 +55,11 @@ const App = () => {
           <Route path="/Checkout" element={<CheckOut />} />
           <Route path="/About-Us" element={<AboutUs />} />
           <Route path="/Workshops" element={<WorkshopCarousel />} />
+          <Route path="/Workshops/:workshopId" element={<WorkshopDetailsPage />} />
            <Route path="/Contact-Us" element={<ContactUs />} />
            <Route path="/Terms-and-Conditions" element={<TermsAndConditions />} />
            <Route path="/Returns-and-Refund" element={<Refund />} />
+            <Route path="/Delivery-Details" element={<DeliveryDetails />} />
         </Route>
 
         {/* Admin routes with AdminLayout */}

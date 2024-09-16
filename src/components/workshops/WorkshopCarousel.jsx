@@ -5,49 +5,31 @@ import 'slick-carousel/slick/slick-theme.css';
 import { BsFillCalendar2EventFill, BsFillGeoAltFill } from 'react-icons/bs';
 import { getAllWorkshops } from '../../services/index/workshops';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+
 const WorkshopCarousel = () => {
   
- const url = import.meta.env.VITE_APP_URL;
-    const { data } = useQuery({
+  const url = import.meta.env.VITE_APP_URL;
+  const { data } = useQuery({
     queryKey: ['workshops'],
     queryFn: getAllWorkshops
   });
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+  const navigate = useNavigate();
 
   return (
-    <div className="workshop-carousel-container max-w-7xl mx-auto my-8 px-4">
+    <div className="workshop-carousel-container mx-auto max-w-7xl mb-8 px-4">
       <h2 className="text-center text-2xl font-bold mb-6">Upcoming Workshops</h2>
-      {/* <Slider {...settings}> */}
-      <div className='flex flex-wrap gap-y-4 gap-x-5'>
+      <div className="flex flex-wrap justify-center gap-y-6 gap-x-5">
         {data?.map((workshop) => (
-          <div key={workshop.workshop_id} className="workshop-card  px-4">
-            <div className="shadow-lg bg-green-100 rounded-lg overflow-hidden">
-             
+          <div
+            key={workshop.workshop_id}
+            onClick={() => navigate(`${workshop?.workshop_id}`)}
+            className="workshop-card flex-grow flex-shrink-0 basis-72 md:basis-60 lg:basis-48 max-w-sm"
+          >
+            <div className="shadow-lg bg-green-50 rounded-lg overflow-hidden h-full">
               <img
-                src={url+ workshop?.images?.[0]?.image}
+                src={url + workshop?.images?.[0]?.image}
                 alt={workshop.name}
                 className="w-full h-48 object-cover"
               />
@@ -63,15 +45,14 @@ const WorkshopCarousel = () => {
                   <BsFillGeoAltFill className="mr-2" />
                   Place: {workshop.place}
                 </p>
-                <p className="workshop-description text-gray-900 mt-3">
+                {/* <p className="workshop-description text-gray-900 mt-3">
                   {workshop.description}
-                </p>
+                </p> */}
               </div>
             </div>
           </div>
         ))}
-        </div>
-      {/* </Slider> */}
+      </div>
     </div>
   );
 };

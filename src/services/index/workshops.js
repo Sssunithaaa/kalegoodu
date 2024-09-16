@@ -79,8 +79,9 @@ export const updateWorkshop = async ({ formData, slug }) => {
 
 export const getSingleWorkshop = async ({ slug }) => {
   try {
+    console.log(slug)
     const { data } = await axios.get(`${url}/api/workshops/${slug}/`);
-    console.log(data)
+   console.log(data)
     return data?.workshop;
   } catch (error) {
     if (error.response && error.response.data.message)

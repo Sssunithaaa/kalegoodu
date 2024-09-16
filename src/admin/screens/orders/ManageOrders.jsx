@@ -87,7 +87,7 @@ const handleCheckboxChange = (orderId, item, quantity) => {
   });
   
 };
-console.log(selectedItems)
+
 
 
 const handleInTransit = async (orderId) => {
@@ -118,7 +118,15 @@ const handleInTransit = async (orderId) => {
     toast.error("Failed to update order items. Try again!");
   }
 };
+  const handleDelete = async (id)=> {
+    try {
+      const response = await axios.delete(`${url}/api/order-items/${id}/delete/ `)
+      console.log(response)
+    } catch (error) {
+      
+    };
 
+  }
 
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
@@ -179,6 +187,7 @@ const handleInTransit = async (orderId) => {
           <th className=" px-3 py-2 text-md bg-white border-b border-gray-200">Product Name</th>
           <th className=" px-3 py-2 text-md bg-white border-b border-gray-200">Quantity</th>
           <th className=" px-3 py-2 text-md bg-white border-b border-gray-200">Price</th>
+           <th className=" px-3 py-2 text-md bg-white border-b border-gray-200"></th>
         </tr>
         
       </thead>
@@ -209,6 +218,7 @@ const handleInTransit = async (orderId) => {
 </td>
 
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.price}</td>
+    <td onClick={()=>handleDelete(item.order_item_id)} className="px-3 py-2 text-md bg-white border-b border-gray-200">Delete</td>
   </tr>
 ))}
 
@@ -250,9 +260,13 @@ const handleInTransit = async (orderId) => {
         </tr>
       ))}
     </DataTable>
-    {!isLoading && <Pagination  onPageChange={handlePageChange}
+     {!isLoading && (
+              <div className="flex mx-auto">
+                <Pagination onPageChange={handlePageChange}
           currentPage={currentPage}
-          totalPageCount={totalPages}/>}
+          totalPageCount={totalPages}/>
+              </div>
+            )}
     </div>
   );
 };

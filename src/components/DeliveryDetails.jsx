@@ -2,7 +2,7 @@ import React from 'react';
 import Title from './Title';
 import { useQuery } from '@tanstack/react-query';
 import { getPageContents } from '../services/index/pageContent';
-const Refund = () => {
+const DeliveryDetails = () => {
    const { data, isLoading } = useQuery({
     queryKey: ['page-contents'],
     queryFn: () => getPageContents(),
@@ -13,13 +13,13 @@ const Refund = () => {
      
       
 
-      <Title>RETURNS AND REFUND POLICY</Title>
+      <Title>DELIVERY DETAILS</Title>
        <div className='flex mx-auto px-10 md:w-[700px] text-center my-4 text-[#1D1D1D]'>
-        {data?.[2]?.content}
+        {data?.[3]?.content}
        </div>
       </div>
    </div>
   );
 };
 
-export default Refund;
+export default DeliveryDetails;

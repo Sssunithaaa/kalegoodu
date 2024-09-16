@@ -1,18 +1,32 @@
-import React from 'react';
+import styled from 'styled-components';
+
+const VideoWrapper = styled.div`
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+`;
+
+const VideoFrame = styled.iframe`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`;
 
 const VideoPlayer = ({ url }) => {
   return (
-    <div className="video-player flex mx-auto">
-      <iframe
-        className='video'
-        title='YouTube player'
-        sandbox='allow-same-origin allow-forms allow-popups allow-scripts allow-presentation'
+    <VideoWrapper>
+      <VideoFrame
         src={url}
-        width="100%"
-        height="100%"
+        title="Product Video"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
-      />
-    </div>
+      ></VideoFrame>
+    </VideoWrapper>
   );
 };
 

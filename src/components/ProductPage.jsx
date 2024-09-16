@@ -48,9 +48,10 @@ function ProductPage() {
             
               <div className='md:w-[50%] md:mt-0 mt-4'>
                 <DetailsSection product={product} cartCounter={cartCounter} setCartCounter={setCartCounter} />
-                 <div className="flex-shrink-0 h-full px-5 my-5">
-             {product?.video_link && <VideoPlayer url={`https://youtube.com/embed/${product?.video_link?.split('v=')[1]}`} />}
-            </div>
+                 {/* <div className="flex-shrink-0 w-full h-full md:px-0 px-5 my-5">
+  {product?.video_link && <VideoPlayer url={`https://youtube.com/embed/${product?.video_link?.split('v=')[1]}`} />}
+</div> */}
+
               </div>
                 
             </div>

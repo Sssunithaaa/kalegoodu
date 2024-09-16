@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import VideoPlayer from "../Video";
+import ReactPlayer from "react-player"; // Use ReactPlayer for the video
 
 export function Carousel({
   images = [],
@@ -9,6 +9,7 @@ export function Carousel({
   autoSlideInterval = 3000,
 }) {
   const [curr, setCurr] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false); // Track if the video is playing
 
   const prev = () =>
     setCurr((curr) => (curr === 0 ? slides.length : curr - 1));
@@ -17,18 +18,30 @@ export function Carousel({
 
   const baseUrl = import.meta.env.VITE_APP_URL;
 
+  // Auto-slide logic
   useEffect(() => {
     if (!autoSlide) return;
     const slideInterval = setInterval(next, autoSlideInterval);
     return () => clearInterval(slideInterval);
   }, [autoSlide, autoSlideInterval]);
 
+  // Handle video play/pause when navigating between slides
+  useEffect(() => {
+    if (curr === slides.length) {
+      // If the current slide is the video, play it
+      setIsPlaying(true);
+    } else {
+      // Otherwise, pause it
+      setIsPlaying(false);
+    }
+  }, [curr, slides.length]);
+
   return (
     <div className="flex flex-col">
       <div className="overflow-hidden relative max-w-[350px] lg:w-[500px] lg:max-w-[500px] md:max-w-[400px] w-full mx-auto md:h-auto md:rounded-2xl">
         <div
           className="flex transition-transform ease-out duration-500"
-          style={{ transform: `translateX(-${curr}%)` }} // Correct translation
+          style={{ transform: `translateX(-${curr}%)` }} // Correct slide translation
         >
           {slides.map((slide, index) => (
             <div
@@ -39,12 +52,23 @@ export function Carousel({
               {slide}
             </div>
           ))}
-          {videoUrl && curr === slides.length && (
-            <div className="flex-shrink-0 w-full">
-              <VideoPlayer url={`https://youtube.com/embed/${videoUrl.split('v=')[1]}`} />
+                   {videoUrl && curr === slides.length && (
+            <div className="flex-shrink-0 w-full h-full"> {/* Full height container */}
+              <div className="relative w-full h-0 pb-[56.25%]"> {/* 16:9 Aspect Ratio */}
+                <ReactPlayer
+                  url={videoUrl}
+                  playing={isPlaying} // Control play state
+                  controls
+                  width="100%" // Full width
+                  height="100%" // Full height
+                  className="absolute top-0 left-0" // Positioning for full coverage
+                />
+              </div>
             </div>
           )}
+
         </div>
+
         {/* Navigation buttons */}
         <div className="absolute inset-0 flex items-center justify-between p-4">
           <button
@@ -66,6 +90,7 @@ export function Carousel({
           </button>
         </div>
       </div>
+
       {/* Thumbnail navigation */}
       <div className="hidden md:flex md:mx-auto md:w-[350px] md:max-w-[350px] lg:max-w-[400px] lg:w-[500px] md:gap-y-8 md:gap-x-2 lg:gap-4 mt-8 h-auto">
         {images.map((image, index) => (
@@ -86,9 +111,11 @@ export function Carousel({
             />
           </div>
         ))}
+
+        {/* Video thumbnail */}
         {videoUrl && (
           <div
-            onClick={() => setCurr(slides.length)}
+            onClick={() => setCurr(slides.length)} // Set to video slide
             className={`hover:cursor-pointer focus:opacity-20 rounded-xl ${
               curr === slides.length ? "border-2 border-orange" : ""
             }`}

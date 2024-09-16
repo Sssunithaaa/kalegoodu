@@ -34,6 +34,7 @@ const AddWorkshop = () => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]); // New field for workshop date
   const [place, setPlace] = useState(""); // New field for workshop place
   const [videoUrl, setVideoUrl] = useState(""); // New field for video URL
+  const [videoId, setVideoId] = useState(null); // New field for video URL
   const [files, setFiles] = useState([null, null, null]);
   const [previews, setPreviews] = useState([null, null, null]);
 
@@ -50,6 +51,7 @@ const AddWorkshop = () => {
        setDate(data?.date || date);
        setVideoUrl(data?.videos?.[0]?.video_url)
       setDescription(data?.description || "Sample Description");
+      setVideoId(data?.videos?.[0]?.workshopvideo_id)
       setPreviews(data?.images?.map((image) => baseUrl + image?.image) || [null, null, null]);
   },[data])
   const baseUrl = import.meta.env.VITE_APP_URL;
@@ -97,7 +99,11 @@ const AddWorkshop = () => {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("place", place);
-    formData.append("video_url", videoUrl);
+  const videos = {
+    video_id: videoId,
+    video_url: videoUrl
+  };
+    formData.append("videos", JSON.stringify(videos));
 
     files.forEach(file => {
       if (file) {
