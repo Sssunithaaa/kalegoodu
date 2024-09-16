@@ -43,7 +43,7 @@ const WorkshopDetailsPage = () => {
               <img
                 src={url + image.image}
                 alt={workshop?.name}
-                className="w-full h-96 object-cover rounded-lg"
+                className="w-full h-full md:h-96 md:object-cover object-contain rounded-lg"
               />
             </div>
           ))}
@@ -54,11 +54,13 @@ const WorkshopDetailsPage = () => {
 
       {/* Video Player if available */}
       {workshop?.videos?.[0]?.video_url && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">Workshop Video</h2>
-          <ReactPlayer url={workshop?.videos[0].video_url} controls width="100%" />
-        </div>
+         
+              <div className="flex w-full mt-4 h-full"> {/* 16:9 Aspect Ratio */}
+               <ReactPlayer url={workshop?.videos?.[0].video_url}  controls width="100%" />
+              </div>
+            
       )}
+        
     </div>
   );
 };

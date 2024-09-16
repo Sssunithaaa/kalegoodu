@@ -19,7 +19,7 @@ const WorkshopCarousel = () => {
 
   return (
     <div className="workshop-carousel-container mx-auto max-w-7xl mb-8 px-4">
-      <h2 className="text-center text-2xl font-bold mb-6">Upcoming Workshops</h2>
+      <h2 className="text-center text-2xl font-bold mb-2">Upcoming Workshops</h2>
       <div className="flex flex-wrap justify-center gap-y-6 gap-x-5">
         {data?.map((workshop) => (
           <div

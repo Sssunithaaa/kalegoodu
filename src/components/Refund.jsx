@@ -8,17 +8,14 @@ const Refund = () => {
     queryFn: () => getPageContents(),
   });
   return (
-   <div className='w-full'>
-     <div className="terms-container  md:w-[60%] mx-auto text-[#1D1D1D] px-20 py-5">
-     
-      
-
-      <Title>RETURNS AND REFUND POLICY</Title>
-       <div className='flex mx-auto px-10 md:w-[700px] text-center my-4 text-[#1D1D1D]'>
-        {data?.[2]?.content}
-       </div>
-      </div>
-   </div>
+    <div>
+        <div>
+            <Title>RETURNS AND REFUNDS POLICY</Title>
+            </div>
+            <div className='flex mx-auto px-10 md:w-[700px] text-center my-4 text-[#1D1D1D]'>
+{data?.[2]?.content}
+            </div>
+    </div>
   );
 };
 

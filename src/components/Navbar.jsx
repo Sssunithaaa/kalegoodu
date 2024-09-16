@@ -208,7 +208,7 @@ const MegaMenu = () => {
   <li 
     id="nav" 
     // onClick={() => item.href === "/about-us" ? {scrollToSection(aboutUsRef); handleMenuToggleOff(true);} : navigate("/</ul>")} 
-    onClick={()=>navigate(`${item.href}`)}
+    onClick={()=>{navigate(`${item.href}`);handleMenuToggleOff(true)}}
     key={index} 
     className='lg:flex lg:mx-auto py-3 px-3 hover:cursor-pointer transition-all duration-500'
   >
