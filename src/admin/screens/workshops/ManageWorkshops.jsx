@@ -39,10 +39,11 @@ const PAGE_SIZE = 5;
   };
   const deleteDataHandler=async (id)=> {
     try {
-      await axios.delete(`${url}/api/worshop/${id}/delete/`)
+      await axios.delete(`${url}/api/worshops/${id}/delete/`)
       toast.success("Workshop deleted successfully")
       refetch()
     } catch (error) {
+      console.log(error)
       toast.error("Failed to delete workshop!! Try again!!")
     }
   }

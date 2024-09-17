@@ -40,3 +40,21 @@
 .slick-next:before {
     color: black;
 }
+
+.slick-slide {
+    float: left;
+    width: 100%;
+    /* Ensure each image takes up the full width of its container */
+}
+
+.slick-slider {
+    width: 100%;
+    max-width: 100%;
+    /* Prevent overflow */
+}
+
+.slick-slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
