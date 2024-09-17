@@ -42,9 +42,9 @@ const WorkshopDetailsPage = () => {
   return (
     <div className="max-w-7xl mx-auto p-4">
       
-      <div className='flex flex-col gap-y-4 md:flex-row space-x-8 min-w-full'>
+      <div className='flex flex-col gap-y-4 md:flex-row gap-x-8 min-w-full'>
       {/* Image Carousel */}
-      <div className="mb-4 md:w-[70%]">
+      <div className="mb-4 md:w-[60%]">
         <Slider {...settings}>
           {workshop?.images?.map((image, index) => (
             <div key={index}>
@@ -57,7 +57,7 @@ const WorkshopDetailsPage = () => {
           ))}
         </Slider>
       </div>
-        <div className='w-full mx-auto mb-4 md:w-[30%] flex flex-col'>
+        <div className='w-full mx-auto mb-4 md:w-[40%] flex flex-col'>
           <h1 className="text-3xl font-bold mb-3">{workshop?.name}</h1>
       <p className="text-gray-900 gap-x-2 flex flex-row">
         <CiCalendarDate/> {new Date(workshop?.date).toLocaleDateString('en-US', options)}
@@ -69,14 +69,14 @@ const WorkshopDetailsPage = () => {
 
       {/* Video Player if available */}
      <div>
-      <div>
+      <div className='mt-2'>
         <h3 className='text-3xl font-semibold'>About</h3>
         <p className='md:text-lg'>{workshop?.description}</p>
       </div>
       <div>
          {workshop?.videos?.[0]?.video_url && (
          
-              <div className="flex w-full mt-4 h-full"> {/* 16:9 Aspect Ratio */}
+              <div className="flex w-full mt-6 h-full"> {/* 16:9 Aspect Ratio */}
                <ReactPlayer url={workshop?.videos?.[0].video_url}  controls width="100%" />
               </div>
             

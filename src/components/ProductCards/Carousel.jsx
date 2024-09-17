@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ReactPlayer from "react-player"; // Use ReactPlayer for the video
+import ReactPlayer from "react-player";
 
 export function Carousel({
   images = [],
@@ -9,36 +9,32 @@ export function Carousel({
   autoSlideInterval = 3000,
 }) {
   const [curr, setCurr] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false); // Track if the video is playing
+  const [isPlaying, setIsPlaying] = useState(false); 
 
   const prev = () =>
-    setCurr((curr) => (curr === 0 ? slides.length : curr - 1));
-  const next = () =>
-    setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
-
+    setCurr((curr) => (curr === 0 ? slides.length-1 : curr - 1));
+const next = () => setCurr((curr) => (curr === slides.length-1 ? 0 : curr + 1));
+ console.log(curr)
+ console.log(slides.length)
   const baseUrl = import.meta.env.VITE_APP_URL;
 
-  // Auto-slide logic
   useEffect(() => {
     if (!autoSlide) return;
     const slideInterval = setInterval(next, autoSlideInterval);
     return () => clearInterval(slideInterval);
   }, [autoSlide, autoSlideInterval]);
 
-  // Handle video play/pause when navigating between slides
   useEffect(() => {
-    if (curr === slides.length) {
-      // If the current slide is the video, play it
+    if (curr === slides.length && videoUrl) {
       setIsPlaying(true);
     } else {
-      // Otherwise, pause it
       setIsPlaying(false);
     }
   }, [curr, slides.length]);
-
+ 
   return (
     <div className="flex flex-col">
-      <div className="overflow-hidden relative max-w-[350px] lg:w-[500px] lg:max-w-[500px] md:max-w-[400px] w-full mx-auto md:h-auto md:rounded-2xl">
+      <div className="overflow-hidden relative max-w-[350px] lg:w-[550px] lg:max-w-[550px] md:max-w-[400px] w-full mx-auto md:h-auto md:rounded-2xl">
         <div
           className="flex transition-transform ease-out duration-500"
           style={{ transform: `translateX(-${curr}%)` }} // Correct slide translation
@@ -52,7 +48,7 @@ export function Carousel({
               {slide}
             </div>
           ))}
-                   {videoUrl && curr === slides.length && (
+                   {videoUrl != null && curr === slides.length && (
             <div className="flex-shrink-0 w-full h-full"> {/* Full height container */}
               <div className="relative w-full h-0 pb-[56.25%]"> {/* 16:9 Aspect Ratio */}
                 <ReactPlayer
