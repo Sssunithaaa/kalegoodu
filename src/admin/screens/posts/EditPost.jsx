@@ -173,7 +173,8 @@ const baseUrl = import.meta.env.VITE_APP_URL
       toast.success("Product added successfully");
     },
     onError: (error) => {
-      toast.error("Error adding product: " + error.message);
+      console.log(error)
+      toast.error("Error adding product");
      
     },
   });
@@ -206,7 +207,7 @@ const handleSubmit = async (e) => {
   
   const tagObjects = tags.map(tag => tag.value);
   formData.append("sale_types", JSON.stringify(tagObjects));
-
+  formData.append("quantity",10);
   
   if(!isEditMode){
     files.forEach((file, index) => {

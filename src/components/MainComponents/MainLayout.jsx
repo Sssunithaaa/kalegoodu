@@ -29,7 +29,7 @@ const MainLayout = ({ children }) => {
       </div>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}
-      <main className='flex-grow min-h-screen'>
+      <main className='flex-grow'>
         {children}
       </main>
       <CTA />

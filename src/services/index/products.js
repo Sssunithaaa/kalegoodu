@@ -75,6 +75,7 @@ export const createProduct = async ( formData ) => {
     
     return data;
   } catch (error) {
+    console.log(error)
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     

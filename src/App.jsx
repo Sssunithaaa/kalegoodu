@@ -7,6 +7,8 @@ import AddWorkshop from './admin/screens/workshops/AddWorkshop';
 import ManageWorkshops from './admin/screens/workshops/ManageWorkshops';
 import DeliveryDetails from './components/DeliveryDetails';
 import WorkshopDetailsPage from './components/workshops/WorkshopDetails';
+import LoginForm from './components/login/LoginForm';
+import { useSelector } from 'react-redux';
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
 const ProductPage = lazy(() => import('./components/ProductPage'));
@@ -36,6 +38,7 @@ const ManageOrders = lazy(()=> import('./admin/screens/orders/ManageOrders'))
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
 const App = () => {
   const {loading} = useContext(CartContext)
+  const {isAuthenticated} = useSelector((state)=>state.auth)
   return (
   
       <div>
@@ -60,10 +63,11 @@ const App = () => {
            <Route path="/Terms-and-Conditions" element={<TermsAndConditions />} />
            <Route path="/Returns-and-Refund" element={<Refund />} />
             <Route path="/Delivery-Details" element={<DeliveryDetails />} />
+            <Route path="/login" element={<LoginForm />} />
         </Route>
 
         {/* Admin routes with AdminLayout */}
-        <Route path="/admin" element={<AdminLayout />}>
+         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
           <Route path='sale-types/manage' element={<ManageSaleType/>}/>
           <Route path='comments/manage' element={<ManageComments/>}/>
