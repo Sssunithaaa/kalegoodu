@@ -19,6 +19,7 @@ import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import "react-toastify/dist/ReactToastify.css";
 import styled from 'styled-components';
 import axios from "axios";
+import Button from "../../../components/Button";
 
 const promiseOptions = async (inputValue) => {
   const { data: categoriesData } = await getAllCategories();
@@ -276,12 +277,11 @@ const handleFileChange = (acceptedFiles, index) => {
   return (
     <section className="w-full p-4 mt-3">
       <div className="flex flex-wrap justify-between gap-3">
-        <Link
-          to="/admin/products/manage"
-          className="btn btn-outline-dark bg-blue-500 px-2 py-1 rounded-md"
+        <h1
+         className="text-lg font-semibold" 
         >
-          Manage Products
-        </Link>
+          Add Product
+        </h1>
       </div>
       <ToastContainer/>
       {isLoading && <p>Loading...</p>} {/* Show loading message */}

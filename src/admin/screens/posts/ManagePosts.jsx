@@ -7,6 +7,7 @@ import Pagination from '../../../components/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../../../services/index/products';
 import { toast, ToastContainer } from 'react-toastify';
+import BackButton from '../../BackButton';
 
 const ManageProducts = () => {
 
@@ -49,6 +50,9 @@ const PAGE_SIZE = 5;
   
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
+      <div className="flex w-full justify-start ml-4 self-start">
+    <BackButton />
+  </div>
     <DataTable
       pageTitle="Manage Products"
       dataListName="Products"

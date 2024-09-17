@@ -11,6 +11,7 @@ import DataTable from "../../DataTable";
 import { useState, useEffect } from "react";
 import styled from 'styled-components'
 import Pagination from '../../../components/Pagination'
+import BackButton from "../../BackButton";
 const Button = styled.button`
   width: 200px;
   height: 45px;
@@ -98,21 +99,9 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
   };
   return (
     <div className="flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">
-
-      <div className=" mx-auto">
-        
-       
-         
-          <Button
-       
-           
-              onClick={()=>navigate("/admin/categories/add")}
-            
-          >
-            Add Category
-          </Button>
-      
-      </div>
+ <div className="flex w-full justify-start self-start">
+    <BackButton />
+  </div>      
       <ToastContainer/>
       <div className="col-span-8 mx-auto">
         <DataTable

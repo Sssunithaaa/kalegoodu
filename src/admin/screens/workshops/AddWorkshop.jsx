@@ -7,6 +7,7 @@ import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import styled from "styled-components";
 import { createWorkshop, getSingleWorkshop, updateWorkshop } from "../../../services/index/workshops";
 import Button from "../../../components/Button";
+import BackButton from "../../BackButton";
 
 
 const DeleteButton = styled.button`
@@ -145,6 +146,9 @@ const AddWorkshop = () => {
 
   return (
     <div className="col-span-4 pb-4">
+      <div className="flex ml-4 w-full justify-start self-start">
+    <BackButton />
+  </div>
       <h4 className="text-lg leading-tight">
         {isEditMode ? "Update Workshop" : "Add New Workshop"}
       </h4>

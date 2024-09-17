@@ -7,6 +7,7 @@ import Pagination from '../../../components/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import { getAllWorkshops } from '../../../services/index/workshops';
+import BackButton from '../../BackButton';
 
 const ManageWorkshops = () => {
 
@@ -50,6 +51,9 @@ const PAGE_SIZE = 5;
   
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
+      <div className="flex ml-4 w-full justify-start self-start">
+    <BackButton />
+  </div>
     <DataTable
       pageTitle="Manage Workshops"
       dataListName="Workshops"

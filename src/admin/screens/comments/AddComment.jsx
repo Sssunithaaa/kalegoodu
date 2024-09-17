@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../../../services/index/products';
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom';
+import BackButton from '../../BackButton';
 
 const Button = styled.button`
   width: 200px;
@@ -97,6 +98,9 @@ const AddTestimonialForm = () => {
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
+      <div className="flex mb-4 w-full justify-start self-start">
+    <BackButton />
+  </div>
       <h2 className="text-2xl font-semibold mb-4">{isEditMode ? "Update Testimonials" : "Add Testimonial"}</h2>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
         <ToastContainer/>

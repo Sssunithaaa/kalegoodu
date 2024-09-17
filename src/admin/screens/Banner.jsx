@@ -7,6 +7,7 @@ import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { QueryClient } from '@tanstack/react-query';
+import BackButton from '../BackButton';
 const AdminContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -149,8 +150,11 @@ const Banner = () => {
 
   return (
     <AdminContainer>
+      <div className="flex w-full justify-start self-start">
+    <BackButton />
+  </div>
       <ToastContainer />
-      <form onSubmit={handleUpload}>
+      <form className='mt-4' onSubmit={handleUpload}>
         <div className="flex md:col-span-2  flex-col gap-2 ">
           <label className="text-lg">Banner Images:</label>
           <div className="flex md:flex-row flex-col ">

@@ -7,6 +7,7 @@ import Button from '../../../components/Button';
 import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import axios from 'axios';
+import BackButton from '../../BackButton';
 const AboutUsForm = () => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -112,6 +113,9 @@ const AboutUsForm = () => {
   }
   return (
     <div className="w-full max-w-md mx-auto mt-8">
+      <div className="flex mb-4 w-full justify-start self-start">
+    <BackButton />
+  </div>
       <ToastContainer />
       <h2 className="text-2xl font-semibold mb-4">Add or Update About Us Section</h2>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">

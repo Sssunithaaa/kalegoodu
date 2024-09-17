@@ -12,6 +12,7 @@ import {
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import styled from "styled-components";
+import BackButton from "../../BackButton";
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -169,10 +170,13 @@ if (newImages.length > 0) {
 
   return (
     <div className="col-span-4 py-8">
-      <h4 className="text-lg leading-tight">
+       <div className="flex w-full justify-start self-start">
+    <BackButton />
+  </div>
+      <h4 className="text-lg leading-tight my-4">
         {isEditMode ? "Update Category" : "Add New Category"}
       </h4>
-      <form onSubmit={handleSubmit} className="d-form-control w-full mt-6">
+      <form onSubmit={handleSubmit} className="d-form-control w-full">
         {/* {isEditMode && ( */}
           <div className="flex md:col-span-2 flex-col gap-2 ">
             <label className="mb-2">

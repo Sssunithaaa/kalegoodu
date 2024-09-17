@@ -6,7 +6,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-
+import BackButton from '../../BackButton';
 const ManageComments = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const PAGE_SIZE = 5;
@@ -43,6 +43,9 @@ const ManageComments = () => {
 
   return (
     <div>
+       <div className="flex ml-4 w-full justify-start self-start">
+    <BackButton />
+  </div>
       <DataTable
         pageTitle=""
         dataListName="Testimonials"

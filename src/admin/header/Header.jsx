@@ -82,7 +82,7 @@ const Header = () => {
             <Link to="/">
               {/* <img src={images.Logo} alt="logo" className="w-16" /> */}
             </Link>
-            <h4 onClick={()=>navigate("/")} className="mt-10 font-bold text-[#C7C7C7]">Kalegoodu</h4>
+            <h4 onClick={()=>navigate("/")} className="text-center text-2xl font-bold text-[#343131]">Kalegoodu</h4>
             {/* menu items */}
             <div className="mt-6 flex flex-col gap-y-[0.563rem]">
               <NavItem
@@ -93,14 +93,26 @@ const Header = () => {
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
-              <NavItem
+              <NavItemCollapse
                 title="Categories"
-                link="/admin/categories/manage"
-                icon={<FaComments className="text-xl" />}
-                name="comments"
+                icon={<MdDashboard className="text-xl" />}
+                name="Categories"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
-              />
+              >
+                <Link to="/admin/categories/manage">Manage all categories</Link>
+                <Link
+                to="/admin/categories/add"
+                  // disabled={isLoadingCreatePost}
+                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                  // onClick={() =>
+                  //   handleCreateNewPost({ token: userState.userInfo.token })
+                  // }
+                >
+                  Add New Category
+                </Link>
+                {/* <Link to="/admin/categories/manage">Categories</Link> */}
+              </NavItemCollapse>
 
               <NavItemCollapse
                 title="Products"
@@ -150,7 +162,7 @@ const Header = () => {
              <NavItemCollapse
                 title="Workshops"
                 icon={<MdDashboard className="text-xl" />}
-                name="Details"
+                name="Workshops"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               >

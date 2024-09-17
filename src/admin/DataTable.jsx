@@ -12,16 +12,14 @@ const DataTable = forwardRef(({
   isFetching,
   data,
   children,
-  setCurrentPage,
-  currentPage,
-  headers,
+  
 }, ref) => {
   return (
-    <div>
-      <h1 className="text-2xl font-semibold">{pageTitle}</h1>
+    <div className='mt-4'>
+      <h1 className="text-2xl ml-4 font-semibold">{pageTitle}</h1>
 
       <div className="w-full px-4 mx-auto">
-        <div className="pt-8">
+        <div className="pt-4">
           <div className="flex flex-row justify-between w-full mb-1 sm:mb-0">
             <h2 className="text-2xl leading-tight">{dataListName}</h2>
             <div className="text-end">
@@ -48,8 +46,8 @@ const DataTable = forwardRef(({
               </form>
             </div>
           </div>
-          <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
-            <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
+          <div className="px-4 py-4  sm:-mx-8 sm:px-8">
+            <div className="inline-block min-w-full rounded-lg shadow">
               <table ref={ref} className="min-w-full leading-normal">
                 <thead>
                   <tr>
