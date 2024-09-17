@@ -68,7 +68,7 @@ export default function ProductCard({ product, productMode, index, len }) {
           <img
             src={baseUrl + product?.images[0]?.image}
             alt={product?.name}
-            className="w-full md:h-64 h-40 object-cover"
+            className={`w-full sm:h-60 md:h-64 ${productMode ? "h-40" :  "h-72"} object-cover`}
             loading="lazy"
             style={{ borderRadius: '0' }}
           />

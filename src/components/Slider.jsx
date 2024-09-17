@@ -36,7 +36,7 @@ const ProductCarousel = ({ saleType,ref }) => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 4,
+          slidesToShow: 3,
         },
       },
       {
@@ -46,7 +46,13 @@ const ProductCarousel = ({ saleType,ref }) => {
         },
       },
       {
-        breakpoint: 480,
+        breakpoint: 540,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 412,
         settings: {
           slidesToShow: 1,
         },
@@ -55,7 +61,7 @@ const ProductCarousel = ({ saleType,ref }) => {
   };
 
  return (
-  <div className="px-10 mx-auto flex flex-col relative">
+  <div className="px-4 mx-auto flex flex-col relative">
     <Slider {...settings}>
       {isLoading || isLoadingError ? (
         // <SkeletonContainer>
