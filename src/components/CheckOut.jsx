@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import CustomerDetailsModal from './CustomerDetails';
 import axios from "axios"
+import { toast, ToastContainer } from 'react-toastify';
 const Button = styled.button`
   width: 50%;
   height: 45px;
@@ -71,9 +72,10 @@ const baseUrl = import.meta.env.VITE_APP_URL
 
     console.log(orderResponse);
     console.log(messageResponse);
-    
+    toast.success("Order placed successfully!!")
   } catch (error) {
     console.log(error);
+    toast.error("Couldn't place order")
   }
 };
 
@@ -81,7 +83,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
   
   return (
     <div>
-      
+      <ToastContainer/>
      {cartItems.length === 0 ? <div className='flex flex-col h-full py-[50%] lg:py-20 justify-center mx-[10%] md:mx-[40%] items-center text-xl'><span>Your cart is empty</span><Button onClick={()=>navigate("/products")}>Start shopping</Button></div> :  <div className="max-w-2xl mx-auto px-4">
         <h1 className="text-2xl mt-4 font-bold ml-[8%]">Your Cart</h1>
 

@@ -152,7 +152,7 @@ const Banner = () => {
       <ToastContainer />
       <form onSubmit={handleUpload}>
         <div className="flex md:col-span-2  flex-col gap-2 ">
-          <label className="text-lg">Product Images:</label>
+          <label className="text-lg">Banner Images:</label>
           <div className="flex md:flex-row flex-col ">
             {[0, 1, 2].map((index) => (
               <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">

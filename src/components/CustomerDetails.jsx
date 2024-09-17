@@ -76,10 +76,10 @@ const CustomerDetailsModal = ({ isOpen, onClose, onSubmit }) => {
   return (
     <ModalBackground>
       <ModalContainer>
-        
+        <CloseButton onClick={onClose}>&times;</CloseButton>
         <div>
           <h2>Enter Customer Details</h2>
-          <CloseButton onClick={onClose}>&times;</CloseButton>
+          
         <Input
           type="text"
           name="name"

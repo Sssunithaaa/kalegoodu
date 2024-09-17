@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 // import { useSelector } from "react-redux";
+import axios from "axios";
 import {
   getSingleCategory,
   updateCategory,
@@ -161,7 +162,7 @@ if (newImages.length > 0) {
       refetch()
     } catch (error) {
       toast.error("Failed to delete image");
-      console.error("Error deleting image:", error.message);
+      console.log("Error deleting image:", error);
     }
   };
   
