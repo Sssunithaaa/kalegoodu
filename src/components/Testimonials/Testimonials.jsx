@@ -86,7 +86,7 @@ const SkeletonCard = styled.div`
           columnClassName="pl-4 bg-clip-padding"
         >
           { reviews?.map((testimonial, index) => (
-            <Testimonial key={index} {...testimonial} productMode={productMode} />
+           testimonial.display &&  <Testimonial key={index} {...testimonial} productMode={productMode} />
           ))}
         </Masonry>}
       </div>

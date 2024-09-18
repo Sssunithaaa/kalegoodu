@@ -70,7 +70,7 @@ const DeleteButton = styled.button`
 const Banner = () => {
   const [files, setFiles] = useState([null, null, null]);
   const [previews, setPreviews] = useState([null, null, null]);
-
+  const [numImages,setNumImages] = useState(3);
   const baseUrl = import.meta.env.VITE_APP_URL;
 
   const { data: banner, isLoading, isError } = useQuery({
@@ -94,6 +94,7 @@ const Banner = () => {
         updatedPreviews[index] = image.image;
       });
       setPreviews(updatedPreviews);
+      setNumImages(bannerImages?.length)
     }
   }, [banner]);
 
@@ -131,6 +132,9 @@ const Banner = () => {
           toast.success("Image uploaded successfully!!")
         }
       });
+      for(let [key,value] of formData.entries()){
+        console.log(key+" "+value)
+      }
 
     } catch (error) {
       toast.error("Couldn't upload image")
@@ -140,7 +144,7 @@ const Banner = () => {
   const handleDelete = async (bannerImageId) => {
     try {
       await axios.delete(`${baseUrl}/api/banner_image/${bannerImageId}/delete/`);
-      // QueryClient.invalidateQueries(["banner"]);
+      
       toast.success("Image deleted successfully");
     } catch (error) {
       toast.error("Failed to delete image");
@@ -154,61 +158,66 @@ const Banner = () => {
     <BackButton />
   </div>
       <ToastContainer />
+      <div className='flex flex-row mx-auto gap-x-3 mt-4'>
+            <button className='px-3 py-2 bg-blue-500 font-medium rounded-md' onClick={()=>setNumImages((count)=>count+1)}>Add an image</button>
+             <button className='px-3 py-2 bg-red-500 font-medium rounded-md'  onClick={()=>setNumImages((count)=>count-1)}>Delete an image</button>
+          </div>
       <form className='mt-4' onSubmit={handleUpload}>
         <div className="flex md:col-span-2  flex-col gap-2 ">
           <label className="text-lg">Banner Images:</label>
           <div className="flex md:flex-row flex-col ">
-            {[0, 1, 2].map((index) => (
-              <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
-                <Dropzone
-                  onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
-                  accept="image/*"
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <div
-                      {...getRootProps({
-                        className: `${
-                          previews[index] ? 'bg-white' : 'bg-black/20'
-                        } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
-                      })}
-                    >
-                      <input {...getInputProps()} />
-                      {previews[index] ? (
-                        <div>
-                          <img
-                            src={previews[index]}
-                            alt={`Preview ${index + 1}`}
-                            className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
-                          />
-                         
-                        </div>
-                      ) : (
-                        <div className="p-3">
-                          <BsFillArrowUpCircleFill
-                            style={{
-                              fontSize: '16px',
-                              marginBottom: '10px',
-                              color: 'black',
-                            }}
-                            className="w-full flex mx-auto"
-                          />
-                          <p className="text-center text-black font-medium">
-                            Drag and drop an image here, or click to select file
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </Dropzone>
-                 {banner?.banner_images[index] && (
-                            <DeleteButton onClick={() => handleDelete(banner.banner_images[index].banner_image_id)}>
-                              Delete
-                            </DeleteButton>
-                          )}
-              </div>
-            ))}
+           {[...Array(numImages)].map((_, index) => (
+  <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
+    <Dropzone
+      onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
+      accept="image/*"
+    >
+      {({ getRootProps, getInputProps }) => (
+        <div
+          {...getRootProps({
+            className: `${
+              previews[index] ? 'bg-white' : 'bg-black/20'
+            } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
+          })}
+        >
+          <input {...getInputProps()} />
+          {previews[index] ? (
+            <div>
+              <img
+                src={previews[index]}
+                alt={`Preview ${index + 1}`}
+                className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
+              />
+            </div>
+          ) : (
+            <div className="p-3">
+              <BsFillArrowUpCircleFill
+                style={{
+                  fontSize: '16px',
+                  marginBottom: '10px',
+                  color: 'black',
+                }}
+                className="w-full flex mx-auto"
+              />
+              <p className="text-center text-black font-medium">
+                Drag and drop an image here, or click to select file
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </Dropzone>
+    {banner?.banner_images[index] && (
+      <DeleteButton onClick={() => handleDelete(banner.banner_images[index].banner_image_id)}>
+        Delete
+      </DeleteButton>
+    )}
+  </div>
+))}
+
           </div>
-          <div className="flex mx-auto">
+          
+          <div className="flex mx-auto mt-4">
             <Button type="submit">Upload Images</Button>
           </div>
         </div>

@@ -33,6 +33,7 @@ const AddTestimonialForm = () => {
   const [userName, setUserName] = useState('');
   const [text, setText] = useState('');
   const [rating, setRating] = useState(1);
+    const [visible, setVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {id} = useParams()
   const {data:comment,isFetching} = useQuery({
@@ -57,6 +58,7 @@ const AddTestimonialForm = () => {
         user_name: userName,
         text,
         rating,
+        display: visible
       });
       toast.success('Testimonial Updated successfully!');
       } else {
@@ -66,6 +68,7 @@ const AddTestimonialForm = () => {
         user_name: userName,
         text,
         rating,
+        display: visible
       });
       toast.success('Testimonial added successfully!');
       setProductId('')
@@ -93,11 +96,12 @@ const AddTestimonialForm = () => {
     setUserName(comment?.user_name);
     setText(comment?.text);
     setRating(comment?.rating)
+    setVisible(comment?.display)
    }
   },[comment])
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8">
+    <div className="w-full max-w-md mx-auto">
       <div className="flex mb-4 w-full justify-start self-start">
     <BackButton />
   </div>
@@ -161,6 +165,19 @@ const AddTestimonialForm = () => {
               </option>
             ))}
           </select>
+        </div>
+
+         <div className="mb-4">
+           
+          <label htmlFor="visibility" className="flex flex-row text-gray-700 text-lg font-medium mb-2"><input
+            type="checkbox"
+            id="visibility"
+            value={visible}
+            onChange={(e) => setVisible(e.target.value)}
+            className="mx-2 border border-gray-300 rounded-md shadow-sm"
+            
+          /> {visible ? "Visible" : "Hidden"}</label>
+         
         </div>
 
         <Button

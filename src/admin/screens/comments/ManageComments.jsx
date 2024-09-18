@@ -40,6 +40,23 @@ const ManageComments = () => {
       toast.error("Couldn't delete testimonial")
     }
   }
+  const handleToggleVisibility = async (id, currentVisibility) => {
+  try {
+    console.log({
+      display: !currentVisibility
+    })
+    const response = await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
+      display: !currentVisibility
+    });
+    console.log(response)
+    toast.success("Visibility updated successfully!");
+    refetch(); 
+  } catch (error) {
+    console.log(error)
+    toast.error("Couldn't update visibility");
+  }
+};
+
 
   return (
     <div>
@@ -50,7 +67,7 @@ const ManageComments = () => {
         pageTitle=""
         dataListName="Testimonials"
         searchInputPlaceHolder="Testimonial User Name..."
-        tableHeaderTitleList={["Product", "User Name", "Text", "Rating", ""]}
+        tableHeaderTitleList={["Product", "User Name", "Text", "Rating","Visibility" ,""]}
         isLoading={isLoading}
         isFetching={isFetching}
         data={paginatedData}
@@ -91,6 +108,17 @@ const ManageComments = () => {
                 </p>
               </div>
             </td>
+           <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+  <div className="flex items-center">
+    <button
+      className={`py-1 px-4 rounded ${comment.display ? "bg-green-500" : "bg-red-500"} text-white`}
+      onClick={() => handleToggleVisibility(comment.comment_id, comment.display)}
+    >
+      {comment.display ? "Visible" : "Hidden"}
+    </button>
+  </div>
+</td>
+
             <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
               <button
                 type="button"
