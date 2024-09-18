@@ -17,6 +17,7 @@ const Testimonials = ({ comments }) => {
   const { data ,isLoading,isLoadingError} = useQuery({
     queryKey: ['comments'],
     queryFn: async () => {
+      // all-comments
       const response = await axios.get(`${baseUrl}/api/comments/`);
       return response.data?.comments;
     },

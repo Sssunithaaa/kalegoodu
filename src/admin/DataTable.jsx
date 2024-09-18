@@ -18,7 +18,7 @@ const DataTable = forwardRef(({
     <div className='mt-4'>
       <h1 className="text-2xl ml-4 font-semibold">{pageTitle}</h1>
 
-      <div className="w-full px-4 mx-auto">
+      <div className="w-full mx-auto">
         <div className="pt-4">
           <div className="flex flex-row justify-between w-full mb-1 sm:mb-0">
             <h2 className="text-2xl leading-tight">{dataListName}</h2>

@@ -20,7 +20,8 @@ const ManageProducts = () => {
   const totalPages = Math.ceil(data?.length / PAGE_SIZE);
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = data?.slice(startIndex, endIndex);
+const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -55,7 +56,7 @@ const ManageProducts = () => {
         pageTitle="Manage Orders"
         dataListName="Orders"
         searchInputPlaceHolder="Order name..."
-        tableHeaderTitleList={['Sl No.', 'Customer Name', 'Total amount', 'Total Products', 'Items', ' ']}
+        tableHeaderTitleList={['Sl No.','Order ID', 'Customer Name', 'Total amount', 'Total Products', 'Items', ' ']}
         isLoading={isLoading}
         isFetching={isFetching}
         data={paginatedData}
@@ -66,6 +67,9 @@ const ManageProducts = () => {
           <tr key={order.order_id}>
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 whitespace-no-wrap">{startIndex + index + 1}</p>
+            </td>
+             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 font-bold whitespace-no-wrap">{order?.order_id}</p>
             </td>
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 whitespace-no-wrap">{order?.customer_name}</p>

@@ -17,7 +17,7 @@ const ManageComments = () => {
   const { data = [], isLoading, isFetching,refetch } = useQuery({
     queryKey: ['comments'],
     queryFn: async () => {
-      const response = await axios.get(`${baseUrl}/api/comments/`);
+      const response = await axios.get(`${baseUrl}/api/allcomments/`);
       return response.data?.comments || [];
     },
   });
@@ -67,7 +67,7 @@ const ManageComments = () => {
         pageTitle=""
         dataListName="Testimonials"
         searchInputPlaceHolder="Testimonial User Name..."
-        tableHeaderTitleList={["Product", "User Name", "Text", "Rating","Visibility" ,""]}
+        tableHeaderTitleList={["Product", "User Name", "Text","Visibility" ,""]}
         isLoading={isLoading}
         isFetching={isFetching}
         data={paginatedData}
@@ -101,13 +101,13 @@ const ManageComments = () => {
                 </p>
               </div>
             </td>
-            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <div className="flex items-center">
                 <p className="text-gray-900 flex flex-row gap-x-3 my-auto whitespace-no-wrap">
                   {comment.rating} <FaStar className="text-yellow-500" />
                 </p>
               </div>
-            </td>
+            </td> */}
            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
   <div className="flex items-center">
     <button

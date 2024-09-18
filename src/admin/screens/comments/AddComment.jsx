@@ -32,8 +32,8 @@ const AddTestimonialForm = () => {
    const [productId, setProductId] = useState('');
   const [userName, setUserName] = useState('');
   const [text, setText] = useState('');
-  const [rating, setRating] = useState(1);
-    const [visible, setVisible] = useState(false);
+  const [rating, setRating] = useState(3);
+    const [visible, setVisible] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {id} = useParams()
   const {data:comment,isFetching} = useQuery({
@@ -150,7 +150,7 @@ const AddTestimonialForm = () => {
           ></textarea>
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="rating" className="block text-gray-700 text-lg font-medium mb-2">Rating</label>
           <select
             id="rating"
@@ -165,13 +165,14 @@ const AddTestimonialForm = () => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
          <div className="mb-4">
            
           <label htmlFor="visibility" className="flex flex-row text-gray-700 text-lg font-medium mb-2"><input
             type="checkbox"
             id="visibility"
+            checked={visible}
             value={visible}
             onChange={(e) => setVisible(e.target.value)}
             className="mx-2 border border-gray-300 rounded-md shadow-sm"
