@@ -58,3 +58,64 @@
     width: 100%;
     height: auto;
 }
+
+.workshop-details-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.workshop-image-carousel {
+    flex: 1;
+    max-width: 50%;
+    /* Adjust width for large devices */
+}
+
+.carousel-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    max-height: 400px;
+    /* Set a fixed height for large devices */
+}
+
+.workshop-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 50%;
+}
+
+.workshop-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.workshop-description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.workshop-date,
+.workshop-place {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+@media (max-width: 768px) {
+    .workshop-details-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .workshop-image-carousel,
+    .workshop-info {
+        max-width: 100%;
+    }
+}
