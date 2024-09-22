@@ -22,8 +22,38 @@ const PAGE_SIZE = 5;
     queryKey: ["products"],
     queryFn: getAllProducts
   })
-  
+  const [products,setProducts] = useState([]);
+  useEffect(()=> {
+    setProducts(data)
+  },[data])
+const [searchKeyword, setSearchKeyword] = useState("");
+
+const searchKeywordOnChangeHandler = (event) => {
+  setSearchKeyword(event.target.value);
+};
+const searchKeywordOnSubmitHandler = (event) => {
+  event.preventDefault();
  
+
+  if (!searchKeyword || searchKeyword.trim() === "") {
+
+    setProducts(products);
+  } else {
+
+    const filteredcategories = products?.filter((product) =>
+      product.name.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+   
+    setProducts(filteredcategories);
+    
+  }
+};
+  
+  useEffect(()=>{
+    if(searchKeyword.trim()==""){
+      setProducts(data)
+    }
+  },[searchKeyword])
  
   const url = import.meta.env.VITE_APP_URL
   
@@ -33,7 +63,7 @@ const PAGE_SIZE = 5;
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = data?.slice(startIndex, endIndex);
+  const paginatedData = products?.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -57,9 +87,9 @@ const PAGE_SIZE = 5;
       pageTitle="Manage Products"
       dataListName="Products"
       searchInputPlaceHolder="Product name..."
-      // searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
-      // searchKeywordOnChangeHandler={searchKeywordHandler}
-      // searchKeyword={searchKeyword}
+      searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
+      searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
+      searchKeyword={searchKeyword}
       tableHeaderTitleList={["Images", "Name",  "Price", "Discount Price", "Categories", "Sale Type"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
@@ -70,9 +100,9 @@ const PAGE_SIZE = 5;
       <ToastContainer/>
       {paginatedData?.map((product) => (
         <tr key={product.product_id}>
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+          <td className="py-5 text-md bg-white border-b border-gray-200">
             <div className="flex items-center">
-              <div className="flex flex-wrap gap-x-3">
+              <div className="flex flex-wrap gap-x-2">
                 {
                   product?.images.map((image)=> (
                    
@@ -83,7 +113,7 @@ const PAGE_SIZE = 5;
                         : 'path/to/sampleProductImage' // Replace with your sample image path
                     }
                     alt={product.name}
-                    className="mx-auto object-cover rounded-lg w-10 md:w-6 aspect-square"
+                    className="mx-auto object-cover rounded-lg w-10 md:w-4 aspect-square"
                   />
               
                   ))

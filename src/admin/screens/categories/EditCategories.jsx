@@ -56,8 +56,8 @@ const EditCategories = () => {
   });
   const baseUrl = import.meta.env.VITE_APP_URL
  useEffect(()=> {
-  setCategoryTitle(data?.name || "Sample Category Title");
-      setDescription(data?.description || "Sample Description");
+  setCategoryTitle(data?.name || "");
+      setDescription(data?.description || "");
       
       setPreviews(data?.images?.map((image)=>baseUrl+image?.image) || [null,null,null])
  },[data])

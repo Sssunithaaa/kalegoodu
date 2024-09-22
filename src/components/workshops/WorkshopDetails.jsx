@@ -59,7 +59,7 @@ const WorkshopDetailsPage = () => {
 
         {/* Description Section */}
         <div className='w-full md:max-w-[30%] md:w-[30%] mx-auto mb-4 md:py-3 '> {/* Description occupies 50% width */}
-          <div className='flex flex-col md:border-2 md:border-slate-200 md:p-4 p-2 rounded-md'>
+          <div className='flex flex-col md:border-2 md:border-slate-200 md:p-4 p-21 rounded-md'>
             <h1 className="text-4xl uppercase font-bold mb-3">{workshop?.name}</h1>
           <p className="text-gray-900 gap-x-2 flex flex-row">
             <CiCalendarDate/> {new Date(workshop?.date).toLocaleDateString('en-US', options)}

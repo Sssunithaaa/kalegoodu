@@ -39,7 +39,7 @@ const Categories = () => {
 });
  useEffect(()=> {
   setCategories(data?.categories)
- })
+ },[data])
  
 const [searchKeyword, setSearchKeyword] = useState("");
 
@@ -63,6 +63,12 @@ const searchKeywordOnSubmitHandler = (event) => {
     
   }
 };
+
+ useEffect(()=>{
+    if(searchKeyword.trim()==""){
+      setCategories(data?.categories)
+    }
+  },[searchKeyword])
 
  
 

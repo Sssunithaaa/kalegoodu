@@ -22,8 +22,35 @@ const PAGE_SIZE = 5;
     queryKey: ["workshops"],
     queryFn: getAllWorkshops
   })
+
+  const [workshops,setWorkshops] = useState([]);
+  useEffect(()=> {
+    setWorkshops(data)
+  },[data])
   
+  
+const [searchKeyword, setSearchKeyword] = useState("");
+
+const searchKeywordOnChangeHandler = (event) => {
+  setSearchKeyword(event.target.value);
+};
+const searchKeywordOnSubmitHandler = (event) => {
+  event.preventDefault();
  
+
+  if (!searchKeyword || searchKeyword.trim() === "") {
+
+    setWorkshops(workshops);
+  } else {
+
+    const filteredcategories = workshops?.filter((workshop) =>
+      workshop.name.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+   
+    setWorkshops(filteredcategories);
+    
+  }
+};
  
   const url = import.meta.env.VITE_APP_URL
   
@@ -33,8 +60,12 @@ const PAGE_SIZE = 5;
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = data?.slice(startIndex, endIndex);
-
+  const paginatedData = workshops?.slice(startIndex, endIndex);
+  useEffect(()=>{
+    if(searchKeyword.trim()==""){
+      setWorkshops(data)
+    }
+  },[searchKeyword])
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -58,7 +89,9 @@ const PAGE_SIZE = 5;
       pageTitle="Manage Workshops"
       dataListName="Workshops"
       searchInputPlaceHolder="Workshop name..."
-     
+       searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
+       searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
+       searchKeyword={searchKeyword}
       tableHeaderTitleList={["Images", "Name",  "Date", "Place", "Description"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
@@ -68,9 +101,9 @@ const PAGE_SIZE = 5;
       <ToastContainer/>
       {paginatedData?.map((workshop) => (
         <tr key={workshop.workshop_id}>
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+          <td className="py-5 text-md bg-white border-b border-gray-200">
             <div className="flex items-center">
-              <div className="flex flex-wrap gap-x-3">
+              <div className="flex flex-wrap gap-x-2">
                 {
                   workshop?.images.map((image)=> (
                    
@@ -81,7 +114,7 @@ const PAGE_SIZE = 5;
                         : 'path/to/sampleworkshopImage' // Replace with your sample image path
                     }
                     alt={workshop.name}
-                    className="mx-auto object-cover rounded-lg w-10 md:w-6 aspect-square"
+                    className="mx-auto object-cover rounded-lg w-10 md:w-4 aspect-square"
                   />
               
                   ))

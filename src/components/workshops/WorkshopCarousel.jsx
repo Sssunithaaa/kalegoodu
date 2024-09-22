@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import styled from 'styled-components';
 import 'slick-carousel/slick/slick.css';
@@ -10,11 +10,15 @@ import { useNavigate } from 'react-router-dom';
 
 const WorkshopCarousel = () => {
   const url = import.meta.env.VITE_APP_URL;
+  const [completedWorkshops,setCompletedWorkshops] = useState([]);
   const { data } = useQuery({
     queryKey: ['workshops'],
     queryFn: getAllWorkshops,
   });
-
+  useEffect(()=> {
+    setCompletedWorkshops(data?.filter((row)=>row?.completed))
+  },[data])
+  console.log(completedWorkshops)
   const navigate = useNavigate();
 
 const Arrow = styled.div`
@@ -68,8 +72,8 @@ const SamplePrevArrow = (props) => {
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true, // Enable arrows
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
+    nextArrow: data?.length > 3 && <SampleNextArrow />,
+    prevArrow: data?.length > 3 && <SamplePrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -95,7 +99,40 @@ const SamplePrevArrow = (props) => {
       {/* Slider with arrows */}
       <Slider {...settings}>
         {data?.map((workshop) => (
-          <div
+          !workshop.completed && <div
+            key={workshop.workshop_id}
+            onClick={() => navigate(`${workshop?.workshop_id}`)}
+            className="workshop-card px-2"
+          >
+            <div className="shadow-lg bg-green-50 rounded-lg overflow-hidden h-full">
+              <img
+                src={url + workshop?.images?.[0]?.image}
+                alt={workshop.name}
+                className="w-full md:h-52 h-48 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="workshop-title text-xl font-semibold text-gray-900 mb-2">
+                  {workshop.name}
+                </h3>
+                <p className="workshop-date text-gray-900 flex items-center">
+                  <BsFillCalendar2EventFill className="mr-2" />
+                  Date: {new Date(workshop.date).toLocaleDateString()}
+                </p>
+                <p className="workshop-place text-gray-900 flex items-center mt-1">
+                  <BsFillGeoAltFill className="mr-2" />
+                  Place: {workshop.place}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </Slider>
+       <h2 className="text-center text-2xl font-bold mt-4 mb-2">Completed Workshops</h2>
+      
+      {/* Slider with arrows */}
+      <Slider {...settings}>
+        {completedWorkshops?.map((workshop) => (
+         <div
             key={workshop.workshop_id}
             onClick={() => navigate(`${workshop?.workshop_id}`)}
             className="workshop-card px-2"
