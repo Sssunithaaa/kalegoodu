@@ -61,7 +61,7 @@ const ProductCarousel = ({ saleType,ref }) => {
   };
 
  return (
-  <div className="md:px-4 px-8 mx-auto flex flex-col relative">
+  <div className="md:px-4 px-6 mx-auto flex flex-col relative">
     <Slider {...settings}>
       {isLoading || isLoadingError ? (
         // <SkeletonContainer>
