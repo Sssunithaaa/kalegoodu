@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
@@ -11,7 +11,7 @@ import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
 import { useStateContext } from '../context/ContextProvider';
 
-const ProductCarousel = ({ saleType,ref }) => {
+const ProductCarousel = ({ saleType }) => {
   const { data: products,isLoading, isLoadingError } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts
@@ -22,16 +22,17 @@ const ProductCarousel = ({ saleType,ref }) => {
   const filteredProducts = bestSellerMode 
     ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
     : products;
-
+const [currentSlide, setCurrentSlide] = useState(0);
 const settings = {
   dots: true,
-  infinite: true,
+  infinite: false,
   speed: 500,
   slidesToShow: 5, // Keep as 5 for desktop
   slidesToScroll: 1,
   initialSlide: 0,
-  nextArrow: <SampleNextArrow />,
-  prevArrow: <SamplePrevArrow />,
+    afterChange: (index) => setCurrentSlide(index),
+    prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
+    nextArrow: <SampleNextArrow />,
   centerMode: false, // Not needed for larger screens
   responsive: [
     {
@@ -97,6 +98,7 @@ const Arrow = styled.div`
   top: 50%;
   transform: translateY(-50%);
   width: 50px;
+ 
   height: 50px;
   font-size: 30px;
   // color: black !important;
