@@ -23,45 +23,50 @@ const ProductCarousel = ({ saleType,ref }) => {
     ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
     : products;
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    initialSlide: 0,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 5, // Keep as 5 for desktop
+  slidesToScroll: 1,
+  initialSlide: 0,
+  nextArrow: <SampleNextArrow />,
+  prevArrow: <SamplePrevArrow />,
+  centerMode: false, // Not needed for larger screens
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 3,
       },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-        },
+    },
+    {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2,
       },
-      {
-        breakpoint: 540,
-        settings: {
-          slidesToShow: 2,
-        },
+    },
+    {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1,
+        centerMode: true, // Center the current slide
+        centerPadding: '30px', // Show part of the next slide
       },
-      {
-        breakpoint: 412,
-        settings: {
-          slidesToShow: 1,
-        },
+    },
+    {
+      breakpoint: 412,
+      settings: {
+        slidesToShow: 1,
+        centerMode: true,
+        centerPadding: '20px', // Adjust the padding for smaller screens
       },
-    ],
-  };
+    },
+  ],
+};
 
  return (
-  <div className="md:px-4 px-8 mx-auto flex flex-col relative">
+  <div className="md:px-4 px-4 mx-auto flex flex-col relative">
     <Slider {...settings}>
       {isLoading || isLoadingError ? (
         // <SkeletonContainer>

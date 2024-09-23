@@ -55,7 +55,7 @@ export default function ProductCard({ product, productMode, index, len }) {
   return (
     <Card
       className={`w-full h-auto my-1 py-1 mx-auto shadow-lg ${
-        productMode ? 'max-w-[11rem]' : 'max-w-[20rem]'
+        productMode ? 'max-w-[11rem]' : 'max-w-[18rem]'
       } md:max-w-[26rem] lg:max-w-[19rem]`}
     >
       <CardHeader
