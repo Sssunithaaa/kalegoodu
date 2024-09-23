@@ -32,7 +32,7 @@ const PolicyForm = ({ title, data, id }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-8">
+    <div className="w-full max-w-md mx-auto mt-4">
       <h2 className="text-2xl font-semibold mb-4 mx-4">{title}</h2>
       <form onSubmit={handleSubmit} className="bg-white p-2 m-4 rounded-lg shadow-md">
         <ToastContainer />

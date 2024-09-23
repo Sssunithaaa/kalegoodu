@@ -53,7 +53,7 @@ const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
       </div>
 
       <DataTable
-        pageTitle="Manage Orders"
+        // pageTitle="Manage Orders"
         dataListName="Orders"
         searchInputPlaceHolder="Order name..."
         tableHeaderTitleList={['Sl No.','Order ID', 'Customer Name', 'Total amount', 'Total Products', 'Items', ' ']}

@@ -84,7 +84,7 @@ const searchKeywordOnSubmitHandler = (event) => {
     <BackButton />
   </div>
     <DataTable
-      pageTitle="Manage Products"
+      // pageTitle="Manage Products"
       dataListName="Products"
       searchInputPlaceHolder="Product name..."
       searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
