@@ -12,8 +12,8 @@ const Refund = () => {
         <div>
             <Title>RETURNS AND REFUNDS POLICY</Title>
             </div>
-            <div className='flex mx-auto px-10 md:w-[700px] text-center my-4 text-[#1D1D1D]'>
-{data?.[2]?.content}
+            <div className='flex mx-auto md:w-[700px] my-4 text-[#1D1D1D]'>
+<div dangerouslySetInnerHTML={{ __html: data?.[2]?.content }} />
             </div>
     </div>
   );

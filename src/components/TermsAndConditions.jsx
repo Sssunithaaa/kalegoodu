@@ -13,8 +13,8 @@ const TermsAndConditions = () => {
         <div>
             <Title>TERMS AND CONDITIONS</Title>
             </div>
-            <div className='flex mx-auto px-10 md:w-[700px] text-center my-4 text-[#1D1D1D]'>
-{data?.[1]?.content}
+            <div className='flex mx-auto md:w-[700px] my-4 text-[#1D1D1D]'>
+<div dangerouslySetInnerHTML={{ __html: data?.[1]?.content }} />
             </div>
     </div>
   )

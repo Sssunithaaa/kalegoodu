@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useParams, useNavigate } from "react-router-dom";
-
+import {  useParams } from "react-router-dom";
+import 'react-quill/dist/quill.snow.css'; 
+import ReactQuill from 'react-quill';
 import { toast, ToastContainer } from "react-toastify";
 import CreatableSelect from "react-select/creatable";
 import {
@@ -380,14 +381,23 @@ const handleFileChange = (acceptedFiles, index) => {
             <label htmlFor="description" className="">
               Description:
             </label>
-            <textarea
-              id="description"
-              className="ring-1 ring-slate-300 rounded-md px-2 py-6 focus:outline-blue-500 bg-white"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Product Description"
-              required
-            />
+           <div className="mb-4">
+          <ReactQuill
+            theme="snow"
+            value={description}
+            onChange={setDescription}
+            className="w-full h-full"
+            placeholder="Add your description here..."
+            modules={{
+              toolbar: [
+                [{ 'header': '1' }, { 'header': '2' }, { 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['bold', 'italic', 'underline'],
+                [{ 'align': [] }, { 'color': [] }],
+                ['link'],
+              ],
+            }}
+          />
+        </div>
           </div>
           <div className="flex md:col-span-2 flex-col gap-2 ">
             <label className="">

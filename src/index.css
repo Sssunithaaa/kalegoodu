@@ -256,3 +256,15 @@ body {
   position: relative;
   z-index: 2;
 }
+
+.terms-container ul {
+  list-style-type: disc;
+  /* Ensure bullets are displayed */
+  padding-left: 20px;
+  /* Add padding so the bullets aren't too close to the text */
+}
+
+.terms-container li {
+  margin-bottom: 10px;
+  /* Optional: Adds spacing between list items */
+}
