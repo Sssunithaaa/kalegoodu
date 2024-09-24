@@ -8,8 +8,8 @@ const DeliveryDetails = () => {
     queryFn: () => getPageContents(),
   });
   return (
-   <div className='w-full'>
-     <div className="">
+   <div className='px-4'>
+    
      
       
 
@@ -20,7 +20,7 @@ const DeliveryDetails = () => {
        <div dangerouslySetInnerHTML={{ __html: data?.[3]?.content }} />
         </div>
       </div>
-   </div>
+   
   );
 };
 

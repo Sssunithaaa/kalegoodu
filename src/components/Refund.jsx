@@ -8,7 +8,7 @@ const Refund = () => {
     queryFn: () => getPageContents(),
   });
   return (
-    <div className='px-4 my-2'>
+    <div className='px-4'>
         <div>
             <Title>RETURNS AND REFUNDS POLICY</Title>
             </div>
