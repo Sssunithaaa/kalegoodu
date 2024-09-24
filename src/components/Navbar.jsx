@@ -168,7 +168,7 @@ const MegaMenu = () => {
    <div className="navbar">
       <div className={`${display} lg:static  w-full  bg-white z-[100001]`}>
         <div className="flex lg:flex-row flex-col  justify-between items-center mx-auto w-full  z-50">
-          <div className='flex justify-between px-4 py-1 sm:py-3 xs:py-6  w-screen lg:w-auto'>
+          <div className='flex justify-between px-4 py-1 lg:py-0 sm:py-3 xs:py-6  w-screen lg:w-auto'>
             <div className='flex flex-row items-center justify-between  gap-x-4'>
              <div className='lg:hidden mt-1'>
             <button className="text-2xl">
@@ -180,7 +180,7 @@ const MegaMenu = () => {
           </div>
            
             </div>
-            <div className='hover:cursor-pointer ' onClick={() => navigate("/")}>
+            <div className='hover:cursor-pointer navbar-logo' onClick={() => navigate("/")}>
             <img src={logo} alt="" srcset="" className='w-28' />
           </div>
               <div className='flex lg:hidden flex-row space-x-3 justify-center items-center'>

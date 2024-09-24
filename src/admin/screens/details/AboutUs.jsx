@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import axios from 'axios';
 import BackButton from '../../BackButton';
+import 'react-quill/dist/quill.snow.css'; 
+import ReactQuill from 'react-quill';
 const AboutUsForm = () => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -163,14 +165,22 @@ const AboutUsForm = () => {
 
         <div className="mb-4">
           <label htmlFor="paragraph" className="block text-gray-700 text-lg font-medium mb-2">Paragraph</label>
-          <textarea
-            id="paragraph"
+          
+           <ReactQuill
+            theme="snow"
             value={paragraph}
-            onChange={(e) => setParagraph(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            rows="7"
-            required
-          ></textarea>
+            onChange={setParagraph}
+            className="w-full h-full"
+            placeholder="Add your content here..."
+            modules={{
+              toolbar: [
+                [{ 'header': '1' }, { 'header': '2' }, { 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['bold', 'italic', 'underline'],
+                [{ 'align': [] }, { 'color': [] }],
+                ['link'],
+              ],
+            }}
+          />
         </div>
 
         <Button type="submit" disabled={isSubmitting}>

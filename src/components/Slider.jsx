@@ -32,9 +32,15 @@ const settings = {
   initialSlide: 0,
     afterChange: (index) => setCurrentSlide(index),
     prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-    nextArrow: <SampleNextArrow />,
+    nextArrow: currentSlide === filteredProducts?.length -1 ? null : <SampleNextArrow />,
   centerMode: false, // Not needed for larger screens
   responsive: [
+     {
+      breakpoint: 1500,
+      settings: {
+        slidesToShow: 4,
+      },
+    },
     {
       breakpoint: 1024,
       settings: {

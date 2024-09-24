@@ -38,7 +38,7 @@ const AboutUs = ({ }) => {
             {isLoading ? (
               <Skeleton count={6} />
             ) : (
-              data?.[0]?.content
+              <div dangerouslySetInnerHTML={{ __html: data?.[0]?.content }} />
             )}
           </p>
         </div>

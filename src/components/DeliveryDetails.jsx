@@ -14,7 +14,7 @@ const DeliveryDetails = () => {
       
 
       <Title>DELIVERY DETAILS</Title>
-       <div className='flex mx-auto md:w-[900px] text-justify my-2 text-[#1D1D1D]'>
+       <div className='flex mx-auto max-w-6xl text-justify my-2 text-[#1D1D1D]'>
       
       
        <div dangerouslySetInnerHTML={{ __html: data?.[3]?.content }} />
