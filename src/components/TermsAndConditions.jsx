@@ -9,7 +9,7 @@ const TermsAndConditions = () => {
     queryFn: () => getPageContents(),
   });
   return (
-    <div className='px-4'>
+    <div className='terms-container px-4'>
         <div>
             <Title>TERMS AND CONDITIONS</Title>
             </div>

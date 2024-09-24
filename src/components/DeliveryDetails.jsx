@@ -8,7 +8,7 @@ const DeliveryDetails = () => {
     queryFn: () => getPageContents(),
   });
   return (
-   <div className='px-4'>
+   <div className='terms-container px-4'>
     
      
       

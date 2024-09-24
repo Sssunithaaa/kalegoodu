@@ -179,7 +179,7 @@ body {
 }
 
 .navbar {
-  height: var(--navbar-height);
+  /* height: var(--navbar-height); */
 
   @media (max-width: 768px) {
     height: var(--navbar-height-mobile);

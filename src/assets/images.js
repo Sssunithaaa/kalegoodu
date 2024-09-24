@@ -20,8 +20,9 @@ import img20 from './20.jpg'
 import img21 from './21.jpg'
 import img22 from './22.jpg'
 import img23 from './23.jpg'
-import logo from './logo.png'
+import logo from './kalegoodu.png'
 import img28 from './28.jpg'
 import img24 from './21-size.jpg'
 import ganesh from './ganesh.avif'
+
 export {logo,img,ganesh,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14,img17,img18,img19,img20,img21,img22,img23,img24,img28}
