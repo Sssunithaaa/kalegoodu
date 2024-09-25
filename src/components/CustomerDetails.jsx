@@ -58,15 +58,15 @@ const CustomerDetails = () => {
        
 
         {/* Order Summary */}
-        <div className={`bg-[#edf3ed] md:w-[50%] lg:col-span-1 lg:sticky lg:top-0 p-4   md:p-6 transition-all duration-300 lg:block ${showSummary ? 'block' : 'hidden'} `}>
-          <table className="md:min-w-full min-w-full  justify-center divide-y divide-gray-500">
+        <div className={`bg-[#edf3ed] w-[100%] md:w-[50%] md:max-w-[50%] md:col-span-1 md:sticky md:top-0 px-4 pb-4  md:p-6 transition-all duration-300 md:block ${showSummary ? 'block' : 'hidden'} `}>
+          <table className="md:min-w-full  min-w-full  justify-center divide-y divide-gray-500">
             <tbody className="divide-y max-w-[100%] divide-gray-300">
               {cartItems.length !== 0 && cartItems?.map((item) => (
                 <tr className='px-2 md:px-0' key={item.product_id}>
                   <td className="py-3">
                     <div className="relative">
                       <img src={baseUrl + item.images[0]?.image} alt="" className="h-auto md:w-20 max-w-8 md:max-w-20 flex mx-auto" />
-                      <span className="absolute top-0 left-[16px] bg-gray-300 text-black w-2 h-auto rounded-full text-xs flex items-center justify-center">{item.quantity}</span>
+                      <span className="absolute top-[-2px] md:top-0 left-[0px] md:left-[16px] bg-gray-300 text-black w-2 h-auto rounded-full text-xs flex items-center justify-center">{item.quantity}</span>
                     </div>
                   </td>
                   <td className="px-1 py-2 text-sm md:text-md">
