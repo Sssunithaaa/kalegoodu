@@ -33,7 +33,7 @@ const Collections = lazy(() => import('./components/Collections'));
 const ManageAboutUs = lazy(()=> import('./admin/screens/details/AboutUs'))
 const ManageDetails = lazy(()=> import('./admin/screens/details/ManageDetails'))
 const ManageOrders = lazy(()=> import('./admin/screens/orders/ManageOrders'))
-
+const CustomerDetails = lazy(()=> import('./components/CustomerDetails'));
 // Load your publishable key from your Stripe account
 // const stripePromise = loadStripe('pk_test_51PgjE5RwCxv1rpup3UpDIrwhKCsnB6UelvyyG7LZmYTypWM5VOWd9I2oaKNw9GJPZABWMkk9y0AdGGxpwmdY0KtO00NsVFvc8d');
 const App = () => {
@@ -56,6 +56,7 @@ const App = () => {
           <Route path="/Categories/:id/:name/" element={<Products />} />
            <Route path="/Categories" element={<Collections />} />
           <Route path="/Checkout" element={<CheckOut />} />
+          <Route path="/Customer-details" element={<CustomerDetails />} />
           <Route path="/About-Us" element={<AboutUs />} />
           <Route path="/Workshops" element={<WorkshopCarousel />} />
           <Route path="/Workshops/:workshopId" element={<WorkshopDetailsPage />} />

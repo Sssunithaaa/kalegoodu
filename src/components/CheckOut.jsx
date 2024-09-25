@@ -165,7 +165,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
             <span>Rs.  {total}</span>
           </div>
           <Button
-          onClick={handlePlaceOrder}
+          onClick={()=>navigate("/Customer-details")}
           className='w-[100%]'
         >
           Place Order
@@ -176,11 +176,11 @@ const baseUrl = import.meta.env.VITE_APP_URL
         
         
       </div>}
-        <CustomerDetailsModal
+        {/* <CustomerDetailsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleModalSubmit}
-      />
+      /> */}
     </div>
   );
 };
