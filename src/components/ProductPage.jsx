@@ -36,13 +36,13 @@ function ProductPage() {
       {/* <div className="fixed md:static mt-0 z-[100001] navbar w-full m-0">
         <Navbar />
       </div> */}
-      <div className=" lg:max-w-[80%] w-[100%] md:max-w-[100%] md:mx-auto md:px-4 pt-[20px] md:pt-[0]">
+      <div className=" lg:max-w-[100%] w-[100%] md:max-w-[100%] md:mx-auto md:px-4 pt-[20px] md:pt-[0]">
         
         <div className="flex flex-col md:flex-row md:items-start md:px-0 md:gap-6 md:py-20 items-center md:justify-center">
           
           {!isLoading ? (
-            <div className='flex flex-col md:flex-row  gap-x-4 '>
-              <div className='md:w-[50%]'>
+            <div className='flex flex-col md:flex-row w-full  gap-x-2 '>
+              <div className='md:w-[50%] md:max-w-[50%] flex mx-auto'>
                 <Slider images={images} videoUrl={product?.video_link} />
               </div>
             

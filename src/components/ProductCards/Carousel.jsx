@@ -34,15 +34,15 @@ const next = () => setCurr((curr) => (curr === slides.length-1 ? 0 : curr + 1));
  
   return (
     <div className="flex flex-col">
-      <div className="overflow-hidden relative max-w-[350px] lg:w-[550px] lg:max-w-[550px] md:max-w-[400px] w-full mx-auto md:h-auto md:rounded-2xl">
+      <div className="overflow-hidden relative max-w-[350px]  lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
         <div
-          className="flex transition-transform ease-out duration-500"
+          className="flex transition-transform  w-full ease-out duration-500"
           style={{ transform: `translateX(-${curr}%)` }} // Correct slide translation
         >
           {slides.map((slide, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-full"
+              className="mx-auto w-full"
               style={{ display: curr === index ? "block" : "none" }}
             >
               {slide}
