@@ -90,12 +90,21 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
                 <span className="text-[16px] font-bold">TOTAL:</span>
                 <span className="text-[16px] font-bold">Rs. {cartTotal}</span>
               </div>
-              <Button onClick={() => {
+               <div className='flex flex-row gap-x-2'>
+                <Button onClick={() => {
                 toggleCart();
                 navigate("/Checkout");
               }} className='font-medium'>
+                View cart
+              </Button>
+              <Button onClick={() => {
+                toggleCart();
+                navigate("/Customer-details");
+              }} className='font-medium'>
                 Proceed to checkout
               </Button>
+               </div>
+
             </>
           ) : (
             <>

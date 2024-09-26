@@ -32,7 +32,8 @@ export default {
         'xs': '343px', // For small devices like Galaxy S8+
         'ys' : '390px',
         'zs' : '412px',
-        'ws' : '1024px'
+        'ws' : '1024px',
+          'xl':'1350px'
       },
     },
   },
