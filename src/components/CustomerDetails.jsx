@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Button from './Button';
 import { CartContext } from '../context/CartContext';
+import axios from 'axios'; // Import axios for making backend requests
+import { toast, ToastContainer } from 'react-toastify'; // For showing success/error messages
 
 const CustomerDetails = () => {
   const [email, setEmail] = useState('');
@@ -10,20 +12,9 @@ const CustomerDetails = () => {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [pincode, setPincode] = useState('');
-  const [showSummary, setShowSummary] = useState(false); // Track order summary visibility
+  const [showSummary, setShowSummary] = useState(false);
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const fullAddress = `${apartment}, ${city}, ${state}, ${pincode}`;
-    const customerData = {
-      email,
-      name: `${firstName} ${lastName}`,
-      address: fullAddress,
-    };
-    console.log(customerData);
-  };
-
-  const { cartItems, cartTotal, increaseQuantity, decreaseQuantity, removeFromCart } = useContext(CartContext);
+  const { cartItems, cartTotal } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
 
   useEffect(() => {
@@ -36,10 +27,60 @@ const CustomerDetails = () => {
 
   const baseUrl = import.meta.env.VITE_APP_URL;
 
+  // Function to submit form and send the data to the backend
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const fullAddress = `${apartment}, ${city}, ${state}, ${pincode}`;
+    const customerDetails = {
+      email,
+      name: `${firstName} ${lastName}`,
+      address: fullAddress,
+      pincode:pincode
+    };
+
+    // Create order payload
+    const orderPayload = {
+      orderDetails: {
+        items: cartItems.map((item) => ({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          price: item.discounted_price !== 0 ? item.discounted_price : item.price,
+        })),
+        total: total,
+        count: cartItems.length,
+      },
+      customerDetails: customerDetails,
+    };
+
+    // Prepare the message for sending
+    let message = 'Order Details:\n\n';
+    cartItems.forEach((item) => {
+      message += `${item.name} × ${item.quantity}: Rs. ${item.price * item.quantity}\n`;
+    });
+    message += `\nTotal: Rs. ${total}`;
+
+    try {
+      // Send the order and message concurrently
+      const [orderResponse, messageResponse] = await Promise.all([
+        axios.post(`${baseUrl}/api/create-order/`, orderPayload),
+        axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
+      ]);
+
+      console.log(orderResponse);
+      console.log(messageResponse);
+      toast.success("Order placed successfully!!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Couldn't place order");
+    }
+  };
+
   return (
-     <div className=" flex flex-col justify-center items-center bg-white">
-      <div className="container max-w-full justify-center  mx-auto grid grid-cols-1 lg:grid-cols-2">
+    <div className=" flex flex-col mx-auto justify-center items-center bg-white">
+      <div className="container max-w-full justify-center grid grid-cols-1 lg:grid-cols-2">
         {/* Mobile: Show Order Summary */}
+        <ToastContainer/>
         <div className="md:hidden w-full bg-[#edf3ed] p-4">
           <button 
             className="flex justify-between items-center w-full bg-white p-3 shadow-md rounded-md"
@@ -55,18 +96,16 @@ const CustomerDetails = () => {
           </button>
         </div>
 
-       
-
         {/* Order Summary */}
         <div className={`bg-[#edf3ed] w-[100%] md:w-[50%] md:max-w-[50%] md:col-span-1 md:sticky md:top-0 px-4 pb-4  md:p-6 transition-all duration-300 md:block ${showSummary ? 'block' : 'hidden'} `}>
-          <table className="md:min-w-full  min-w-full  justify-center divide-y divide-gray-500">
+          <table className="md:min-w-full min-w-full justify-center divide-y divide-gray-500">
             <tbody className="divide-y max-w-[100%] divide-gray-300">
               {cartItems.length !== 0 && cartItems?.map((item) => (
                 <tr className='px-2 md:px-0' key={item.product_id}>
                   <td className="py-3">
                     <div className="relative">
                       <img src={baseUrl + item.images[0]?.image} alt="" className="h-auto md:w-20 max-w-8 md:max-w-20 flex mx-auto" />
-                      <span className="absolute top-[-2px] md:top-0 left-[0px] md:left-[16px] bg-gray-300 text-black w-2 h-auto rounded-full text-xs flex items-center justify-center">{item.quantity}</span>
+                      {/* <span className="absolute top-[-2px] md:top-0 left-[0px] md:left-[32px] bg-gray-300 text-black w-2 rounded-full text-xs flex items-center justify-center">{item.quantity}</span> */}
                     </div>
                   </td>
                   <td className="px-1 py-2 text-sm md:text-md">
@@ -79,7 +118,7 @@ const CustomerDetails = () => {
               ))}
             </tbody>
           </table>
-          <div className="flex md:px-3  mx-auto justify-between mt-4">
+          <div className="flex md:px-3 mx-auto justify-between mt-4">
             <span>Shipping</span>
             <span>Free shipping</span>
           </div>
@@ -88,8 +127,9 @@ const CustomerDetails = () => {
             <span>Rs. {total}</span>
           </div>
         </div>
-         {/* Customer Info Form */}
-         <div className="bg-white md:w-[50%] justify-end p-3 md:p-6 lg:col-span-1 overflow-y-auto">
+
+        {/* Customer Info Form */}
+        <div className="bg-white md:w-[50%] justify-end p-4  md:p-6 lg:col-span-1 overflow-y-auto">
           <h2 className="text-lg font-bold mb-4">Contact Information</h2>
           <form onSubmit={handleFormSubmit}>
             <div className="mb-4">
