@@ -213,12 +213,11 @@ const SkeletonCard = styled.div`
                 <ClipLoader color="#36d7b7" size={50} />
               </div>
             ) : (
-<div className="flex w-full md:px-2">
-  <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 w-full 
-    ${filteredProducts?.length === 1 ? "grid-cols-1" : ""}
-    ${filteredProducts?.length === 2 ? "grid-cols-2 md:grid-cols-2" : ""}
-    ${filteredProducts?.length > 2 ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4" : ""}`}>
-    
+ <div className="flex w-full  md:px-2">
+    <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
+      ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
+      ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} 
+      w-full`}>
     {(isLoading || pLoading) ? 
       [...Array(2)].map((_, index) => (
         <SkeletonCard key={index}>
