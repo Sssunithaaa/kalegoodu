@@ -30,7 +30,7 @@ const AboutUs = ({ }) => {
             <FoundersImage src={`${url}/${data?.[0]?.images[0]?.image}`} alt="Founder 1" loading="lazy" />
           )}
         </div>
-        <div className="founder-description flex flex-col justify-start items-start text-md px-2 md:w-[50%] md:text-lg text-gray-700 text-left">
+        <div className="founder-description flex flex-col justify-start items-start text-md px-4 md:w-[50%] md:text-lg text-gray-700 text-left">
           <h3 className="md:text-lg text-md font-bold mb-2">
             {isLoading ? <Skeleton width={200} /> : 'HELLO, From the Founders'}
           </h3>
