@@ -1,10 +1,11 @@
 import React, { useEffect, useState, Suspense, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Hero from './Hero';
+import Hero from './components/Hero';
 import Title from './Title';
 import { img1, img2, img3 } from '../assets/images';
 import FullPageLoader from './FullPageLoader';
 import {  useStateContext } from '../context/ContextProvider';
+import { SectionWrapper } from '../constants';
 
 const ProductCarousel = React.lazy(() => import('./Slider'));
 const Categories = React.lazy(() => import('./Categories'));
@@ -28,9 +29,9 @@ const MainPage = () => {
   
 
   return (
-    <div className='scroll-container'>
-      <div className="scroll-section w-full">
-        <Hero />
+    <div>
+      <div className='max-h-screen'>
+        < Hero/>
       </div>
       <Suspense fallback={<FullPageLoader />}>
         <div className="scroll-section my-6" ref={categoriesRef}>

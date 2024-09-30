@@ -1,25 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import Slider from 'react-slick';
+import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { img12, img24 } from '../assets/images';
 import { useNavigate } from 'react-router-dom';
-import { FaAngleDoubleDown } from "react-icons/fa";
 import { useStateContext } from '../context/ContextProvider';
-// Keyframes for slide animation
-const slide = keyframes`
-  0% { transform: translateX(0); }
-  33% { transform: translateX(0); }
-  38% { transform: translateX(-100%); }
-  71% { transform: translateX(-100%); }
-  76% { transform: translateX(-200%); }
-  100% { transform: translateX(-200%); }
-`;
 
 // Hero section styling
 const HeroSection = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
   height: calc(95vh - var(--navbar-height) - var(--marquee-height));
   overflow: hidden;
   position: relative;
@@ -32,19 +23,10 @@ const HeroSection = styled.div`
   }
 `;
 
-// Image slider styling
-const ImageSlider = styled.div`
-  display: flex;
-  position: absolute;
-  width: ${({ imageCount }) => `${100 * imageCount}%`};
-  animation: ${slide} 18s linear infinite;
-`;
-
 // Individual image wrapper styling using background image
 const ImageWrapper = styled.div`
-  flex: 1 0 100%;
   height: 90vh;
-  background-size: contain; 
+  background-size: contain;
   background-position: center;
   background-image: ${({ loaded, src, placeholder }) => (loaded ? `url(${src})` : `url(${placeholder})`)};
   filter: ${({ loaded }) => (loaded ? 'none' : 'blur(5px)')};
@@ -130,13 +112,9 @@ const LazyImage = ({ src, placeholder, ...props }) => {
     />
   );
 };
-
-// Hero component
 const Hero = () => {
   const [images, setImages] = useState([img24]);  // Start with the static image
   const baseUrl = import.meta.env.VITE_APP_URL;
- 
-  // Fetch banner images from API
   const { data: banner, isLoading } = useQuery({
     queryKey: ["banner"],
     queryFn: async () => {
@@ -158,27 +136,36 @@ const Hero = () => {
 
   const navigate = useNavigate();
 
+  // Slick slider settings
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
+
   return (
     <HeroSection>
       {isLoading ? (
-      
-        <ImageWrapper src={img24} placeholder={img12} loaded={true} />
+        <ImageWrapper>
+          <img src={img24} alt="Placeholder" />
+        </ImageWrapper>
       ) : (
-        <ImageSlider imageCount={images.length}>
-      
+        <Slider {...settings}>
           {images.map((img, index) => (
-            <LazyImage
-              key={index}
-              src={img.image || img}  
-              placeholder="path/to/placeholder/image.jpg"
-            />
+            <ImageWrapper key={index}>
+              <img src={img.image || img} alt={`Slide ${index + 1}`} />
+            </ImageWrapper>
           ))}
-        </ImageSlider>
+        </Slider>
       )}
       {!isLoading && (
         <HeroContent>
-          <HeroTitle>Transform Your Space</HeroTitle>
-          <HeroSubtitle>Discover the best home decor ideas to beautify your home.</HeroSubtitle>
+          <h1>Transform Your Space</h1>
+          <p>Discover the best home decor ideas to beautify your home.</p>
           <HeroButton onClick={() => navigate("/products")}>Shop Now</HeroButton>
         </HeroContent>
       )}

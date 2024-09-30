@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef ,useEffect} from "react";
+import React, { createContext, useContext, useState, useRef, useEffect } from "react";
 
 const StateContext = createContext();
 
@@ -17,24 +17,23 @@ export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [isClicked, setIsClicked] = useState(initialState);
 
-  useEffect(() => {
+  // Store the navbar heights in the context
+  const [navbarHeight, setNavbarHeight] = useState(130); // Default for desktop
+  const [navbarHeightMobile, setNavbarHeightMobile] = useState(160); // Default for mobile
 
+  useEffect(() => {
     const updateScreenSize = () => {
       if (window.innerWidth >= 1024) {
-        setScreenSize("large"); 
+        setScreenSize("large");
       } else {
-        setScreenSize("mobile"); 
+        setScreenSize("mobile");
       }
     };
 
     updateScreenSize();
-
     window.addEventListener("resize", updateScreenSize);
-
-    return () => {
-      window.removeEventListener("resize", updateScreenSize);
-    };
-  }, []); 
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -47,39 +46,29 @@ export const ContextProvider = ({ children }) => {
     localStorage.setItem("colorMode", color);
   };
 
-  const handleClick = (clicked) =>
-    setIsClicked({ ...initialState, [clicked]: true });
+  const handleClick = (clicked) => setIsClicked({ ...initialState, [clicked]: true });
 
-   const categoriesRef = useRef(null);
+  const categoriesRef = useRef(null);
   const newArrivalsRef = useRef(null);
   const bestSellersRef = useRef(null);
   const aboutUsRef = useRef(null);
   const testimonialsRef = useRef(null);
 
-const scrollToSection = (sectionRef) => {
-  const sectionElement = sectionRef.current;
-  const sectionHeight = sectionElement.offsetHeight;
-  const windowHeight = window.innerHeight;
+  const scrollToSection = (sectionRef) => {
+    const sectionElement = sectionRef.current;
+    const sectionHeight = sectionElement.offsetHeight;
+    const windowHeight = window.innerHeight;
 
-
-  console.log(sectionElement)
-   console.log(sectionHeight)
-    console.log(windowHeight)
-  if (sectionHeight < windowHeight) {
-    const offset = (windowHeight - sectionHeight) / 2;
-    console.log(offset)
-    window.scrollTo({
-      top: sectionElement.offsetTop - offset,
-      behavior: 'smooth',
-    });
-    document.documentElement.scrollTop = sectionElement.offsetTop - offset; // For most browsers
-      document.body.scrollTop = sectionElement.offsetTop - offset;
-  } else {
-    // If the section is taller or equal to the window's height, just scroll to its top
-    sectionElement.scrollIntoView({ behavior: 'smooth' });
-  }
-};
-
+    if (sectionHeight < windowHeight) {
+      const offset = (windowHeight - sectionHeight) / 2;
+      window.scrollTo({
+        top: sectionElement.offsetTop - offset,
+        behavior: "smooth",
+      });
+    } else {
+      sectionElement.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <StateContext.Provider
@@ -106,6 +95,8 @@ const scrollToSection = (sectionRef) => {
         setColor,
         themeSettings,
         setThemeSettings,
+        navbarHeight, // Provide navbar height in context
+        navbarHeightMobile, // Provide mobile navbar height in context
       }}
     >
       {children}

@@ -9,6 +9,7 @@ import DeliveryDetails from './components/DeliveryDetails';
 import WorkshopDetailsPage from './components/workshops/WorkshopDetails';
 import LoginForm from './components/login/LoginForm';
 import { useSelector } from 'react-redux';
+import Hero from './components/components/Hero'
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
 const ProductPage = lazy(() => import('./components/ProductPage'));
@@ -47,9 +48,9 @@ const App = () => {
       {loading && <FullPageLoader/>}
       <MainLayout>
       <Routes>
-        {/* Non-admin routes with MainLayout */}
         <Route>
           <Route path="/" element={<MainPage />} />
+          <Route path="/Hero" element={<Hero/>} />
           <Route path="/Products" element={<Products />} />
           <Route path="/Products/:id" element={<Products />} />
           <Route path="/Products/:id/:name" element={<ProductPage />} />
@@ -67,7 +68,7 @@ const App = () => {
             <Route path="/login" element={<LoginForm />} />
         </Route>
 
-        {/* Admin routes with AdminLayout */}
+    
          <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
           <Route path='sale-types/manage' element={<ManageSaleType/>}/>
