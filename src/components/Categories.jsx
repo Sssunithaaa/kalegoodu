@@ -59,7 +59,7 @@ const Categories = () => {
   }, [navigate]);
 
   return (
-    <div className="grid relative md:w-[90%] lg:w-[80%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-4 mx-auto">
+    <div className="grid relative md:w-[90%] lg:w-[70%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-1 mx-auto">
       {isLoading || isLoadingError ? (
         Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="md:mx-4 mx-2 my-[6px] text-center">
@@ -73,7 +73,7 @@ const Categories = () => {
         data?.categories?.map((category) => (
           <div
             key={category.category_id}
-            className={`md:mx-4 mx-2 my-[6px] text-center`}
+            className={`md:mx-3 mx-2 my-[6px] text-center`}
             onMouseEnter={() => handleMouseEnter(category.category_id)}
             onMouseLeave={handleMouseLeave}
             onClick={() => handleCategoryClick(category)}
