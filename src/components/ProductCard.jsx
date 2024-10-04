@@ -51,7 +51,7 @@ export default function ProductCard({ product, productMode, index, len }) {
     : 0;
   const navigate = useNavigate();
   const displayValue = product?.name.replaceAll(" ", "-");
-
+ 
   return (
     <Card
       className={`w-full h-auto my-1 py-1 mx-auto shadow-lg ${
@@ -66,12 +66,13 @@ export default function ProductCard({ product, productMode, index, len }) {
       >
         <div className="w-full h-full relative">
           <img
-            src={baseUrl + product?.images[0]?.image}
-            alt={product?.name}
-            className={`w-full h-full min-h-40  xs:min-h-52 sm:min-h-60 md:min-h-64 lg:min-h-72 object-cover`}
-            loading="lazy"
-            style={{ borderRadius: '0' }}
-          />
+  src={baseUrl + product?.images[0]?.image}
+  alt={product?.name}
+  className={`w-full h-full ${productMode ? "min-h-40" : "min-h-60  max-h-[250px]"} sm:min-h-60 md:min-h-64 md:max-h-64 lg:min-h-60 lg:max-h-[270px] object-cover`}
+  loading="lazy"
+  style={{ borderRadius: '0' }} // Add maxHeight here
+/>
+
           <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
           {hasDiscount && (
             <div className="absolute bottom-0 left-0 bg-red-500 text-white text-sm px-2 py-1 rounded">

@@ -32,7 +32,7 @@ export default {
         'ys' : '390px',
         'zs' : '412px',
         'ws' : '1024px',
-          'xl':'1350px'
+          'xl':'1440px'
       },
     },
   },

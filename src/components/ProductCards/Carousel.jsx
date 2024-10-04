@@ -9,13 +9,11 @@ export function Carousel({
   autoSlideInterval = 3000,
 }) {
   const [curr, setCurr] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false); 
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const prev = () =>
-    setCurr((curr) => (curr === 0 ? slides.length-1 : curr - 1));
-const next = () => setCurr((curr) => (curr === slides.length-1 ? 0 : curr + 1));
- console.log(curr)
- console.log(slides.length)
+  const prev = () => setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
+  const next = () => setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
+
   const baseUrl = import.meta.env.VITE_APP_URL;
 
   useEffect(() => {
@@ -31,12 +29,12 @@ const next = () => setCurr((curr) => (curr === slides.length-1 ? 0 : curr + 1));
       setIsPlaying(false);
     }
   }, [curr, slides.length]);
- 
+
   return (
     <div className="flex flex-col">
-      <div className="overflow-hidden relative max-w-[350px]  lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
+      <div className="overflow-hidden relative max-w-[350px] lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
         <div
-          className="flex transition-transform  w-full ease-out duration-500"
+          className="flex transition-transform w-full ease-out duration-500"
           style={{ transform: `translateX(-${curr}%)` }} // Correct slide translation
         >
           {slides.map((slide, index) => (
@@ -48,28 +46,30 @@ const next = () => setCurr((curr) => (curr === slides.length-1 ? 0 : curr + 1));
               {slide}
             </div>
           ))}
-                   {videoUrl != null && curr === slides.length && (
-            <div className="flex-shrink-0 w-full h-full"> {/* Full height container */}
-              <div className="relative w-full h-0 pb-[56.25%]"> {/* 16:9 Aspect Ratio */}
+
+          {videoUrl != null && curr === slides.length && (
+            <div className="flex-shrink-0 w-full h-full">
+              <div className="relative w-full h-0 pb-[56.25%]">
                 <ReactPlayer
                   url={videoUrl}
-                  playing={isPlaying} // Control play state
+                  playing={isPlaying}
                   controls
-                  width="100%" // Full width
-                  height="100%" // Full height
-                  className="absolute top-0 left-0" // Positioning for full coverage
+                  width="100%"
+                  height="100%"
+                  className="absolute top-0 left-0"
                 />
               </div>
             </div>
           )}
-
         </div>
 
         {/* Navigation buttons */}
         <div className="absolute inset-0 flex items-center justify-between p-4">
+          {/* Previous button */}
           <button
             onClick={prev}
             className="bg-white rounded-full p-3 md:hidden"
+            style={{ visibility: curr === 0 ? "hidden" : "visible" }} // Hide on first slide
           >
             <img
               className="h-[10px] w-[10px]"
@@ -77,7 +77,13 @@ const next = () => setCurr((curr) => (curr === slides.length-1 ? 0 : curr + 1));
               alt="Previous"
             />
           </button>
-          <button onClick={next} className="bg-white rounded-full p-3 md:hidden">
+
+          {/* Next button */}
+          <button
+            onClick={next}
+            className="bg-white rounded-full p-3 md:hidden"
+            style={{ visibility: curr === slides.length-1 ? "hidden" : "visible" }} // Hide on last slide
+          >
             <img
               className="h-[10px] w-[10px]"
               src="./images/icon-next.svg"

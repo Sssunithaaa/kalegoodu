@@ -464,7 +464,7 @@ const handleFileChange = (acceptedFiles, index) => {
               className="btn btn-outline-dark bg-blue-500 px-4 py-2 rounded-md"
               disabled={isLoadingUpdatePostDetail || isLoadingAddPostDetail}
             >
-              {isEditMode ? "Update Product" : "Add Product"}
+              {isEditMode ? "Update Product" : isLoadingAddPostDetail ? "Adding product" : "Add Product"}
             </button>
           </div>
         </form>
