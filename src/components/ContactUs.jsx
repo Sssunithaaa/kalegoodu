@@ -5,7 +5,7 @@ import Title from './Title';
 const ContactUs = () => {
   return (
     <div className="flex flex-col w-full items-center p-4">
-      <div className="mb-6">
+      <div className="mb-2">
         <Title>CONTACT US!</Title>
       </div>
 
