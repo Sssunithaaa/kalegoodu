@@ -60,7 +60,7 @@ const MainPage = () => {
           <Title>About us</Title>
           <AboutUs />
         </div>
-        <div className='scroll-section my-6' ref={testimonialsRef}>
+        <div className='scroll-section my-6' ref={testimonialsRef} home={true}>
           <Testimonials />
         </div>
       </Suspense>

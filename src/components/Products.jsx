@@ -11,6 +11,9 @@ import { getAllProducts } from '../services/index/products';
 import { ClipLoader } from 'react-spinners';
 import styled from 'styled-components';
 import Skeleton from 'react-loading-skeleton';
+import { SectionWrapper } from '../hoc';
+import { motion } from 'framer-motion';
+import { fadeIn } from '../utils/motion';
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All Products');
@@ -226,29 +229,20 @@ const SkeletonCard = styled.div`
         </SkeletonCard>
       )) 
       : filteredProducts?.map((product, index) => (
-        <ProductCard 
-          productMode={true} 
-          index={index} 
-          len={filteredProducts?.length} 
-          height="48" 
-          key={product.product_id} 
-          product={product} 
-        />
-      ))
-    }
+  <div key={product.id}>
+    <ProductCard 
+      productMode={true} 
+      index={index} 
+      len={filteredProducts?.length} 
+      height="48" 
+      product={product} 
+    />
+  </div>
+))}
+
+    
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
             )}
           </div>
         </div>
@@ -257,4 +251,4 @@ const SkeletonCard = styled.div`
   );
 };
 
-export default Products;
+export default SectionWrapper(Products,"");

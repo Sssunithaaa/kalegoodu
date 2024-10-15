@@ -4,6 +4,9 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useQuery } from '@tanstack/react-query';
 import { getPageContents } from '../services/index/pageContent';
+import { motion } from 'framer-motion';
+import {fadeIn} from '../utils/motion'
+import {SectionWrapper} from '../hoc'
  const url = import.meta.env.VITE_APP_URL;
 const FoundersImage = styled.img`
   width: 350px;
@@ -21,30 +24,31 @@ const AboutUs = ({ }) => {
   })
 
   return (
-    <div id="about-us" className="about-us-container px-2 md:px-6">
+    <div id="about-us" className="about-us-container max-w-7xl mx-auto px-2 md:px-6">
       <div className="founders-section my-2 flex flex-col md:flex-row gap-x-4 justify-center items-center text-center">
-        <div className="founders-content md:w-[50%] flex flex-col px-4 md:flex-row justify-end items-center">
+        <motion.div variants={fadeIn("up","",0.2,1)} className="founders-content md:w-[50%] flex flex-col px-4 md:flex-row justify-end items-center">
           {isLoading ? (
             <Skeleton width={350} height={350} />
           ) : (
             <FoundersImage src={`${url}/${data?.[0]?.images[0]?.image}`} alt="Founder 1" loading="lazy" />
           )}
-        </div>
+        </motion.div>
         <div className="founder-description flex flex-col justify-start items-start text-md px-4 md:w-[50%] md:text-lg text-gray-700 text-left">
-          <h3 className="md:text-lg text-md font-bold mb-2">
+          <motion.p variants={fadeIn("up","",0.1,1)} className="md:text-lg text-md font-bold mb-2">
             {isLoading ? <Skeleton width={200} /> : 'HELLO, From the Founders'}
-          </h3>
-          <p className="text-md text-justify md:text-lg mx-w-lg">
+          </motion.p>
+          <motion.p 
+        variants={fadeIn("up", "", 0.1, 1)} className="text-md text-justify md:text-lg mx-w-lg">
             {isLoading ? (
               <Skeleton count={6} />
             ) : (
               <div dangerouslySetInnerHTML={{ __html: data?.[0]?.content }} />
             )}
-          </p>
+          </motion.p>
         </div>
       </div>
     </div>
   );
 }
 
-export default AboutUs;
+export default SectionWrapper(AboutUs,"");

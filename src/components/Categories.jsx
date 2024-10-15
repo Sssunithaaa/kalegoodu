@@ -5,7 +5,9 @@ import styled from 'styled-components';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { img28 } from '../assets/images';
 import { getAllCategories } from '../services/index/postCategories';
-
+import { SectionWrapper } from '../hoc';
+import { motion } from 'framer-motion';
+import { fadeIn } from '../utils/motion';
 const ImageWrapper = styled.div`
   width: 10rem;
   height: 10rem;
@@ -70,8 +72,9 @@ const Categories = () => {
           </div>
         ))
       ) : (
-        data?.categories?.map((category) => (
-          <div
+        data?.categories?.map((category,index) => (
+          <motion.div
+          variants={fadeIn("","",0.2*index,1)}
             key={category.category_id}
             className={`md:mx-3 mx-2 my-[6px] text-center`}
             onMouseEnter={() => handleMouseEnter(category.category_id)}
@@ -89,7 +92,7 @@ const Categories = () => {
             <div className="mt-2 text-[#1d1D1D] text-[15px] md:text-[16px] font-medium">
               {category.name}
             </div>
-          </div>
+          </motion.div>
         ))
       )}
       {/* <div className='absolute flex bottom-0 mx-auto hover:cursor-pointer' onClick={()=>scrollToSection(newArrivalsRef)}><FaAngleDoubleDown color='gray'/></div> */}
@@ -98,4 +101,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default SectionWrapper(Categories,"");

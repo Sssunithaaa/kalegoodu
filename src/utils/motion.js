@@ -72,6 +72,25 @@ export const zoomIn = (delay, duration) => {
     },
   };
 };
+export const zoomOut = (delay, duration) => {
+  return {
+    hidden: {
+      scale: 1.2, // Start slightly zoomed in
+      opacity: 1,
+    },
+    show: {
+      scale: 1, // End at normal size
+      opacity: 1,
+      transition: {
+        type: "tween",
+        delay: delay,
+        duration: duration,
+        ease: "easeOut",
+      },
+    },
+  };
+};
+
 
 export const slideIn = (direction, type, delay, duration) => {
   return {

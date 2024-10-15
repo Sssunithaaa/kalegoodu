@@ -8,9 +8,10 @@ import {
 import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { motion } from "framer-motion";
 import Button from "./Button";
 import { useStateContext } from "../context/ContextProvider";
+import { zoomIn, zoomOut } from "../utils/motion";
 
 // const Button = styled.button`
 //   width: 100%;
@@ -58,7 +59,7 @@ export default function ProductCard({ product, productMode, index, len }) {
 
   return (
     <Card
-      className={`w-full h-auto my-1 py-1 mx-auto shadow-lg relative ${
+      className={`w-full h-auto my-1 py-1 mx-auto shadow-lg hover:transition-transform relative ${
         productMode ? "" : "max-w-[18rem]"
       } md:max-w-[26rem] lg:max-w-[19rem]`}
       onMouseEnter={() => setIsHovered(true)}
@@ -70,12 +71,12 @@ export default function ProductCard({ product, productMode, index, len }) {
         floated={false}
         color="blue-gray"
       >
-        <div className="w-full h-full relative">
+        <motion.div variants={zoomOut(0.2,1)} className="w-full h-full relative">
           {/* Image Change on Hover */}
           <img
             src={baseUrl + (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)}
             alt={product?.name}
-            className={`w-full h-full ${productMode ? "min-h-40" : "min-h-60 max-h-[250px]"} sm:min-h-60 md:min-h-64 md:max-h-64 lg:min-h-60 lg:max-h-[270px] object-cover`}
+            className={`w-full h-full ${productMode ? "min-h-40" : "min-h-60 max-h-[250px]"}  sm:min-h-60 md:min-h-64 md:max-h-64 lg:min-h-60 lg:max-h-[270px] object-cover`}
             loading="lazy"
             style={{ borderRadius: "0" }}
           />
@@ -85,7 +86,7 @@ export default function ProductCard({ product, productMode, index, len }) {
               {discountPercentage}% OFF
             </div>
           )}
-        </div>
+        </motion.div>
       </CardHeader>
 
       <CardBody
@@ -115,7 +116,7 @@ export default function ProductCard({ product, productMode, index, len }) {
       </CardBody>
 
       {/* Show button based on screen size */}
-      {(isHovered || screenSize !== "large" || !productMode) && (
+      {productMode && (isHovered || screenSize !== "large") && (
         <CardFooter className={`relative flex  justify-center items-center px-2 py-2`}>
           <Button
             onClick={handleCartClick}

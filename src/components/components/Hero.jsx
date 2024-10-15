@@ -46,6 +46,7 @@ const Hero = () => {
           slidingDelay: 100,
           slidingDuration: 300,
         }}
+        animations
       >
         <Overlay>
           <Wrapper>

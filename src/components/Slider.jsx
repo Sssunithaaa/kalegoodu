@@ -5,11 +5,13 @@ import Slider from 'react-slick';
 import styled from "styled-components";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-
+import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
 import { useStateContext } from '../context/ContextProvider';
+import { SectionWrapper } from '../hoc';
+import { fadeIn, slideIn, zoomIn } from '../utils/motion';
 
 const ProductCarousel = ({ saleType }) => {
   const { data: products,isLoading, isLoadingError } = useQuery({
@@ -56,8 +58,7 @@ const settings = {
     {
       breakpoint: 540,
       settings: {
-        slidesToShow: 1,
-        centerMode: true, // Center the current slide
+        slidesToShow: 2,
         centerPadding: '30px', // Show part of the next slide
       },
     },
@@ -85,10 +86,10 @@ const settings = {
           ))
         // </SkeletonContainer>
       ) : (
-        filteredProducts?.map((product) => (
-          <div className='px-2' key={product.product_id}>
+        filteredProducts?.map((product,index) => (
+          <motion.div variants={fadeIn("","",index*0.2,1)} className='px-2' key={product.product_id}>
             <ProductCard padding="py-2 my-2" product={product} />
-          </div>
+          </motion.div>
         ))
       )}
     </Slider>
@@ -148,17 +149,20 @@ const SkeletonContainer = styled.div`
   justify-content: space-between;
 `;
 
-
 const SkeletonCard = styled.div`
   flex: 1;
   padding: 10px;
+  @media (min-width: 1024px) and (max-width: 1500px) {
+    flex: 0 0 20%; /* For larger tablets */
+    max-width: 20%;
+  }
   @media (max-width: 1024px) {
-    flex: 0 0 25%; /* For tablets */
-    max-width: 25%;
+    flex: 0 0 100%; /* For tablets */
+    max-width: 100%;
   }
   @media (max-width: 768px) {
-    flex: 0 0 33.33%; /* For small tablets or large phones */
-    max-width: 33.33%;
+    flex: 0 0 80%; /* For small tablets or large phones */
+    max-width: 80%;
   }
   @media (max-width: 480px) {
     flex: 0 0 100%; /* For mobile devices */
@@ -166,4 +170,5 @@ const SkeletonCard = styled.div`
   }
 `;
 
-export default ProductCarousel;
+
+export default SectionWrapper(ProductCarousel,"");

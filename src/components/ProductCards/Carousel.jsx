@@ -34,9 +34,12 @@ export function Carousel({
     <div className="flex flex-col">
       <div className="overflow-hidden relative max-w-[350px] lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
         <div
-          className="flex transition-transform w-full ease-out duration-500"
-          style={{ transform: `translateX(-${curr}%)` }} // Correct slide translation
-        >
+    className={`flex transition-transform w-full ease-out duration-500 ${
+        curr === slides.length ? "transition-none" : ""
+    }`}
+    style={{ transform: `translateX(-${curr}%)` }}
+>
+
           {slides.map((slide, index) => (
             <div
               key={index}
@@ -49,16 +52,18 @@ export function Carousel({
 
           {videoUrl != null && curr === slides.length && (
             <div className="flex-shrink-0 w-full h-full">
-              <div className="relative w-full h-0 pb-[56.25%]">
-                <ReactPlayer
-                  url={videoUrl}
-                  playing={isPlaying}
-                  controls
-                  width="100%"
-                  height="100%"
-                  className="absolute top-0 left-0"
-                />
-              </div>
+              <div className="relative hover:cursor-pointer w-full h-0 pb-[56.25%]">
+    <ReactPlayer
+        url={videoUrl}
+        playing={isPlaying}
+        controls
+        width="100%"
+        height="100%"
+        className="absolute top-0 left-0"
+        style={{ pointerEvents: "auto",zIndex:10 }} // Ensuring that pointer events are allowed
+    />
+</div>
+
             </div>
           )}
         </div>

@@ -7,7 +7,7 @@ const CTA = () => {
   return (
     <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-1">
-        <div class="flex lg:flex-row justify-center flex-col gap-x-10 ">
+        <div class="flex md:flex-row justify-between flex-col">
             <div class="lg:pr-8 mb-7 px-4">
 
               <span className="text-2xl md:text-3xl text-left font-semibold text-gray-800 tracking-wide">Kalegoodu</span>
@@ -52,7 +52,7 @@ const CTA = () => {
                     </li>
                 </ul>
             </div>
-           <div className='flex flex-row px-4  md:mt-[0%] gap-x-[40px] md:gap-x-[100px] pb-10 w-[90%]'>
+           <div className='flex flex-row px-4  mt-[0%] w-full justify-between md:justify-center md:gap-x-20 pb-10 '>
             <div>
                 <p class="text-sm font-semibold tracking-widest text-gray-700 uppercase">MAIN MENU</p>
 

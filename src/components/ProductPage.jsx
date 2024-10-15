@@ -54,7 +54,7 @@ function ProductPage() {
         </div>
 
         <div className="mt-4">
-          <Testimonials comments={product?.comments || []} />
+          <Testimonials comments={product?.comments || []} home={false} />
         </div>
       </div>
     </div>
