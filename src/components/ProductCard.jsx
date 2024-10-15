@@ -71,22 +71,24 @@ export default function ProductCard({ product, productMode, index, len }) {
         floated={false}
         color="blue-gray"
       >
-        <motion.div variants={zoomOut(0.2,1)} className="w-full h-full relative">
-          {/* Image Change on Hover */}
-          <img
-            src={baseUrl + (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)}
-            alt={product?.name}
-            className={`w-full h-full ${productMode ? "min-h-40" : "min-h-60 max-h-[250px]"}  sm:min-h-60 md:min-h-64 md:max-h-64 lg:min-h-60 lg:max-h-[270px] object-cover`}
-            loading="lazy"
-            style={{ borderRadius: "0" }}
-          />
-          <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
-          {hasDiscount && (
-            <div className="absolute bottom-0 left-0 bg-red-500 text-white text-sm px-2 py-1 rounded">
-              {discountPercentage}% OFF
-            </div>
-          )}
-        </motion.div>
+        <motion.div variants={zoomOut(0.2, 1)} className="w-full h-full relative">
+  {/* Image Change on Hover */}
+  <img
+    src={baseUrl + (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)}
+    alt={product?.name}
+    className={`w-full h-full ${productMode ? "min-h-40" : "min-h-60 max-h-[250px]"} sm:min-h-60 md:min-h-64 md:max-h-64 lg:min-h-60 lg:max-h-[270px] object-cover`}
+    loading="lazy"
+    style={{ borderRadius: "0" }}
+  />
+  <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
+
+  {hasDiscount && (
+    <div className="absolute bottom-3 left-3 md:bottom-5 md:left-5 bg-red-500 text-white text-sm px-2 py-1 rounded">
+      {discountPercentage}% OFF
+    </div>
+  )}
+</motion.div>
+
       </CardHeader>
 
       <CardBody
