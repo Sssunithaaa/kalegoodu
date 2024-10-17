@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import CTA from '../CTA';
 import Breadcrumbs from '../BreadCrumbs';
+import ScrollToTop from '../ScrollToTop';
 
 const MainWrapper = styled.div`
   // background: rgb(192,230,109,0.1);
@@ -22,6 +23,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className='example'>
+      <ScrollToTop/>
       <div className="static py-4 marquee my-auto flex w-[100%] bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  m-0 overflow-hidden justify-center items-center">
         <div className="whitespace-nowrap w-full animate-marquee text-center">
           Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.
@@ -29,7 +31,7 @@ const MainLayout = ({ children }) => {
       </div>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}
-      <main className='h-[100%] min-h-[100vh] flex-grow'>
+      <main className='h-[100%] min-h-screen flex-grow'>
         {children}
       </main>
       <CTA />

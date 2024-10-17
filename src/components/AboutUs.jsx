@@ -26,7 +26,7 @@ const AboutUs = ({ }) => {
   return (
     <div id="about-us" className="about-us-container max-w-7xl mx-auto px-2 md:px-6">
       <div className="founders-section my-2 flex flex-col md:flex-row gap-x-4 justify-center items-center text-center">
-        <motion.div variants={fadeIn("up","",0.2,1)} className="founders-content md:w-[50%] flex flex-col px-4 md:flex-row justify-end items-center">
+        <motion.div variants={fadeIn("right","",0.3,1)} className="founders-content md:w-[50%] flex flex-col px-4 md:flex-row justify-end items-center">
           {isLoading ? (
             <Skeleton width={350} height={350} />
           ) : (
@@ -34,11 +34,11 @@ const AboutUs = ({ }) => {
           )}
         </motion.div>
         <div className="founder-description flex flex-col justify-start items-start text-md px-4 md:w-[50%] md:text-lg text-gray-700 text-left">
-          <motion.p variants={fadeIn("up","",0.1,1)} className="md:text-lg text-md font-bold mb-2">
+          <motion.p variants={fadeIn("left","",0.3,1)} className="md:text-lg text-md font-bold mb-2">
             {isLoading ? <Skeleton width={200} /> : 'HELLO, From the Founders'}
           </motion.p>
           <motion.p 
-        variants={fadeIn("up", "", 0.1, 1)} className="text-md text-justify md:text-lg mx-w-lg">
+        variants={fadeIn("left", "", 0.3, 1)} className="text-md text-justify md:text-lg mx-w-lg">
             {isLoading ? (
               <Skeleton count={6} />
             ) : (

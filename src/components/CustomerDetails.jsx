@@ -97,39 +97,46 @@ const CustomerDetails = () => {
         </div>
 
         {/* Order Summary */}
-        <div className={`bg-[#edf3ed] w-[100%] md:w-[50%] md:max-w-[50%] md:col-span-1 md:sticky md:top-0 px-4 pb-4  md:p-6 transition-all duration-300 md:block ${showSummary ? 'block' : 'hidden'} `}>
-          <table className="md:min-w-full min-w-full justify-center divide-y divide-gray-500">
-            <tbody className="divide-y max-w-[100%] divide-gray-300">
-              {cartItems.length !== 0 && cartItems?.map((item) => (
-                <tr className='px-2 md:px-0' key={item.product_id}>
-                  <td className="py-3">
-                    <div className="relative">
-                      <img src={baseUrl + item.images[0]?.image} alt="" className="h-auto md:w-20 max-w-8 md:max-w-20 flex mx-auto" />
-                      {/* <span className="absolute top-[-2px] md:top-0 left-[0px] md:left-[32px] bg-gray-300 text-black w-2 rounded-full text-xs flex items-center justify-center">{item.quantity}</span> */}
-                    </div>
-                  </td>
-                  <td className="px-1 py-2 text-sm md:text-md">
-                    <div className="flex flex-row gap-x-2 justify-between">
-                      <span>{item.name}</span>
-                      <span>Rs {item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity}</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="flex md:px-3 mx-auto justify-between mt-4">
+        <div className={`bg-[#edf3ed] w-[100%] md:w-[50%] md:max-w-[50%] md:col-span-1 md:sticky md:top-0 px-4 pb-4 md:py-6 transition-all duration-300 md:block ${showSummary ? 'block' : 'hidden'}`}>
+  <table className="md:min-w-full md:px-3 min-w-full justify-center divide-y divide-gray-500">
+    <tbody className="divide-y max-w-[100%] divide-gray-300">
+      {cartItems.length !== 0 && cartItems.map((item) => (
+        <tr className="px-2 md:px-0" key={item.product_id}>
+          <td className="py-3">
+            <div className="">
+              <img src={baseUrl + item.images[0]?.image} alt="" className="h-auto max-w-8 md:max-w-16 flex justify-start mx-auto" />
+            </div>
+          </td>
+          <td className="px-1 py-2 text-sm md:text-md">
+            <div className="flex flex-row gap-x-2 justify-between">
+              <span>{item.name}</span>
+              <span>Rs {item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity}</span>
+            </div>
+          </td>
+        </tr>
+      ))}
+      <tr className="px-2 md:px-0">
+        <td className="py-2 text-sm md:text-md text-left md:pl-5 lg:pl-10" colSpan="2">
+          <div className="flex justify-between">
             <span>Shipping</span>
             <span>Free shipping</span>
           </div>
-          <div className="flex md:px-3 mx-auto justify-between font-bold text-lg mt-4">
+        </td>
+      </tr>
+      <tr className="px-2 md:px-0">
+        <td className="py-2 text-sm md:text-md text-left font-semibold md:pl-5 lg:pl-10" colSpan="2">
+          <div className="flex justify-between">
             <span>Total</span>
             <span>Rs. {total}</span>
           </div>
-        </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
         {/* Customer Info Form */}
-        <div className="bg-white md:w-[50%] justify-end p-4  md:p-6 lg:col-span-1 overflow-y-auto">
+        <div className="bg-white md:w-[50%] justify-end p-4  md:py-6 lg:col-span-1 overflow-y-auto">
           <h2 className="text-lg font-bold mb-4">Contact Information</h2>
           <form onSubmit={handleFormSubmit}>
             <div className="mb-4">

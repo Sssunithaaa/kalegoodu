@@ -87,7 +87,7 @@ const settings = {
         // </SkeletonContainer>
       ) : (
         filteredProducts?.map((product,index) => (
-          <motion.div variants={fadeIn("","",index*0.2,1)} className='px-2' key={product.product_id}>
+          <motion.div variants={fadeIn("","",index*0.3,1)} className='px-2' key={product.product_id}>
             <ProductCard padding="py-2 my-2" product={product} />
           </motion.div>
         ))

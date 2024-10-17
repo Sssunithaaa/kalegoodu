@@ -6,6 +6,7 @@ import { img1, img2, img3 } from '../assets/images';
 import FullPageLoader from './FullPageLoader';
 import {  useStateContext } from '../context/ContextProvider';
 import { SectionWrapper } from '../constants';
+import ScrollToTop from './ScrollToTop';
 
 const ProductCarousel = React.lazy(() => import('./Slider'));
 const Categories = React.lazy(() => import('./Categories'));
@@ -30,6 +31,7 @@ const MainPage = () => {
 
   return (
     <div>
+      <ScrollToTop/>
       <div className='max-h-screen'>
         < Hero/>
       </div>

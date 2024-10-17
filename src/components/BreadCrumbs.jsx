@@ -1,5 +1,3 @@
-// Breadcrumbs.jsx
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,7 +10,6 @@ const BreadcrumbNav = styled.nav`
 const BreadcrumbList = styled.ul`
   display: flex;
   list-style: none;
-  flex-direction: row;
   padding: 0;
   margin: 0;
   margin-left: 10px;
@@ -34,32 +31,35 @@ const BreadcrumbItem = styled.li`
 const BreadcrumbLink = styled(Link)`
   text-decoration: none;
   color: #949494;
-  font-weight: bold;
+  font-weight: semibold;
 `;
 
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
- 
+
   return (
     <BreadcrumbNav>
       <BreadcrumbList>
-        <div className="text-black lg:mt-0 opacity-80 text-[16px] font-roboto md:text-[16px] mr-[8px]" to="/">
-          <Link to="/">Home&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;</Link>
-        </div>
+        <BreadcrumbItem>
+          <BreadcrumbLink to="/"><div className='text-black opacity-80 text-[16px] font-roboto md:text-[16px]'>
+                Home</div></BreadcrumbLink>
+        </BreadcrumbItem>
 
         {pathnames.map((value, index) => {
-           const displayValue = decodeURIComponent(value).replace(/%20/g, '-');
+          const displayValue = decodeURIComponent(value).replace(/%20/g, '-');
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
 
-          if(Number.isInteger(Number(displayValue))){
-            return null
-          } 
+          // Exclude numeric segments from the breadcrumb display.
+          if (Number.isInteger(Number(displayValue))) {
+            return null;
+          }
+
           return (
-            <div key={index} className="text-black opacity-80 text-[16px] font-roboto md:text-[16px]">
-              <Link to={to}>{displayValue}</Link>
-              {index !== pathnames.length - 1 && <span className="px-3">&gt;</span>}
-            </div>
+            <BreadcrumbItem key={index}>
+              <BreadcrumbLink to={to}><div className='text-black opacity-80 text-[16px] font-roboto md:text-[16px]'>
+                {displayValue}</div></BreadcrumbLink>
+            </BreadcrumbItem>
           );
         })}
       </BreadcrumbList>

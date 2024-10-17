@@ -6,6 +6,7 @@ import axios from 'axios';
 import Title from '../Title';
 import styled from 'styled-components';
 import Skeleton from 'react-loading-skeleton';
+import { SectionWrapper } from '../../hoc';
 const Testimonials = ({ comments }) => {
   const breakpointColumnsObj = {
     default: 4,

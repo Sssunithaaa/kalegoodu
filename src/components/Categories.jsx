@@ -74,7 +74,7 @@ const Categories = () => {
       ) : (
         data?.categories?.map((category,index) => (
           <motion.div
-          variants={fadeIn("","",0.2*index,1)}
+          variants={fadeIn("","",0.3*index,1)}
             key={category.category_id}
             className={`md:mx-3 mx-2 my-[6px] text-center`}
             onMouseEnter={() => handleMouseEnter(category.category_id)}

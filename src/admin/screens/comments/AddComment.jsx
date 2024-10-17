@@ -36,14 +36,16 @@ const AddTestimonialForm = () => {
     const [visible, setVisible] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {id} = useParams()
+   const isEditMode = Boolean(id)
   const {data:comment,isFetching} = useQuery({
     queryKey: ["comment",id],
     queryFn: async ()=> {
       const response = await axios.get(`${baseUrl}/api/comments/${id}/`);
       return response.data.comment
-    }
+    },
+    enabled: isEditMode
   })
-  const isEditMode = Boolean(id)
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -62,7 +64,7 @@ const AddTestimonialForm = () => {
       });
       toast.success('Testimonial Updated successfully!');
       } else {
-        await axios.post(`${baseUrl}/api/comments/`, {
+        await axios.post(`${baseUrl}/api/allcomments/`, {
         product_name: selectedProduct ? selectedProduct.name : '',
         product: parseInt(productId),
         user_name: userName,
