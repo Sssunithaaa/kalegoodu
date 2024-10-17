@@ -110,6 +110,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
                                 <span className="line-through text-gray-500">
                                   Rs. {item.price}&nbsp;
                                 </span>
+                                <br/>
                                 <span className="text-red-600">
                                   {'  '}
                                   Rs. {item.discounted_price}
