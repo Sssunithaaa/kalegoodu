@@ -18,21 +18,20 @@ const PolicyForm = ({ title, data, id }) => {
     setIsSubmitting(true);
     const formData = new FormData();
     formData.append('page_name', data?.page_name);
-    formData.append('content', text); // Quill editor's value will be HTML
-    console.log(text)
+    formData.append('content', text);
+  
     try {
       await updatePageContent(id, formData);
-      toast.success(`${title} added successfully!`);
+      toast.success(`${title} updated successfully!`,{autoClose:2000});
     } catch (error) {
-      toast.error(`Failed to add ${title}`);
-      console.error(`Error adding ${title}:`, error);
+      toast.error(`Failed to update ${title}`,{autoClose:2000});  
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-4">
+    <div className="w-full max-w-lg mx-auto mt-4">
       <h2 className="text-2xl font-semibold mb-4 mx-4">{title}</h2>
       <form onSubmit={handleSubmit} className="bg-white p-2 m-4 rounded-lg shadow-md">
         <ToastContainer />
@@ -53,7 +52,7 @@ const PolicyForm = ({ title, data, id }) => {
             }}
           />
         </div>
-        <Button className='py-4 px-2' type="submit" disabled={isSubmitting}>
+        <Button className='' type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Submitting...' : `Update ${title}`}
         </Button>
       </form>

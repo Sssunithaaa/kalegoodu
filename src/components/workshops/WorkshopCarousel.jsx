@@ -101,7 +101,7 @@ const SamplePrevArrow = (props) => {
         {data?.map((workshop) => (
           !workshop.completed && <div
             key={workshop.workshop_id}
-            onClick={() => navigate(`${workshop?.workshop_id}`)}
+            onClick={() => navigate(`${workshop?.workshop_id}/${workshop?.name?.replaceAll(" ","-")}`)}
             className="workshop-card px-2"
           >
             <div className="shadow-lg bg-green-50 rounded-lg overflow-hidden h-full">

@@ -2,6 +2,7 @@ import React from 'react';
 import Title from './Title';
 import { useQuery } from '@tanstack/react-query';
 import { getPageContents } from '../services/index/pageContent';
+
 const DeliveryDetails = () => {
    const { data, isLoading } = useQuery({
     queryKey: ['page-contents'],
@@ -10,8 +11,7 @@ const DeliveryDetails = () => {
   return (
    <div className='terms-container px-4'>
     
-     
-      
+  
 
       <Title>DELIVERY DETAILS</Title>
        <div className='flex mx-auto max-w-6xl text-justify my-2 text-[#1D1D1D]'>

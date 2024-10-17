@@ -20,6 +20,7 @@ const AboutUsForm = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['page-contents'],
     queryFn: () => getPageContents(),
+    
   });
 
   const baseUrl = import.meta.env.VITE_APP_URL;

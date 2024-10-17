@@ -136,7 +136,7 @@ const CustomerDetails = () => {
 </div>
 
         {/* Customer Info Form */}
-        <div className="bg-white md:w-[50%] justify-end p-4  md:py-6 lg:col-span-1 overflow-y-auto">
+        <div className="bg-white md:w-[50%] justify-end p-4  md:py-3 lg:col-span-1 overflow-y-auto">
           <h2 className="text-lg font-bold mb-4">Contact Information</h2>
           <form onSubmit={handleFormSubmit}>
             <div className="mb-4">

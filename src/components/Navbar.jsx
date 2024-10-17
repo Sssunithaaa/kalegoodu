@@ -54,7 +54,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
       }`}
     >
       <div className="p-4 overflow-y-auto">
-        <button className="text-2xl mb-4" onClick={toggleCart}>
+        <button className=" mb-2 font-bold text-[28px]" onClick={toggleCart}>
           &times;
         </button>
         <div className="text-center">
