@@ -79,7 +79,7 @@ function ProductPage() {
       {similarProducts?.slice(0, 5).map((product) => (
         <CompactProductCard 
           product={product} 
-          key={product.id} // Assuming each product has a unique id
+          key={product.product_id} // Assuming each product has a unique id
         />
       ))}
     </div>
