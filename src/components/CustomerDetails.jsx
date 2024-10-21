@@ -109,7 +109,7 @@ const CustomerDetails = () => {
           </td>
           <td className="px-1 py-2 text-sm md:text-md">
             <div className="flex flex-row gap-x-2 justify-between">
-              <span>{item.name}</span>
+              <span>{item.name}&nbsp;&nbsp;×&nbsp;&nbsp;{item.quantity}</span>
               <span>Rs {item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity}</span>
             </div>
           </td>

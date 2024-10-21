@@ -11,7 +11,7 @@ import { CartContext } from '../context/CartContext';
 import { useStateContext } from '../context/ContextProvider';
 import SearchBar from '../searchbar/SearchBar';
 import styled from 'styled-components';
-import AnchorLink from 'react-anchor-link-smooth-scroll';
+
 const Button = styled.button`
   width: 100%;
   height: 45px;
@@ -58,7 +58,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
           &times;
         </button>
         <div className="text-center">
-          <h2 className="text-[24px] font-semibold">Shopping Cart</h2>
+          <h2 className="text-[24px] font-medium">Shopping Cart</h2>
           {cartItems && cartItems.length > 0 ? (
             <>
               {cartItems.map(item => (
@@ -70,7 +70,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
 />
 
                   <div className="ml-4 flex-1">
-                    <h2 className="text-[16px] text-left font-bold">{item.name}</h2>
+                    <h2 className="text-[16px] text-left font-medium">{item.name}</h2>
                     <div className="flex items-center">
                       <span className="text-gray-500">Quantity</span>
                       <div className="flex items-center ml-2 border px-2 py-1">
@@ -81,7 +81,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-[16px] font-semibold">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
+                    <p className="text-[16px] font-medium">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
                     <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 text-[26px] hover:text-red-700">&times;</button>
                   </div>
                 </div>

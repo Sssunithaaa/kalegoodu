@@ -4,7 +4,7 @@ export const Slider = ({ images, videoUrl }) => {
   const baseUrl = import.meta.env.VITE_APP_URL;
 
   return (
-    <div className="relative w-full md:w-full md:px-4 md:h-full md:max-w-[400px] lg:max-w-full mx-auto">
+    <div className="relative w-full px-4 md:w-full md:px-4 md:h-full md:max-w-[400px] lg:max-w-full mx-auto">
       <Carousel images={images} videoUrl={videoUrl} autoSlide={false}>
         {/* Pass images as children */}
         {images?.map((image, index) => (

@@ -27,7 +27,7 @@ export const CTASection = ({ product, cartCounter, setCartCounter }) => {
     
     const productDetails = {
       ...product,
-      quantity: productCounter,
+      quantity: productCounter === 0 ? 1 : productCounter,
     };
   console.log(productDetails)
 
