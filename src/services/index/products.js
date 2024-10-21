@@ -13,6 +13,19 @@ export const getAllProducts = async () => {
     throw new Error(error.message);
   }
 };
+export const getProductsByCategory = async (id) => {
+  try {
+    const response = await axios.get(
+      `${url}/api/products_by_category/${id}/`
+    );
+   
+    return response.data?.products
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
 
 export const getSingleProduct = async (id) => {
   try {
