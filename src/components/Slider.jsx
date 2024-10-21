@@ -58,18 +58,12 @@ const settings = {
     {
       breakpoint: 540,
       settings: {
-        slidesToShow: 2,
+        slidesToShow: 1,
+        centerMode:true,
         centerPadding: '30px', // Show part of the next slide
       },
     },
-    {
-      breakpoint: 412,
-      settings: {
-        slidesToShow: 1,
-        centerMode: true,
-        centerPadding: '20px', // Adjust the padding for smaller screens
-      },
-    },
+    
   ],
 };
 
