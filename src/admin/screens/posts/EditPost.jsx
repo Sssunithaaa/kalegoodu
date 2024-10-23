@@ -21,6 +21,7 @@ import "react-toastify/dist/ReactToastify.css";
 import styled from 'styled-components';
 import axios from "axios";
 import Button from "../../../components/Button";
+import BackButton from "../../BackButton";
 
 const promiseOptions = async (inputValue) => {
   const { data: categoriesData } = await getAllCategories();
@@ -277,11 +278,14 @@ const handleFileChange = (acceptedFiles, index) => {
 
   return (
     <section className="w-full p-4 mt-3">
+      <div className="flex w-full justify-start mb-4 self-start">
+    <BackButton />
+  </div>
       <div className="flex flex-wrap justify-between gap-3">
         <h1
          className="text-lg font-semibold" 
         >
-          Add Product
+          {isEditMode ? "Update Product" : "Add Product"}
         </h1>
       </div>
       <ToastContainer/>

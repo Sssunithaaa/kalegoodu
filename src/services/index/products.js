@@ -3,10 +3,10 @@ import axios from "axios";
 export const getAllProducts = async () => {
   try {
     const response = await axios.get(
-      `${url}/api/products/`
+      `${url}/api/list_products/`
     );
    
-    return response.data?.products
+    return response.data?.results
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);

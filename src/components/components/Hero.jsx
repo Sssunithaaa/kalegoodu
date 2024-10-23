@@ -33,7 +33,7 @@ const Hero = () => {
     ? `${100 - (navbarHeight / window.innerHeight) * 100}vh`
     : `${100 - (navbarHeightMobile / window.innerHeight) * 100}vh`;
 
-  console.log(sliderHeight)
+  
   return (
     <div style={{ height: sliderHeight }}>
       <HeroSlider
@@ -59,7 +59,7 @@ const Hero = () => {
         {images?.map((img, index) => (
           <Slide
             key={index}
-            shouldRenderMask
+            
             label={`Image ${index + 1}`}
             background={{
               backgroundAttachment: "fixed",
