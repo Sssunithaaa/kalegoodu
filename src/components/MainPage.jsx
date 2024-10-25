@@ -61,9 +61,9 @@ const MainPage = () => {
   return (
     <div>
       <ScrollToTop/>
-      <div>
+      {/* <div>
           <TestImage/>
-        </div>
+        </div> */}
       <div className='max-h-screen'>
         < Hero/>
       </div>
