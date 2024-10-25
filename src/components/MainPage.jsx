@@ -7,11 +7,40 @@ import FullPageLoader from './FullPageLoader';
 import {  useStateContext } from '../context/ContextProvider';
 import { SectionWrapper } from '../constants';
 import ScrollToTop from './ScrollToTop';
+import axios from 'axios';
 
 const ProductCarousel = React.lazy(() => import('./Slider'));
 const Categories = React.lazy(() => import('./Categories'));
 const Testimonials = React.lazy(() => import('./Testimonials/Testimonials'));
 const AboutUs = React.lazy(() => import('./AboutUs'));
+  const baseUrl = import.meta.env.VITE_APP_URL;
+
+const TestImage = () => {
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await axios.get(`${baseUrl}/api/test-products`);
+        setImage(response.data?.test_products?.[0]?.image);
+      } catch (error) {
+        console.error('Failed to fetch image', error);
+      }
+    };
+
+    fetchImage();
+  }, []);
+
+  return (
+    <div>
+      {image ? (
+        <img src={"https://res.cloudinary.com/dgkgxokru/"+image} alt="Product" />
+      ) : (
+        <p>Loading...</p>
+      )}
+    </div>
+  );
+};
 
 const MainPage = () => {
   useEffect(() => {
@@ -32,6 +61,9 @@ const MainPage = () => {
   return (
     <div>
       <ScrollToTop/>
+      <div>
+          <TestImage/>
+        </div>
       <div className='max-h-screen'>
         < Hero/>
       </div>
@@ -65,6 +97,7 @@ const MainPage = () => {
         <div className='scroll-section my-6' ref={testimonialsRef} home={true}>
           <Testimonials />
         </div>
+        
       </Suspense>
       <div className='hover:cursor-pointer' onClick={() => navigate("/admin")}>
         <Title>Admin</Title>
