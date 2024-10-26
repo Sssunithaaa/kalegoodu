@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
-import { img12, img24 } from '../assets/images';
+import { first, img12, img24 } from '../assets/images';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../context/ContextProvider';
 
@@ -118,21 +118,13 @@ const Hero = () => {
   const { data: banner, isLoading } = useQuery({
     queryKey: ["banner"],
     queryFn: async () => {
-      const response = await fetch(`${baseUrl}/api/banner_images/`);
+      const response = await fetch(`${baseUrl}/api/test-products/`);
+      console.log(response)
       const data = await response.json();
+      console.log(data)
       return data;
     }
   });
-
-  useEffect(() => {
-    if (banner?.banner_images) {
-      const bannerImages = banner.banner_images.map(image => ({
-        ...image,
-        image: baseUrl + image.image // Concatenate base URL with image path
-      }));
-      setImages([img24, ...bannerImages]);  // Always keep the static image as the first image
-    }
-  }, [banner, baseUrl]);
 
   const navigate = useNavigate();
 
@@ -147,15 +139,16 @@ const Hero = () => {
     autoplaySpeed: 3000,
   };
 
+
   return (
     <HeroSection>
       {isLoading ? (
         <ImageWrapper>
-          <img src={img24} alt="Placeholder" />
+          <img src={first} alt="Placeholder" />
         </ImageWrapper>
       ) : (
         <Slider {...settings}>
-          {images.map((img, index) => (
+          {banner?.test_products?.map((img, index) => (
             <ImageWrapper key={index}>
               <img src={img.image || img} alt={`Slide ${index + 1}`} />
             </ImageWrapper>

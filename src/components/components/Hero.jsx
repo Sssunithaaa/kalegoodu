@@ -13,19 +13,19 @@ const Hero = () => {
   const { data: banner } = useQuery({
     queryKey: ["banner"],
     queryFn: async () => {
-      const response = await fetch(`${baseUrl}/api/banner_images/`);
+      const response = await fetch(`${baseUrl}/api/test-products/`);
       return response.json();
     },
   });
 
-  useEffect(() => {
-    if (banner?.banner_images) {
-      const bannerImages = banner.banner_images.map((image) => ({
-        image: baseUrl + image.image,
-      }));
-      setImages([...bannerImages]);
-    }
-  }, [banner, baseUrl]);
+  // useEffect(() => {
+  //   if (banner?.banner_images) {
+  //     const bannerImages = banner.banner_images.map((image) => ({
+  //       image: baseUrl + image.image,
+  //     }));
+  //     setImages([...bannerImages]);
+  //   }
+  // }, [banner, baseUrl]);
 
   // Dynamically adjust height based on screen size and navbar height
  const sliderHeight =
@@ -33,7 +33,7 @@ const Hero = () => {
     ? `${100 - (navbarHeight / window.innerHeight) * 100}vh`
     : `${100 - (navbarHeightMobile / window.innerHeight) * 100}vh`;
 
-  
+   console.log(banner?.test_products)
   return (
     <div style={{ height: sliderHeight }}>
       <HeroSlider
@@ -56,7 +56,7 @@ const Hero = () => {
         </Overlay>
 
         {/* Dynamically create slides based on the fetched images */}
-        {images?.map((img, index) => (
+        {banner?.test_products?.map((img, index) => (
           <Slide
             key={index}
             
@@ -65,7 +65,7 @@ const Hero = () => {
               backgroundAttachment: "fixed",
               backgroundSize: "cover",
               backgroundPosition: "center center",
-              backgroundImageSrc: img.image,
+              backgroundImageSrc: "https://res.cloudinary.com/dgkgxokru/"+img.image,
             }}
           />
         ))}

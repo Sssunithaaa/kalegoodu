@@ -30,7 +30,7 @@ const AboutUs = ({ }) => {
           {isLoading ? (
             <Skeleton width={350} height={350} />
           ) : (
-            <FoundersImage src={`${url}/${data?.[0]?.images[0]?.image}`} alt="Founder 1" loading="lazy" />
+            <FoundersImage src={`${data?.[0]?.images[0]?.image}`} alt="Founder 1" loading="lazy" />
           )}
         </motion.div>
         <div className="founder-description flex flex-col justify-start items-start text-md px-4 md:w-[50%] md:text-lg text-gray-700 text-left">
