@@ -49,7 +49,7 @@ export default function CompactProductCard({ product }) {
       >
         <motion.div className="relative">
           <img
-            src={baseUrl + (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)}
+            src={"https://res.cloudinary.com/dgkgxokru/" + (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)}
             alt={product?.name}
             className="h-[100%] w-full object-cover" // Ensures image covers the container without stretching
             loading="lazy"

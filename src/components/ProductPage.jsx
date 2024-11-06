@@ -29,7 +29,9 @@ function ProductPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  const productId = parseInt(id, 10);
 
+  console.log(similarProducts?.filter((pid)=> pid !== id))
   return (
     <div className="">
       <div className="lg:max-w-[100%] w-[100%] md:max-w-[100%] md:mx-auto md:px-4 pt-[10px] lg:pt-0 md:pt-[0]">
@@ -76,12 +78,17 @@ function ProductPage() {
     <div
       className={`md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:overflow-x-auto gap-x-4 md:justify-start md:items-start`}
     >
-      {similarProducts?.slice(0, 5).map((product) => (
-        <CompactProductCard 
-          product={product} 
-          key={product.product_id} // Assuming each product has a unique id
-        />
-      ))}
+      {similarProducts
+  ?.filter((product) => product.product_id !== productId)
+  .slice(0, 5)
+  .map((product) => (
+    <CompactProductCard 
+      product={product} 
+      key={product.product_id}
+    />
+  ))}
+
+
     </div>
   )}
 </div>
