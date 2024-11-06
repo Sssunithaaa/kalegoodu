@@ -1,21 +1,23 @@
 import React, { createContext, useState, useEffect } from 'react';
-
-// Create a Context for the cart
+import { useQuery } from '@tanstack/react-query'; // Assuming useQuery is from react-query
+import { getAllProducts } from '../services/index/products';
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const { data: products, isLoading: pLoading, isFetching: pFetching } = useQuery({
+    queryKey: ['products'],
+    queryFn: getAllProducts,
+  });
+
   const [cartItems, setCartItems] = useState(() => {
     const storedCartItems = localStorage.getItem('cartItems');
     return storedCartItems ? JSON.parse(storedCartItems) : [];
   });
 
   const [isCartVisible, setIsCartVisible] = useState(false);
-
   const [paymentMethod, setPaymentMethod] = useState('upi');
 
-  
   const addToCart = (item) => {
-    
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.product_id === item.product_id);
       if (existingItem) {
@@ -23,12 +25,11 @@ export const CartProvider = ({ children }) => {
           i.product_id === item.product_id ? { ...i, quantity: i.quantity + 1 } : i
         );
       } else {
-        return [...prevItems, { ...item, quantity: item.quantity }];
+        return [...prevItems, { ...item, quantity: 1 }];
       }
     });
   };
 
-  // Function to increase item quantity
   const increaseQuantity = (id) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -37,7 +38,6 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Function to decrease item quantity
   const decreaseQuantity = (id) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -48,33 +48,36 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Function to remove item from cart
   const removeFromCart = (id) => {
-    console.log(id)
     setCartItems((prevItems) => prevItems.filter((item) => item.product_id !== id));
   };
 
-  // Function to toggle cart visibility
   const toggleCart = () => {
-    
     setIsCartVisible(!isCartVisible);
   };
 
-  // Calculate total number of items in the cart
-  // const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-   const cartItemCount = cartItems?.length
-  console.log(cartItems?.length)
+  const cartItemCount = cartItems.length;
+  const cartTotal = cartItems.reduce(
+    (acc, item) => acc + (item.discounted_price ? item.discounted_price * item.quantity : item.price * item.quantity),
+    0
+  );
 
-  // Calculate total price of items in the cart
-const cartTotal = cartItems.reduce(
-  (acc, item) => acc + (item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity),
-  0
-);
-  const [loading, setLoading] = useState(false)
-  // useEffect to store cart items in localStorage whenever cartItems state changes
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  // Check if cart items exist in products data and update localStorage
+  useEffect(() => {
+    if (products && cartItems.length > 0) {
+      const updatedCartItems = cartItems.filter((cartItem) =>
+        products.some((product) => product.product_id === cartItem.product_id)
+      );
+      setCartItems(updatedCartItems);
+      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    }
+  }, [products]);
 
   return (
     <CartContext.Provider

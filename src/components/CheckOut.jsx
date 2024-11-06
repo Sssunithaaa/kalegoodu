@@ -95,7 +95,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       <tr key={item.product_id}>
         <td className="mx-auto py-5 text-sm">
           <div className="">
-            <img src={baseUrl + item.images[0]?.image} alt="" className="h-auto md:w-32 w-[80%] flex mx-auto" />
+            <img src={"https://res.cloudinary.com/dgkgxokru/" + item.images[0]?.image} alt="" className="h-auto md:w-32 w-[80%] flex mx-auto" />
           </div>
         </td>
         <td className="px-3 py-5 text-sm">

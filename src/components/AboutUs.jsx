@@ -12,7 +12,7 @@ const url = import.meta.env.VITE_APP_URL;
 
 const FoundersImage = styled.img`
   width: 100%;
-  height: 100%;
+  height:40vh;
   object-fit: cover;
   margin: 1rem;
 `;
@@ -28,7 +28,7 @@ const AboutUs = () => {
       <div className="founders-section my-2 flex flex-col md:flex-row gap-x-4 justify-center items-stretch text-center">
         <motion.div
           variants={fadeIn("right", "", 0.3, 1)}
-          className="founders-content md:w-[50%] flex flex-col px-4 justify-end items-center"
+          className="founders-content md:w-[50%] max-h-[50vh] flex flex-col px-4 justify-end items-center"
           style={{ height: '100%' }}
         >
           {isLoading ? (

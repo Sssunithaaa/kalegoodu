@@ -27,17 +27,19 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
      <Provider store={store}>
   <HashRouter>
+     <QueryClientProvider client={queryClient}>
     <CartProvider>
       <ContextProvider>
-    <QueryClientProvider client={queryClient}>
+   
       <ScrollToTop/>
       
      <PersistGate loading={null} persistor={persistor}>
         <App />
         </PersistGate>
-      </QueryClientProvider>
+     
     </ContextProvider>
     </CartProvider>
+    </QueryClientProvider>
     </HashRouter>
         </Provider>
   </React.StrictMode>,

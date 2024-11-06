@@ -12,6 +12,7 @@ const CustomerDetails = () => {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [pincode, setPincode] = useState('');
+   const [phone, setPhone] = useState('');
   const [showSummary, setShowSummary] = useState(false);
 
   const { cartItems, cartTotal } = useContext(CartContext);
@@ -104,7 +105,7 @@ const CustomerDetails = () => {
         <tr className="px-2 md:px-0" key={item.product_id}>
           <td className="py-3">
             <div className="">
-              <img src={baseUrl + item.images[0]?.image} alt="" className="h-auto max-w-8 md:max-w-16 flex justify-start mx-auto" />
+              <img src={"https://res.cloudinary.com/dgkgxokru/" + item.images[0]?.image} alt="" className="h-auto max-w-8 md:max-w-16 flex justify-start mx-auto" />
             </div>
           </td>
           <td className="px-1 py-2 text-sm md:text-md">
@@ -211,7 +212,17 @@ const CustomerDetails = () => {
                 />
               </div>
             </div>
-
+            <div className='mb-3'>
+              <label className="block text-md font-medium text-gray-700">Phone number</label>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                maxLength={12}
+                className="mt-1 block w-full p-2 border rounded-md"
+                required
+              />
+            </div>
             <div className='mb-3'>
               <label className="block text-md font-medium text-gray-700">Pincode</label>
               <input

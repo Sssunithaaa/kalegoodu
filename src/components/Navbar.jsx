@@ -42,11 +42,11 @@ const navButtons = [
   // { name: "About us", href: "/about-us" }
 ];
 
-const baseUrl = import.meta.env.VITE_APP_URL
+
 const SideBar = ({ isCartVisible, toggleCart }) => {
   const { cartItems, removeFromCart,increaseQuantity,decreaseQuantity ,cartItemCount,cartTotal} = useContext(CartContext);
   const navigate = useNavigate();
-
+console.log(cartItems)
   return (
     <div
       className={`fixed top-0 right-0 overflow-y-auto sm:w-[400px] w-full lg:max-w-[450px] bg-white h-full shadow-lg transition-transform transform z-[10000001] ${
@@ -64,7 +64,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
               {cartItems.map(item => (
                 <div key={item.id} className="flex justify-between items-center border-b py-4">
                 <img 
-  src={item?.images?.[0]?.image ? baseUrl + item.images[0].image : img1} 
+  src={item?.images?.[0]?.image ? "https://res.cloudinary.com/dgkgxokru/" + item?.images?.[0]?.image : img1} 
   alt={item?.name || "Product Image"} 
   className="w-24 h-24 object-cover" 
 />

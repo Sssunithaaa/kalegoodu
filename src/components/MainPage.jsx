@@ -72,7 +72,7 @@ const MainPage = () => {
         </div>
         
       </Suspense>
-      <div className='hover:cursor-pointer' onClick={() => navigate("/admin")}>
+      <div className='hover:cursor-pointer' onClick={() => navigate("/login")}>
         <Title>Admin</Title>
       </div>
     </div>
