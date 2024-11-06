@@ -86,7 +86,7 @@ const Banner = () => {
     if (banner) {
       const bannerImages = banner.banner_images.map((image) => ({
         ...image,
-        image: baseUrl + image.image,
+        image: "https://res.cloudinary.com/dgkgxokru/" + image.image,
       }));
 
       const updatedPreviews = [null, null, null];

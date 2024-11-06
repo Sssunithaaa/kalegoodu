@@ -111,7 +111,7 @@ const Collections = () => {
               {category?.images.map((image, imgIndex) => (
                 <CarouselImage
                   key={image.category_image_id}
-                  src={`${baseUrl}${image.image}`}
+                  src={"https://res.cloudinary.com/dgkgxokru/"+`${image.image}`}
                   alt={image.alt_text || category.name}
                   style={{ display: imgIndex === 0 ? 'block' : 'none' }}
                 />

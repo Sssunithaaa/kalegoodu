@@ -13,7 +13,7 @@ const Hero = () => {
   const { data: banner } = useQuery({
     queryKey: ["banner"],
     queryFn: async () => {
-      const response = await fetch(`${baseUrl}/api/test-products/`);
+      const response = await fetch(`${baseUrl}/api/banner_images/`);
       return response.json();
     },
   });
@@ -43,7 +43,6 @@ const Hero = () => {
         className="hero-slider"
         controller={{
           initialSlide: 1,
-          slidingDelay: 100,
           slidingDuration: 300,
         }}
         animations
@@ -56,7 +55,7 @@ const Hero = () => {
         </Overlay>
 
         {/* Dynamically create slides based on the fetched images */}
-        {banner?.test_products?.map((img, index) => (
+        {banner?.banner_images?.map((img, index) => (
           <Slide
             key={index}
             

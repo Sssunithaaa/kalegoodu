@@ -46,7 +46,7 @@ const AboutUsForm = () => {
       setPageId(aboutUsData.pagecontent_id);
 
       if (aboutUsData.images?.[0]?.image) {
-        setPreview(baseUrl + aboutUsData.images[0].image);
+        setPreview("https://res.cloudinary.com/dgkgxokru/" + aboutUsData.images[0].image);
       }
     }
   }, [data]);

@@ -145,7 +145,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
                   {category?.images.map((image) => (
                     <img
                       key={image.category_image_id}
-                      src={`${import.meta.env.VITE_APP_URL}${image.image}`} // Construct full image URL
+                      src={"https://res.cloudinary.com/dgkgxokru/"+`${image.image}`} // Construct full image URL
                       alt={image.alt_text || category.name}
                       className="w-10 h-10 object-cover rounded-full"
                     />

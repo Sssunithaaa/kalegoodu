@@ -11,7 +11,7 @@ export const Slider = ({ images, videoUrl }) => {
           <img
             className="object-cover w-full h-full"
             key={index}
-            src={baseUrl + image}
+            src={"https://res.cloudinary.com/dgkgxokru/" + image}
             alt={`Slide ${index + 1}`}
           />
         ))}

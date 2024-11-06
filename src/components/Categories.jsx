@@ -82,7 +82,7 @@ const Categories = () => {
             onClick={() => handleCategoryClick(category)}
           >
             <LazyLoadImage
-              src={`${url}${category?.images[0]?.image}`}
+              src={"https://res.cloudinary.com/dgkgxokru/"+`${category?.images[0]?.image}`}
               alt={category.name}
               placeholderSrc={img28}
               wrapperClassName={`md:w-36 w-32 md:h-36 h-32 rounded-full object-cover mx-auto`}

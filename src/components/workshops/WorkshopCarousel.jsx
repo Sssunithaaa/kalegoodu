@@ -94,7 +94,7 @@ const SamplePrevArrow = (props) => {
 
   return (
     <div className="workshop-carousel-container mx-auto max-w-7xl mb-8 px-4">
-      <h2 className="text-center text-2xl font-bold mb-2">Upcoming Workshops</h2>
+      <h2 className="text-center text-2xl font-bold mb-3">Upcoming Workshops</h2>
       
       {/* Slider with arrows */}
       <Slider {...settings}>
@@ -106,7 +106,7 @@ const SamplePrevArrow = (props) => {
           >
             <div className="shadow-lg bg-green-50 rounded-lg overflow-hidden h-full">
               <img
-                src={url + workshop?.images?.[0]?.image}
+                src={"https://res.cloudinary.com/dgkgxokru/" + workshop?.images?.[0]?.image}
                 alt={workshop.name}
                 className="w-full md:h-52 h-48 object-cover"
               />
@@ -127,7 +127,7 @@ const SamplePrevArrow = (props) => {
           </div>
         ))}
       </Slider>
-       <h2 className="text-center text-2xl font-bold mt-4 mb-2">Completed Workshops</h2>
+       <h2 className="text-center text-2xl font-bold mt-4 mb-3">Completed Workshops</h2>
       
       {/* Slider with arrows */}
       <Slider {...settings}>

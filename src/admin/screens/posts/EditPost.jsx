@@ -114,7 +114,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       // setFiles(initialFiles);
       
       setPreviews(
-        product.images?.map((image) => `${BURL}${image.image}`) // Assuming image.image is a URL string
+        product.images?.map((image) => "https://res.cloudinary.com/dgkgxokru/"+`${image.image}`) // Assuming image.image is a URL string
       );
 
     }

@@ -112,7 +112,7 @@ export function Carousel({
               className={`rounded-xl ${curr === index && "opacity-40"} ${
                 images?.length === 1 ? "w-[200px]" : "w-full"
               } h-auto object-contain`}
-              src={baseUrl + image}
+              src={"https://res.cloudinary.com/dgkgxokru/" + image}
               alt={`Image ${index + 1}`}
               loading="lazy"
             />

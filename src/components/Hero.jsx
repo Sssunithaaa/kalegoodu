@@ -118,7 +118,7 @@ const Hero = () => {
   const { data: banner, isLoading } = useQuery({
     queryKey: ["banner"],
     queryFn: async () => {
-      const response = await fetch(`${baseUrl}/api/test-products/`);
+      const response = await fetch(`${baseUrl}/api/banner_images/`);
       console.log(response)
       const data = await response.json();
       console.log(data)

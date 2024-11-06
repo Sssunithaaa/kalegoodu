@@ -15,32 +15,7 @@ const Testimonials = React.lazy(() => import('./Testimonials/Testimonials'));
 const AboutUs = React.lazy(() => import('./AboutUs'));
   const baseUrl = import.meta.env.VITE_APP_URL;
 
-const TestImage = () => {
-  const [image, setImage] = useState(null);
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const response = await axios.get(`${baseUrl}/api/test-products`);
-        setImage(response.data?.test_products?.[0]?.image);
-      } catch (error) {
-        console.error('Failed to fetch image', error);
-      }
-    };
-
-    fetchImage();
-  }, []);
-
-  return (
-    <div>
-      {image ? (
-        <img src={"https://res.cloudinary.com/dgkgxokru/"+image} alt="Product" />
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
-};
 
 const MainPage = () => {
   useEffect(() => {
@@ -61,9 +36,7 @@ const MainPage = () => {
   return (
     <div>
       <ScrollToTop/>
-      {/* <div>
-          <TestImage/>
-        </div> */}
+      
       <div className='max-h-screen'>
         < Hero/>
       </div>

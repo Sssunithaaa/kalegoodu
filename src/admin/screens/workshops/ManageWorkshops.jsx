@@ -110,7 +110,7 @@ const searchKeywordOnSubmitHandler = (event) => {
                   <img
                     src={
                       workshop.images.length > 0
-                        ? `${url}${image.image}` // Construct full image URL
+                        ? "https://res.cloudinary.com/dgkgxokru/"+`${image.image}` // Construct full image URL
                         : 'path/to/sampleworkshopImage' // Replace with your sample image path
                     }
                     alt={workshop.name}
