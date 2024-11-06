@@ -35,7 +35,7 @@ const SearchBar = ({ isSearchBarVisible, toggleSearchbar }) => {
     return (
       <>
      <div className='flex flex-row gap-x-4'>
-      <img src={baseUrl+item?.images?.[0]?.image} alt={item.name} style={{ width: '50px'}}/>
+      <img src={"https://res.cloudinary.com/dgkgxokru/"+item?.images?.[0]?.image} alt={item.name} style={{ width: '50px'}}/>
       <div>
                 <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
         <span style={{ display: 'block', textAlign: 'left' }}>Rs. {item.price}</span>
