@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom'
 
 const CTA = () => {
     const navigate = useNavigate()
+    const fn = () => {
+        window
+    }
   return (
     <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-1">

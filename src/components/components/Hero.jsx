@@ -41,10 +41,22 @@ const Hero = () => {
         height={sliderHeight} // Set dynamic height
         width="100vw"
         className="hero-slider"
-        controller={{
-          initialSlide: 1,
-          slidingDuration: 300,
-        }}
+       controller={{
+        initialSlide: 1,
+        slidingDuration: 300,
+        slidingDelay: 10,
+        
+        onSliding: (nextSlide) =>
+          console.debug("onSliding(nextSlide): ", nextSlide),
+        onBeforeSliding: (previousSlide, nextSlide) =>
+          console.debug(
+            "onBeforeSliding(previousSlide, nextSlide): ",
+            previousSlide,
+            nextSlide
+          ),
+        onAfterSliding: (nextSlide) =>
+          console.debug("onAfterSliding(nextSlide): ", nextSlide)
+      }}
         animations
       >
         <Overlay>

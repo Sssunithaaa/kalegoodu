@@ -5,7 +5,7 @@ import Navbar from '../Navbar';
 import CTA from '../CTA';
 import Breadcrumbs from '../BreadCrumbs';
 import ScrollToTop from '../ScrollToTop';
-
+import Marquee from "react-fast-marquee";
 const MainWrapper = styled.div`
   // background: rgb(192,230,109,0.1);
   // background: linear-gradient(90deg, rgba(192,230,109,0.5) 12%, rgba(236,244,135,0.5) 90%);
@@ -24,10 +24,10 @@ const MainLayout = ({ children }) => {
   return (
     <div className='example'>
       <ScrollToTop/>
-      <div className="static py-4 marquee my-auto flex w-[100%] bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  m-0 overflow-hidden justify-center items-center">
-        <div className="whitespace-nowrap w-full animate-marquee text-center">
-          Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.
-        </div>
+      <div className="static py-2 overflow-y-hidden flex w-[100%] bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  m-0 overflow-hidden justify-center items-center">
+        <Marquee speed={100}>
+           Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.
+        </Marquee>
       </div>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}

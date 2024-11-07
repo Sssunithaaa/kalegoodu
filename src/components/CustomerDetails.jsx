@@ -37,6 +37,8 @@ const CustomerDetails = () => {
       email,
       name: `${firstName} ${lastName}`,
       address: fullAddress,
+      phone_number:"+91"+phone,
+      
       pincode:pincode
     };
 
@@ -116,7 +118,7 @@ const CustomerDetails = () => {
           </td>
         </tr>
       ))}
-      <tr className="px-2 md:px-0">
+      <tr className="px-2 md:px-0 ">
         <td className="py-2 text-sm md:text-md text-left md:pl-5 lg:pl-10" colSpan="2">
           <div className="flex justify-between">
             <span>Shipping</span>

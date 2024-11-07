@@ -8,6 +8,7 @@ import { getAllCategories } from '../services/index/postCategories';
 import { SectionWrapper } from '../hoc';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../utils/motion';
+import { Skeleton } from '@mui/material';
 const ImageWrapper = styled.div`
   width: 10rem;
   height: 10rem;
@@ -66,9 +67,9 @@ const Categories = () => {
         Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="md:mx-4 mx-2 my-[6px] text-center">
             <ShinyPlaceholder />
-            <div className=" text-[#1d1D1D] text-[15px] md:text-[16px] font-medium">
-              Loading...
-            </div>
+           
+           
+            
           </div>
         ))
       ) : (

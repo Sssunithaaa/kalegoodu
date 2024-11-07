@@ -10,10 +10,9 @@ import axios from 'axios';
 import { getAllProducts } from '../services/index/products';
 import { ClipLoader } from 'react-spinners';
 import styled from 'styled-components';
-import Skeleton from 'react-loading-skeleton';
+import {Skeleton} from '@mui/material';
 import { SectionWrapper } from '../hoc';
-import { motion } from 'framer-motion';
-import { fadeIn } from '../utils/motion';
+
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All Products');
@@ -39,7 +38,7 @@ const Products = () => {
   const categoryMode = Boolean(id);
 
   // Fetching products from API
-  const { data: productss, isLoading, isFetching } = useQuery({
+  const { data: productss,isLoading, isFetching } = useQuery({
     queryKey: ['productsByCategory', id],
     queryFn: async () => {
       const response = await axios.get(`${baseUrl}/api/products_by_category/${id}`);
@@ -47,7 +46,7 @@ const Products = () => {
     },
     enabled: categoryMode
   });
-
+  
   const { data, isLoading: pLoading, isFetching: pFetching } = useQuery({
     queryKey: ['products'],
     queryFn: getAllProducts
@@ -211,23 +210,29 @@ const SkeletonCard = styled.div`
                 </div>
               )}
             </div>
-            {isLoading || pLoading || isFetching || pFetching ? (
-              <div className="flex h-full justify-center items-center">
-                <ClipLoader color="#36d7b7" size={50} />
-              </div>
-            ) : (
+            
  <div className="flex w-full  md:px-2">
     <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
       ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
       ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
       w-full`}>
-    {(isLoading || pLoading) ? 
-      [...Array(2)].map((_, index) => (
-        <SkeletonCard key={index}>
-          <Skeleton height={200} />
-          <Skeleton count={2} />
-        </SkeletonCard>
-      )) 
+    {isLoading  ? 
+      Array.from({ length: filteredProducts.length }).map((_, index) => (
+              <div key={index} className="px-2 mt-2">
+  <Skeleton
+    variant="rectangular"
+    height={150}
+    sx={{
+      height: { xs: 100, sm: 150, md: 250 }, // Adjusts height based on screen size
+      width: '100%', // Ensures it spans the full width
+    }}
+  />
+  <Skeleton variant="text" width="100%" />
+  <Skeleton variant="text" width="40%" />
+  <Skeleton variant="text" width="50%" />
+</div>
+
+            ))
       : filteredProducts?.map((product, index) => (
   <div key={product.id}>
     <ProductCard 
@@ -243,7 +248,7 @@ const SkeletonCard = styled.div`
     
   </div>
 </div>
-            )}
+            
           </div>
         </div>
       </div>

@@ -38,7 +38,7 @@ const navButtons = [
   { name: "Gifting combos", href: "/Categories/8/Gifting-Combos" },
   {name: "Workshops",href:"/Workshops"},
   { name: "Contact us", href: "/Contact-us" },
-  {name: "About us",href: "/about-us"}
+  {name: "About us",href: "/About-Us"}
   // { name: "About us", href: "/about-us" }
 ];
 
