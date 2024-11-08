@@ -120,6 +120,12 @@ const ManageComments = () => {
 </td>
 
             <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
+               <Link
+                to={`/admin/comments/manage/edit/${comment.comment_id}`}
+                className="text-green-600 hover:text-green-900"
+              >
+                Edit
+              </Link>
               <button
                 type="button"
                 className="text-red-600 hover:text-red-900"
@@ -127,12 +133,7 @@ const ManageComments = () => {
               >
                 Delete
               </button>
-              <Link
-                to={`/admin/comments/manage/edit/${comment.comment_id}`}
-                className="text-green-600 hover:text-green-900"
-              >
-                Edit
-              </Link>
+             
             </td>
           </tr>
         ))}

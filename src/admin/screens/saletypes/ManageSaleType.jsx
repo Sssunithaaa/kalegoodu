@@ -145,6 +145,13 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
                 </div>
               </td>
                <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
+                  <button
+  onClick={() => handleEditClick(sale)}
+  className="text-green-600 hover:text-green-900"
+>
+  Edit
+</button>
+
                <button
   type="button"
   className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
@@ -153,13 +160,7 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
   Delete
 </button>
 
-               <button
-  onClick={() => handleEditClick(sale)}
-  className="text-green-600 hover:text-green-900"
->
-  Edit
-</button>
-
+             
               </td>  
               </tr>
              ))}

@@ -51,6 +51,7 @@ const EditPost = () => {
   const [discountedPrice, setDiscountPrice] = useState(""); 
   const [price, setPrice] = useState(""); 
   const [description, setDescription] = useState(""); 
+  const [videoUrl, setVideoUrl] = useState("")
 
   const isEditMode = Boolean(id); 
    const { data: categoriesData, isLoadingg, isFetching } = useQuery({
@@ -112,7 +113,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       //   return new File([], fileName, { type: "image/jpeg" }); // Creating a placeholder file
       // });
       // setFiles(initialFiles);
-      
+      setVideoUrl(product.video_url)
       setPreviews(
         product.images?.map((image) => "https://res.cloudinary.com/dgkgxokru/"+`${image.image}`) // Assuming image.image is a URL string
       );
@@ -402,6 +403,20 @@ const handleFileChange = (acceptedFiles, index) => {
             }}
           />
         </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="videoUrl" className="">
+              Video URL:
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="Video URL"
+              
+            />
           </div>
           <div className="flex md:col-span-2 flex-col gap-2 ">
             <label className="">

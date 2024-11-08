@@ -168,6 +168,12 @@ const searchKeywordOnSubmitHandler = (event) => {
           </td>
           <td className="px-5 py-5 text-md bg-white border-b border-gray-200 ">
             <div className='flex flex-row gap-x-5'>
+              <Link
+              to={`/admin/products/manage/edit/${product.product_id}`} // Make sure the slug field is correctly used here
+              className="text-green-600 hover:text-green-900"
+            >
+              Edit
+            </Link>
               <button
               disabled={isLoadingDeleteData}
               type="button"
@@ -181,12 +187,7 @@ const searchKeywordOnSubmitHandler = (event) => {
             >
               Delete
             </button>
-            <Link
-              to={`/admin/products/manage/edit/${product.product_id}`} // Make sure the slug field is correctly used here
-              className="text-green-600 hover:text-green-900"
-            >
-              Edit
-            </Link>
+            
             </div>
           </td>
         </tr>
