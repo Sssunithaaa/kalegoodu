@@ -49,7 +49,7 @@ const EditPost = () => {
   const [categories, setCategories] = useState([]); 
   const [name, setName] = useState(""); 
   const [tags, setTags] = useState([]);
-  const [discountedPrice, setDiscountPrice] = useState(""); 
+  const [discountedPrice, setDiscountPrice] = useState(0); 
   const [price, setPrice] = useState(""); 
   const [description, setDescription] = useState(""); 
   const [videoUrl, setVideoUrl] = useState("")
@@ -114,7 +114,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       //   return new File([], fileName, { type: "image/jpeg" }); // Creating a placeholder file
       // });
       // setFiles(initialFiles);
-      setVideoUrl(product.video_url)
+      setVideoUrl(product.video_link)
       setPreviews(
         product.images?.map((image) => "https://res.cloudinary.com/dgkgxokru/"+`${image.image}`) // Assuming image.image is a URL string
       );
@@ -379,7 +379,7 @@ const handleFileChange = (acceptedFiles, index) => {
               value={discountedPrice}
               onChange={(e) => setDiscountPrice(e.target.value)}
               placeholder="Discounted Price"
-              required
+              
             />
           </div>
           <div className="flex flex-col gap-2 md:col-span-2">
