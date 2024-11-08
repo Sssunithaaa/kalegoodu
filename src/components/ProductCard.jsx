@@ -76,7 +76,7 @@ export default function ProductCard({ product, productMode, index, len }) {
   <img
     src={"https://res.cloudinary.com/dgkgxokru/" + (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)}
     alt={product?.name}
-    className={`w-full h-full ${productMode ? "min-h-44  max-h-44" : "min-h-60 max-h-[250px]"} sm:min-h-60 md:min-h-64 md:max-h-64 lg:min-h-[270px] lg:max-h-[270px] object-cover`}
+    className={`w-full h-full ${productMode ? "min-h-44  max-h-44" : "min-h-60 max-h-60"} sm:min-h-60 md:min-h-64 md:max-h-64 lg:min-h-[270px] lg:max-h-[270px] object-cover`}
     loading="lazy"
     style={{ borderRadius: "0" }}
   />
