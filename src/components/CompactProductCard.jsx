@@ -35,7 +35,7 @@ export default function CompactProductCard({ product }) {
 
   return (
     <Card
-  className=" mx-2 shadow-lg max-w-[270px] inline-block hover:transition-transform relative"
+  className=" mx-2 shadow-lg my-2 max-w-[270px] inline-block hover:transition-transform relative"
   onMouseEnter={() => setIsHovered(true)}
   onMouseLeave={() => setIsHovered(false)}
    // Adjusted width and max width for larger cards

@@ -26,7 +26,6 @@ const ProductCarousel = ({ saleType }) => {
     : products;
 const [currentSlide, setCurrentSlide] = useState(0);
 const settings = {
-  dots: true,
   infinite: false,
   speed: 500,
   slidesToShow: 5, // Keep as 5 for desktop

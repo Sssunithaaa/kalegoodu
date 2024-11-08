@@ -78,7 +78,7 @@ function ProductPage() {
     // <div
     //   className={`md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:overflow-x-auto gap-x-4 md:justify-start md:items-start`}
     // >
-    <div className='overflow-x-auto mx-auto whitespace-nowrap overflow-y-hidden w-full h-full'>
+    <div className='example overflow-x-auto mx-auto whitespace-nowrap overflow-y-hidden w-full h-full'>
       {similarProducts
   ?.filter((product) => product.product_id !== productId)
   .slice(0, 5)
