@@ -204,6 +204,7 @@ const handleSubmit = async (e) => {
   formData.append("price", price);
   formData.append("discounted_price", discountedPrice);
   formData.append("short_description", description); 
+   formData.append("video_link", videoUrl); 
 
   // Append categories as a JSON array of objects
   const categoryObjects = categories.map(category => category.value);
