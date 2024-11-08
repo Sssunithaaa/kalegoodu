@@ -22,6 +22,7 @@ import styled from 'styled-components';
 import axios from "axios";
 import Button from "../../../components/Button";
 import BackButton from "../../BackButton";
+import { ClipLoader } from "react-spinners";
 
 const promiseOptions = async (inputValue) => {
   const { data: categoriesData } = await getAllCategories();
@@ -52,7 +53,7 @@ const EditPost = () => {
   const [price, setPrice] = useState(""); 
   const [description, setDescription] = useState(""); 
   const [videoUrl, setVideoUrl] = useState("")
-
+  const [uploading,setIsUploading] = useState(false)
   const isEditMode = Boolean(id); 
    const { data: categoriesData, isLoadingg, isFetching } = useQuery({
     queryKey: ["categories"],
@@ -140,49 +141,41 @@ const baseUrl = import.meta.env.VITE_APP_URL
   },[categoriesData,saleTypesData])
 
   // Mutation for updating post details
-  const {
-    mutate: mutateUpdatePostDetail,
-    isLoading: isLoadingUpdatePostDetail,
-  } = useMutation({
-    mutationFn: ({ updatedData, id }) => {
-      return updateProduct({
-        updatedData,
-        id
-        
-      });
-    },
-    onSuccess: (data) => {
-      // Invalidate queries to refetch updated post data
-      queryClient.invalidateQueries(["product", id]);
-      toast.success("Product is updated successfully"); // Show success toast
-      // navigate(`/admin/posts/manage/edit/${data?.product?.product_id}`, { replace: true }); // Navigate to updated post
-    },
-    onError: (error) => {
-      toast.error("Error updating post: " + error.message); // Show error toast
+ // Mutation for updating post details
+const { mutate: mutateUpdatePostDetail, isLoading: isLoadingUpdatePostDetail } = useMutation({
+  mutationFn: ({ updatedData, id }) => updateProduct({ updatedData, id }),
+  onMutate: () => setIsUploading(true), // Start uploading state
+  onSuccess: (data) => {
+    queryClient.invalidateQueries(["product", id]);
+    toast.success("Product updated successfully");
+    setIsUploading(false); // End uploading state on success
+  },
+  onError: (error) => {
+    toast.error("Error updating product: " + error.message);
+    setIsUploading(false); // End uploading state on error
+  },
+});
 
-    },
-  });
-
-
-  const {
-    mutate: mutateAddPostDetail,
-    isLoading: isLoadingAddPostDetail,
-  } = useMutation({
-    mutationFn: (formData) => {
-      return createProduct(
-        formData,
-      );
-    },
-    onSuccess: (data) => {
-      toast.success("Product added successfully");
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error("Error adding product");
-     
-    },
-  });
-
+const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMutation({
+  mutationFn: (formData) => createProduct(formData),
+  onMutate: () => setIsUploading(true), // Start uploading state
+  onSuccess: (data) => {
+    toast.success("Product added successfully");
+    setName("");
+    setDescription("");
+    setTags([]);
+    setCategories([]);
+    setDiscountPrice("");
+    setPrice("");
+    setPreviews([]);
+    setIsUploading(false); // End uploading state on success
+  },
+  onError: (error) => {
+    console.error(error);
+    toast.error("Error adding product");
+    setIsUploading(false); // End uploading state on error
+  },
+});
 
  
 
@@ -213,7 +206,7 @@ const handleSubmit = async (e) => {
   const tagObjects = tags.map(tag => tag.value);
   formData.append("sale_types", JSON.stringify(tagObjects));
   formData.append("quantity",10);
-  
+
   if(!isEditMode){
     files.forEach((file, index) => {
     if (file) {
@@ -236,17 +229,23 @@ if (newImages.length > 0) {
 
 
 
+  setIsUploading(true)
+ 
+  try {
+    if (isEditMode) {
 
-  // for(let [key,value] of formData.entries()){
-  //   console.log(key,value)
-  // }
-  if (isEditMode) {
     mutateUpdatePostDetail({
       updatedData: formData,
       id,
     });
   } else {
+    console.log(uploading)
     mutateAddPostDetail(formData);
+  }
+  } catch (error) {
+    console.log(error)
+  } finally {
+    setIsUploading(false)
   }
 };
 
@@ -479,13 +478,21 @@ const handleFileChange = (acceptedFiles, index) => {
        </div>
               
           <div className="md:col-span-2 flex justify-end">
-            <button
-              type="submit"
-              className="btn btn-outline-dark bg-blue-500 px-4 py-2 rounded-md"
-              disabled={isLoadingUpdatePostDetail || isLoadingAddPostDetail}
-            >
-              {isEditMode ? "Update Product" : isLoadingAddPostDetail ? "Adding product" : "Add Product"}
-            </button>
+        
+<button
+  type="submit"
+  className="btn btn-outline-dark bg-blue-500 disabled:cursor-not-allowed px-4 py-2 rounded-md"
+  disabled={uploading || isLoadingUpdatePostDetail || isLoadingAddPostDetail}
+>
+  {isEditMode
+    ? isLoadingUpdatePostDetail
+      ? "Updating Product..."
+      : "Update Product"
+    : isLoadingAddPostDetail || uploading
+    ? <ClipLoader size={20}/>
+    : "Add Product"}
+</button>
+
           </div>
         </form>
       )}

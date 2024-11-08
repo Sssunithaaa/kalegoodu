@@ -66,6 +66,7 @@ const settings = {
     
   ],
 };
+console.log(currentSlide)
 
  return (
   <div className="md:px-4 px-4 mx-auto flex flex-col relative">
@@ -80,7 +81,7 @@ const settings = {
           ))
         // </SkeletonContainer>
       ) : (
-        filteredProducts?.map((product,index) => (
+        [...filteredProducts]?.reverse().map((product,index) => (
           <motion.div variants={fadeIn("","",index*0.3,1)} className='px-2' key={product.product_id}>
             <ProductCard padding="py-2 my-2" product={product} />
           </motion.div>

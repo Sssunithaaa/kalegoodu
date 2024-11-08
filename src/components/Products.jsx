@@ -233,7 +233,7 @@ const SkeletonCard = styled.div`
 </div>
 
             ))
-      : filteredProducts?.map((product, index) => (
+  : [...filteredProducts]?.reverse().map((product, index) => (
   <div key={product.id}>
     <ProductCard 
       productMode={true} 

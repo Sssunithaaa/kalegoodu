@@ -35,14 +35,14 @@ export default function CompactProductCard({ product }) {
 
   return (
     <Card
-  className="my-1 mx-auto shadow-lg w-[270px] hover:transition-transform relative"
+  className=" mx-2 shadow-lg max-w-[270px] inline-block hover:transition-transform relative"
   onMouseEnter={() => setIsHovered(true)}
   onMouseLeave={() => setIsHovered(false)}
    // Adjusted width and max width for larger cards
 >
       <CardHeader
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
-        className="p-0 mx-[2px] h-[240px] rounded-none relative"
+        className="p-0 mx-[2px] min-h-[180px] max-h-[240px] rounded-none relative"
         floated={false}
         color="blue-gray"
          // Fixed height for uniformity
@@ -64,32 +64,39 @@ export default function CompactProductCard({ product }) {
           )}
         </motion.div>
       </CardHeader>
+<CardBody
+  onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
+  className="hover:cursor-pointer pb-1 p-[10px] px-[20px]"
+>
+  <div className="mb-[2px] flex h-10 items-center justify-between">
+    <Typography className="font-medium my-1 text-[14px] md:text-[16px]">
+      {product?.name}
+    </Typography>
+  </div>
 
-      <CardBody
-        onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
-        className="hover:cursor-pointer pb-1 p-[10px] px-[20px]"
-      >
-        <div className="mb-[2px] flex h-10 items-center justify-between">
-          <Typography className="font-medium my-1 text-[12px] md:text-[14px]">
-            {product?.name}
-          </Typography>
-        </div>
+  {/* Fixed height for price container to align cards with and without discounts */}
+  <div className="h-12 flex items-center">
+    {hasDiscount ? (
+      <div className="flex flex-col text-[12px]">
+        <Typography color="red">
+          <del>Rs. {product?.price}</del>
+        </Typography>
+        <p className="text-black py-0.5 text-sm">
+          Rs. {product?.discounted_price}
+        </p>
+      </div>
+    ) : (
+      <div className="text-gray-900 py-0.5 text-[12px] flex flex-col">
+        <p className="text-black py-0.5 text-sm">
+          Rs. {product?.price}
+        </p>
+        {/* Placeholder element to match the height of the discounted price */}
+        <p className="invisible py-0.5 text-sm">Rs. 0</p>
+      </div>
+    )}
+  </div>
+</CardBody>
 
-        <div className="h-8 flex items-center">
-          {hasDiscount ? (
-            <div className="flex flex-col text-[12px]">
-              <Typography color="red">
-                <del>Rs. {product?.price}</del>
-              </Typography>
-              <p className="text-black py-0.5 text-sm">
-                Rs. {product?.discounted_price}
-              </p>
-            </div>
-          ) : (
-            <p className="text-gray-900 py-0.5 text-sm">Rs. {product?.price}</p>
-          )}
-        </div>
-      </CardBody>
 
    
     </Card>
