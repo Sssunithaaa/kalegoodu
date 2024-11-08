@@ -1,10 +1,10 @@
-import React, { useContext, Suspense, lazy } from 'react';
+import React, { useContext,useEffect, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import FullPageLoader from './components/FullPageLoader';
 import { CartContext } from './context/CartContext';
 import { useSelector } from 'react-redux';
-import ScrollToTop from './components/ScrollToTop'; // Make sure this import is correct.
 
+const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
 const ProductPage = lazy(() => import('./components/ProductPage'));
@@ -40,13 +40,16 @@ const Hero = lazy(() => import('./components/components/Hero'));
 const App = () => {
   const { loading } = useContext(CartContext);
   const { isAuthenticated } = useSelector((state) => state.auth);
-
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual'
+  }, []);
   return (
     <div>
       {/* ScrollToTop should be outside the Suspense component */}
-      <ScrollToTop />
+    
       <Suspense fallback={<FullPageLoader />}>
         {loading && <FullPageLoader />}
+          <ScrollToTop />
         <MainLayout>
           <Routes>
             <Route path="/" element={<MainPage />} />

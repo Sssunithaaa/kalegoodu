@@ -46,7 +46,7 @@ const navButtons = [
 const SideBar = ({ isCartVisible, toggleCart }) => {
   const { cartItems, removeFromCart,increaseQuantity,decreaseQuantity ,cartItemCount,cartTotal} = useContext(CartContext);
   const navigate = useNavigate();
-console.log(cartItems)
+
   return (
     <div
       className={`fixed top-0 right-0 overflow-y-auto sm:w-[400px] w-full lg:max-w-[450px] bg-white h-full shadow-lg transition-transform transform z-[10000001] ${

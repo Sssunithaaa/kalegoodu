@@ -1,12 +1,15 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-
-
-const CTA = () => {
+import { useStateContext } from '../context/ContextProvider'
+const CTA = ({}) => {
     const navigate = useNavigate()
-    const fn = () => {
-        window
+    const {heroRef, newArrivalsRef } = useStateContext();
+    const scrollToSection = (ref) => {
+        console.log(ref)
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
     }
+  };
   return (
     <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-1">
@@ -60,17 +63,17 @@ const CTA = () => {
                 <p class="text-sm font-semibold tracking-widest text-gray-700 uppercase">MAIN MENU</p>
 
                 <ul class="mt-6 space-y-4">
-                    <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Home page </a>
-                    </li>
+                    <li onClick={() => {scrollToSection(heroRef); navigate("/")}}>
+                  <a className="flex text-base text-black transition-all duration-200 hover:text-green-600 cursor-pointer">
+                    Home page
+                  </a>
+                </li>
+                <li onClick={() => navigate("/?section=newArrivals")}>
+  <a className="flex text-base text-black transition-all duration-200 hover:text-green-600 cursor-pointer">
+    New arrivals
+  </a>
+</li>
 
-                    <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> Search </a>
-                    </li>
-
-                    <li>
-                        <a href="#" title="" class="flex text-base text-black transition-all duration-200 hover:text-green-600 focus:text-green-600"> New arrivals </a>
-                    </li>
 
                
                 </ul>

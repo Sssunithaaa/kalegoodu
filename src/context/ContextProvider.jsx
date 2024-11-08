@@ -47,12 +47,13 @@ export const ContextProvider = ({ children }) => {
   };
 
   const handleClick = (clicked) => setIsClicked({ ...initialState, [clicked]: true });
-
+  const heroRef = useRef(null)
   const categoriesRef = useRef(null);
   const newArrivalsRef = useRef(null);
   const bestSellersRef = useRef(null);
   const aboutUsRef = useRef(null);
   const testimonialsRef = useRef(null);
+  const marqueeRef = useRef(null)
 
   const scrollToSection = (sectionRef) => {
     const sectionElement = sectionRef.current;
@@ -79,11 +80,13 @@ export const ContextProvider = ({ children }) => {
         screenSize,
         setScreenSize,
         handleClick,
+        heroRef,
         categoriesRef,
         newArrivalsRef,
         bestSellersRef,
         aboutUsRef,
         testimonialsRef,
+        marqueeRef,
         scrollToSection,
         isClicked,
         initialState,

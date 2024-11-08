@@ -1,16 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import CTA from '../CTA';
 import Breadcrumbs from '../BreadCrumbs';
-import ScrollToTop from '../ScrollToTop';
 import Marquee from "react-fast-marquee";
-const MainWrapper = styled.div`
-  // background: rgb(192,230,109,0.1);
-  // background: linear-gradient(90deg, rgba(192,230,109,0.5) 12%, rgba(236,244,135,0.5) 90%);
-  // min-height: 100vh; /* Ensure it covers the full viewport height */
-`;
+import { useStateContext } from '../../context/ContextProvider';
 
 const MainLayout = ({ children }) => {
   const location = useLocation();
@@ -20,13 +15,26 @@ const MainLayout = ({ children }) => {
   if (isAdminPage) {
     return <div>{children}</div>;
   }
+ const {marqueeRef} = useStateContext()
 
+ useEffect(() => {
+   const params = new URLSearchParams(location.search);
+    const section = params.get("section");
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0; 
+      document.body.scrollTop = 0; 
+     if (section !== "newArrivals" && marqueeRef && marqueeRef.current) {
+     marqueeRef.current.scrollIntoView({ behavior: 'smooth' });
+   }
+    }, 0);
+  }, [location.pathname]);
   return (
     <div className='example'>
-      <ScrollToTop/>
-      <div className="static py-2 overflow-y-hidden flex w-[100%] bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  m-0 overflow-hidden justify-center items-center">
+      
+      <div ref={marqueeRef} className="static py-2 overflow-y-hidden flex w-[100%] bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  m-0 overflow-hidden justify-center items-center">
         <Marquee speed={100}>
-           Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.
+           Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.&nbsp;&nbsp;
         </Marquee>
       </div>
       <Navbar />
@@ -34,7 +42,7 @@ const MainLayout = ({ children }) => {
       <main className='h-[100%] min-h-screen flex-grow'>
         {children}
       </main>
-      <CTA />
+    {<CTA/>}
     </div>
   );
 };
