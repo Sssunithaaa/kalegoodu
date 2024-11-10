@@ -57,11 +57,7 @@ export default function CompactProductCard({ product }) {
           />
           <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
 
-          {hasDiscount && (
-            <div className="absolute bottom-1 left-1 bg-red-500 text-white text-xs px-1 py-0.5 rounded">
-              {discountPercentage}% OFF
-            </div>
-          )}
+          
         </motion.div>
       </CardHeader>
 <CardBody

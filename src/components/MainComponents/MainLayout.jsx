@@ -29,13 +29,18 @@ const MainLayout = ({ children }) => {
    }
     }, 0);
   }, [location.pathname]);
+   const message = "Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.";
+const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; // Adds extra non-breaking spaces
   return (
     <div className='example'>
       
       <div ref={marqueeRef} className="static py-2 overflow-y-hidden flex w-[100%] bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  m-0 overflow-hidden justify-center items-center">
-        <Marquee speed={100}>
-           Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.&nbsp;&nbsp;
-        </Marquee>
+     
+
+<Marquee speed={100} gradient={false}>
+  {message}{spacing}{spacing}{spacing}{spacing}{spacing}{spacing}{message}
+</Marquee>
+
       </div>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}

@@ -4,7 +4,7 @@ import { FaStar } from 'react-icons/fa'; // For golden star ratings
 
 const Testimonial = ({productMode, text,product_name, user_name,rating }) => {
   return (
-    <div className={`${productMode ? "bg-green-100" : "bg-white"} testimonial p-5 m-4 rounded-lg shadow-md flex flex-col items-center space-y-4`}>
+    <div className={`${productMode ? "bg-gradient-to-r from-green-300 to-green-400" : "bg-white"} testimonial p-5 m-4 rounded-lg shadow-md flex flex-col items-center space-y-4`}>
       <div>
           <h4 className=" text-md font-semibold">{product_name}</h4>
         </div>

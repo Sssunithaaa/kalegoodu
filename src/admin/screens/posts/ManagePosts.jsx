@@ -90,7 +90,7 @@ const searchKeywordOnSubmitHandler = (event) => {
       searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
       searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
       searchKeyword={searchKeyword}
-      tableHeaderTitleList={["Images", "Name",  "Price", "Discount Price", "Categories", "Sale Type"," "]}
+      tableHeaderTitleList={[ "Name",  "Price", "Discount Price", "Categories"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
@@ -98,9 +98,9 @@ const searchKeywordOnSubmitHandler = (event) => {
       // currentPage={currentPage}
     >
       <ToastContainer/>
-      {paginatedData?.map((product) => (
+      {[...paginatedData]?.reverse().map((product) => (
         <tr key={product.product_id}>
-          <td className="py-5 text-md bg-white border-b border-gray-200">
+          {/* <td className="py-5 text-md bg-white border-b border-gray-200">
             <div className="flex items-center">
               <div className="flex flex-wrap gap-x-2">
                 {
@@ -121,7 +121,7 @@ const searchKeywordOnSubmitHandler = (event) => {
               </div>
              
             </div>
-          </td>
+          </td> */}
          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{product.name}</p>
           </td>
@@ -154,7 +154,7 @@ const searchKeywordOnSubmitHandler = (event) => {
                 : "Uncategorized"}
             </p>
           </td>
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+          {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <div className="flex gap-x-2">
               {product.sale_types.length > 0
                 ? product.sale_types.map((sale_type, index) => (
@@ -165,7 +165,7 @@ const searchKeywordOnSubmitHandler = (event) => {
                   ))
                 : "No tags"}
             </div>
-          </td>
+          </td> */}
           <td className="px-5 py-5 text-md bg-white border-b border-gray-200 ">
             <div className='flex flex-row gap-x-5'>
               <Link

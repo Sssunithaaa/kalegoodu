@@ -151,6 +151,7 @@ const { mutate: mutateUpdatePostDetail, isLoading: isLoadingUpdatePostDetail } =
     setIsUploading(false); // End uploading state on success
   },
   onError: (error) => {
+    console.log(error)
     toast.error("Error updating product: " + error.message);
     setIsUploading(false); // End uploading state on error
   },
@@ -197,7 +198,12 @@ const handleSubmit = async (e) => {
   formData.append("price", price);
   formData.append("discounted_price", discountedPrice);
   formData.append("short_description", description); 
-   formData.append("video_link", videoUrl); 
+  // Append video link only if it’s not empty
+  console.log(description)
+if (videoUrl) {
+  formData.append("video_link", videoUrl);
+}
+
 
   // Append categories as a JSON array of objects
   const categoryObjects = categories.map(category => category.value);
@@ -453,7 +459,7 @@ const handleFileChange = (acceptedFiles, index) => {
               <BsFillArrowUpCircleFill
                 style={{
                   fontSize: "16px",
-                  marginBottom: "10px",
+                  marginBottom: "5px",
                   color: "black",
                 }}
                 className="w-full flex mx-auto"
@@ -477,9 +483,9 @@ const handleFileChange = (acceptedFiles, index) => {
 
        </div>
               
-          <div className="md:col-span-2 flex justify-end">
+          <div className="md:col-span-2 mt-5 flex justify-end">
         
-<button
+<Button
   type="submit"
   className="btn btn-outline-dark bg-blue-500 disabled:cursor-not-allowed px-4 py-2 rounded-md"
   disabled={uploading || isLoadingUpdatePostDetail || isLoadingAddPostDetail}
@@ -491,7 +497,7 @@ const handleFileChange = (acceptedFiles, index) => {
     : isLoadingAddPostDetail || uploading
     ? <ClipLoader size={20}/>
     : "Add Product"}
-</button>
+</Button>
 
           </div>
         </form>
