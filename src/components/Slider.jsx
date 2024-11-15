@@ -16,6 +16,7 @@ const ProductCarousel = ({ saleType }) => {
   const { data: products, isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts,
+    refetchOnMount:true,
     staleTime: 1000 * 60 * 5, // Cache data for 5 minutes
   });
 

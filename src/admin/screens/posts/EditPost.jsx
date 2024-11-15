@@ -51,7 +51,7 @@ const UpdateButton = styled.button`
   cursor: pointer;
   margin-top: 10px;
   &:hover {
-    background-color: #c0392b;
+    background-color: #0096FA;
   }
 `;
 const EditPost = () => {
@@ -153,21 +153,21 @@ const baseUrl = import.meta.env.VITE_APP_URL
       
   },[categoriesData,saleTypesData])
 
-  // Mutation for updating post details
- // Mutation for updating post details
+ const handleMutationError = (error) => {
+  setIsUploading(false);
+  toast.error("An error occurred: " + error.message);
+  console.error(error);
+};
+
 const { mutate: mutateUpdatePostDetail, isLoading: isLoadingUpdatePostDetail } = useMutation({
   mutationFn: ({ updatedData, id }) => updateProduct({ updatedData, id }),
-  onMutate: () => setIsUploading(true), // Start uploading state
-  onSuccess: (data) => {
+  onMutate: () => setIsUploading(true),
+  onSuccess: () => {
     queryClient.invalidateQueries(["product", id]);
     toast.success("Product updated successfully");
-    setIsUploading(false); // End uploading state on success
+    setIsUploading(false);
   },
-  onError: (error) => {
-    console.log(error)
-    toast.error("Error updating product: " + error.message);
-    setIsUploading(false); // End uploading state on error
-  },
+  onError: handleMutationError
 });
 
 const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMutation({
@@ -203,7 +203,7 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-
+ console.log("Hellooo")
   const formData = new FormData();
 
   // Append product details to formData
@@ -235,14 +235,6 @@ if (videoUrl) {
   } 
   
  
-const newImages = files ? files.filter(file => file && file.hasOwnProperty('path')) : [];
-
-if (newImages.length > 0) {
-  newImages.forEach(file => {
-    formData.append('new_images', file);
-  });
-}
-
 
 
 
@@ -275,22 +267,20 @@ const [files, setFiles] = useState([null, null, null]);
 const [previews, setPreviews] = useState([null, null, null]);
 const handleFileChange = (acceptedFiles, index) => {
   const updatedFiles = [...files];
-  updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone
+  updatedFiles[index] = acceptedFiles[0]; 
   setFiles(updatedFiles);
 
   const updatedPreviews = [...previews];
   updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
   setPreviews(updatedPreviews);
-  if (product?.images[index]) {
-    handleUpdate(product.images[index].product_image_id, acceptedFiles[0]);
-  }
-  refetch();
+  
 };
-
+  const [isUpdatingImage,setIsUpdatingImage] = useState(false)
   const handleUpdate = async (productImageId, file) => {
-  const formData = new FormData();
+    const formData = new FormData();
   formData.append('image', file);
-
+  console.log("Hello")
+  setIsUpdatingImage(true)
   try {
     const response = await axios.put(
       `${baseUrl}/api/update_product_image/${productImageId}/`,
@@ -300,9 +290,34 @@ const handleFileChange = (acceptedFiles, index) => {
     toast.success("Image updated successfully!");
     // Refresh the banner data here to reflect updated images
     refetch();
+    setIsUpdatingImage(false)
   } catch (error) {
     toast.error("Failed to update image");
     console.error("Error updating image:", error.message);
+    setIsUpdatingImage(false)
+  }
+};
+  const [isAddingImage,setIsAddingImage] = useState(false)
+
+const handleAddImage = async (productImageId, file) => {
+    const formData = new FormData();
+  formData.append('image', file);
+  console.log("Hello")
+  setIsAddingImage(true)
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/add_product_image/${productImageId}/`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+    toast.success("Image added successfully!");
+    // Refresh the banner data here to reflect updated images
+    refetch();
+    setIsAddingImage(false)
+  } catch (error) {
+    toast.error("Failed to add image");
+    console.log("Error add image:", error.message);
+    setIsAddingImage(false)
   }
 };
 
@@ -509,16 +524,20 @@ const handleFileChange = (acceptedFiles, index) => {
         </div>
       )}
     </Dropzone>
-      {product?.images[index] && !files[index] && (
+      {product?.images[index] ? (
                             <div className='flex flex-row gap-x-2'> 
-                  <UpdateButton onClick={() => handleUpdate(product?.images[index], files[index])}>
-                  Update
-                </UpdateButton>
-                  <DeleteButton onClick={() => handleDelete(product?.images[index])}>
+                      <UpdateButton className="disabled:cursor-not-allowed" disabled={isUpdatingImage} type="button" onClick={() => handleUpdate(product?.images[index]?.product_image_id, files[index])}>
+                     {isUpdatingImage ? <ClipLoader size={20}></ClipLoader> : " Update"}
+                    </UpdateButton>
+                  <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
                   Delete
                 </DeleteButton>
                 </div>
-                          )}
+                          ) : files[index] && <div>
+                             <UpdateButton className="disabled:cursor-not-allowed" disabled={isAddingImage} type="button" onClick={() => handleAddImage(product?.product_id, files[index])}>
+                     {isUpdatingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
+                    </UpdateButton>
+                            </div> }
   </div>
 ))}
 </div>
