@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState, useMemo } from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
@@ -9,88 +9,71 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
-import { useStateContext } from '../context/ContextProvider';
 import { SectionWrapper } from '../hoc';
-import { fadeIn, slideIn, zoomIn } from '../utils/motion';
+import { fadeIn } from '../utils/motion';
 
 const ProductCarousel = ({ saleType }) => {
-  const { data: products,isLoading, isLoadingError } = useQuery({
+  const { data: products, isLoading, isError } = useQuery({
     queryKey: ["products"],
-    queryFn: getAllProducts
+    queryFn: getAllProducts,
+    staleTime: 1000 * 60 * 5, // Cache data for 5 minutes
   });
- 
 
   const bestSellerMode = Boolean(saleType);
-  const filteredProducts = bestSellerMode 
-    ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
-    : products;
-const [currentSlide, setCurrentSlide] = useState(0);
-const settings = {
-  infinite: false,
-  speed: 500,
-  slidesToShow: 5, // Keep as 5 for desktop
-  slidesToScroll: 1,
-  initialSlide: 0,
+
+  // Memoize filtered products to prevent unnecessary re-filtering
+  const filteredProducts = useMemo(() => (
+    bestSellerMode
+      ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
+      : products
+  ), [products, saleType]);
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const settings = {
+    infinite: false,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
     afterChange: (index) => setCurrentSlide(index),
     prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-    nextArrow: currentSlide === filteredProducts?.length -1 ? null : <SampleNextArrow />,
-  centerMode: false, // Not needed for larger screens
-  responsive: [
-     {
-      breakpoint: 1500,
-      settings: {
-        slidesToShow: 4,
-      },
-    },
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 3,
-      },
-    },
-    {
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 2,
-      },
-    },
-    {
-      breakpoint: 540,
-      settings: {
-        slidesToShow: 1,
-        centerMode:true,
-        centerPadding: '30px', // Show part of the next slide
-      },
-    },
-    
-  ],
-};
-console.log(currentSlide)
+    nextArrow: currentSlide < filteredProducts?.length - 5 ? <SampleNextArrow /> : null,
+    responsive: [
+      { breakpoint: 1500, settings: { slidesToShow: 4 } },
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 540, settings: { slidesToShow: 1, centerMode: true, centerPadding: '30px' } },
+    ],
+  };
 
- return (
-  <div className="md:px-4 px-4 mx-auto flex flex-col relative">
-    <Slider {...settings}>
-      {isLoading || isLoadingError ? (
-        // <SkeletonContainer>
-          [...Array(5)].map((_, index) => (
-            <SkeletonCard key={index}>
-              <Skeleton height={230} />
-              <Skeleton count={2} />
-            </SkeletonCard>
-          ))
-        // </SkeletonContainer>
+  return (
+    <div className="md:px-4 px-4 mx-auto flex flex-col relative">
+      {isError ? (
+        <div className="text-center py-4 text-red-500">
+          Failed to load products. Please try again later.
+        </div>
       ) : (
-        [...filteredProducts]?.reverse().map((product,index) => (
-          <motion.div variants={fadeIn("","",index*0.3,1)} className='px-2' key={product.product_id}>
-            <ProductCard padding="py-2 my-2" product={product} />
-          </motion.div>
-        ))
+        <Slider {...settings}>
+          {isLoading ? (
+            <SkeletonContainer>
+              {[...Array(5)].map((_, index) => (
+                <SkeletonCard key={index}>
+                  <Skeleton height={230} />
+                  <Skeleton count={2} />
+                </SkeletonCard>
+              ))}
+            </SkeletonContainer>
+          ) : (
+            filteredProducts?.reverse().map((product, index) => (
+              <motion.div variants={fadeIn("", "", index * 0.3, 1)} className="px-2" key={product.product_id}>
+                <ProductCard padding="py-2 my-2" product={product} />
+              </motion.div>
+            ))
+          )}
+        </Slider>
       )}
-    </Slider>
-
-  </div>
-);
-
+    </div>
+  );
 };
 
 const Arrow = styled.div`
@@ -99,10 +82,8 @@ const Arrow = styled.div`
   top: 50%;
   transform: translateY(-50%);
   width: 50px;
- 
   height: 50px;
   font-size: 30px;
-  // color: black !important;
   cursor: pointer;
   z-index: 2;
   &:hover {
@@ -111,27 +92,18 @@ const Arrow = styled.div`
 `;
 
 const SampleNextArrow = (props) => {
-  const {  onClick } = props;
+  const { onClick } = props;
   return (
-    <Arrow
-      className="text-[#000000]"
-      onClick={onClick}
-      style={{color:"black" , right: '-50px' }}
-    >
+    <Arrow onClick={onClick} style={{ color: "black", right: '-50px' }}>
       &#8250;
     </Arrow>
   );
 };
 
 const SamplePrevArrow = (props) => {
-  const {  onClick } = props;
+  const { onClick } = props;
   return (
-    <Arrow
-      
-      className="text-[#000000]"
-      onClick={onClick}
-      style={{color:"black",  left: '-10px' }}
-    >
+    <Arrow onClick={onClick} style={{ color: "black", left: '-10px' }}>
       &#8249;
     </Arrow>
   );
@@ -139,7 +111,6 @@ const SamplePrevArrow = (props) => {
 
 const SkeletonContainer = styled.div`
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens */
   justify-content: space-between;
 `;
 
@@ -147,22 +118,21 @@ const SkeletonCard = styled.div`
   flex: 1;
   padding: 10px;
   @media (min-width: 1024px) and (max-width: 1500px) {
-    flex: 0 0 20%; /* For larger tablets */
+    flex: 0 0 20%;
     max-width: 20%;
   }
   @media (max-width: 1024px) {
-    flex: 0 0 100%; /* For tablets */
+    flex: 0 0 100%;
     max-width: 100%;
   }
   @media (max-width: 768px) {
-    flex: 0 0 80%; /* For small tablets or large phones */
+    flex: 0 0 80%;
     max-width: 80%;
   }
   @media (max-width: 480px) {
-    flex: 0 0 100%; /* For mobile devices */
+    flex: 0 0 100%;
     max-width: 100%;
   }
 `;
 
-
-export default SectionWrapper(ProductCarousel,"");
+export default SectionWrapper(ProductCarousel, "");

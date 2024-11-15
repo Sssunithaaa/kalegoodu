@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo,useEffect, useCallback } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Sidebar from './SideBar';
 import ProductCard from './ProductCard';
@@ -10,13 +10,12 @@ import axios from 'axios';
 import { getAllProducts } from '../services/index/products';
 import { ClipLoader } from 'react-spinners';
 import styled from 'styled-components';
-import {Skeleton} from '@mui/material';
+import { Skeleton } from '@mui/material';
 import { SectionWrapper } from '../hoc';
 
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All Products');
-  const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState('dateNewToOld');
   const [sPrice, setSprice] = useState(0);
   const [ePrice, setEprice] = useState(null);
@@ -26,7 +25,22 @@ const Products = () => {
 
   const baseUrl = import.meta.env.VITE_APP_URL;
   const { id, name } = useParams();
-  const location = useLocation()
+  
+
+  const categoryMode = Boolean(id);
+  
+  // Fetching products by category
+ const { data: productsByCategory, isLoading: categoryLoading } = useQuery({
+    queryKey: ["productsByCategory",id],
+    queryFn: async () => {
+      const response = await axios.get(`${baseUrl}/api/products_by_category/${id}`);
+      return response.data.products;
+    },
+    enabled: categoryMode
+  }
+   
+  );
+ const location = useLocation()
   useEffect(() => {
     if (name) {
       setSelectedCategory(name.replaceAll("-", " "));
@@ -34,108 +48,66 @@ const Products = () => {
       setSelectedCategory("All Products")
     }
   }, [name,location]);
+  const { data: allProducts, isLoading: allProductsLoading } = useQuery(
+   {
+     queryKey: ['products'],
+    queryFn: getAllProducts,
+     enabled: !categoryMode 
+   }
+  );
 
-  const categoryMode = Boolean(id);
+  // Deriving products list based on category or all products
+  const products = categoryMode ? productsByCategory : allProducts;
 
-  // Fetching products from API
-  const { data: productss,isLoading, isFetching } = useQuery({
-    queryKey: ['productsByCategory', id],
-    queryFn: async () => {
-      const response = await axios.get(`${baseUrl}/api/products_by_category/${id}`);
-      return response.data.products;
-    },
-    enabled: categoryMode
-  });
-  
-  const { data, isLoading: pLoading, isFetching: pFetching } = useQuery({
-    queryKey: ['products'],
-    queryFn: getAllProducts
-  });
-
-  // Update products when data is fetched
-  useEffect(() => {
-    setProducts(categoryMode ? productss : data);
-  }, [productss, data, categoryMode]);
-
-  // Derived state for sorting
+  // Memoized sorting function
   const sortedProducts = useMemo(() => {
-    let sorted = products ? [...products] : [];
+    if (!products) return [];
+    
+    const sorted = [...products];
     switch (sortOption) {
       case 'dateNewToOld':
-        sorted.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-        break;
+        return sorted.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
       case 'dateOldToNew':
-        sorted.sort((a, b) => new Date(a.updated_at) - new Date(b.updated_at));
-        break;
+        return sorted.sort((a, b) => new Date(a.updated_at) - new Date(b.updated_at));
       case 'priceLowToHigh':
-        sorted.sort((a, b) => a.price - b.price);
-        break;
+        return sorted.sort((a, b) => a.price - b.price);
       case 'priceHighToLow':
-        sorted.sort((a, b) => b.price - a.price);
-        break;
+        return sorted.sort((a, b) => b.price - a.price);
       case 'alphabeticallyAZ':
-        sorted.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
       case 'alphabeticallyZA':
-        sorted.sort((a, b) => b.name.localeCompare(a.name));
-        break;
+        return sorted.sort((a, b) => b.name.localeCompare(a.name));
       default:
-        break;
+        return sorted;
     }
-    setSort(false)
-    return sorted;
   }, [sortOption, products]);
 
-  // Derived state for filtering
+  // Memoized filtering function
   const filteredProducts = useMemo(() => {
-    if (sPrice !== null && ePrice !== null) {
-      return sortedProducts.filter(
-        (product) => product.price >= sPrice && product.price <= ePrice
-      );
-    }
-    return sortedProducts;
-  }, [sPrice, ePrice, sortedProducts]);
+    return sortedProducts.filter(
+      (product) =>
+        (sPrice === null || product.price >= sPrice) &&
+        (ePrice === null || product.price <= ePrice) &&
+        (!keyword || new RegExp(keyword.split('').join('.*'), 'i').test(product.name))
+    );
+  }, [sortedProducts, sPrice, ePrice, keyword]);
 
-  // Handle price filter reset
-  useEffect(() => {
-    if (!price) {
-      setProducts(categoryMode ? productss : data);
-    }
-  }, [price, data, productss, categoryMode]);
+  const toggleSidebar = () => setShowSidebar((prev) => !prev);
 
-  const toggleSidebar = () => {
-    setShowSidebar((prev) => !prev);
-  };
-
-const SkeletonCard = styled.div`
-  flex: 1;
-  padding: 10px;
- 
-
-`;
-
-
-
-  const searchKeywordOnSubmitHandler = (event) => {
+  const searchKeywordOnSubmitHandler = useCallback((event) => {
     event.preventDefault();
-
-    if (!keyword || keyword.trim() === "") {
-      setProducts(categoryMode ? productss : data);
-    } else {
-      const regex = new RegExp(keyword.split('').join('.*'), 'i');
-      const filteredProducts = products?.filter((product) =>
-        regex.test(product.name)
-      );
-      setProducts(filteredProducts);
+    setKeyword((prevKeyword) => (prevKeyword ? prevKeyword.trim() : null));
+    
+    if (window.innerWidth <= 768) {
+      setTimeout(toggleSidebar, 1000);
     }
+  }, []);
 
-    setTimeout(() => {
-      if(window.innerWidth <= 768){
-        toggleSidebar()
-      }
-    }, 1000);
-  };
-  
+  const SkeletonCard = styled.div`
+    flex: 1;
+    padding: 10px;
+  `;
+
   return (
     <div className="w-screen mb-10">
       <div className="flex flex-col lg:mx-[20px] px-1 lg:px-0 relative">
@@ -171,37 +143,31 @@ const SkeletonCard = styled.div`
                   onClick={toggleSidebar}
                   className="lg:hidden text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[3%]"
                 >
-                  Filter<span>
-                    <IoFilter />
-                  </span>
+                  Filter<span><IoFilter /></span>
                 </h1>
                 <h1
                   onClick={() => setSort(!sort)}
                   className="text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[3%]"
                 >
-                  Sort by<span>
-                    <BiSort />
-                  </span>
+                  Sort by<span><BiSort /></span>
                 </h1>
                 {sort && (
-                  <div className="flex justify-center items-center mx-auto ml-2">
-                    <FormControl sx={{ m: 1, minWidth: 120, maxHeight: 70 }}>
-                      <Select
-                        labelId="sort-select-label"
-                        id="sort-select"
-                        value={sortOption}
-                        onChange={(e) => setSortOption(e.target.value)}
-                        autoWidth
-                      >
-                        <MenuItem value="dateNewToOld">Date, new to old</MenuItem>
-                        <MenuItem value="dateOldToNew">Date, old to new</MenuItem>
-                        <MenuItem value="priceLowToHigh">Price, low to high</MenuItem>
-                        <MenuItem value="priceHighToLow">Price, high to low</MenuItem>
-                        <MenuItem value="alphabeticallyAZ">Alphabetically, A-Z</MenuItem>
-                        <MenuItem value="alphabeticallyZA">Alphabetically, Z-A</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </div>
+                  <FormControl sx={{ m: 1, minWidth: 120, maxHeight: 70 }}>
+                    <Select
+                      labelId="sort-select-label"
+                      id="sort-select"
+                      value={sortOption}
+                      onChange={(e) => setSortOption(e.target.value)}
+                      autoWidth
+                    >
+                      <MenuItem value="dateNewToOld">Date, new to old</MenuItem>
+                      <MenuItem value="dateOldToNew">Date, old to new</MenuItem>
+                      <MenuItem value="priceLowToHigh">Price, low to high</MenuItem>
+                      <MenuItem value="priceHighToLow">Price, high to low</MenuItem>
+                      <MenuItem value="alphabeticallyAZ">Alphabetically, A-Z</MenuItem>
+                      <MenuItem value="alphabeticallyZA">Alphabetically, Z-A</MenuItem>
+                    </Select>
+                  </FormControl>
                 )}
               </div>
               {price && sPrice !== null && ePrice !== null && (
@@ -211,44 +177,29 @@ const SkeletonCard = styled.div`
               )}
             </div>
             
- <div className="flex w-full  md:px-2">
-    <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
-      ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
-      ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
-      w-full`}>
-    {isLoading  ? 
-      Array.from({ length: filteredProducts.length }).map((_, index) => (
-              <div key={index} className="px-2 mt-2">
-  <Skeleton
-    variant="rectangular"
-    height={150}
-    sx={{
-      height: { xs: 100, sm: 150, md: 250 }, // Adjusts height based on screen size
-      width: '100%', // Ensures it spans the full width
-    }}
-  />
-  <Skeleton variant="text" width="100%" />
-  <Skeleton variant="text" width="40%" />
-  <Skeleton variant="text" width="50%" />
-</div>
+            <div className="flex w-full md:px-2">
+              <div className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
+                ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
+                ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
+                w-full`}
+              >
+                {categoryLoading || allProductsLoading
+                  ? Array.from({ length:  filteredProducts?.length || 4 }).map((_, index) => (
+                      <SkeletonCard key={index}>
+                        <Skeleton variant="rectangular" height={160} sx={{ width: '100%' }} />
+                        <Skeleton variant="text" width="100%" />
+                        <Skeleton variant="text" width="40%" />
+                        <Skeleton variant="text" width="50%" />
+                      </SkeletonCard>
+                    ))
+                  : filteredProducts.reverse().map((product) => (
+<div key={product?.product_id}>
+                        <ProductCard key={product.product_id} productMode={true} product={product} />
 
-            ))
-  : [...filteredProducts]?.reverse().map((product, index) => (
-  <div key={product.id}>
-    <ProductCard 
-      productMode={true} 
-      index={index} 
-      len={filteredProducts?.length} 
-      height="48" 
-      product={product} 
-    />
-  </div>
+</div>
 ))}
-
-    
-  </div>
-</div>
-            
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -256,4 +207,4 @@ const SkeletonCard = styled.div`
   );
 };
 
-export default SectionWrapper(Products,"");
+export default SectionWrapper(Products);

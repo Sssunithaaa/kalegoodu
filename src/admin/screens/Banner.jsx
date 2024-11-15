@@ -67,13 +67,26 @@ const DeleteButton = styled.button`
     background-color: #c0392b;
   }
 `;
+const UpdateButton = styled.button`
+  background-color: #0096FF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block:5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #c0392b;
+  }
+`;
 const Banner = () => {
   const [files, setFiles] = useState([null, null, null]);
   const [previews, setPreviews] = useState([null, null, null]);
   const [numImages,setNumImages] = useState(3);
   const baseUrl = import.meta.env.VITE_APP_URL;
 
-  const { data: banner, isLoading, isError } = useQuery({
+  const { data: banner, refetch } = useQuery({
     queryKey: ['banner'],
     queryFn: async () => {
       const response = await fetch(`${baseUrl}/api/banner_images/`);
@@ -97,18 +110,43 @@ const Banner = () => {
       setNumImages(bannerImages?.length)
     }
   }, [banner]);
+const handleFileChange = (acceptedFiles, index) => {
+  const updatedFiles = [...files];
+  updatedFiles[index] = acceptedFiles[0];
+  setFiles(updatedFiles);
 
-  const handleFileChange = (acceptedFiles, index) => {
-    const updatedFiles = [...files];
-    updatedFiles[index] = acceptedFiles[0];
-    setFiles(updatedFiles);
+  const updatedPreviews = [...previews];
+  updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
+  setPreviews(updatedPreviews);
 
-    const updatedPreviews = [...previews];
-    updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
-    setPreviews(updatedPreviews);
-  };
+  // If an existing banner image is present, call handleUpdate to update it with the new file.
+  if (banner?.banner_images[index]) {
+    handleUpdate(banner.banner_images[index].banner_image_id, acceptedFiles[0]);
+  }
+  refetch();
+};
 
-  const handleUpload = async (e) => {
+  const handleUpdate = async (bannerImageId, file) => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const response = await axios.put(
+      `${baseUrl}/api/update_banner_image/${bannerImageId}/`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+    toast.success("Image updated successfully!");
+    // Refresh the banner data here to reflect updated images
+    refetch();
+  } catch (error) {
+    toast.error("Failed to update image");
+    console.error("Error updating image:", error.message);
+  }
+};
+
+
+const handleUpload = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
@@ -141,16 +179,22 @@ const Banner = () => {
     }
   };
 
+  
+
+
   const handleDelete = async (bannerImageId) => {
     try {
       await axios.delete(`${baseUrl}/api/banner_image/${bannerImageId}/delete/`);
       
       toast.success("Image deleted successfully");
+      refetch();
     } catch (error) {
       toast.error("Failed to delete image");
       console.error("Error deleting image:", error.message);
     }
   };
+
+
 
   return (
     <AdminContainer>
@@ -207,11 +251,17 @@ const Banner = () => {
         </div>
       )}
     </Dropzone>
-    {banner?.banner_images[index] && (
-      <DeleteButton onClick={() => handleDelete(banner.banner_images[index].banner_image_id)}>
-        Delete
-      </DeleteButton>
-    )}
+     {banner?.banner_images[index] && !files[index] && (
+
+                <div className='flex flex-row gap-x-2'> 
+                  <UpdateButton onClick={() => handleUpdate(banner.banner_images[index].banner_image_id, files[index])}>
+                  Update
+                </UpdateButton>
+                  <DeleteButton onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
+                  Delete
+                </DeleteButton>
+                </div>
+              )}
   </div>
 ))}
 

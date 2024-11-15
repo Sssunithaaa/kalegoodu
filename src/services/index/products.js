@@ -64,7 +64,7 @@ export const updateProduct = async ({ updatedData, id }) => {
         'Content-Type': 'multipart/form-data',
       },
     };
-
+    console.log(updatedData)
     const response = await axios.put(`${url}/api/update_full_product/${id}/`, updatedData, config);
    
     return response.data;

@@ -41,6 +41,19 @@ const DeleteButton = styled.button`
     background-color: #c0392b;
   }
 `;
+const UpdateButton = styled.button`
+  background-color: #0096FF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block:5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #c0392b;
+  }
+`;
 const EditPost = () => {
   const { id } = useParams(); 
   const queryClient = useQueryClient();
@@ -268,6 +281,29 @@ const handleFileChange = (acceptedFiles, index) => {
   const updatedPreviews = [...previews];
   updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
   setPreviews(updatedPreviews);
+  if (product?.images[index]) {
+    handleUpdate(product.images[index].product_image_id, acceptedFiles[0]);
+  }
+  refetch();
+};
+
+  const handleUpdate = async (productImageId, file) => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const response = await axios.put(
+      `${baseUrl}/api/update_product_image/${productImageId}/`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+    toast.success("Image updated successfully!");
+    // Refresh the banner data here to reflect updated images
+    refetch();
+  } catch (error) {
+    toast.error("Failed to update image");
+    console.error("Error updating image:", error.message);
+  }
 };
 
  const handleDelete = async (productImageId) => {
@@ -277,6 +313,7 @@ const handleFileChange = (acceptedFiles, index) => {
       toast.success("Image deleted successfully");
       refetch()
     } catch (error) {
+      console.log(error)
       toast.error("Failed to delete image");
       // console.error("Error deleting image:", error.message);
     }
@@ -472,10 +509,15 @@ const handleFileChange = (acceptedFiles, index) => {
         </div>
       )}
     </Dropzone>
-      {product?.images[index] && (
-                            <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
-                              Delete
-                            </DeleteButton>
+      {product?.images[index] && !files[index] && (
+                            <div className='flex flex-row gap-x-2'> 
+                  <UpdateButton onClick={() => handleUpdate(product?.images[index], files[index])}>
+                  Update
+                </UpdateButton>
+                  <DeleteButton onClick={() => handleDelete(product?.images[index])}>
+                  Delete
+                </DeleteButton>
+                </div>
                           )}
   </div>
 ))}
@@ -492,7 +534,7 @@ const handleFileChange = (acceptedFiles, index) => {
 >
   {isEditMode
     ? isLoadingUpdatePostDetail
-      ? "Updating Product..."
+      ? <ClipLoader size={20}/>
       : "Update Product"
     : isLoadingAddPostDetail || uploading
     ? <ClipLoader size={20}/>
