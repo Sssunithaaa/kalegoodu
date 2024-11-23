@@ -21,6 +21,11 @@ const Testimonials = ({ comments }) => {
       const response = await axios.get(`${baseUrl}/api/comments/`);
       return response.data?.comments;
     },
+    staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache for 30 minutes
+    retry: 2, // Retry twice on failure
+    retryDelay: attempt => Math.min(1000 * 2 ** attempt, 3000), // Exponential backoff
+    refetchOnWindowFocus: false, // No automatic refetch on focus
   });
 
   const [reviews, setReviews] = useState([]);

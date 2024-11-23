@@ -64,7 +64,7 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
               {cartItems.map(item => (
                 <div key={item.id} className="flex justify-between items-center border-b py-4">
                 <img 
-  src={item?.images?.[0]?.image ? "https://res.cloudinary.com/dgkgxokru/" + item?.images?.[0]?.image : img1} 
+  src={item?.images?.[0]?.image ? import.meta.env.VITE_CLOUD_URL+ item?.images?.[0]?.image : img1} 
   alt={item?.name || "Product Image"} 
   className="w-24 h-24 object-cover" 
 />
@@ -219,9 +219,9 @@ const MegaMenu = () => {
     // onClick={() => item.href === "/about-us" ? {scrollToSection(aboutUsRef); handleMenuToggleOff(true);} : navigate("/</ul>")} 
     onClick={()=>{navigate(`${item.href}`);handleMenuToggleOff(true)}}
     key={index} 
-    className='lg:flex lg:mx-auto py-3 px-3 hover:cursor-pointer transition-all duration-500'
+    className='lg:flex lg:mx-auto py-2 px-3 hover:cursor-pointer transition-all duration-500'
   >
-    <div className="lg:flex lg:mx-auto block pb-2  px-3 text-gray-900 lg:p-0" aria-current="page">
+    <div className="lg:flex lg:mx-auto block pb-1  px-3 text-gray-900 lg:p-0" aria-current="page">
       <span className='hover:text-black text-center hover:font-semibold'>{item.name}</span>
     </div>
   </li>

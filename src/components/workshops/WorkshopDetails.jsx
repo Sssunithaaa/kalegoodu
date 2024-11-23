@@ -46,7 +46,7 @@ const WorkshopDetailsPage = () => {
             {workshop?.images?.map((image, index) => (
               <div key={index} className='object-cover'>
                 <img
-                  src={"https://res.cloudinary.com/dgkgxokru/" + image.image}
+                  src={import.meta.env.VITE_CLOUD_URL+ image.image}
                   alt={workshop?.name}
                   className="w-full h-full md:w-[500px] object-cover rounded-lg"
                   // style={{ minWidth: "500px" }} // Set min dimensions

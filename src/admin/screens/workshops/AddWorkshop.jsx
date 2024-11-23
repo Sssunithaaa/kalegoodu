@@ -53,7 +53,7 @@ const AddWorkshop = () => {
        setVideoUrl(data?.videos?.[0]?.video_url)
       setDescription(data?.description || "Sample Description");
       setVideoId(data?.videos?.[0]?.workshopvideo_id)
-      setPreviews(data?.images?.map((image) => "https://res.cloudinary.com/dgkgxokru/" + image?.image) || [null, null, null]);
+      setPreviews(data?.images?.map((image) => import.meta.env.VITE_CLOUD_URL+ image?.image) || [null, null, null]);
   },[data])
   const baseUrl = import.meta.env.VITE_APP_URL;
 

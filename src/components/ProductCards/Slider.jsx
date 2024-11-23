@@ -11,7 +11,7 @@ export const Slider = ({ images, videoUrl }) => {
           <img
             className="object-cover w-full h-full"
             key={index}
-            src={"https://res.cloudinary.com/dgkgxokru/" + image}
+            src={import.meta.env.VITE_CLOUD_URL+ image}
             alt={`Slide ${index + 1}`}
           />
         ))}

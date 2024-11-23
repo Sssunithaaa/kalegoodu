@@ -41,25 +41,26 @@ export default function CompactProductCard({ product }) {
    // Adjusted width and max width for larger cards
 >
       <CardHeader
-        onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
-        className="p-0 mx-[2px] min-h-[180px] max-h-[240px] rounded-none relative"
-        floated={false}
-        color="blue-gray"
-         // Fixed height for uniformity
-      >
-        <motion.div className="relative">
-          <img
-            src={"https://res.cloudinary.com/dgkgxokru/" + (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)}
-            alt={product?.name}
-            className="h-[100%] w-full object-cover" // Ensures image covers the container without stretching
-            loading="lazy"
-            style={{ borderRadius: "0" }}
-          />
-          <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
+  onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
+  className="p-0 mx-[2px]  rounded-none relative overflow-hidden"
+  floated={false}
+  color="blue-gray"
+>
+  <motion.div className="w-full h-full relative">
+    <img
+      src={
+        import.meta.env.VITE_CLOUD_URL +
+        (isHovered && product?.images[1]?.image ? product?.images[1]?.image : product?.images[0]?.image)
+      }
+      alt={product?.name}
+      className="h-full w-full min-h-[220px] max-h-[220px] min-w-[240px] max-w-[280px] object-cover object-center" // Ensures focus on the center of the image
+      loading="lazy"
+      style={{ borderRadius: "0" }}
+    />
+    <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />
+  </motion.div>
+</CardHeader>
 
-          
-        </motion.div>
-      </CardHeader>
 <CardBody
   onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
   className="hover:cursor-pointer pb-1 p-[10px] px-[20px]"

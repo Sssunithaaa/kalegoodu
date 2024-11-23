@@ -44,6 +44,10 @@ const Categories = () => {
     queryKey: ["categories"],
     queryFn: getAllCategories,
     refetchOnMount: true, // Ensures data refetches on component mount
+    staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache for 30 minutes
+    
+    refetchOnWindowFocus: false, // No automatic refetch on focus
   });
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
@@ -91,7 +95,7 @@ const Categories = () => {
               transition={{ delay: 0.3 * index, duration: 0.6 }}
             >
               <LazyLoadImage
-                src={"https://res.cloudinary.com/dgkgxokru/" + `${category?.images[0]?.image}`}
+                src={import.meta.env.VITE_CLOUD_URL+ `${category?.images[0]?.image}`}
                 alt={category.name}
                 placeholderSrc={img28}
                 wrapperClassName={`md:w-36 w-32 md:h-36 h-32 rounded-full object-cover mx-auto`}

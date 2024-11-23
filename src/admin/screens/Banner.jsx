@@ -99,7 +99,7 @@ const Banner = () => {
     if (banner) {
       const bannerImages = banner.banner_images.map((image) => ({
         ...image,
-        image: "https://res.cloudinary.com/dgkgxokru/" + image.image,
+        image: import.meta.env.VITE_CLOUD_URL+ image.image,
       }));
 
       const updatedPreviews = [null, null, null];

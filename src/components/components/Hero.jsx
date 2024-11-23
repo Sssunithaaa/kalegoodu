@@ -20,6 +20,10 @@ const Hero = () => {
     data: banner, 
     isInitialLoading, 
     isError, 
+    isFetching,
+    isRefetching,
+    isPending,
+    isLoading,
     error, 
     refetch 
   } = useQuery({
@@ -31,8 +35,7 @@ const Hero = () => {
     },
     staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
     cacheTime: 1000 * 60 * 30, // Cache for 30 minutes
-    retry: 2, // Retry twice on failure
-    retryDelay: attempt => Math.min(1000 * 2 ** attempt, 3000), // Exponential backoff
+    
     refetchOnWindowFocus: false, // No automatic refetch on focus
   });
 
@@ -58,7 +61,7 @@ const Hero = () => {
         </Overlay>
 
         {/* Display loading placeholder if still loading */}
-        {isInitialLoading ? (
+        {isLoading || isPending || isFetching || isRefetching || isError ? (
           <Slide
             label="Loading"
             background={{

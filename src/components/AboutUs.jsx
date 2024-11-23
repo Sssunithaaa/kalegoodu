@@ -20,6 +20,11 @@ const AboutUs = () => {
   const { data,isLoading } = useQuery({
     queryKey: ["page-contents"],
     queryFn: getPageContents,
+    staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache for 30 minutes
+    retry: 2, // Retry twice on failure
+    retryDelay: attempt => Math.min(1000 * 2 ** attempt, 3000), // Exponential backoff
+    refetchOnWindowFocus: false, // No automatic refetch on focus
   });
 
 
@@ -37,7 +42,7 @@ const AboutUs = () => {
             <Skeleton variant="rectangular" height="40vh" width="100%" style={{ margin: '1rem' }} />
           ) : (
             <FoundersImage
-              src={"https://res.cloudinary.com/dgkgxokru/" + `${data?.[0]?.images[0]?.image}`}
+              src={import.meta.env.VITE_CLOUD_URL+ `${data?.[0]?.images[0]?.image}`}
               alt="Founder 1"
               loading="lazy"
             />

@@ -17,17 +17,20 @@ const ProductCarousel = ({ saleType }) => {
     queryKey: ["products"],
     queryFn: getAllProducts,
     refetchOnMount:true,
+    refetchOnReconnect: true,
     staleTime: 1000 * 60 * 5, // Cache data for 5 minutes
   });
 
   const bestSellerMode = Boolean(saleType);
 
   // Memoize filtered products to prevent unnecessary re-filtering
-  const filteredProducts = useMemo(() => (
-    bestSellerMode
-      ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
-      : products
-  ), [products, saleType]);
+const filteredProducts = useMemo(() => {
+  const result = bestSellerMode
+    ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
+    : products;
+  return result ? [...result].reverse() : result; // Reverse once and memoize
+}, [products, saleType, bestSellerMode]);
+
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -47,6 +50,7 @@ const ProductCarousel = ({ saleType }) => {
     ],
   };
 
+  
   return (
     <div className="md:px-4 px-4 mx-auto flex flex-col relative">
       {isError ? (

@@ -107,7 +107,7 @@ const CustomerDetails = () => {
         <tr className="px-2 md:px-0" key={item.product_id}>
           <td className="py-3">
             <div className="">
-              <img src={"https://res.cloudinary.com/dgkgxokru/" + item.images[0]?.image} alt="" className="h-auto max-w-8 md:max-w-16 flex justify-start mx-auto" />
+              <img src={import.meta.env.VITE_CLOUD_URL+ item.images[0]?.image} alt="" className="h-auto max-w-8 md:max-w-16 flex justify-start mx-auto" />
             </div>
           </td>
           <td className="px-1 py-2 text-sm md:text-md">
