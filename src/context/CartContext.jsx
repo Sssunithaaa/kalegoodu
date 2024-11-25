@@ -72,7 +72,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     if (products && cartItems.length > 0) {
       const updatedCartItems = cartItems.filter((cartItem) =>
-        products.some((product) => product.product_id === cartItem.product_id)
+        products?.some((product) => product.product_id === cartItem.product_id)
       );
       setCartItems(updatedCartItems);
       localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));

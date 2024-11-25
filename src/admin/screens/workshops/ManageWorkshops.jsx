@@ -92,7 +92,7 @@ const searchKeywordOnSubmitHandler = (event) => {
        searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
        searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
        searchKeyword={searchKeyword}
-      tableHeaderTitleList={["Images", "Name",  "Date", "Place", "Description"," "]}
+      tableHeaderTitleList={[ "Name",  "Date", "Place", "Description"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
@@ -101,7 +101,7 @@ const searchKeywordOnSubmitHandler = (event) => {
       <ToastContainer/>
       {paginatedData?.map((workshop) => (
         <tr key={workshop.workshop_id}>
-          <td className="py-5 text-md bg-white border-b border-gray-200">
+          {/* <td className="py-5 text-md bg-white border-b border-gray-200">
             <div className="flex items-center">
               <div className="flex flex-wrap gap-x-2">
                 {
@@ -122,7 +122,7 @@ const searchKeywordOnSubmitHandler = (event) => {
               </div>
              
             </div>
-          </td>
+          </td> */}
          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{workshop.name}</p>
           </td>

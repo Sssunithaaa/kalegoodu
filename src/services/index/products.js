@@ -13,6 +13,24 @@ export const getAllProducts = async () => {
     throw new Error(error.message);
   }
 };
+export const getAllProductss = async (page = 1) => {
+  try {
+    const response = await axios.get(
+      `https://kalegoodupractice.pythonanywhere.com/api/list_products/`,
+      { params: { page } } // Pass the page as a query parameter
+    );
+    return {
+      products: response.data.results, // List of products
+      totalCount: response.data.count, // Total number of products
+      next: response.data.next, // URL for the next page
+      previous: response.data.previous, // URL for the previous page
+    };
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
 export const getProductsByCategory = async (id) => {
   try {
     const response = await axios.get(
@@ -65,7 +83,7 @@ export const updateProduct = async ({ updatedData, id }) => {
       },
     };
     console.log(updatedData)
-    const response = await axios.put(`${url}/api/update_full_product/${id}/`, updatedData, config);
+    const response = await axios.put(`${url}/api/update_product/${id}/`, updatedData, config);
    
     return response.data;
   } catch (error) {

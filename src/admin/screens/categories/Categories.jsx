@@ -117,7 +117,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
           searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
           searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
           searchKeyword={searchKeyword}
-          tableHeaderTitleList={["Name","Description",  "Images", ""]}
+          tableHeaderTitleList={["Name","Description", ""]}
           isLoading={isLoading}
           isFetching={isFetching}
           data={data}
@@ -153,7 +153,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
                 </div>
               </td>
               <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
-                <button
+                {/* <button
                   disabled={isLoadingDeleteData}
                   type="button"
                   className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
@@ -162,7 +162,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
                   }}
                 >
                   Delete
-                </button>
+                </button> */}
                 <Link
                   to={`/admin/categories/manage/edit/${category.category_id}`}
                   className="text-green-600 hover:text-green-900"

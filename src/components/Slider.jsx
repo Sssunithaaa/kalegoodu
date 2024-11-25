@@ -28,7 +28,7 @@ const filteredProducts = useMemo(() => {
   const result = bestSellerMode
     ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
     : products;
-  return result ? [...result].reverse() : result; // Reverse once and memoize
+  return result ? [...result]?.reverse() : result; // Reverse once and memoize
 }, [products, saleType, bestSellerMode]);
 
 

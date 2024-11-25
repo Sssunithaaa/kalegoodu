@@ -233,7 +233,9 @@ if (videoUrl) {
     }
   }); 
   } 
-  
+  for(let [key,value] of formData.entries()){
+    console.log(key+" "+value)
+  }
  
 
 
@@ -249,6 +251,7 @@ if (videoUrl) {
       updatedData: formData,
       id,
     });
+    refetch()
   } else {
     console.log(uploading)
     mutateAddPostDetail(formData);
@@ -256,7 +259,8 @@ if (videoUrl) {
   } catch (error) {
     console.log(error)
   } finally {
-    setIsUploading(false)
+    setIsUploading(false);
+    
   }
 };
 
