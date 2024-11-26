@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
-import { Skeleton } from "@mui/material";
+import Pagination from "@mui/material/Pagination"; // Material-UI Pagination
 import { SectionWrapper } from "../hoc";
 
 const Products = () => {
@@ -21,16 +21,12 @@ const Products = () => {
   const [price, setPrice] = useState(false);
   const [keyword, setKeyword] = useState(null);
   const [sort, setSort] = useState(false);
-
-  const [products, setProducts] = useState([]);
-  const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Adjust this to match your API pagination settings
+  const [itemsPerPage,setItemsPerPage] = useState(2);
 
   const baseUrl = import.meta.env.VITE_APP_URL;
   const { id, name } = useParams();
   const categoryMode = Boolean(id);
-
   const location = useLocation();
 
   // Set the selected category on location/name change
@@ -42,27 +38,31 @@ const Products = () => {
     }
   }, [name, location]);
 
-  // Fetch products from API
-  const fetchProducts = async (page, categoryId = null) => {
-    try {
-      const endpoint = categoryId
-        ? `${baseUrl}/api/products_by_category/${categoryId}`
-        : `${baseUrl}/api/products?page=${page}&limit=${itemsPerPage}`;
-      const response = await axios.get(endpoint);
+  // Fetch products using `useQuery`
+  const fetchProducts = async (page) => {
+    const endpoint = categoryMode
+      ? `${baseUrl}/api/products_by_category/${id}?page=${page}&limit=${itemsPerPage}`
+      : `${baseUrl}/api/list_products?page=${page}`;
 
-      const data = response.data;
-      setProducts(data.products || []);
-      setTotalCount(data.totalCount || 0);
-    } catch (error) {
-      console.error("Error fetching products:", error.message);
-    }
+    const { data } = await axios.get(endpoint);
+    console.log(data)
+    return data;
   };
+  
+  const { data, isLoading, error } = useQuery({
+    queryKey : ["products", currentPage],
+    queryFn : () => fetchProducts(currentPage),
+    
+});
 
-  // Fetch products on initial render and when currentPage changes
-  useEffect(() => {
-    fetchProducts(currentPage, categoryMode ? id : null);
-  }, [currentPage, id, categoryMode]);
-
+const products = data?.results || [];
+const totalCount = data?.count || 0;
+const totalPages = Math.ceil(totalCount/itemsPerPage);
+useEffect(()=>{
+   setItemsPerPage(data?.results?.length)
+},[products])
+console.log(totalPages)
+  console.log(currentPage)
   // Memoized sorting function
   const sortedProducts = useMemo(() => {
     if (!products) return [];
@@ -107,13 +107,7 @@ const Products = () => {
     }
   }, []);
 
-  const SkeletonCard = styled.div`
-    flex: 1;
-    padding: 10px;
-  `;
-
-  // Calculate total pages
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  
 
   return (
     <div className="w-screen mb-10">
@@ -197,39 +191,36 @@ const Products = () => {
               <div
                 className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
                   ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
-                  ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
+                  ${filteredProducts?.length === 2 ? "md:grid-cols-3 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
                   w-full`}
               >
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product?.product_id}
-                    productMode={true}
-                    product={product}
-                  />
-                ))}
+                {isLoading ? (
+                 <div className="w-full h-full flex items-center justify-center">
+                   <ClipLoader size={50} color="#123abc" />
+                 </div>
+                ) : error ? (
+                  <p>Error fetching products.</p>
+                ) : (
+                  filteredProducts.map((product) => (
+                   <div key={product?.product_id}>
+                     <ProductCard
+                      
+                      productMode={true}
+                      product={product}
+                    />
+                   </div>
+                  ))
+                )}
               </div>
             </div>
-            <div className="pagination flex justify-between mt-5">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="btn"
-              >
-                Previous
-              </button>
-              <p>
-                Page {currentPage} of {totalPages}
-              </p>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="btn"
-              >
-                Next
-              </button>
-            </div>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(event, value) => setCurrentPage(value)}
+              variant="outlined"
+              shape="rounded"
+              className="mt-5 flex justify-center"
+            />
           </div>
         </div>
       </div>
