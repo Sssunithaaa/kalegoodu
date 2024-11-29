@@ -38,7 +38,7 @@ const customerDetails = {
   email,
   name: `${firstName} ${lastName}`,
   address: fullAddress,
-  phone_number: "+91" + formattedPhone,
+  phone_number: "91" + formattedPhone,
   pincode: pincode
 };
 
@@ -56,7 +56,7 @@ const customerDetails = {
       },
       customerDetails: customerDetails,
     };
-    
+    console.log(orderPayload)
 
     // Prepare the message for sending
     let message = 'Order Details:\n\n';
