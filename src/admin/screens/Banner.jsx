@@ -8,6 +8,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { QueryClient } from '@tanstack/react-query';
 import BackButton from '../BackButton';
+import { ClipLoader } from 'react-spinners';
 const AdminContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -77,7 +78,7 @@ const UpdateButton = styled.button`
   cursor: pointer;
   margin-top: 10px;
   &:hover {
-    background-color: #c0392b;
+    background-color: #00965F;
   }
 `;
 const Banner = () => {
@@ -120,9 +121,9 @@ const handleFileChange = (acceptedFiles, index) => {
   setPreviews(updatedPreviews);
 
   // If an existing banner image is present, call handleUpdate to update it with the new file.
-  if (banner?.banner_images[index]) {
-    handleUpdate(banner.banner_images[index].banner_image_id, acceptedFiles[0]);
-  }
+  // if (banner?.banner_images[index]) {
+  //   handleUpdate(banner.banner_images[index].banner_image_id, acceptedFiles[0]);
+  // }
   refetch();
 };
 
@@ -145,10 +146,10 @@ const handleFileChange = (acceptedFiles, index) => {
   }
 };
 
-
+const [isAddingImage,setIsAddingImage] =useState(false)
 const handleUpload = async (e) => {
     e.preventDefault();
-
+   setIsAddingImage(true)
     const formData = new FormData();
 
     try {
@@ -168,6 +169,8 @@ const handleUpload = async (e) => {
           );
           
           toast.success("Image uploaded successfully!!")
+          setIsAddingImage(false)
+          refetch()
         }
       });
       for(let [key,value] of formData.entries()){
@@ -176,6 +179,7 @@ const handleUpload = async (e) => {
 
     } catch (error) {
       toast.error("Couldn't upload image")
+       setIsAddingImage(false)
     }
   };
 
@@ -251,13 +255,13 @@ const handleUpload = async (e) => {
         </div>
       )}
     </Dropzone>
-     {banner?.banner_images[index] && !files[index] && (
+     {banner?.banner_images[index] && (
 
                 <div className='flex flex-row gap-x-2'> 
-                  <UpdateButton onClick={() => handleUpdate(banner.banner_images[index].banner_image_id, files[index])}>
+                  <UpdateButton type='button' onClick={() => handleUpdate(banner.banner_images[index].banner_image_id, files[index])}>
                   Update
                 </UpdateButton>
-                  <DeleteButton onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
+                  <DeleteButton type='button' onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
                   Delete
                 </DeleteButton>
                 </div>
@@ -268,7 +272,7 @@ const handleUpload = async (e) => {
           </div>
           
           <div className="flex mx-auto mt-4">
-            <Button type="submit">Upload Images</Button>
+            <Button type="submit disabled:cursor-none" disabled={isAddingImage}>{isAddingImage ? <ClipLoader size={20}/> : "Upload Images"}</Button>
           </div>
         </div>
       </form>

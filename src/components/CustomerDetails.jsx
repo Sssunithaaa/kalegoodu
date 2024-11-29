@@ -216,17 +216,21 @@ const customerDetails = {
                 />
               </div>
             </div>
-            <div className='mb-3'>
-              <label className="block text-md font-medium text-gray-700">Phone number</label>
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                maxLength={12}
-                className="mt-1 block w-full p-2 border rounded-md"
-                required
-              />
-            </div>
+           <div className="mb-3">
+  <label className="block text-md font-medium text-gray-700">Phone number</label>
+  <div className="flex items-center border rounded-md">
+    <span className="px-3 py-3 text-gray-700 bg-gray-200">+91</span>
+    <input
+      type="text"
+      value={phone}
+      onChange={(e) => setPhone(e.target.value)}
+      maxLength={10}  // Allow only 10 digits for the phone number
+      className="mt-1 block w-full p-2 pl-2 border-l-0 rounded-md"
+      required
+    />
+  </div>
+</div>
+
             <div className='mb-3'>
               <label className="block text-md font-medium text-gray-700">Pincode</label>
               <input

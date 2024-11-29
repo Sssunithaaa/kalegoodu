@@ -43,6 +43,9 @@ const handleEditClick = (saleType) => {
   setSelectedSaleType(saleType);
   handleOpenDialog();
 };
+useEffect(()=>{
+  setSelectedSaleType(null)
+},[])
  useEffect(()=> {
   setSales(data)
  },[data])
@@ -72,13 +75,16 @@ const searchKeywordOnSubmitHandler = (event) => {
  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Handle opening the dialog
-  const handleOpenDialog = () => {
-    setDialogOpen(true);
-  };
+ const handleOpenDialog = (saleType = null) => {
+
+  setDialogOpen(true);
+};
+
 
   // Handle closing the dialog
   const handleCloseDialog = () => {
     setDialogOpen(false);
+    setSelectedSaleType(null)
     refetch()
   };
 

@@ -539,7 +539,7 @@ const handleAddImage = async (productImageId, file) => {
                 </div>
                           ) : files[index] && <div>
                              <UpdateButton className="disabled:cursor-not-allowed" disabled={isAddingImage} type="button" onClick={() => handleAddImage(product?.product_id, files[index])}>
-                     {isUpdatingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
+                     {isAddingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
                     </UpdateButton>
                             </div> }
   </div>

@@ -23,16 +23,21 @@ const AddSaleTypeDialog = ({ open, handleClose, onSubmit, editSaleType }) => {
       if (editSaleType) {
         // Edit existing sale type
         await axios.put(`${baseUrl}/api/update_sale_type/${editSaleType.sale_type_id}/`, newSaleType);
-        toast.success("Sale type updated successfully");
+       
+          toast.success("Sale type updated successfully");
+      
       } else {
         // Add new sale type
         await axios.post(`${baseUrl}/api/sale_types/`, newSaleType);
         toast.success("Sale type added successfully");
       }
 
-      setSaleTypeName("");
+      
       onSubmit();
+       setTimeout(()=> {
+        setSaleTypeName("");
       handleClose();
+        },1000)
     } catch (error) {
       console.error("Error adding/updating sale type:", error);
       toast.error("Failed to add/update sale type");

@@ -42,7 +42,7 @@ export const createWorkshop = async (formData) => {
     };
 
     const { data } = await axios.post(
-      `${url}/api/workshops-create/`,
+      `${url}/api/add_workshop/`,
       formData,
       config
     );

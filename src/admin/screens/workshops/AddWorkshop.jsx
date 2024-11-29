@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { createWorkshop, getSingleWorkshop, updateWorkshop } from "../../../services/index/workshops";
 import Button from "../../../components/Button";
 import BackButton from "../../BackButton";
-
+import axios from "axios";
 
 const DeleteButton = styled.button`
   background-color: #e74c3c;
@@ -46,8 +46,9 @@ const AddWorkshop = () => {
     enabled: isEditMode,
   });
   useEffect(()=>{
- setTitle(data?.name || "");
+
       if(isEditMode){
+         setTitle(data?.name || "");
         setPlace(data?.place);
        setDate(data?.date || date);
        setVideoUrl(data?.videos?.[0]?.video_url)
@@ -103,52 +104,70 @@ const AddWorkshop = () => {
     },
   });
 
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  try {
+    // Step 1: Add or Update Workshop Details
+    const workshopFormData = new FormData();
+    workshopFormData.append("name", title);
+    workshopFormData.append("description", description);
+    workshopFormData.append("date", date);
+    workshopFormData.append("place", place);
 
-    const formData = new FormData();
-    formData.append("name", title);
-    formData.append("description", description);
-    formData.append("date", date);
-    formData.append("place", place);
-  const videos = {
-    video_id: videoId,
-    video_url: videoUrl
-  };
-    formData.append("videos", JSON.stringify(videos));
+    const workshopResponse = isEditMode
+      ? await updateWorkshop({ formData: workshopFormData, slug })
+      : await createWorkshop(workshopFormData);
 
-    files.forEach(file => {
-      if (file) {
-        formData.append("images", file);
-      }
-    });
+    const workshopId = workshopResponse?.data?.id || data?.id;
 
-    const newImages = files.filter(file => file && file.hasOwnProperty('path'));
-
+    // Step 2: Add or Update Images (if provided)
+    const newImages = files.filter(file => file && file instanceof File);
     if (newImages.length > 0) {
+      const imageFormData = new FormData();
       newImages.forEach(file => {
-        formData.append('new_images', file);
+        imageFormData.append("images", file);
+      });
+
+      await axios.post(`${baseUrl}/workshops/${workshopId}/add-images/`, imageFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
     }
 
-    // Log FormData content to verify
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
+    // Step 3: Add or Update Video (if provided)
+    if (videoUrl) {
+      const videoFormData = new FormData();
+      videoFormData.append("video_url", videoUrl);
+      if (videoId) videoFormData.append("video_id", videoId);
+
+      await axios.post(`${baseUrl}/workshops/${workshopId}/add-videos/`, videoFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     }
 
-    if (isEditMode) {
-      // Handle update logic here
-      mutateUpdateWorkshop({ formData, slug });
-    } else {
-      mutateAddWorkshop(formData);
+    // Step 4: Success Handling
+    toast.success(isEditMode ? "Workshop updated successfully!" : "Workshop added successfully!");
+    queryClient.invalidateQueries(["workshops"]);
 
-    }
-  };
+    // Clear Form Fields
+    setTitle("");
+    setDescription("");
+    setDate(new Date().toISOString().split("T")[0]);
+    setPlace("");
+    setVideoUrl("");
+    setFiles([null, null, null]);
+    setPreviews([null, null, null]);
+
+  } catch (error) {
+    console.error(error);
+    toast.error("An error occurred while submitting the workshop!");
+  }
+};
+
 
   const handleDelete = async (imageId) => {
     try {
-      await axios.delete(`${baseUrl}/api/category_image/${imageId}/delete/`);
+      await axios.delete(`${baseUrl}/api/workshop-images/${imageId}/delete/`);
       toast.success("Image deleted successfully");
       refetch();
     } catch (error) {
@@ -205,7 +224,7 @@ const AddWorkshop = () => {
                   )}
                 </Dropzone>
                 {data?.images?.[index] && (
-                  <DeleteButton type="button" onClick={() => handleDelete(data?.images[index]?.category_image_id)}>
+                  <DeleteButton type="button" onClick={() => handleDelete(data?.images[index]?.workshop_image_id)}>
                     Delete
                   </DeleteButton>
                 )}
