@@ -146,6 +146,7 @@ const handleFileChange = (acceptedFiles, index) => {
   }
 };
 
+const [addingImages,setAddingImages] = useState(false)
 const [isAddingImage,setIsAddingImage] =useState(false)
 const handleUpload = async (e) => {
     e.preventDefault();
@@ -207,8 +208,9 @@ const handleUpload = async (e) => {
   </div>
       <ToastContainer />
       <div className='flex flex-row mx-auto gap-x-3 mt-4'>
-            <button className='px-3 py-2 bg-blue-500 font-medium rounded-md' onClick={()=>setNumImages((count)=>count+1)}>Add an image</button>
-             <button className='px-3 py-2 bg-red-500 font-medium rounded-md'  onClick={()=>setNumImages((count)=>count-1)}>Delete an image</button>
+            <button className='px-3 py-2 bg-blue-500 font-medium rounded-md'  onClick={()=>{setNumImages((count)=>count+1);setAddingImages(true)}}>Add an image</button>
+{addingImages &&              <button className='px-3 py-2 bg-red-500 font-medium rounded-md'  onClick={()=>setNumImages((count)=>count-1)}>Delete an image</button>
+}
           </div>
       <form className='mt-4' onSubmit={handleUpload}>
         <div className="flex md:col-span-2  flex-col gap-2 ">
@@ -271,9 +273,9 @@ const handleUpload = async (e) => {
 
           </div>
           
-          <div className="flex mx-auto mt-4">
+          {addingImages && <div className="flex mx-auto mt-4">
             <Button type="submit disabled:cursor-none" disabled={isAddingImage}>{isAddingImage ? <ClipLoader size={20}/> : "Upload Images"}</Button>
-          </div>
+          </div>}
         </div>
       </form>
     </AdminContainer>
