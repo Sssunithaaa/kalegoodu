@@ -29,7 +29,6 @@ const AddWorkshop = () => {
   const { slug } = useParams();
   const isEditMode = Boolean(slug);
   
-  // State for category/workshop details
   const [title, setTitle] = useState(isEditMode ? "" : "");
   const [description, setDescription] = useState(isEditMode ? "" : "");
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]); // New field for workshop date
@@ -48,13 +47,16 @@ const AddWorkshop = () => {
   });
   useEffect(()=>{
  setTitle(data?.name || "");
-      setPlace(data?.place);
+      if(isEditMode){
+        setPlace(data?.place);
        setDate(data?.date || date);
        setVideoUrl(data?.videos?.[0]?.video_url)
       setDescription(data?.description || "");
       setVideoId(data?.videos?.[0]?.workshopvideo_id)
       setPreviews(data?.images?.map((image) => import.meta.env.VITE_CLOUD_URL+ image?.image) || [null, null, null]);
+      }
   },[data])
+
   const baseUrl = import.meta.env.VITE_APP_URL;
 
   const handleFileChange = (acceptedFiles, index) => {
@@ -73,6 +75,16 @@ const AddWorkshop = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["workshops"]);
       toast.success("Workshop added successfully!");
+      
+  
+    setTitle("");
+    setDescription("");
+    setDate(new Date().toISOString().split('T')[0]);
+    setPlace("");
+    setVideoUrl("");
+    setFiles([null, null, null]);
+    setPreviews([null, null, null]);
+
     },
     onError: (error) => {
         console.log(error)
@@ -129,23 +141,7 @@ const AddWorkshop = () => {
       // Handle update logic here
       mutateUpdateWorkshop({ formData, slug });
     } else {
-      mutateAddWorkshop(formData, {
-  onSuccess: () => {
-    queryClient.invalidateQueries(["workshops"]);
-    toast.success("Workshop added successfully!");
-    setTitle("");
-    setDescription("");
-    setDate(new Date().toISOString().split('T')[0]);
-    setPlace("");
-    setVideoUrl("");
-    setFiles([null, null, null]);
-    setPreviews([null, null, null]);
-  },
-  onError: (error) => {
-    console.error(error);
-    toast.error("Couldn't add workshop!");
-  },
-});
+      mutateAddWorkshop(formData);
 
     }
   };
@@ -208,7 +204,7 @@ const AddWorkshop = () => {
                     </div>
                   )}
                 </Dropzone>
-                {data?.images[index] && (
+                {data?.images?.[index] && (
                   <DeleteButton type="button" onClick={() => handleDelete(data?.images[index]?.category_image_id)}>
                     Delete
                   </DeleteButton>

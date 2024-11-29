@@ -32,6 +32,11 @@ const PolicyForm = ({ title, data, id }) => {
       setIsSubmitting(false);
     }
   };
+ useEffect(() => {
+  return () => {
+    toast.dismiss();
+  };
+}, []);
 
   return (
     <div className="w-full max-w-lg mx-auto mt-4">

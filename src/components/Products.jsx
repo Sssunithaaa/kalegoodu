@@ -11,7 +11,7 @@ import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import Pagination from "@mui/material/Pagination"; // Material-UI Pagination
 import { SectionWrapper } from "../hoc";
-
+import FullPageLoader from "./FullPageLoader";
 const Products = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Products");
@@ -209,9 +209,7 @@ console.log(totalPages)
                   w-full`}
               >
                 {isLoading ? (
-                 <div className="w-full h-full flex items-center justify-center">
-                   <ClipLoader size={50} color="#123abc" />
-                 </div>
+                 <FullPageLoader/>
                 ) : error ? (
                   <p>Error fetching products.</p>
                 ) : (
