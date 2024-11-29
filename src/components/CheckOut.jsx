@@ -67,7 +67,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     // Using Promise.all to handle multiple requests concurrently
     const [orderResponse, messageResponse] = await Promise.all([
       axios.post(`${baseUrl}/api/create-order/`, orderPayload),
-      axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
+      // axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
     ]);
 
     console.log(orderResponse);

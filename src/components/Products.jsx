@@ -22,7 +22,11 @@ const Products = () => {
   const [keyword, setKeyword] = useState(null);
   const [sort, setSort] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage,setItemsPerPage] = useState(2);
+  
+const [itemsPerPage] = useState(4); // Fixed items per page
+
+
+
 
   const baseUrl = import.meta.env.VITE_APP_URL;
   const { id, name } = useParams();
@@ -41,26 +45,36 @@ const Products = () => {
   // Fetch products using `useQuery`
   const fetchProducts = async (page) => {
     const endpoint = categoryMode
-      ? `${baseUrl}/api/products_by_category/${id}?page=${page}&limit=${itemsPerPage}`
+      ? `${baseUrl}/api/products_by_category/${id}`
       : `${baseUrl}/api/list_products?page=${page}`;
 
     const { data } = await axios.get(endpoint);
+
     console.log(data)
     return data;
   };
   
   const { data, isLoading, error } = useQuery({
-    queryKey : ["products", currentPage],
+    queryKey : ["products", currentPage,id],
     queryFn : () => fetchProducts(currentPage),
     
 });
 
-const products = data?.results || [];
+const products = data?.results || data?.products;
 const totalCount = data?.count || 0;
-const totalPages = Math.ceil(totalCount/itemsPerPage);
-useEffect(()=>{
-   setItemsPerPage(data?.results?.length)
-},[products])
+const totalPages = Math.ceil(totalCount / itemsPerPage); // Total pages calculation
+useEffect(() => {
+  if (products?.length === 0 && currentPage > 1) {
+    // If the current page has no data and is beyond page 1, navigate back to a valid page
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  }
+}, [products, currentPage]);
+
+// Handle page change
+const handlePageChange = (event, value) => {
+  setCurrentPage(value);
+};
+
 console.log(totalPages)
   console.log(currentPage)
   // Memoized sorting function
@@ -216,7 +230,7 @@ console.log(totalPages)
             <Pagination
               count={totalPages}
               page={currentPage}
-              onChange={(event, value) => setCurrentPage(value)}
+              onChange={handlePageChange}
               variant="outlined"
               shape="rounded"
               className="mt-5 flex justify-center"

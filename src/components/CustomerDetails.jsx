@@ -32,15 +32,16 @@ const CustomerDetails = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const fullAddress = `${apartment}, ${city}, ${state}, ${pincode}`;
-    const customerDetails = {
-      email,
-      name: `${firstName} ${lastName}`,
-      address: fullAddress,
-      phone_number:"+91"+phone,
-      
-      pincode:pincode
-    };
+    const formattedPhone = phone.startsWith('0') ? phone.slice(1) : phone;
+const fullAddress = `${apartment}, ${city}, ${state}, ${pincode}`;
+const customerDetails = {
+  email,
+  name: `${firstName} ${lastName}`,
+  address: fullAddress,
+  phone_number: "+91" + formattedPhone,
+  pincode: pincode
+};
+
 
     // Create order payload
     const orderPayload = {
@@ -55,6 +56,7 @@ const CustomerDetails = () => {
       },
       customerDetails: customerDetails,
     };
+    
 
     // Prepare the message for sending
     let message = 'Order Details:\n\n';
@@ -67,7 +69,7 @@ const CustomerDetails = () => {
       // Send the order and message concurrently
       const [orderResponse, messageResponse] = await Promise.all([
         axios.post(`${baseUrl}/api/create-order/`, orderPayload),
-        axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
+        // axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
       ]);
 
       console.log(orderResponse);

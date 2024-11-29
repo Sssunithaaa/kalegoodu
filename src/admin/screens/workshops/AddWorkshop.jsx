@@ -30,8 +30,8 @@ const AddWorkshop = () => {
   const isEditMode = Boolean(slug);
   
   // State for category/workshop details
-  const [title, setTitle] = useState(isEditMode ? "Sample Title" : "");
-  const [description, setDescription] = useState(isEditMode ? "Sample Description" : "");
+  const [title, setTitle] = useState(isEditMode ? "" : "");
+  const [description, setDescription] = useState(isEditMode ? "" : "");
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]); // New field for workshop date
   const [place, setPlace] = useState(""); // New field for workshop place
   const [videoUrl, setVideoUrl] = useState(""); // New field for video URL
@@ -47,11 +47,11 @@ const AddWorkshop = () => {
     enabled: isEditMode,
   });
   useEffect(()=>{
- setTitle(data?.name || "Sample Title");
+ setTitle(data?.name || "");
       setPlace(data?.place);
        setDate(data?.date || date);
        setVideoUrl(data?.videos?.[0]?.video_url)
-      setDescription(data?.description || "Sample Description");
+      setDescription(data?.description || "");
       setVideoId(data?.videos?.[0]?.workshopvideo_id)
       setPreviews(data?.images?.map((image) => import.meta.env.VITE_CLOUD_URL+ image?.image) || [null, null, null]);
   },[data])
@@ -129,7 +129,24 @@ const AddWorkshop = () => {
       // Handle update logic here
       mutateUpdateWorkshop({ formData, slug });
     } else {
-      mutateAddWorkshop(formData);
+      mutateAddWorkshop(formData, {
+  onSuccess: () => {
+    queryClient.invalidateQueries(["workshops"]);
+    toast.success("Workshop added successfully!");
+    setTitle("");
+    setDescription("");
+    setDate(new Date().toISOString().split('T')[0]);
+    setPlace("");
+    setVideoUrl("");
+    setFiles([null, null, null]);
+    setPreviews([null, null, null]);
+  },
+  onError: (error) => {
+    console.error(error);
+    toast.error("Couldn't add workshop!");
+  },
+});
+
     }
   };
 
@@ -149,7 +166,7 @@ const AddWorkshop = () => {
       <div className="flex ml-4 w-full justify-start self-start">
     <BackButton />
   </div>
-      <h4 className="text-lg leading-tight">
+      <h4 className="text-lg leading-tight mt-4">
         {isEditMode ? "Update Workshop" : "Add New Workshop"}
       </h4>
       <form onSubmit={handleSubmit} className="d-form-control w-full mt-4">
