@@ -7,26 +7,18 @@ import Pagination from '../../../components/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import { getAllOrders } from '../../../services/index/orders';
 import Button from '../../../components/Button';
-
+import { useEffect } from 'react';
 const ManageProducts = () => {
   const PAGE_SIZE = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]); // State for checked items
-  const [checkedItems, setCheckedItems] = useState([])
+  
   const { data = [], isLoading, refetch, isFetching } = useQuery({
     queryKey: ['orders'],
     queryFn: getAllOrders,
   });
 
-  const url = import.meta.env.VITE_APP_URL;
-  const totalPages = Math.ceil(data?.length / PAGE_SIZE);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+ 
 
   const tableRef = useRef(null);
   const handleExport = () => {
@@ -58,7 +50,7 @@ const ManageProducts = () => {
     };
   });
 }
-  console.log(selectedItems)
+  
     const deleteDataHandler=async (id)=> {
     try {
       await axios.delete(`${url}/api/orders/${id}/delete/`)
@@ -95,6 +87,43 @@ const handleInTransit = async (orderId) => {
     toast.error("Failed to update order items. Try again!");
 }
 }
+ const [orders,setOrders] = useState([]);
+  useEffect(()=> {
+    setOrders(data)
+  },[data])
+const [searchKeyword, setSearchKeyword] = useState("");
+const searchKeywordOnChangeHandler = (event) => {
+  setSearchKeyword(event.target.value);
+};
+const searchKeywordOnSubmitHandler = (event) => {
+  event.preventDefault();
+ 
+
+  if (!searchKeyword || searchKeyword.trim() === "") {
+
+    setOrders(orders);
+  } else {
+
+    const filteredcategories = orders?.filter((product) =>
+      product.customer_name.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+   
+    setOrders(filteredcategories);
+    
+  }
+};
+
+ const url = import.meta.env.VITE_APP_URL;
+  const totalPages = Math.ceil(data?.length / PAGE_SIZE);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedData = orders?.slice().reverse().slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  
   return (
     <div className="w-full overflow-x-auto">
       <div className="flex mx-auto">
@@ -108,9 +137,12 @@ const handleInTransit = async (orderId) => {
       <DataTable
         dataListName="Orders"
         searchInputPlaceHolder="Order name..."
-        tableHeaderTitleList={['Sl No.', 'Order ID', 'Customer Name', 'Total amount', 'Total Products', 'Items', ' ', ' ']}
+        tableHeaderTitleList={['Sl No.', 'Order ID', 'Customer Name', 'Total amount', 'Total Orders', 'Items', ' ', ' ']}
         isLoading={isLoading}
         isFetching={isFetching}
+        searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
+        searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
+        searchKeyword={searchKeyword}
         data={paginatedData}
         ref={tableRef}
       >

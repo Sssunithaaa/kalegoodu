@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import Button from '../components/Button';
 const DataTable = forwardRef(({
   pageTitle,
@@ -14,6 +14,7 @@ const DataTable = forwardRef(({
   children,
   
 }, ref) => {
+  
   return (
     <div className='mt-4'>
       <h1 className="text-2xl ml-4 font-semibold">{pageTitle}</h1>

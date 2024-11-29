@@ -103,10 +103,10 @@ const AddWorkshop = () => {
       toast.error("Couldn't update workshop!!");
     },
   });
-
+  const [isAdding,setIsAdding] = useState(false)
 const handleSubmit = async (e) => {
   e.preventDefault();
-
+  setIsAdding(true)
   try {
     // Step 1: Add or Update Workshop Details
     const workshopFormData = new FormData();
@@ -114,7 +114,21 @@ const handleSubmit = async (e) => {
     workshopFormData.append("description", description);
     workshopFormData.append("date", date);
     workshopFormData.append("place", place);
-
+ const newImages = files.filter(file => file && file instanceof File);
+    if (newImages.length > 0) {
+      const imageFormData = new FormData();
+      newImages.forEach(file => {
+        workshopFormData.append("images", file);
+      });
+    }
+    if(videoUrl){
+       const videoFormData = new FormData();
+      workshopFormData.append("video_url", videoUrl);
+      if (videoId) workshopFormData.append("video_id", videoId);
+    }
+    for (let [key,value] of workshopFormData.entries()){
+      console.log(key,value)
+    }
     const workshopResponse = isEditMode
       ? await updateWorkshop({ formData: workshopFormData, slug })
       : await createWorkshop(workshopFormData);
@@ -122,27 +136,19 @@ const handleSubmit = async (e) => {
     const workshopId = workshopResponse?.data?.id || data?.id;
 
     // Step 2: Add or Update Images (if provided)
-    const newImages = files.filter(file => file && file instanceof File);
-    if (newImages.length > 0) {
-      const imageFormData = new FormData();
-      newImages.forEach(file => {
-        imageFormData.append("images", file);
-      });
-
-      await axios.post(`${baseUrl}/workshops/${workshopId}/add-images/`, imageFormData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    }
+   
+      // await axios.post(`${baseUrl}/workshops/${workshopId}/add-images/`, imageFormData, {
+      //   headers: { "Content-Type": "multipart/form-data" },
+      // });
+    
 
     // Step 3: Add or Update Video (if provided)
     if (videoUrl) {
-      const videoFormData = new FormData();
-      videoFormData.append("video_url", videoUrl);
-      if (videoId) videoFormData.append("video_id", videoId);
+     
 
-      await axios.post(`${baseUrl}/workshops/${workshopId}/add-videos/`, videoFormData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      // await axios.post(`${baseUrl}/workshops/${workshopId}/add-videos/`, videoFormData, {
+      //   headers: { "Content-Type": "multipart/form-data" },
+      // });
     }
 
     // Step 4: Success Handling
@@ -157,9 +163,11 @@ const handleSubmit = async (e) => {
     setVideoUrl("");
     setFiles([null, null, null]);
     setPreviews([null, null, null]);
+    setIsAdding(false)
 
   } catch (error) {
     console.error(error);
+    setIsAdding(false)
     toast.error("An error occurred while submitting the workshop!");
   }
 };
@@ -286,10 +294,10 @@ const handleSubmit = async (e) => {
         <div className="mt-6 w-[30%] flex mx-auto">
           <Button
             type="submit"
-            className="d-button d-button-primary !outline-slate-300 border-2 border-gray-300 w-full py-2"
-            disabled={isLoadingAddWorkshop}
+            className="disabled:cursor-none d-button d-button-primary !outline-slate-300 border-2 border-gray-300 w-full py-2"
+            disabled={isLoadingAddWorkshop || isAdding}
           >
-            {isLoadingAddWorkshop || isLoadingUpdateWorkshop ? "Submitting..." : isEditMode ? "Update workshop" : "Add workshop"}
+            {isLoadingAddWorkshop|| isAdding || isLoadingUpdateWorkshop ? "Submitting..." : isEditMode ? "Update workshop" : "Add workshop"}
           </Button>
         </div>
       </form>
