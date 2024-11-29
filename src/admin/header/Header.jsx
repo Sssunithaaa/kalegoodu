@@ -9,6 +9,9 @@ import { MdDashboard } from "react-icons/md";
 import NavItem from "./NavItem";
 import NavItemCollapse from "./NavItemCollapse";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Button from "../../components/Button";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/actions";
 // import toast from "react-hot-toast";
 // import { useSelector } from "react-redux";
 // import { createPost } from "../../../../services/index/posts";
@@ -54,15 +57,21 @@ const Header = () => {
   // const handleCreateNewPost = ({ token }) => {
   //   mutateCreatePost({ token });
   // };
+  
+  const dispatch = useDispatch()
+  const handleLogout = ()=>{
+    dispatch(logout());
+    
+  }
 
   return (
-    <header className="flex h-fit z-[1001] w-full items-center justify-between p-4 md:h-full md:max-w-[300px] md:flex-col md:items-start md:justify-start md:p-0">
+    <header className="flex h-fit z-[1001] w-full items-center justify-between p-4 lg:h-full lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0">
       {/* logo */}
       <Link to="/">
-        {/* <img src={images.Logo} alt="logo" className="w-16 md:hidden" /> */}
+        {/* <img src={images.Logo} alt="logo" className="w-16 lg:hidden" /> */}
       </Link>
     
-      <div className="cursor-pointer md:hidden">
+      <div className="cursor-pointer lg:hidden">
         {isMenuActive ? (
           <AiOutlineClose className="w-6 h-6" onClick={toggleMenuHandler} />
         ) : (
@@ -71,14 +80,14 @@ const Header = () => {
       </div>
       {/* sidebar container */}
       {isMenuActive && (
-        <div className="fixed inset-0 md:static md:h-full md:w-full">
+        <div className="fixed inset-0 lg:static lg:h-full lg:w-full">
           {/* underlay */}
           <div
-            className="fixed inset-0 bg-black opacity-50 md:hidden"
+            className="fixed inset-0 bg-black opacity-50 lg:hidden"
             onClick={toggleMenuHandler}
           />
           {/* sidebar */}
-          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 md:static md:h-full md:w-full md:p-6">
+          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 lg:static lg:h-full lg:w-full lg:p-6">
             <Link to="/">
               {/* <img src={images.Logo} alt="logo" className="w-16" /> */}
             </Link>
@@ -217,7 +226,9 @@ const Header = () => {
                 {/* <Link to="/admin/categories/manage">Categories</Link> */}
               </NavItemCollapse>
             </div>
+            <Button className="px-8 mt-5" onClick={handleLogout}>Logout</Button>
           </div>
+          
         </div>
       )}
     </header>

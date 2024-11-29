@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import FullPageLoader from './components/FullPageLoader';
 import { CartContext } from './context/CartContext';
 import { useSelector } from 'react-redux';
-
+import { Navigate } from 'react-router-dom';
 const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
@@ -69,27 +69,32 @@ const App = () => {
             <Route path="/Returns-and-Refund" element={<Refund />} />
             <Route path="/Delivery-Details" element={<DeliveryDetails />} />
             <Route path="/login" element={<LoginForm />} />
+      
+            {isAuthenticated ? (
+  <Route path="/admin" element={<AdminLayout />}>
+    <Route index element={<Admin />} />
+    <Route path="sale-types/manage" element={<ManageSaleType />} />
+    <Route path="comments/manage" element={<ManageComments />} />
+    <Route path="comments/manage/edit/:id" element={<AddTestimonialForm />} />
+    <Route path="comments/add" element={<AddTestimonialForm />} />
+    <Route path="products/manage" element={<ManagePosts />} />
+    <Route path="products/manage/edit/:id" element={<EditPost />} />
+    <Route path="products/add" element={<EditPost />} />
+    <Route path="banner" element={<Banner />} />
+    <Route path="categories/manage" element={<Categories />} />
+    <Route path="categories/manage/edit/:slug" element={<EditCategories />} />
+    <Route path="categories/add" element={<EditCategories />} />
+    <Route path="about-us/manage" element={<ManageAboutUs />} />
+    <Route path="details/manage" element={<ManageDetails />} />
+    <Route path="orders/manage" element={<ManageOrders />} />
+    <Route path="workshops/manage" element={<ManageWorkshops />} />
+    <Route path="workshops/add" element={<AddWorkshop />} />
+    <Route path="workshops/manage/edit/:slug" element={<AddWorkshop />} />
+  </Route>
+) : (
+  <Route path="/admin" element={<Navigate to="/login" replace />} />
+)}
 
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Admin />} />
-              <Route path="sale-types/manage" element={<ManageSaleType />} />
-              <Route path="comments/manage" element={<ManageComments />} />
-              <Route path="comments/manage/edit/:id" element={<AddTestimonialForm />} />
-              <Route path="comments/add" element={<AddTestimonialForm />} />
-              <Route path="products/manage" element={<ManagePosts />} />
-              <Route path="products/manage/edit/:id" element={<EditPost />} />
-              <Route path="products/add" element={<EditPost />} />
-              <Route path="banner" element={<Banner />} />
-              <Route path="categories/manage" element={<Categories />} />
-              <Route path="categories/manage/edit/:slug" element={<EditCategories />} />
-              <Route path="categories/add" element={<EditCategories />} />
-              <Route path="about-us/manage" element={<ManageAboutUs />} />
-              <Route path="details/manage" element={<ManageDetails />} />
-              <Route path="orders/manage" element={<ManageOrders />} />
-              <Route path="workshops/manage" element={<ManageWorkshops />} />
-              <Route path="workshops/add" element={<AddWorkshop />} />
-              <Route path="workshops/manage/edit/:slug" element={<AddWorkshop />} />
-            </Route>
           </Routes>
         </MainLayout>
       </Suspense>

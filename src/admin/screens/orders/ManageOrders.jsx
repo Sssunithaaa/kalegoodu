@@ -11,6 +11,8 @@ import Button from '../../../components/Button';
 const ManageProducts = () => {
   const PAGE_SIZE = 5;
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedItems, setSelectedItems] = useState([]); // State for checked items
+  const [checkedItems, setCheckedItems] = useState([])
   const { data = [], isLoading, refetch, isFetching } = useQuery({
     queryKey: ['orders'],
     queryFn: getAllOrders,
@@ -20,28 +22,79 @@ const ManageProducts = () => {
   const totalPages = Math.ceil(data?.length / PAGE_SIZE);
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
-
+  const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const tableRef = useRef(null);
- const handleExport = () => {
-  const excludedColumns = document.querySelectorAll('.exclude-from-export');
+  const handleExport = () => {
+    const excludedColumns = document.querySelectorAll('.exclude-from-export');
 
-  // Remove excluded columns before exporting
-  excludedColumns.forEach(col => col.remove());
+    excludedColumns.forEach((col) => col.remove());
+    setTimeout(() => {
+      refetch();
+    }, 1000);
+  };
 
-  // Trigger the Excel export
-  setTimeout(() => {
-    // Refetch or rerender the columns after export
-    refetch();
-  }, 1000);
-};
+  // Handle checkbox changes
+  const handleCheckboxChange = (orderId, item, quantity) => {
+    console.log(item)
+    console.log(orderId)
+  setSelectedItems(prevState => {
+    const orderSelectedItems = prevState[orderId] || {};
 
+    return {
+      ...prevState,
+      [orderId]: {
+        ...orderSelectedItems,
+        [item?.order_item_id]: {
+          product_id: item.product,
+          quantity: quantity,
+          order_completed: true // Mark as completed if quantity is 0
+        }
+      }
+    };
+  });
+}
+  console.log(selectedItems)
+    const deleteDataHandler=async (id)=> {
+    try {
+      await axios.delete(`${url}/api/orders/${id}/delete/`)
+      toast.success("Order deleted successfully")
+      refetch()
+    } catch (error) {
+      toast.error("Failed to delete order!! Try again!!")
+    }
+  }
+const handleInTransit = async (orderId) => {
+  const itemsToSend = selectedItems[orderId];
 
+ if (!itemsToSend || Object.keys(itemsToSend).length === 0) {
+   toast.error("No items selected");
+       return;
+
+      }
+      const items = Object.entries(itemsToSend).map(([itemId, item]) => ({
+   product_id: item.product_id,
+    quantity: item.quantity,
+  }));
+ console.log({
+      order_id: orderId,
+      items,
+    })
+  try {
+    await axios.put(`${url}/api/acknowledge_order/`, {
+      order_id: orderId,
+      items,
+    });
+    toast.success("Order items updated to In Transit");
+  } catch (error) {
+    console.log(error)
+    toast.error("Failed to update order items. Try again!");
+}
+}
   return (
     <div className="w-full overflow-x-auto">
       <div className="flex mx-auto">
@@ -53,10 +106,9 @@ const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
       </div>
 
       <DataTable
-        // pageTitle="Manage Orders"
         dataListName="Orders"
         searchInputPlaceHolder="Order name..."
-        tableHeaderTitleList={['Sl No.','Order ID', 'Customer Name', 'Total amount', 'Total Products', 'Items', ' ',' ']}
+        tableHeaderTitleList={['Sl No.', 'Order ID', 'Customer Name', 'Total amount', 'Total Products', 'Items', ' ', ' ']}
         isLoading={isLoading}
         isFetching={isFetching}
         data={paginatedData}
@@ -68,7 +120,7 @@ const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 whitespace-no-wrap">{startIndex + index + 1}</p>
             </td>
-             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 font-bold whitespace-no-wrap">{order?.order_id}</p>
             </td>
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
@@ -85,8 +137,7 @@ const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
                 <table className="bg-gray-300 w-full">
                   <thead>
                     <tr>
-                      {/* Exclude checkbox column from export */}
-                      <th className="exclude-from-export px-3 py-2 text-md bg-white border-b border-gray-200"></th>
+                      <th className="px-3 py-2 text-md bg-white border-b border-gray-200"></th>
                       <th className="px-3 py-2 text-md bg-white border-b border-gray-200">Product Name</th>
                       <th className="px-3 py-2 text-md bg-white border-b border-gray-200">Quantity</th>
                       <th className="px-3 py-2 text-md bg-white border-b border-gray-200">Price</th>
@@ -94,17 +145,26 @@ const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
                   </thead>
                   <tbody>
                     {order.items.map((item) => (
-                      <tr key={item.order_item_id}>
-                        {/* Exclude checkbox column from export */}
-                        <td className="exclude-from-export px-3 py-2 text-md bg-white border-b border-gray-200">
-                          <input
-                            checked={item.order_completed}
-                            type="checkbox"
-                            disabled={item?.order_completed}
-                          />
-                        </td>
+  <tr key={item.order_item_id}>
+    <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
+      <input
+        checked={selectedItems[order.order_id]?.[item.order_item_id]?.order_completed  || item.order_completed || false}
+        type="checkbox"
+         disabled={item?.order_completed}
+        onChange={(e) => handleCheckboxChange(order?.order_id,item,item?.quantity ? item?.quantity : 0)}
+      />
+    </td>
                         <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.product_name}</td>
-                        <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.quantity}</td>
+                       <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
+
+  <input
+   type="number"
+    value={selectedItems[order.order_id]?.[item.order_item_id]?.quantity === 0 ? 0 : selectedItems[order.order_id]?.[item.order_item_id]?.quantity  || item.quantity}
+
+    className='w-full'
+   onChange={(e) => handleCheckboxChange(order.order_id, item, Number(e.target.value))}
+  />
+</td>
                         <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.price}</td>
                       </tr>
                     ))}
@@ -121,20 +181,9 @@ const paginatedData = data?.slice().reverse().slice(startIndex, endIndex);
 </td>
 
 
-            <td className="exclude-from-export px-5 py-5 text-md bg-white border-b border-gray-200">
-              {/* Action buttons */}
-              <div className="flex flex-row gap-x-5">
-                <button
-                  type="button"
-                  className="text-red-600 hover:text-red-900"
-                  onClick={() => {
-                    // Delete action handler
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </td>
+          <td onClick={()=>deleteDataHandler(item.order_item_id)} className="px-3 py-2 text-md bg-white border-b border-gray-200">Delete</td>
+
+
           </tr>
         ))}
       </DataTable>

@@ -4,9 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 // import { getUserProfile } from "../../services/index/users";
 // import { useSelector } from "react-redux";
 // import { toast } from "react-hot-toast";
-
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 const AdminLayout = () => {
   const navigate = useNavigate();
+    const { isAuthenticated } = useSelector((state) => state.auth);
   // const userState = useSelector((state) => state.user);
 
   // const {
@@ -31,7 +33,11 @@ const AdminLayout = () => {
   //   },
   // });
   const profileIsLoading = false;
-
+  useEffect(()=>{
+    if(!isAuthenticated)
+      navigate("/login")
+    
+  },[])
   if (profileIsLoading) {
     return (
       <div className="w-full h-screen flex justify-center items-center">

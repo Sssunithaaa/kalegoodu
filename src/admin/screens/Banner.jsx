@@ -171,6 +171,8 @@ const handleUpload = async (e) => {
           
           toast.success("Image uploaded successfully!!")
           setIsAddingImage(false)
+          
+          setAddingImages(false)
           refetch()
         }
       });
