@@ -59,7 +59,7 @@ const EditCategories = () => {
   setCategoryTitle(data?.name || "");
       setDescription(data?.description || "");
       
-      setPreviews(data?.images?.map((image)=>baseUrl+image?.image) || [null,null,null])
+      setPreviews(data?.images?.map((image)=>"https://res.cloudinary.com/dgkgxokru/"+image?.image) || [null,null,null])
  },[data])
  
   

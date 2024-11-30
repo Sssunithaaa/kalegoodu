@@ -45,6 +45,8 @@ const AddWorkshop = () => {
     
     enabled: isEditMode,
   });
+    const [isAdding,setIsAdding] = useState(false)
+
   useEffect(()=>{
 
       if(isEditMode){
@@ -56,7 +58,7 @@ const AddWorkshop = () => {
       setVideoId(data?.videos?.[0]?.workshopvideo_id)
       setPreviews(data?.images?.map((image) => import.meta.env.VITE_CLOUD_URL+ image?.image) || [null, null, null]);
       }
-  },[data])
+  },[data,isAdding])
 
   const baseUrl = import.meta.env.VITE_APP_URL;
 
@@ -103,7 +105,6 @@ const AddWorkshop = () => {
       toast.error("Couldn't update workshop!!");
     },
   });
-  const [isAdding,setIsAdding] = useState(false)
 const handleSubmit = async (e) => {
   e.preventDefault();
   setIsAdding(true)
@@ -156,13 +157,17 @@ const handleSubmit = async (e) => {
     queryClient.invalidateQueries(["workshops"]);
 
     // Clear Form Fields
-    setTitle("");
+    if(!isEditMode){
+      setTitle("");
     setDescription("");
     setDate(new Date().toISOString().split("T")[0]);
     setPlace("");
     setVideoUrl("");
     setFiles([null, null, null]);
     setPreviews([null, null, null]);
+    } else {
+      refetch()
+    }
     setIsAdding(false)
 
   } catch (error) {

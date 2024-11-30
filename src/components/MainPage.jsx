@@ -52,7 +52,7 @@ const MainPage = () => {
         <div className="scroll-section w-full my-6" ref={newArrivalsRef}>
           <div className='relative mx-auto'>
             <Title>Trendiest new arrivals</Title>
-            <ProductCarousel  />
+            <ProductCarousel saleType="New Arrival" />
           </div>
         </div>
         <div className="scroll-section w-full my-6" ref={bestSellersRef}>

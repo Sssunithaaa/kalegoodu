@@ -12,7 +12,7 @@ import ProductCard from './ProductCard';
 import { SectionWrapper } from '../hoc';
 import { fadeIn } from '../utils/motion';
 
-const ProductCarousel = ({ saleType }) => {
+const ProductCarousel = ( {saleType} ) => {
   const { data: products, isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: getAllProducts,
@@ -22,12 +22,15 @@ const ProductCarousel = ({ saleType }) => {
   });
 
   const bestSellerMode = Boolean(saleType);
-
+  
   // Memoize filtered products to prevent unnecessary re-filtering
 const filteredProducts = useMemo(() => {
+  console.log(saleType)
   const result = bestSellerMode
-    ? products?.filter(product => product?.sale_types.some(type => type.name === saleType))
+    ? products?.filter(product => Array.isArray(product?.sale_types) && 
+  product.sale_types.some(type => type?.name === "New Arrival"))
     : products;
+    console.log(result)
   return result ? [...result]?.reverse() : result; // Reverse once and memoize
 }, [products, saleType, bestSellerMode]);
 

@@ -37,6 +37,7 @@ const [itemsPerPage] = useState(4); // Fixed items per page
   useEffect(() => {
     if (name) {
       setSelectedCategory(name.replaceAll("-", " "));
+      
     } else {
       setSelectedCategory("All Products");
     }
@@ -45,7 +46,7 @@ const [itemsPerPage] = useState(4); // Fixed items per page
   // Fetch products using `useQuery`
   const fetchProducts = async (page) => {
     const endpoint = categoryMode
-      ? `${baseUrl}/api/products_by_category/${id}`
+      ? `${baseUrl}/api/products_by_category/${id}/?page=${page}`
       : `${baseUrl}/api/list_products?page=${page}`;
 
     const { data } = await axios.get(endpoint);
@@ -74,9 +75,12 @@ useEffect(() => {
 const handlePageChange = (event, value) => {
   setCurrentPage(value);
 };
+useEffect(() => {
+  if (location) {
+    setCurrentPage(1); // Reset page to 1 on location change
+  }
+}, [location]);
 
-console.log(totalPages)
-  console.log(currentPage)
   // Memoized sorting function
   const sortedProducts = useMemo(() => {
     if (!products) return [];
