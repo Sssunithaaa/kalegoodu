@@ -9,7 +9,8 @@ import { createWorkshop, getSingleWorkshop, updateWorkshop } from "../../../serv
 import Button from "../../../components/Button";
 import BackButton from "../../BackButton";
 import axios from "axios";
-
+import { addImage,updateImage } from "../../api/ImageApi";
+import { ClipLoader } from "react-spinners";
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -23,7 +24,19 @@ const DeleteButton = styled.button`
     background-color: #c0392b;
   }
 `;
-
+const UpdateButton = styled.button`
+  background-color: #0096FF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block:5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #0096FA;
+  }
+`;
 const AddWorkshop = () => {
   const queryClient = useQueryClient();
   const { slug } = useParams();
@@ -105,6 +118,20 @@ const AddWorkshop = () => {
       toast.error("Couldn't update workshop!!");
     },
   });
+  
+  const [isUpdatingImage, setIsUpdatingImage] = useState(false);
+
+  const handleUpdate = async (workshopImageId, file) => {
+    console.log(workshopImageId)
+    await updateImage(baseUrl, workshopImageId, file, refetch, setIsUpdatingImage,`update_workshop_image/${workshopImageId}/`);
+    setFiles([null,null,null])
+  };
+ 
+  const [isAddingImage,setIsAddingImage] = useState(false)
+
+ const handleAddImage = (workshopId, file) => {
+    addImage(baseUrl, workshopId, file, refetch, setIsAddingImage,`workshops/${workshopId}/add-images/`);
+  };
 const handleSubmit = async (e) => {
   e.preventDefault();
   setIsAdding(true)
@@ -115,44 +142,36 @@ const handleSubmit = async (e) => {
     workshopFormData.append("description", description);
     workshopFormData.append("date", date);
     workshopFormData.append("place", place);
- const newImages = files.filter(file => file && file instanceof File);
-    if (newImages.length > 0) {
-      const imageFormData = new FormData();
-      newImages.forEach(file => {
-        workshopFormData.append("images", file);
-      });
-    }
+
     if(videoUrl){
        const videoFormData = new FormData();
-      workshopFormData.append("video_url", videoUrl);
-      if (videoId) workshopFormData.append("video_id", videoId);
+      videoFormData.append("video_url", videoUrl);
+      
+      workshopFormData.append("video_url",videoUrl);
+      if(isEditMode){
+         try {
+        const response = await axios.put(`${baseUrl}/api/update_workshop_video/${slug}/`, videoFormData, {
+       headers: { "Content-Type": "multipart/form-data" },
+       });
+      } catch (error) {
+        console.log(error)
+      }
+      }
     }
-    for (let [key,value] of workshopFormData.entries()){
-      console.log(key,value)
-    }
+   
     const workshopResponse = isEditMode
       ? await updateWorkshop({ formData: workshopFormData, slug })
       : await createWorkshop(workshopFormData);
 
-    const workshopId = workshopResponse?.data?.id || data?.id;
-
-    // Step 2: Add or Update Images (if provided)
    
-      // await axios.post(`${baseUrl}/workshops/${workshopId}/add-images/`, imageFormData, {
-      //   headers: { "Content-Type": "multipart/form-data" },
-      // });
+
+   
     
 
-    // Step 3: Add or Update Video (if provided)
-    if (videoUrl) {
-     
+   
+  
 
-      // await axios.post(`${baseUrl}/workshops/${workshopId}/add-videos/`, videoFormData, {
-      //   headers: { "Content-Type": "multipart/form-data" },
-      // });
-    }
-
-    // Step 4: Success Handling
+    
     toast.success(isEditMode ? "Workshop updated successfully!" : "Workshop added successfully!");
     queryClient.invalidateQueries(["workshops"]);
 
@@ -236,11 +255,38 @@ const handleSubmit = async (e) => {
                     </div>
                   )}
                 </Dropzone>
-                {data?.images?.[index] && (
-                  <DeleteButton type="button" onClick={() => handleDelete(data?.images[index]?.workshop_image_id)}>
-                    Delete
-                  </DeleteButton>
-                )}
+                <div className="flex flex-row gap-x-2">
+  {data?.images?.[index] && files[index] ? (
+    <UpdateButton
+      className="disabled:cursor-not-allowed"
+      disabled={isUpdatingImage}
+      type="button"
+      onClick={() => handleUpdate(data?.images[index]?.workshopimage_id, files[index])}
+    >
+      {isUpdatingImage ? <ClipLoader size={20} /> : "Update"}
+    </UpdateButton>
+  ) : (
+    files[index] && (
+      <UpdateButton
+        className="disabled:cursor-not-allowed"
+        disabled={isAddingImage}
+        type="button"
+        onClick={() => handleAddImage(data?.workshop_id, files[index])}
+      >
+        {isAddingImage ? <ClipLoader size={20} /> : "Add Image"}
+      </UpdateButton>
+    )
+  )}
+  
+  {/* Delete button always visible */}
+  <DeleteButton
+    type="button"
+    onClick={() => handleDelete(data?.images?.[index]?.workshopimage_id)}
+  >
+    Delete
+  </DeleteButton>
+</div>
+
               </div>
             ))}
           </div>

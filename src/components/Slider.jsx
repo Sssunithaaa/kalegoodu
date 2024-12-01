@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
@@ -12,46 +12,85 @@ import ProductCard from './ProductCard';
 import { SectionWrapper } from '../hoc';
 import { fadeIn } from '../utils/motion';
 
-const ProductCarousel = ( {saleType} ) => {
-  const { data: products, isLoading, isError } = useQuery({
-    queryKey: ["products"],
-    queryFn: getAllProducts,
-    refetchOnMount:true,
-    refetchOnReconnect: true,
-    staleTime: 1000 * 60 * 5, // Cache data for 5 minutes
-  });
-
-  const bestSellerMode = Boolean(saleType);
+const fetchProductsBySaleType = async (saleTypeId, page=1) => {
+  if (!saleTypeId) {
+    throw new Error("saleTypeId is undefined");
+  }
+  const response = await fetch(
+    `https://kalegoodupractice.pythonanywhere.com/api/products_by_saletype/${saleTypeId}/?page=${page}`
+  );
   
-  // Memoize filtered products to prevent unnecessary re-filtering
-const filteredProducts = useMemo(() => {
-  console.log(saleType)
-  const result = bestSellerMode
-    ? products?.filter(product => Array.isArray(product?.sale_types) && 
-  product.sale_types.some(type => type?.name === "New Arrival"))
-    : products;
-    console.log(result)
-  return result ? [...result]?.reverse() : result; // Reverse once and memoize
-}, [products, saleType, bestSellerMode]);
+  if (!response.ok) throw new Error('Failed to fetch products');
+  return response.json();
+};
 
+const ProductCarousel = ( {saleTypeId} ) => {
 
+   const [currentPage, setCurrentPage] = useState(1);
+  const [allProducts, setAllProducts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const { data, isLoading, isError } = useQuery({
+  queryKey: ['products', saleTypeId, currentPage],
+  queryFn: () => fetchProductsBySaleType(saleTypeId, currentPage),
+  enabled: !!saleTypeId, // Only execute query if saleTypeId is truthy
+  keepPreviousData: true,
+  
+});
   const [currentSlide, setCurrentSlide] = useState(0);
+const settings = {
+  infinite: false,
+  speed: 500,
+  slidesToShow: 5,
+  slidesToScroll: 1,
+  initialSlide: 0,
+  afterChange: (index) => setCurrentSlide(index),
+  prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
+  nextArrow:
+   hasMore 
+      ? <SampleNextArrow />
+      :  null,
+  responsive: [
+    { breakpoint: 1500, settings: { slidesToShow: 4 } },
+    { breakpoint: 1024, settings: { slidesToShow: 3 } },
+    { breakpoint: 768, settings: { slidesToShow: 2 } },
+    {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1,
+        centerMode: true,
+        centerPadding: "30px",
+      },
+    },
+  ],
+};
 
-  const settings = {
-    infinite: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    afterChange: (index) => setCurrentSlide(index),
-    prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-    nextArrow: currentSlide < filteredProducts?.length - 5 ? <SampleNextArrow /> : null,
-    responsive: [
-      { breakpoint: 1500, settings: { slidesToShow: 4 } },
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 540, settings: { slidesToShow: 1, centerMode: true, centerPadding: '30px' } },
-    ],
-  };
+
+useEffect(() => {
+  if (data?.results) {
+    setAllProducts((prev) => {
+      const newProducts = data.results.filter(
+        (newProduct) => !prev.some((prevProduct) => prevProduct.product_id === newProduct.product_id)
+      );
+      return [...prev, ...newProducts]; // Append only unique products
+    });
+    setHasMore(!!data.next); // Check if there's more data
+  }
+}, [data]);
+
+
+useEffect(() => {
+  if (allProducts?.length !== 0 && currentSlide + settings.slidesToShow >= allProducts.length && hasMore) {
+    setCurrentPage((prevPage) => prevPage + 1);
+  }
+}, [currentSlide, allProducts, hasMore, settings.slidesToShow]);
+
+
+
+
+
+
+
+
 
   
   return (
@@ -61,7 +100,7 @@ const filteredProducts = useMemo(() => {
           Failed to load products. Please try again later.
         </div>
       ) : (
-        <Slider {...settings}>
+       allProducts?.length > 0 ? <Slider {...settings}>
           {isLoading ? (
             <SkeletonContainer>
               {[...Array(5)].map((_, index) => (
@@ -72,13 +111,16 @@ const filteredProducts = useMemo(() => {
               ))}
             </SkeletonContainer>
           ) : (
-            filteredProducts?.reverse().map((product, index) => (
+            allProducts?.map((product, index) => (
               <motion.div variants={fadeIn("", "", index * 0.3, 1)} className="px-2" key={product.product_id}>
                 <ProductCard padding="py-2 my-2" product={product} />
               </motion.div>
             ))
           )}
-        </Slider>
+        </Slider> : <div>
+                          <p>Loading products...</p>
+
+          </div>
       )}
     </div>
   );
@@ -116,6 +158,7 @@ const SamplePrevArrow = (props) => {
     </Arrow>
   );
 };
+
 
 const SkeletonContainer = styled.div`
   display: flex;

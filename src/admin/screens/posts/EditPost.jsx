@@ -15,6 +15,8 @@ import {
   
   filterCategories,
 } from "../../../utils/multiSelectTagUtils";
+import { updateImage } from "../../api/ImageApi";
+import { addImage } from "../../api/ImageApi";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import "react-toastify/dist/ReactToastify.css";
@@ -279,51 +281,18 @@ const handleFileChange = (acceptedFiles, index) => {
   setPreviews(updatedPreviews);
   
 };
-  const [isUpdatingImage,setIsUpdatingImage] = useState(false)
-  const handleUpdate = async (productImageId, file) => {
-    const formData = new FormData();
-  formData.append('image', file);
-  console.log("Hello")
-  setIsUpdatingImage(true)
-  try {
-    const response = await axios.put(
-      `${baseUrl}/api/update_product_image/${productImageId}/`,
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
-    toast.success("Image updated successfully!");
-    // Refresh the banner data here to reflect updated images
-    refetch();
-    setIsUpdatingImage(false)
-  } catch (error) {
-    toast.error("Failed to update image");
-    console.error("Error updating image:", error.message);
-    setIsUpdatingImage(false)
-  }
-};
-  const [isAddingImage,setIsAddingImage] = useState(false)
 
-const handleAddImage = async (productImageId, file) => {
-    const formData = new FormData();
-  formData.append('image', file);
-  console.log("Hello")
-  setIsAddingImage(true)
-  try {
-    const response = await axios.post(
-      `${baseUrl}/api/add_product_image/${productImageId}/`,
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
-    toast.success("Image added successfully!");
-    // Refresh the banner data here to reflect updated images
-    refetch();
-    setIsAddingImage(false)
-  } catch (error) {
-    toast.error("Failed to add image");
-    console.log("Error add image:", error.message);
-    setIsAddingImage(false)
-  }
-};
+
+const [isUpdatingImage, setIsUpdatingImage] = useState(false);
+  const [isAddingImage, setIsAddingImage] = useState(false);
+
+  const handleUpdate = (productImageId, file) => {
+    updateImage(baseUrl, productImageId, file, refetch, setIsUpdatingImage,`update_product_image/${productImageId}`);
+  };
+
+  const handleAddImage = (productImageId, file) => {
+    addImage(baseUrl, productImageId, file, refetch, setIsAddingImage,`add_product_image/${productImageId}`);
+  };
 
  const handleDelete = async (productImageId) => {
     try {
