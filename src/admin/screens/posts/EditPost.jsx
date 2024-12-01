@@ -287,11 +287,11 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   const [isAddingImage, setIsAddingImage] = useState(false);
 
   const handleUpdate = (productImageId, file) => {
-    updateImage(baseUrl, productImageId, file, refetch, setIsUpdatingImage,`update_product_image/${productImageId}`);
+    updateImage(baseUrl, productImageId, file, refetch, setIsUpdatingImage,`update_product_image/${productImageId}/`);
   };
 
   const handleAddImage = (productImageId, file) => {
-    addImage(baseUrl, productImageId, file, refetch, setIsAddingImage,`add_product_image/${productImageId}`);
+    addImage(baseUrl, productImageId, file, refetch, setIsAddingImage,`add_product_image/${productImageId}/`);
   };
 
  const handleDelete = async (productImageId) => {
@@ -497,20 +497,23 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
         </div>
       )}
     </Dropzone>
-      {product?.images[index] ? (
+      <div className="flex flex-row gap-x-2">
+        {product?.images[index] && files[index] ? (
                             <div className='flex flex-row gap-x-2'> 
                       <UpdateButton className="disabled:cursor-not-allowed" disabled={isUpdatingImage} type="button" onClick={() => handleUpdate(product?.images[index]?.product_image_id, files[index])}>
                      {isUpdatingImage ? <ClipLoader size={20}></ClipLoader> : " Update"}
                     </UpdateButton>
-                  <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
-                  Delete
-                </DeleteButton>
+                 
                 </div>
-                          ) : files[index] && <div>
+                          ) : ( files[index] && ( <div>
                              <UpdateButton className="disabled:cursor-not-allowed" disabled={isAddingImage} type="button" onClick={() => handleAddImage(product?.product_id, files[index])}>
                      {isAddingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
                     </UpdateButton>
-                            </div> }
+                            </div> )) }
+                             <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
+                  Delete
+                </DeleteButton>
+      </div>
   </div>
 ))}
 </div>

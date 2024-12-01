@@ -16,7 +16,7 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
   }
 `;
 export const CTASection = ({ product, cartCounter, setCartCounter }) => {
-  const [productCounter, setProductCounter] = useState(0);
+  const [productCounter, setProductCounter] = useState(1);
   const { addToCart, setIsCartVisible,setLoading } = useContext(CartContext);
 
   const addProduct = () => setProductCounter(prev => prev + 1);

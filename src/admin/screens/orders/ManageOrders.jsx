@@ -30,27 +30,32 @@ const ManageProducts = () => {
     }, 1000);
   };
 
-  // Handle checkbox changes
-  const handleCheckboxChange = (orderId, item, quantity) => {
-    console.log(item)
-    console.log(orderId)
-  setSelectedItems(prevState => {
+const handleCheckboxChange = (orderId, item, quantity, isChecked) => {
+  setSelectedItems((prevState) => {
     const orderSelectedItems = prevState[orderId] || {};
+
+    // Update or remove the item based on the checkbox state
+    const updatedOrderItems = isChecked
+      ? {
+          ...orderSelectedItems,
+          [item?.order_item_id]: {
+            product_id: item.product,
+            quantity: quantity,
+            order_completed: isChecked, // Update the state based on the checkbox
+          },
+        }
+      : (() => {
+          const { [item?.order_item_id]: _, ...rest } = orderSelectedItems; // Remove item if unchecked
+          return rest;
+        })();
 
     return {
       ...prevState,
-      [orderId]: {
-        ...orderSelectedItems,
-        [item?.order_item_id]: {
-          product_id: item.product,
-          quantity: quantity,
-          order_completed: true // Mark as completed if quantity is 0
-        }
-      }
+      [orderId]: updatedOrderItems,
     };
   });
-}
-  
+};
+
     const deleteDataHandler=async (id)=> {
     try {
       await axios.delete(`${url}/api/orders/${id}/delete/`)
@@ -72,16 +77,14 @@ const handleInTransit = async (orderId) => {
    product_id: item.product_id,
     quantity: item.quantity,
   }));
- console.log({
-      order_id: orderId,
-      items,
-    })
+
   try {
     await axios.put(`${url}/api/acknowledge_order/`, {
       order_id: orderId,
       items,
     });
     toast.success("Order items updated to In Transit");
+    refetch()
   } catch (error) {
     console.log(error)
     toast.error("Failed to update order items. Try again!");
@@ -179,12 +182,19 @@ const searchKeywordOnSubmitHandler = (event) => {
                     {order.items.map((item) => (
   <tr key={item.order_item_id}>
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
-      <input
-        checked={selectedItems[order.order_id]?.[item.order_item_id]?.order_completed  || item.order_completed || false}
-        type="checkbox"
-         disabled={item?.order_completed}
-        onChange={(e) => handleCheckboxChange(order?.order_id,item,item?.quantity ? item?.quantity : 0)}
-      />
+     <input
+  checked={
+    selectedItems[order.order_id]?.[item.order_item_id]?.order_completed ||
+    item.order_completed ||
+    false
+  }
+  type="checkbox"
+  disabled={item?.order_completed}
+  onChange={(e) =>
+    handleCheckboxChange(order?.order_id, item, item?.quantity ? item?.quantity : 0, e.target.checked)
+  }
+/>
+
     </td>
                         <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.product_name}</td>
                        <td className="px-3 py-2 text-md bg-white border-b border-gray-200">

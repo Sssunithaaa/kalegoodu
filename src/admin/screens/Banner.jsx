@@ -126,13 +126,15 @@ const handleFileChange = (acceptedFiles, index) => {
   // }
   refetch();
 };
+  
 
+const [isUpdatingImage,setIsUpdatingImage] = useState(false)
   const handleUpdate = async (bannerImageId, file) => {
   const formData = new FormData();
   formData.append('image', file);
-
+   setIsUpdatingImage(true)
   try {
-    const response = await axios.put(
+    await axios.put(
       `${baseUrl}/api/update_banner_image/${bannerImageId}/`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -144,6 +146,7 @@ const handleFileChange = (acceptedFiles, index) => {
     toast.error("Failed to update image");
     console.error("Error updating image:", error.message);
   }
+  setIsUpdatingImage(false)
 };
 
 const [addingImages,setAddingImages] = useState(false)
@@ -259,17 +262,21 @@ const handleUpload = async (e) => {
         </div>
       )}
     </Dropzone>
-     {banner?.banner_images[index] && (
+   <div className='flex flex-row gap-x-2'>
+      {banner?.banner_images[index] && files[index] && (
 
                 <div className='flex flex-row gap-x-2'> 
-                  <UpdateButton type='button' onClick={() => handleUpdate(banner.banner_images[index].banner_image_id, files[index])}>
-                  Update
+                  <UpdateButton disabled={isUpdatingImage} type='button' onClick={() => handleUpdate(banner.banner_images[index].banner_image_id, files[index])}>
+                  {isUpdatingImage ? <ClipLoader size={20}/> : "Update"}
                 </UpdateButton>
-                  <DeleteButton type='button' onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
+                
+                </div>
+              ) }
+                <DeleteButton type='button' onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
                   Delete
                 </DeleteButton>
-                </div>
-              )}
+   </div>
+
   </div>
 ))}
 
