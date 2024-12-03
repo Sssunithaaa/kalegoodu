@@ -36,8 +36,8 @@ export const getProductsByCategory = async (id) => {
     const response = await axios.get(
       `${url}/api/products_by_category/${id}/`
     );
-   
-    return response.data?.products
+     console.log(response)
+    return response.data?.results
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
