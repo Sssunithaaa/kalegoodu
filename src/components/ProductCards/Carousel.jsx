@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
+import { play, video } from "../../assets/images";
 
 export function Carousel({
   images = [],
@@ -120,18 +121,33 @@ export function Carousel({
         ))}
 
         {/* Video thumbnail */}
-        {videoUrl && (
-          <div
-            onClick={() => setCurr(slides.length)} // Set to video slide
-            className={`hover:cursor-pointer focus:opacity-20 rounded-xl ${
-              curr === slides.length ? "border-2 border-orange" : ""
-            }`}
-          >
-            <div className="w-full h-auto bg-gray-200 flex items-center justify-center">
-              <span className="text-sm">Video</span>
-            </div>
-          </div>
-        )}
+     {/* Video thumbnail */}
+{videoUrl && (
+  <div
+    onClick={() => setCurr(slides.length)} // Set to video slide
+    className={`hover:cursor-pointer rounded-xl ${
+      curr === slides.length ? "border-2 border-orange" : ""
+    }`}
+  >
+    <div className="relative w-28 h-28 bg-gray-200 flex items-center justify-center">
+      {/* Static video preview */}
+      <img
+        src={video} // Replace with a suitable placeholder or dynamically fetched thumbnail
+        alt="Video Thumbnail"
+        className="rounded-xl object-cover h-28"
+      />
+      {/* Play button overlay */}
+      {/* <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-xl">
+        <img
+          src={play} // Replace with a play icon image path
+          alt="Play Icon"
+          className="w-8 h-8"
+        />
+      </div> */}
+    </div>
+  </div>
+)}
+
       </div>
     </div>
   );

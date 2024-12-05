@@ -25,5 +25,6 @@ import img28 from './28.jpg'
 import first from './16-min.jpg'
 import img24 from './21-size.jpg'
 import ganesh from './ganesh.avif'
-
-export {logo,img,ganesh,first,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14,img17,img18,img19,img20,img21,img22,img23,img24,img28}
+import video from './video-thumbnail.png'
+import play from './play.png'
+export {logo,img,play,ganesh,video,first,hero,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img14,img17,img18,img19,img20,img21,img22,img23,img24,img28}
