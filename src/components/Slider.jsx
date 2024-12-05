@@ -34,7 +34,16 @@ const ProductCarousel = ( {saleTypeId} ) => {
   queryFn: () => fetchProductsBySaleType(saleTypeId, currentPage),
   enabled: !!saleTypeId, // Only execute query if saleTypeId is truthy
   keepPreviousData: true,
-  
+  refetchOnWindowFocus: true, // Refetch data when the window regains focus
+  staleTime: 20000, // Data will remain fresh for 5 seconds
+  cacheTime: 10000, // Cached data will persist for 10 seconds after being unused
+  retry: 3, // Retry failed queries up to 3 times
+  retryDelay: attempt => Math.min(1000 * 2 ** attempt, 30000), // Exponential backoff for retries
+  onError: (error) => {
+    console.error('Error fetching products:', error);
+  },
+    suspense: false // Disable React Suspense for this query
+
 });
   const [currentSlide, setCurrentSlide] = useState(0);
 const settings = {
