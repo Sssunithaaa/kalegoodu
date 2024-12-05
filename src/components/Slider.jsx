@@ -42,6 +42,9 @@ const ProductCarousel = ( {saleTypeId} ) => {
   onError: (error) => {
     console.error('Error fetching products:', error);
   },
+   refetchOnMount:true,
+  refetchOnReconnect:true,
+  retryOnMount:true,
     suspense: false // Disable React Suspense for this query
 
 });
