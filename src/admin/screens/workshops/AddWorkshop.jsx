@@ -195,7 +195,17 @@ const handleSubmit = async (e) => {
     toast.error("An error occurred while submitting the workshop!");
   }
 };
-
+ useEffect(()=>{
+   if(!isEditMode){
+      setTitle("");
+    setDescription("");
+    setDate(new Date().toISOString().split("T")[0]);
+    setPlace("");
+    setVideoUrl("");
+    setFiles([null, null, null]);
+    setPreviews([null, null, null]);
+    } 
+ },[isEditMode])
 
   const handleDelete = async (imageId) => {
     try {

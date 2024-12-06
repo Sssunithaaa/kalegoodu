@@ -195,7 +195,16 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
 
  
 
-
+  useEffect(()=>{
+    if(!isEditMode){
+      setName("");
+      setDescription("");
+      setDiscountPrice("");
+      setPrice("");
+      setVideoUrl("")
+      setPreviews([null,null,null])
+    }
+  },[isEditMode])
   
   // Determine if post data is loaded
   let isPostDataLoaded = !isLoading && !isError;

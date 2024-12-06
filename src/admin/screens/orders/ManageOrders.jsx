@@ -30,7 +30,26 @@ const ManageProducts = () => {
     }, 1000);
   };
 
-const handleCheckboxChange = (orderId, item, quantity, isChecked) => {
+const handleQuantityChange = (orderId, item, quantity) => {
+  setSelectedItems((prevState) => {
+    const orderSelectedItems = prevState[orderId] || {};
+
+    return {
+      ...prevState,
+      [orderId]: {
+        ...orderSelectedItems,
+        [item.order_item_id]: {
+          ...(orderSelectedItems[item.order_item_id] || {
+            product_id: item.product,
+          }),
+          quantity, // Update quantity
+        },
+      },
+    };
+  });
+};
+
+const handleCheckboxChange = (orderId, item, isChecked) => {
   setSelectedItems((prevState) => {
     const orderSelectedItems = prevState[orderId] || {};
 
@@ -39,8 +58,10 @@ const handleCheckboxChange = (orderId, item, quantity, isChecked) => {
       ? {
           ...orderSelectedItems,
           [item?.order_item_id]: {
-            product_id: item.product,
-            quantity: quantity,
+            ...(orderSelectedItems[item.order_item_id] || {
+              product_id: item.product,
+              quantity: item.quantity, // Preserve the existing quantity or default to item.quantity
+            }),
             order_completed: isChecked, // Update the state based on the checkbox
           },
         }
@@ -55,6 +76,7 @@ const handleCheckboxChange = (orderId, item, quantity, isChecked) => {
     };
   });
 };
+
 
     const deleteDataHandler=async (id)=> {
     try {
@@ -199,13 +221,19 @@ const searchKeywordOnSubmitHandler = (event) => {
                         <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.product_name}</td>
                        <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
 
-  <input
-   type="number"
-    value={selectedItems[order.order_id]?.[item.order_item_id]?.quantity === 0 ? 0 : selectedItems[order.order_id]?.[item.order_item_id]?.quantity  || item.quantity}
+<input
+  type="number"
+  value={
+    selectedItems[order.order_id]?.[item.order_item_id]?.quantity === 0
+      ? 0
+      : selectedItems[order.order_id]?.[item.order_item_id]?.quantity || item.quantity
+  }
+  className="w-full"
+  onChange={(e) =>
+    handleQuantityChange(order.order_id, item, Number(e.target.value))
+  }
+/>
 
-    className='w-full'
-   onChange={(e) => handleCheckboxChange(order.order_id, item, Number(e.target.value))}
-  />
 </td>
                         <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.price}</td>
                       </tr>

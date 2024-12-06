@@ -16,7 +16,7 @@ export const ContextProvider = ({ children }) => {
   const [themeSettings, setThemeSettings] = useState(false);
   const [activeMenu, setActiveMenu] = useState(true);
   const [isClicked, setIsClicked] = useState(initialState);
-
+  const [showSidebar,setShowSidebar] = useState(false)
   // Store the navbar heights in the context
   const [navbarHeight, setNavbarHeight] = useState(130); // Default for desktop
   const [navbarHeightMobile, setNavbarHeightMobile] = useState(160); // Default for mobile
@@ -80,6 +80,8 @@ export const ContextProvider = ({ children }) => {
         screenSize,
         setScreenSize,
         handleClick,
+        showSidebar,
+        setShowSidebar,
         heroRef,
         categoriesRef,
         newArrivalsRef,

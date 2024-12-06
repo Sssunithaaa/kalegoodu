@@ -153,7 +153,7 @@ const MegaMenu = () => {
     }
     setDisplay("static");
   };
-  console.log(display)
+ 
 
   useEffect(() => {
     const handleResize = () => {

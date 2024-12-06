@@ -25,13 +25,12 @@ function ProductPage() {
   });
 
   const images = product?.images?.map((image) => image.image);
-  
+  console.log(product)
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   const productId = parseInt(id, 10);
 
-  console.log(similarProducts?.filter((pid)=> pid !== id))
   return (
     <div className="">
       <div className="lg:max-w-[100%] w-[100%] md:max-w-[100%] md:mx-auto md:px-4 pt-[10px] lg:pt-0 md:pt-[0]">

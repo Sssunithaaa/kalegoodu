@@ -12,8 +12,11 @@ import styled from "styled-components";
 import Pagination from "@mui/material/Pagination"; // Material-UI Pagination
 import { SectionWrapper } from "../hoc";
 import FullPageLoader from "./FullPageLoader";
+import { useStateContext } from "../context/ContextProvider";
 const Products = () => {
-  const [showSidebar, setShowSidebar] = useState(false);
+  const {showSidebar,setShowSidebar} = useStateContext();
+  
+  const [showOverlay,setShowOverlay] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [sortOption, setSortOption] = useState("dateNewToOld");
   const [sPrice, setSprice] = useState(0);
@@ -51,7 +54,7 @@ const [itemsPerPage] = useState(4); // Fixed items per page
 
     const { data } = await axios.get(endpoint);
 
-    console.log(data)
+  
     return data;
   };
   
@@ -114,7 +117,10 @@ useEffect(() => {
     );
   }, [sortedProducts, sPrice, ePrice, keyword]);
 
-  const toggleSidebar = () => setShowSidebar((prev) => !prev);
+  const toggleSidebar = () =>{ setShowSidebar((prev) => !prev)
+
+    setShowOverlay(true);
+  };
 
   const searchKeywordOnSubmitHandler = useCallback((event) => {
     event.preventDefault();
@@ -125,7 +131,24 @@ useEffect(() => {
     }
   }, []);
 
-  
+
+  useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth > 1024) {
+      setShowSidebar(false); // Ensure sidebar is closed
+      setShowOverlay(false); // Remove the overlay
+    }
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize); // Cleanup listener
+}, []);
+
+
+console.log(showSidebar)
+console.log(showOverlay)
+
+ 
 
   return (
     <div className="w-screen mb-10">
@@ -134,7 +157,7 @@ useEffect(() => {
           <h1 className="text-3xl font-semibold">{selectedCategory}</h1>
         </div>
         <div className="flex lg:flex-row flex-col">
-          {showSidebar && (
+          {showSidebar && showOverlay && (
             <div
               className="fixed inset-0 bg-gray-800 bg-opacity-40 z-40"
               onClick={toggleSidebar}

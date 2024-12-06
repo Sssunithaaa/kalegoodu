@@ -45,7 +45,7 @@ const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSu
 
 
   return (
-    <div className="flex flex-col z-[20] p-4 w-64">
+    <div className="flex flex-col z-40 p-4 w-64">
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-2">Filter</h3>
         <div className="mb-4">

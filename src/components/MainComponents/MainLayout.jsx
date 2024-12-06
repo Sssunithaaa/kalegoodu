@@ -15,7 +15,7 @@ const MainLayout = ({ children }) => {
   if (isAdminPage) {
     return <div>{children}</div>;
   }
- const {marqueeRef} = useStateContext()
+ const {marqueeRef,showSidebar} = useStateContext()
 
  useEffect(() => {
    const params = new URLSearchParams(location.search);
@@ -33,15 +33,16 @@ const MainLayout = ({ children }) => {
 const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; // Adds extra non-breaking spaces
   return (
     <div className='example'>
-      
-      <div ref={marqueeRef} className="static py-2 overflow-y-hidden flex w-[100%] bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5  m-0 overflow-hidden justify-center items-center">
-     
+      <div 
+  ref={marqueeRef} 
+  className="static py-2 overflow-hidden w-full z-10  bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5"
+  style={{ position: 'relative',zIndex:10 }}
+>
+  {!showSidebar && <Marquee speed={100} style={{zIndex:1}} gradient={false}>
+    {message}{spacing}{spacing}{spacing}{spacing}{spacing}{spacing}{message}
+  </Marquee>}
+</div>
 
-<Marquee speed={100} gradient={false}>
-  {message}{spacing}{spacing}{spacing}{spacing}{spacing}{spacing}{message}
-</Marquee>
-
-      </div>
       <Navbar />
       {!isHomePage && <Breadcrumbs />}
       <main className='h-[100%] min-h-screen flex-grow'>

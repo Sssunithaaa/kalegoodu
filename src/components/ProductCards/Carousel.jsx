@@ -12,8 +12,8 @@ export function Carousel({
   const [curr, setCurr] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const prev = () => setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
-  const next = () => setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
+ const prev = () =>    setCurr((curr) => (curr === 0 ? slides.length-1 : curr - 1));
+const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
 
   const baseUrl = import.meta.env.VITE_APP_URL;
 
@@ -30,44 +30,57 @@ export function Carousel({
       setIsPlaying(false);
     }
   }, [curr, slides.length]);
-
+  console.log(curr)
+  console.log(videoUrl)
+  console.log(slides.length)
   return (
     <div className="flex flex-col">
       <div className="overflow-hidden relative max-w-[350px] lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
         <div
-    className={`flex transition-transform w-full ease-out duration-500 ${
-        curr === slides.length ? "transition-none" : ""
-    }`}
-    style={{ transform: `translateX(-${curr}%)` }}
+  className={`flex transition-transform w-full ease-out duration-500 ${
+    curr === slides.length ? "transition-none" : ""
+  }`}
+  style={{ 
+    transform: `translateX(-${curr}%)`,
+    pointerEvents: curr === slides.length ? "auto" : "none" // Allow pointer events on video slide only
+  }}
 >
+  {slides.map((slide, index) => (
+    <div
+      key={index}
+      className="mx-auto w-full"
+      style={{
+        display: curr === index ? "block" : "none",
+        visibility: curr === index ? "visible" : "hidden" // hide inactive slides without removing them
+      }}
+    >
+      {slide}
+    </div>
+  ))}
 
-          {slides.map((slide, index) => (
-            <div
-              key={index}
-              className="mx-auto w-full"
-              style={{ display: curr === index ? "block" : "none" }}
-            >
-              {slide}
-            </div>
-          ))}
-
-          {videoUrl != null && curr === slides.length && (
-            <div className="flex-shrink-0 w-full h-full">
-              <div className="relative hover:cursor-pointer w-full h-0 pb-[56.25%]">
-    <ReactPlayer
+  {videoUrl != null && curr === slides.length && (
+  <div className="flex-shrink-0 w-full">
+    <div 
+      className="relative w-[330px] sm:w-[350px] lg:w-full h-[200px] sm:h-[200px] md:h-[400px]"
+      style={{ maxHeight: "100vh" }} // Ensure it doesn't exceed the viewport height
+    >
+      &nbsp;&nbsp;
+      <ReactPlayer
         url={videoUrl}
         playing={isPlaying}
         controls
         width="100%"
         height="100%"
         className="absolute top-0 left-0"
-        style={{ pointerEvents: "auto",zIndex:10 }} // Ensuring that pointer events are allowed
-    />
+        style={{ pointerEvents: "auto", zIndex: 100 }}
+      />
+    </div>
+  </div>
+)}
+
+
 </div>
 
-            </div>
-          )}
-        </div>
 
         {/* Navigation buttons */}
         <div className="absolute inset-0 flex items-center justify-between p-4">
@@ -88,7 +101,7 @@ export function Carousel({
           <button
             onClick={next}
             className="bg-white rounded-full p-3 md:hidden"
-            style={{ visibility: curr === slides.length-1 ? "hidden" : "visible" }} // Hide on last slide
+            style={{ visibility: curr === slides.length ? "hidden" : "visible" }} // Hide on last slide
           >
             <img
               className="h-[10px] w-[10px]"
