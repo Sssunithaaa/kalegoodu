@@ -3,6 +3,8 @@ import Button from './Button';
 import { CartContext } from '../context/CartContext';
 import axios from 'axios'; // Import axios for making backend requests
 import { toast, ToastContainer } from 'react-toastify'; // For showing success/error messages
+import OrderConfirmation from './OrderConfirmation';
+import { useNavigate } from 'react-router-dom';
 
 const CustomerDetails = () => {
   const [email, setEmail] = useState('');
@@ -14,9 +16,18 @@ const CustomerDetails = () => {
   const [pincode, setPincode] = useState('');
    const [phone, setPhone] = useState('');
   const [showSummary, setShowSummary] = useState(false);
-
-  const { cartItems, cartTotal } = useContext(CartContext);
+  const [customer, setCustomer] = useState([])
+   const navigate = useNavigate()
+  const { cartItems, cartTotal,emptyCart } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
+    const [dialogOpen, setDialogOpen] = useState(false);
+const handleOpenDialog = () => {
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   useEffect(() => {
     let totalPrice = 0;
@@ -27,7 +38,7 @@ const CustomerDetails = () => {
   }, [cartItems]);
 
   const baseUrl = import.meta.env.VITE_APP_URL;
-
+  
   // Function to submit form and send the data to the backend
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -43,20 +54,47 @@ const customerDetails = {
 };
 
 
+
+
     // Create order payload
-    const orderPayload = {
-      orderDetails: {
-        items: cartItems.map((item) => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-          price: item.discounted_price !== 0 ? item.discounted_price : item.price,
-        })),
-        total: total,
-        count: cartItems.length,
-      },
-      customerDetails: customerDetails,
-    };
-    console.log(orderPayload)
+   const frontendOrderDetails = {
+  orderDetails : {
+    items: cartItems.map((item) => ({
+    name: item.name,
+    product_id: item.product_id,
+    quantity: item.quantity,
+    price: item.discounted_price !== 0 ? item.discounted_price : item.price,
+    image: import.meta.env.VITE_CLOUD_URL + item.images[0]?.image, // Include the image
+  })),
+  total: total,
+  count: cartItems.length,
+},
+customerDetails : customerDetails
+  
+};
+console.log(cartItems)
+
+// Backend payload (excluding images)
+const orderPayload = {
+  orderDetails: {
+    items: cartItems.map((item) => ({
+      name: item.name,
+      product_id: item.product_id,
+      quantity: item.quantity,
+      price: item.discounted_price !== 0 ? item.discounted_price : item.price,
+    })),
+    total: total,
+    count: cartItems.length,
+  },
+  customerDetails: customerDetails,
+};
+
+
+setCustomer(frontendOrderDetails); // Use this for the OrderConfirmation page
+handleOpenDialog();
+
+    
+   
 
     // Prepare the message for sending
     let message = 'Order Details:\n\n';
@@ -66,23 +104,32 @@ const customerDetails = {
     message += `\nTotal: Rs. ${total}`;
 
     try {
-      // Send the order and message concurrently
-      const [orderResponse, messageResponse] = await Promise.all([
+ 
+      await Promise.all([
         axios.post(`${baseUrl}/api/create-order/`, orderPayload),
         // axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
       ]);
 
-      console.log(orderResponse);
-      console.log(messageResponse);
+      
       toast.success("Order placed successfully!!");
+      setTimeout(()=>{
+        handleOpenDialog()
+          emptyCart();
+        navigate("/products")
+      },2000)
+
+      
+      
     } catch (error) {
       console.log(error);
       toast.error("Couldn't place order");
     }
   };
 
+ 
   return (
     <div className=" flex flex-col mx-auto justify-center items-center bg-white">
+      <OrderConfirmation open={dialogOpen} handleClose={handleCloseDialog} customer={customer}/>
       <div className="container max-w-full justify-center grid grid-cols-1 lg:grid-cols-2">
         {/* Mobile: Show Order Summary */}
         <ToastContainer/>
@@ -244,6 +291,7 @@ const customerDetails = {
 
             <Button
               type="submit"
+              
               className="w-full p-2 rounded"
             >
               Place Order

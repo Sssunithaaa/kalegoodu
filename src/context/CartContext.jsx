@@ -52,6 +52,10 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.product_id !== id));
   };
 
+  const emptyCart = () => {
+    setCartItems([]);
+  }
+
   const toggleCart = () => {
     setIsCartVisible(!isCartVisible);
   };
@@ -86,6 +90,7 @@ export const CartProvider = ({ children }) => {
         paymentMethod,
         setPaymentMethod,
         addToCart,
+        emptyCart,
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,

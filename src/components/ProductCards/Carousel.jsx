@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
-import { play, video } from "../../assets/images";
-
+import {  video } from "../../assets/images";
+import { useRef } from "react";
 export function Carousel({
   images = [],
   videoUrl,
@@ -12,6 +12,13 @@ export function Carousel({
   const [curr, setCurr] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
+const productPageRef = useRef(null)
+    const scrollToSection = (ref) => {
+      
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
  const prev = () =>    setCurr((curr) => (curr === 0 ? slides.length-1 : curr - 1));
 const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
 
@@ -30,11 +37,9 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
       setIsPlaying(false);
     }
   }, [curr, slides.length]);
-  console.log(curr)
-  console.log(videoUrl)
-  console.log(slides.length)
+  
   return (
-    <div className="flex flex-col">
+    <div ref={productPageRef} className="flex flex-col">
       <div className="overflow-hidden relative max-w-[350px] lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
         <div
   className={`flex transition-transform w-full ease-out duration-500 ${
@@ -117,7 +122,7 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
         {images.map((image, index) => (
           <div
             key={index}
-            onClick={() => setCurr(index)}
+            onClick={() => {setCurr(index);scrollToSection(productPageRef)}}
             className={`hover:cursor-pointer focus:opacity-20 rounded-xl ${
               images.length === 1 ? "mx-auto w-[200px]" : "sm:w-[180px] md:w-[200px] lg:w-[180px]"
             }`}

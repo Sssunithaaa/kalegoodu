@@ -73,7 +73,15 @@ body,
   scrollbar-width: none;
   /* Firefox */
 }
+.slider::-webkit-scrollbar {
+  display: none;
+}
 
+/* Hide scrollbar for IE, Edge and Firefox */
+.slider {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 .beige {
   background: #d3ad9a;
 }

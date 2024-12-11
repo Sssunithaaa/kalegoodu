@@ -35,10 +35,10 @@ const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; 
     <div className='example'>
       <div 
   ref={marqueeRef} 
-  className="static py-2 overflow-hidden w-full z-10  bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5"
+  className="static overflow-hidden w-full z-10  bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5"
   style={{ position: 'relative',zIndex:10 }}
 >
-  {!showSidebar && <Marquee speed={100} style={{zIndex:1}} gradient={false}>
+  {!showSidebar && <Marquee speed={100} style={{zIndex:1,paddingBlock:"6px"}} gradient={false}>
     {message}{spacing}{spacing}{spacing}{spacing}{spacing}{spacing}{message}
   </Marquee>}
 </div>

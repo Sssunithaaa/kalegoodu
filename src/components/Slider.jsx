@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 import styled from "styled-components";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { motion } from 'framer-motion';
+import { motion,AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
@@ -35,16 +35,16 @@ const ProductCarousel = ( {saleTypeId} ) => {
   enabled: !!saleTypeId, // Only execute query if saleTypeId is truthy
   keepPreviousData: true,
   refetchOnWindowFocus: true, // Refetch data when the window regains focus
-  staleTime: 20000, // Data will remain fresh for 5 seconds
-  cacheTime: 10000, // Cached data will persist for 10 seconds after being unused
-  retry: 3, // Retry failed queries up to 3 times
-  retryDelay: attempt => Math.min(1000 * 2 ** attempt, 30000), // Exponential backoff for retries
+   
+    refetchOnMount: true, // Ensures data refetches on component mount
+    staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache for 30 minutes
   onError: (error) => {
     console.error('Error fetching products:', error);
   },
-   refetchOnMount:true,
+  
   refetchOnReconnect:true,
-  retryOnMount:true,
+
     suspense: false // Disable React Suspense for this query
 
 });
@@ -105,34 +105,49 @@ useEffect(() => {
 
 
   
-  return (
+ return (
     <div className="md:px-4 px-4 mx-auto flex flex-col relative">
       {isError ? (
         <div className="text-center py-4 text-red-500">
           Failed to load products. Please try again later.
         </div>
       ) : (
-       allProducts?.length > 0 ? <Slider {...settings}>
+        <AnimatePresence>
           {isLoading ? (
-            <SkeletonContainer>
-              {[...Array(5)].map((_, index) => (
-                <SkeletonCard key={index}>
-                  <Skeleton height={230} />
-                  <Skeleton count={2} />
-                </SkeletonCard>
-              ))}
-            </SkeletonContainer>
-          ) : (
-            allProducts?.map((product, index) => (
-              <motion.div variants={fadeIn("", "", index * 0.3, 1)} className="px-2" key={product.product_id}>
-                <ProductCard padding="py-2 my-2" product={product} />
-              </motion.div>
-            ))
-          )}
-        </Slider> : <div>
-                          <p>Loading products...</p>
+            <div className="flex slider overflow-x-auto space-x-4">
+  {Array.from({ length: 5 }).map((_, index) => (
+    <motion.div
+      key={index}
+      className="flex-shrink-0 w-72"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="rounded-md shadow-md bg-gray-100 p-4">
+        <Skeleton height={230} className="mb-2" />
+        <Skeleton count={2} />
+      </div>
+    </motion.div>
+  ))}
+</div>
 
-          </div>
+          ) : (
+            <Slider {...settings}>
+              {allProducts?.map((product, index) => (
+                <motion.div
+                  key={product.product_id}
+                  className="px-2"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ delay: 0.3 * index, duration: 0.6 }}
+                >
+                  <ProductCard padding="py-2 my-2" product={product} />
+                </motion.div>
+              ))}
+            </Slider>
+          )}
+        </AnimatePresence>
       )}
     </div>
   );
