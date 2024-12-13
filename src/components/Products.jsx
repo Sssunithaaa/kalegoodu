@@ -145,8 +145,6 @@ useEffect(() => {
 }, []);
 
 
-console.log(showSidebar)
-console.log(showOverlay)
 
  
 
@@ -194,22 +192,66 @@ console.log(showOverlay)
                   Sort by<span><BiSort /></span>
                 </h1>
                 {sort && (
-                  <FormControl sx={{ m: 1, minWidth: 120, maxHeight: 70 }}>
-                    <Select
-                      labelId="sort-select-label"
-                      id="sort-select"
-                      value={sortOption}
-                      onChange={(e) => setSortOption(e.target.value)}
-                      autoWidth
-                    >
-                      <MenuItem value="dateNewToOld">Date, new to old</MenuItem>
-                      <MenuItem value="dateOldToNew">Date, old to new</MenuItem>
-                      <MenuItem value="priceLowToHigh">Price, low to high</MenuItem>
-                      <MenuItem value="priceHighToLow">Price, high to low</MenuItem>
-                      <MenuItem value="alphabeticallyAZ">Alphabetically, A-Z</MenuItem>
-                      <MenuItem value="alphabeticallyZA">Alphabetically, Z-A</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <FormControl
+  sx={{
+    m: 1,
+    minWidth: 120,
+    maxHeight: 60,
+    '& .MuiSelect-select': {
+      fontFamily: 'Amiri, serif', // Update font family
+      fontSize: '14px', // Update font size
+      color: 'black', // Use theme primary color
+      paddingBlock: '7px',
+      fontWeight: '20px'
+    },
+  }}
+>
+  <Select
+    labelId="sort-select-label"
+    id="sort-select"
+    value={sortOption}
+    onChange={(e) => setSortOption(e.target.value)}
+    autoWidth
+     inputProps={{
+    style: {
+      fontFamily: 'Amiri serif',
+      fontSize: '14px',
+    },
+  }}
+  >
+    <MenuItem sx={{ 
+    fontFamily: 'Amiri serif', 
+    fontSize: '14px', 
+    color: '#333' 
+  }} value="dateNewToOld">Date, new to old</MenuItem>
+    <MenuItem sx={{ 
+    fontFamily: 'Amiri serif', 
+    fontSize: '14px', 
+    color: '#333' 
+  }} value="dateOldToNew">Date, old to new</MenuItem>
+    <MenuItem sx={{ 
+    fontFamily: 'Amiri serif', 
+    fontSize: '14px', 
+    color: '#333' 
+  }} value="priceLowToHigh">Price, low to high</MenuItem>
+    <MenuItem sx={{ 
+    fontFamily: 'Amiri serif', 
+    fontSize: '14px', 
+    color: '#333' 
+  }} value="priceHighToLow">Price, high to low</MenuItem>
+    <MenuItem sx={{ 
+    fontFamily: 'Amiri serif', 
+    fontSize: '14px', 
+    color: '#333' 
+  }} value="alphabeticallyAZ">Alphabetically, A-Z</MenuItem>
+    <MenuItem sx={{ 
+    fontFamily: 'Amiri serif', 
+    fontSize: '14px', 
+    color: '#333' 
+  }} value="alphabeticallyZA">Alphabetically, Z-A</MenuItem>
+  </Select>
+</FormControl>
+
                 )}
               </div>
               {price && sPrice !== null && ePrice !== null && (

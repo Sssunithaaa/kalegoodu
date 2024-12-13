@@ -47,8 +47,8 @@ const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSu
   return (
     <div className="flex flex-col z-40 p-4 w-64">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold mb-2">Filter</h3>
-        <div className="mb-4">
+        {/* <h3 className="text-lg font-semibold mb-2">Filter</h3> */}
+        {/* <div className="mb-4">
           
           <div className="relative mt-1">
             <input
@@ -76,12 +76,12 @@ const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSu
           </div>
               <Button onClick={searchKeywordOnSubmitHandler} >Search</Button>
 
-        </div>
+        </div> */}
 
         
 
         <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Price Range:</h3>
+          <h3 className="text-lg font-semibold mb-2">Filter By Price Range:</h3>
          
            <Box display="flex" flexDirection="column" mt={2}>
       <TextField

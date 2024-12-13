@@ -46,12 +46,12 @@ const MainPage = () => {
 
       <Suspense fallback={<FullPageLoader />}>
         <div className="scroll-section my-6" ref={categoriesRef}>
-          <Title>Shop by collection</Title>
+          <Title>Shop By Collection</Title>
           <Categories />
         </div>
         <div className="scroll-section w-full my-6" ref={newArrivalsRef}>
           <div className='relative mx-auto'>
-            <Title>Trendiest new arrivals</Title>
+            <Title>Trendiest New Arrivals</Title>
             <ProductCarousel saleTypeId={9} />
           </div>
         </div>
@@ -62,7 +62,7 @@ const MainPage = () => {
           </div>
         </div>
         <div className='scroll-section my-6' >
-          <Title>About us</Title>
+          <Title>About Us</Title>
           <AboutUs />
         </div>
         <div className='scroll-section my-6' home={true}>

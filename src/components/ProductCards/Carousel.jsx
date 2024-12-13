@@ -123,14 +123,13 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
           <div
             key={index}
             onClick={() => {setCurr(index);scrollToSection(productPageRef)}}
-            className={`hover:cursor-pointer focus:opacity-20 rounded-xl ${
-              images.length === 1 ? "mx-auto w-[200px]" : "sm:w-[180px] md:w-[200px] lg:w-[180px]"
-            }`}
+            className={`hover:cursor-pointer focus:opacity-20 rounded-xl h-28 w-28
+            `}
           >
             <img
               className={`rounded-xl ${curr === index && "opacity-40"} ${
-                images?.length === 1 ? "w-[200px]" : "w-full"
-              } h-auto object-contain`}
+                images?.length === 1 ? "w-[200px]" : "w-24 h-24"
+              } object-contain`}
               src={import.meta.env.VITE_CLOUD_URL+ image}
               alt={`Image ${index + 1}`}
               loading="lazy"
@@ -142,12 +141,12 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
      {/* Video thumbnail */}
 {videoUrl && (
   <div
-    onClick={() => setCurr(slides.length)} // Set to video slide
-    className={`hover:cursor-pointer rounded-xl ${
-      curr === slides.length ? "border-2 border-orange" : ""
-    }`}
+    onClick={() =>{ setCurr(slides.length);scrollToSection(productPageRef)}} // Set to video slide
+    className={`hover:cursor-pointer rounded-xl `}
   >
-    <div className="relative w-28 h-28 bg-gray-200 flex items-center justify-center">
+    <div className={`relative w-28 h-28 bg-gray-200 rounded-xl flex items-center justify-center ${
+      curr === slides.length ? "border-2 border-orange" : ""
+    } `}>
       {/* Static video preview */}
       <img
         src={video} // Replace with a suitable placeholder or dynamically fetched thumbnail

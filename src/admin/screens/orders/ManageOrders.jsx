@@ -29,6 +29,17 @@ const ManageProducts = () => {
       refetch();
     }, 1000);
   };
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
+  };
 
 const handleQuantityChange = (orderId, item, quantity) => {
   setSelectedItems((prevState) => {
@@ -161,8 +172,8 @@ const searchKeywordOnSubmitHandler = (event) => {
 
       <DataTable
         dataListName="Orders"
-        searchInputPlaceHolder="Order name..."
-        tableHeaderTitleList={['Sl No.', 'Order ID', 'Customer Name', 'Total amount', 'Total Orders', 'Items', ' ', ' ']}
+        searchInputPlaceHolder="Search By Order ID/Customer Name..."
+        tableHeaderTitleList={['Sl No.', 'Order ID', 'Customer Name', 'Total amount', 'Total Quantity', 'Items',"Created At", ' ', ' ']}
         isLoading={isLoading}
         isFetching={isFetching}
         searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
@@ -174,7 +185,7 @@ const searchKeywordOnSubmitHandler = (event) => {
         <ToastContainer />
         {paginatedData?.map((order, index) => (
           <tr key={order.order_id}>
-            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            <td className="px-2 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 whitespace-no-wrap">{startIndex + index + 1}</p>
             </td>
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
@@ -244,10 +255,13 @@ const searchKeywordOnSubmitHandler = (event) => {
                 <p className="text-gray-900 whitespace-no-wrap">No Items</p>
               )}
             </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">{formatDate(order.created_at)}</p>
+            </td>
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200 ">
-  <Button className='px-5' onClick={() => handleInTransit(order.order_id)}>
+ {!order?.order_completed ?  <Button  className='px-5' onClick={() => handleInTransit(order.order_id)}>
    {order?.order_completed ? "Success" : "In Transit"}
-  </Button>
+  </Button> : <p className='text-lg font-bold text-purple-600'>Order completed</p>}
 </td>
 
 

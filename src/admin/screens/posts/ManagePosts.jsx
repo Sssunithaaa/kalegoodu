@@ -90,7 +90,7 @@ const searchKeywordOnSubmitHandler = (event) => {
       searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
       searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
       searchKeyword={searchKeyword}
-      tableHeaderTitleList={[ "Name",  "Price", "Discount Price", "Categories"," "]}
+      tableHeaderTitleList={[ "Name","Price","Discount Price","Quantity", "Categories"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
@@ -144,6 +144,9 @@ const searchKeywordOnSubmitHandler = (event) => {
                 product.price
               )}
             </p>
+          </td>
+          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            <p className="text-gray-900 whitespace-no-wrap">{product.quantity}</p>
           </td>
           <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">

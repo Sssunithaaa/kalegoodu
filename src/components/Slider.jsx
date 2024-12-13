@@ -34,7 +34,7 @@ const ProductCarousel = ( {saleTypeId} ) => {
   queryFn: () => fetchProductsBySaleType(saleTypeId, currentPage),
   enabled: !!saleTypeId, // Only execute query if saleTypeId is truthy
   keepPreviousData: true,
-  refetchOnWindowFocus: true, // Refetch data when the window regains focus
+  refetchOnWindowFocus: false, // Refetch data when the window regains focus
    
     refetchOnMount: true, // Ensures data refetches on component mount
     staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes

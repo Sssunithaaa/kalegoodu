@@ -50,7 +50,7 @@ const DataTable = forwardRef(({
               </form>
             </div>
           </div>
-          <div className="px-4 py-4  sm:-mx-8 sm:px-8">
+          <div className="px-2 py-4  sm:-mx-8 sm:px-8">
             <div className="inline-block min-w-full rounded-lg shadow">
               <table ref={ref} className="min-w-full leading-normal">
                 <thead>

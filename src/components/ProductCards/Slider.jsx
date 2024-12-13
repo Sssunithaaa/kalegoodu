@@ -9,7 +9,7 @@ export const Slider = ({ images, videoUrl }) => {
         {/* Pass images as children */}
         {images?.map((image, index) => (
           <img
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-[500px]"
             key={index}
             src={import.meta.env.VITE_CLOUD_URL+ image}
             alt={`Slide ${index + 1}`}

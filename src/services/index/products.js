@@ -16,7 +16,7 @@ export const getAllProducts = async () => {
 export const getAllProductss = async (page = 1) => {
   try {
     const response = await axios.get(
-      `https://kalegoodupractice.pythonanywhere.com/api/list_products/`,
+      `${url}/api/list_products/`,
       { params: { page } } // Pass the page as a query parameter
     );
     return {
