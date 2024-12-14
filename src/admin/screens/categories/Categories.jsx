@@ -7,6 +7,7 @@ import {
   getAllCategories,
   
 } from "../../../services/index/postCategories";
+import axios from "axios";
 import DataTable from "../../DataTable";
 import { useState, useEffect } from "react";
 import styled from 'styled-components'
@@ -27,7 +28,7 @@ const Button = styled.button`
   }
 `;
 const Categories = () => {
-
+  const baseUrl = import.meta.env.VITE_APP_URL;
   const [categories, setCategories] = useState([]);
   const queryClient = useQueryClient(); 
  const PAGE_SIZE = 5;
@@ -103,6 +104,21 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+   const handleToggleVisibility = async (id, currentVisibility) => {
+  try {
+   
+   await axios.put(`${baseUrl}/api/update_category/${id}/`, {
+      visible: !currentVisibility
+    });
+    
+    toast.success("Visibility updated successfully!");
+    refetch(); 
+  } catch (error) {
+    console.log(error)
+    toast.error("Couldn't update visibility");
+  }
+};
   return (
     <div className="flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">
  <div className="flex w-full justify-start self-start">
@@ -152,6 +168,16 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
                   ))}
                 </div>
               </td>
+              <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+  <div className="flex items-center">
+    <button
+      className={`py-1 px-4 rounded ${category.visible ? "bg-green-500" : "bg-red-500"} text-white`}
+      onClick={() => handleToggleVisibility(category.category_id, category.visible)}
+    >
+      {category.visible ? "Visible" : "Hidden"}
+    </button>
+  </div>
+</td>
               <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
                 {/* <button
                   disabled={isLoadingDeleteData}

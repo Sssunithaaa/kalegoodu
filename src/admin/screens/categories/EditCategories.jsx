@@ -13,6 +13,7 @@ import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import styled from "styled-components";
 import BackButton from "../../BackButton";
+import { ClipLoader } from "react-spinners";
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -41,6 +42,8 @@ const EditCategories = () => {
     isEditMode ? "Sample Description" : ""
   );
 
+  const [visible,setVisible] = useState(false)
+
 
   // Fetching single category (only in edit mode)
   const {data, isLoading, isError,refetch } = useQuery({
@@ -60,6 +63,7 @@ const EditCategories = () => {
       setDescription(data?.description || "");
       
       setPreviews(data?.images?.map((image)=>"https://res.cloudinary.com/dgkgxokru/"+image?.image) || [null,null,null])
+      setVisible(data?.visible)
  },[data])
  
   
@@ -111,17 +115,17 @@ const handleFileChange = (acceptedFiles, index) => {
      
       },
     });
-
+  const [loading,setIsLoading] = useState(false)
   // Handle Submit Function for both Add and Update
   const handleSubmit = (e) => {
    e.preventDefault();
-
+   setIsLoading(true)
   const formData = new FormData();
   
   // Append product details to formData
   formData.append("name", categoryTitle);
-
   formData.append("description", description); // Ensure the key matches
+  formData.append("visible", isEditMode ? visible : true); // Ensure the key matches
 
   
   // Append image files
@@ -129,6 +133,7 @@ const handleFileChange = (acceptedFiles, index) => {
    files.forEach(file => {
     if (file) {
       formData.append("images", file); // Ensure the key matches
+      formData.append("visible",true);
     }
   });
  }
@@ -137,6 +142,7 @@ const newImages = files ? files.filter(file => file && file.hasOwnProperty('path
 if (newImages.length > 0) {
   newImages.forEach(file => {
     formData.append('new_images', file);
+    formData.append("visible",true);
   });
 }
   // Log FormData content to verify
@@ -154,7 +160,9 @@ if (newImages.length > 0) {
       formData,
     );
   }
+  setIsLoading(false)
 };
+
  const handleDelete = async (categoryImageId) => {
     try {
       await axios.delete(`${baseUrl}/api/category_image/${categoryImageId}/delete/`);
@@ -254,6 +262,19 @@ if (newImages.length > 0) {
             placeholder="Description"
           />
         </div>
+       <div className="mb-4">
+  <label htmlFor="visibility" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
+    <input
+      type="checkbox"
+      id="visibility"
+      checked={visible}
+      onChange={(e) => setVisible(e.target.checked)}
+      className="mx-2 border border-gray-300 rounded-md shadow-sm"
+    />
+    {visible ? "Visible" : "Hidden"}
+  </label>
+</div>
+
         <ToastContainer/>
         {/* Created At Field (Display Only, Non-editable in edit mode)
         {isEditMode && (
@@ -274,13 +295,14 @@ if (newImages.length > 0) {
             isLoadingUpdateCategory ||
             isLoadingAddCategory ||
             isLoading ||
-            isError
+            isError ||
+            loading
           }
           type="submit"
           
           className="w-fit mt-3 bg-green-500 text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isEditMode ? "Update Category" : "Add Category"}
+          {isEditMode ? "Update Category" :loading ? <ClipLoader size={20}/> : "Add Category"}
         </button>
       </form>
     </div>

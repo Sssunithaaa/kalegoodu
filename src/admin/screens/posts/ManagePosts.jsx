@@ -12,6 +12,7 @@ import BackButton from '../../BackButton';
 const ManageProducts = () => {
 
  
+    const baseUrl = import.meta.env.VITE_APP_URL;
 
 
  
@@ -77,6 +78,21 @@ const searchKeywordOnSubmitHandler = (event) => {
       toast.error("Failed to delete product!! Try again!!")
     }
   }
+
+  const handleToggleVisibility = async (id, currentVisibility) => {
+  try {
+   
+   await axios.put(`${baseUrl}/api/update_product/${id}/`, {
+      visible: !currentVisibility
+    });
+    
+    toast.success("Visibility updated successfully!");
+    refetch(); 
+  } catch (error) {
+    console.log(error)
+    toast.error("Couldn't update visibility");
+  }
+};
   
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
@@ -169,6 +185,17 @@ const searchKeywordOnSubmitHandler = (event) => {
                 : "No tags"}
             </div>
           </td> */}
+           <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+  <div className="flex items-center">
+    <button
+      className={`py-1 px-4 rounded ${product?.visible ? "bg-green-500" : "bg-red-500"} text-white`}
+      onClick={() => handleToggleVisibility(product?.product_id, product?.visible)}
+    >
+      {product?.visible ? "Visible" : "Hidden"}
+    </button>
+  </div>
+</td>
+        
           <td className="px-5 py-5 text-md bg-white border-b border-gray-200 ">
             <div className='flex flex-row gap-x-5'>
               <Link

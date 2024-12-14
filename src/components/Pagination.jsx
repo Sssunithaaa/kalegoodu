@@ -15,7 +15,7 @@ const Pagination = ({
 
   // If paginationRange is undefined or the length is less than 2, don't render pagination
   if (!paginationRange || paginationRange.length < 2) {
-    return null;
+    return <div>"null"</div>;
   }
 
   const onNext = () => {

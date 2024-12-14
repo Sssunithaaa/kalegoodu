@@ -166,12 +166,12 @@ const handleUpload = async (e) => {
         if (file) {
           formData.append('title', "Sample image");
           formData.append('image', file);
-          const response = await axios.post(
+          formData.append('visible', true);
+          await axios.post(
             `${baseUrl}/api/banner_images/`,
             formData,
             config
-          );
-          
+          );          
           toast.success("Image uploaded successfully!!")
           setIsAddingImage(false)
           
@@ -179,9 +179,9 @@ const handleUpload = async (e) => {
           refetch()
         }
       });
-      for(let [key,value] of formData.entries()){
-        console.log(key+" "+value)
-      }
+      // for(let [key,value] of formData.entries()){
+      //   console.log(key+" "+value)
+      // }
 
     } catch (error) {
       toast.error("Couldn't upload image")
@@ -220,68 +220,68 @@ const handleUpload = async (e) => {
       <form className='mt-4' onSubmit={handleUpload}>
         <div className="flex md:col-span-2  flex-col gap-2 ">
           <label className="text-lg">Banner Images:</label>
-          <div className="flex md:flex-row flex-col ">
-           {[...Array(numImages)].map((_, index) => (
-  <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
-    <Dropzone
-      onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
-      accept="image/*"
-    >
-      {({ getRootProps, getInputProps }) => (
-        <div
-          {...getRootProps({
-            className: `${
-              previews[index] ? 'bg-white' : 'bg-black/20'
-            } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
-          })}
-        >
-          <input {...getInputProps()} />
-          {previews[index] ? (
-            <div>
-              <img
-                src={previews[index]}
-                alt={`Preview ${index + 1}`}
-                className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
-              />
-            </div>
-          ) : (
-            <div className="p-3">
-              <BsFillArrowUpCircleFill
-                style={{
-                  fontSize: '16px',
-                  marginBottom: '10px',
-                  color: 'black',
-                }}
-                className="w-full flex mx-auto"
-              />
-              <p className="text-center text-black font-medium">
-                Drag and drop an image here, or click to select file
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-    </Dropzone>
-   <div className='flex flex-row gap-x-2'>
-      {banner?.banner_images[index] && files[index] && (
-
-                <div className='flex flex-row gap-x-2'> 
-                  <UpdateButton disabled={isUpdatingImage} type='button' onClick={() => handleUpdate(banner.banner_images[index].banner_image_id, files[index])}>
-                  {isUpdatingImage ? <ClipLoader size={20}/> : "Update"}
-                </UpdateButton>
-                
-                </div>
-              ) }
-                <DeleteButton type='button' onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
-                  Delete
-                </DeleteButton>
-   </div>
-
-  </div>
-))}
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {[...Array(numImages)].map((_, index) => (
+    <div key={index} className="mx-auto content-center p-2 rounded-md">
+      <Dropzone
+        onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
+        accept="image/*"
+      >
+        {({ getRootProps, getInputProps }) => (
+          <div
+            {...getRootProps({
+              className: `${
+                previews[index] ? 'bg-white' : 'bg-black/20'
+              } dropzone grid content-center h-full mx-auto lg:w-[250px] w-[200px] rounded-xl` // Fixed width for images
+            })}
+          >
+            <input {...getInputProps()} />
+            {previews[index] ? (
+              <div>
+                <img
+                  src={previews[index]}
+                  alt={`Preview ${index + 1}`}
+                  className="w-full h-auto my-5 rounded-lg mx-auto" // Ensure the image is responsive
+                />
+              </div>
+            ) : (
+              <div className="p-3">
+                <BsFillArrowUpCircleFill
+                  style={{
+                    fontSize: '16px',
+                    marginBottom: '10px',
+                    color: 'black',
+                  }}
+                  className="w-full flex mx-auto"
+                />
+                <p className="text-center text-black font-medium">
+                  Drag and drop an image here, or click to select file
+                </p>
+              </div>
+            )}
           </div>
-          
+        )}
+      </Dropzone>
+      <div className="flex flex-row gap-x-2 justify-center">
+        {banner?.banner_images[index] && files[index] && (
+          <div className="flex flex-row gap-x-2">
+            <UpdateButton
+              disabled={isUpdatingImage}
+              type="button"
+              onClick={() => handleUpdate(banner.banner_images[index].banner_image_id, files[index])}
+            >
+              {isUpdatingImage ? <ClipLoader size={20} /> : 'Update'}
+            </UpdateButton>
+          </div>
+        )}
+        <DeleteButton type="button" onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
+          Delete
+        </DeleteButton>
+      </div>
+    </div>
+  ))}
+</div>
+
           {addingImages && <div className="flex mx-auto mt-4">
             <Button type="submit disabled:cursor-none" disabled={isAddingImage}>{isAddingImage ? <ClipLoader size={20}/> : "Upload Images"}</Button>
           </div>}

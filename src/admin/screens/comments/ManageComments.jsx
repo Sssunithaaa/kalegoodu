@@ -42,9 +42,7 @@ const ManageComments = () => {
   }
   const handleToggleVisibility = async (id, currentVisibility) => {
   try {
-    console.log({
-      display: !currentVisibility
-    })
+   
     const response = await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
       display: !currentVisibility
     });

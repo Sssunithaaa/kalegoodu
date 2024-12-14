@@ -69,6 +69,7 @@ const EditPost = () => {
   const [description, setDescription] = useState(""); 
   const [videoUrl, setVideoUrl] = useState("")
   const [uploading,setIsUploading] = useState(false)
+  const [quantity,setQuantity] = useState(1);
   const isEditMode = Boolean(id); 
    const { data: categoriesData, isLoadingg, isFetching } = useQuery({
     queryKey: ["categories"],
@@ -133,6 +134,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       setPreviews(
         product.images?.map((image) => "https://res.cloudinary.com/dgkgxokru/"+`${image.image}`) // Assuming image.image is a URL string
       );
+      setQuantity(product?.quantity)
 
     }
   }, [product]);
@@ -184,6 +186,8 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
     setDiscountPrice("");
     setPrice("");
     setPreviews([]);
+    setVideoUrl("");
+    setQuantity(1);
     setIsUploading(false); // End uploading state on success
   },
   onError: (error) => {
@@ -214,7 +218,6 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
 
 const handleSubmit = async (e) => {
   e.preventDefault();
- console.log("Hellooo")
   const formData = new FormData();
 
   // Append product details to formData
@@ -235,18 +238,20 @@ if (videoUrl) {
   
   const tagObjects = tags.map(tag => tag.value);
   formData.append("sale_types", JSON.stringify(tagObjects));
-  formData.append("quantity",10);
+  formData.append("quantity",quantity);
+  formData.append("visible",true);
 
   if(!isEditMode){
     files.forEach((file, index) => {
     if (file) {
       formData.append(`images`, file);
+      formData.append("visible",true);
     }
   }); 
   } 
-  for(let [key,value] of formData.entries()){
-    console.log(key+" "+value)
-  }
+  // for(let [key,value] of formData.entries()){
+  //   console.log(key+" "+value)
+  // }
  
 
 
@@ -419,6 +424,20 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               value={discountedPrice}
               onChange={(e) => setDiscountPrice(e.target.value)}
               placeholder="Discounted Price"
+              
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="quantity" className="">
+              Quantity:
+            </label>
+            <input
+              type="number"
+              id="quantity"
+              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              placeholder="Quantity"
               
             />
           </div>

@@ -142,6 +142,7 @@ const handleSubmit = async (e) => {
     workshopFormData.append("description", description);
     workshopFormData.append("date", date);
     workshopFormData.append("place", place);
+    workshopFormData.append("completed",true)
 
     if(videoUrl){
        const videoFormData = new FormData();
@@ -150,7 +151,7 @@ const handleSubmit = async (e) => {
       workshopFormData.append("video_url",videoUrl);
       if(isEditMode){
          try {
-        const response = await axios.put(`${baseUrl}/api/update_workshop_video/${slug}/`, videoFormData, {
+        await axios.put(`${baseUrl}/api/update_workshop_video/${slug}/`, videoFormData, {
        headers: { "Content-Type": "multipart/form-data" },
        });
       } catch (error) {
@@ -162,16 +163,7 @@ const handleSubmit = async (e) => {
     const workshopResponse = isEditMode
       ? await updateWorkshop({ formData: workshopFormData, slug })
       : await createWorkshop(workshopFormData);
-
    
-
-   
-    
-
-   
-  
-
-    
     toast.success(isEditMode ? "Workshop updated successfully!" : "Workshop added successfully!");
     queryClient.invalidateQueries(["workshops"]);
 

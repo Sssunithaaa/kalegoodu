@@ -113,6 +113,20 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
     console.error("Error deleting sale type:", error.message);
   }
 };
+ const handleToggleVisibility = async (id, currentVisibility) => {
+  try {
+   
+await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
+      visible: !currentVisibility
+    });
+    
+    toast.success("Visibility updated successfully!");
+    refetch(); 
+  } catch (error) {
+    console.log(error)
+    toast.error("Couldn't update visibility");
+  }
+};
 
   return (
     <div>
@@ -134,7 +148,7 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
           searchInputPlaceHolder="Sale type..."
           searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
           searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
-          tableHeaderTitleList={["Name", ""]}
+          tableHeaderTitleList={["Name","", ""]}
           searchKeyword={searchKeyword}
           isLoading={isLoading}
           isFetching={isFetching}
@@ -150,6 +164,16 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
                   </p>
                 </div>
               </td>
+               {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+  <div className="flex items-center">
+    <button
+      className={`py-1 px-4 rounded ${sale.visible ? "bg-green-500" : "bg-red-500"} text-white`}
+      onClick={() => handleToggleVisibility(sale.sale_type_id, sale.visible)}
+    >
+      {sale.visible ? "Visible" : "Hidden"}
+    </button>
+  </div>
+</td> */}
                <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
                   <button
   onClick={() => handleEditClick(sale)}

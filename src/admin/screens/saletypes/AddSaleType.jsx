@@ -16,33 +16,33 @@ const AddSaleTypeDialog = ({ open, handleClose, onSubmit, editSaleType }) => {
  
   const baseUrl = import.meta.env.VITE_APP_URL;
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    const newSaleType = { name: saleTypeName };
+  event.preventDefault();
+  const newSaleType = { name: saleTypeName, visible: true };
 
-    try {
-      if (editSaleType) {
-        // Edit existing sale type
-        await axios.put(`${baseUrl}/api/update_sale_type/${editSaleType.sale_type_id}/`, newSaleType);
-       
-          toast.success("Sale type updated successfully");
-      
-      } else {
-        // Add new sale type
-        await axios.post(`${baseUrl}/api/sale_types/`, newSaleType);
-        toast.success("Sale type added successfully");
-      }
-
-      
-      onSubmit();
-       setTimeout(()=> {
-        setSaleTypeName("");
-      handleClose();
-        },1000)
-    } catch (error) {
-      console.error("Error adding/updating sale type:", error);
-      toast.error("Failed to add/update sale type");
+  try {
+    if (editSaleType) {
+      // Edit existing sale type
+      await axios.put(`${baseUrl}/api/update_sale_type/${editSaleType.sale_type_id}/`, newSaleType);
+      toast.success("Sale type updated successfully");
+    } else {
+      // Add new sale type
+      await axios.post(`${baseUrl}/api/sale_types/`, newSaleType);
+      toast.success("Sale type added successfully");
     }
-  };
+
+    // Trigger parent refresh and close the dialog only on success
+    onSubmit();
+    setTimeout(() => {
+      setSaleTypeName("");
+      handleClose();
+    }, 1000);
+  } catch (error) {
+    console.error("Error adding/updating sale type:", error.response || error);
+    toast.error(
+      error.response?.data?.message || "Failed to add/update sale type"
+    );
+  }
+};
 
   return (
     <Dialog open={open} onClose={handleClose}>

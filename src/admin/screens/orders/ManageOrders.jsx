@@ -3,32 +3,70 @@ import { DownloadTableExcel } from 'react-export-table-to-excel';
 import { toast, ToastContainer } from 'react-toastify';
 import DataTable from '../../DataTable';
 import axios from 'axios';
-import Pagination from '../../../components/Pagination';
+import { Pagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { getAllOrders } from '../../../services/index/orders';
 import Button from '../../../components/Button';
-import { useEffect } from 'react';
 const ManageProducts = () => {
   const PAGE_SIZE = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]); // State for checked items
+    const baseUrl = import.meta.env.VITE_APP_URL;
+  const fetchOrders = async (page = 1) => {
+  const response = await axios.get(`https://kalegoodupractice.pythonanywhere.com/api/list-orders/?page=${page}`);
+  return response.data;
+};
+  const {
+  data: ordersData = { results: [], next: null, previous: null },
+  isLoading,
+  isFetching,
+  refetch,
+} = useQuery({
+  queryKey :['orders', currentPage], 
+  queryFn : () => fetchOrders(currentPage),
+  keepPreviousData: true, // Useful for smooth transitions between pages
   
-  const { data = [], isLoading, refetch, isFetching } = useQuery({
-    queryKey: ['orders'],
-    queryFn: getAllOrders,
-  });
+});
+
+const orders = ordersData.results;
+
+
 
  
-
+const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const tableRef = useRef(null);
-  const handleExport = () => {
-    const excludedColumns = document.querySelectorAll('.exclude-from-export');
 
-    excludedColumns.forEach((col) => col.remove());
-    setTimeout(() => {
-      refetch();
-    }, 1000);
-  };
+  const [exportAll, setExportAll] = useState(true);
+const handleExport = () => {
+  let url = `${baseUrl}/api/export-customers-orders/`;
+  let fileName = "customers_orders.xlsx";  // Default file name
+
+  if (!exportAll && startDate && endDate) {
+    url += `?start_date=${startDate}&end_date=${endDate}`;
+    // Format the file name to include the start and end dates
+    const formattedStartDate = new Date(startDate).toISOString().split('T')[0];  // "YYYY-MM-DD"
+    const formattedEndDate = new Date(endDate).toISOString().split('T')[0];  // "YYYY-MM-DD"
+    fileName = `customers_orders_${formattedStartDate}_to_${formattedEndDate}.xlsx`;
+  }
+
+  axios
+    .get(url, { responseType: "blob" })
+    .then((response) => {
+      const blob = new Blob([response.data]);
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute("download", fileName);  // Use dynamic file name
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.success("Orders exported successfully!");
+    })
+    .catch((error) => {
+      console.error("Export failed:", error);
+      toast.error("Failed to export orders. Please try again.");
+    });
+};
+
   const formatDate = (dateString) => {
     const options = {
       year: 'numeric',
@@ -61,25 +99,28 @@ const handleQuantityChange = (orderId, item, quantity) => {
 };
 
 const handleCheckboxChange = (orderId, item, isChecked) => {
+console.log(isChecked)
   setSelectedItems((prevState) => {
     const orderSelectedItems = prevState[orderId] || {};
 
-    // Update or remove the item based on the checkbox state
-    const updatedOrderItems = isChecked
-      ? {
-          ...orderSelectedItems,
-          [item?.order_item_id]: {
-            ...(orderSelectedItems[item.order_item_id] || {
-              product_id: item.product,
-              quantity: item.quantity, // Preserve the existing quantity or default to item.quantity
-            }),
-            order_completed: isChecked, // Update the state based on the checkbox
-          },
-        }
-      : (() => {
-          const { [item?.order_item_id]: _, ...rest } = orderSelectedItems; // Remove item if unchecked
-          return rest;
-        })();
+    const updatedOrderItems = {
+      ...orderSelectedItems,
+      [item?.order_item_id]: {
+        ...orderSelectedItems[item.order_item_id],
+        product_id: item.product,
+        quantity: item.quantity,
+        order_completed: isChecked, // Toggle the checkbox state
+      },
+    };
+
+    // If unchecked, remove the item
+    if (!isChecked) {
+      const { [item?.order_item_id]: _, ...rest } = updatedOrderItems;
+      return {
+        ...prevState,
+        [orderId]: rest,
+      };
+    }
 
     return {
       ...prevState,
@@ -123,10 +164,7 @@ const handleInTransit = async (orderId) => {
     toast.error("Failed to update order items. Try again!");
 }
 }
- const [orders,setOrders] = useState([]);
-  useEffect(()=> {
-    setOrders(data)
-  },[data])
+ 
 const [searchKeyword, setSearchKeyword] = useState("");
 const searchKeywordOnChangeHandler = (event) => {
   setSearchKeyword(event.target.value);
@@ -137,38 +175,78 @@ const searchKeywordOnSubmitHandler = (event) => {
 
   if (!searchKeyword || searchKeyword.trim() === "") {
 
-    setOrders(orders);
+    // setOrders(orders);
   } else {
 
     const filteredcategories = orders?.filter((product) =>
       product.customer_name.toLowerCase().includes(searchKeyword.toLowerCase())
     );
    
-    setOrders(filteredcategories);
+    // setOrders(filteredcategories);
     
   }
 };
 
  const url = import.meta.env.VITE_APP_URL;
-  const totalPages = Math.ceil(data?.length / PAGE_SIZE);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = orders?.slice().reverse().slice(startIndex, endIndex);
+  // const totalPages = Math.ceil(data?.length / PAGE_SIZE);
+  // const startIndex = (currentPage - 1) * PAGE_SIZE;
+  // const endIndex = startIndex + PAGE_SIZE;
+  // const paginatedData = orders?.slice().reverse().slice(startIndex, endIndex);
+  const totalPages = Math.ceil(ordersData.count); // Assuming 10 items per page
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (event,page) => {
     setCurrentPage(page);
   };
 
   
   return (
     <div className="w-full overflow-x-auto">
-      <div className="flex mx-auto">
-        <DownloadTableExcel filename="Orders" sheet="Orders" currentTableRef={tableRef.current}>
-          <Button className="w-[100%] ml-4" onClick={handleExport}>
-            Export Excel
-          </Button>
-        </DownloadTableExcel>
+     <div className='flex flex-col justify-center mx-auto'>
+      <h1 className='font-bold text-2xl mb-2 text-center'>Export Customers Orders</h1>
+      <div className='flex mx-auto mb-2 gap-x-2'>
+        <label>
+          <input
+            type="radio"
+            name="exportOption"
+            checked={exportAll}
+            onChange={() => setExportAll(true)}
+          />
+          Export All
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="exportOption"
+            checked={!exportAll}
+            onChange={() => setExportAll(false)}
+          />
+          Export by Date Range
+        </label>
       </div>
+
+      {!exportAll && (
+        <div className='flex mx-auto gap-x-2'>
+          <label>
+            Start Date:
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </label>
+          <label>
+            End Date:
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </label>
+        </div>
+      )}
+
+      <Button className='text-left' onClick={handleExport}>Export Orders</Button>
+    </div>
 
       <DataTable
         dataListName="Orders"
@@ -179,25 +257,25 @@ const searchKeywordOnSubmitHandler = (event) => {
         searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
         searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
         searchKeyword={searchKeyword}
-        data={paginatedData}
+        data={orders}
         ref={tableRef}
       >
         <ToastContainer />
-        {paginatedData?.map((order, index) => (
+        {orders?.map((order, index) => (
           <tr key={order.order_id}>
-            <td className="px-2 py-5 text-md bg-white border-b border-gray-200">
-              <p className="text-gray-900 whitespace-no-wrap">{startIndex + index + 1}</p>
+            <td className="px-3 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">{index + 1}</p>
             </td>
-            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            <td className="px-3 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 font-bold whitespace-no-wrap">{order?.order_id}</p>
             </td>
-            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            <td className="px-3 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 whitespace-no-wrap">{order?.customer_name}</p>
             </td>
-            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            <td className="px-3 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 whitespace-no-wrap">{order?.total_amount}</p>
             </td>
-            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+            <td className="px-3 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 whitespace-no-wrap">{order?.count}</p>
             </td>
             <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
@@ -215,18 +293,17 @@ const searchKeywordOnSubmitHandler = (event) => {
                     {order.items.map((item) => (
   <tr key={item.order_item_id}>
     <td className="px-3 py-2 text-md bg-white border-b border-gray-200">
-     <input
+   <input
   checked={
-    selectedItems[order.order_id]?.[item.order_item_id]?.order_completed ||
-    item.order_completed ||
-    false
+    selectedItems[order?.order_id]?.[item?.order_item_id]?.order_completed || false
   }
+   disabled={item?.order_completed}
   type="checkbox"
-  disabled={item?.order_completed}
   onChange={(e) =>
-    handleCheckboxChange(order?.order_id, item, item?.quantity ? item?.quantity : 0, e.target.checked)
+    handleCheckboxChange(order?.order_id, item, e.target.checked)
   }
 />
+
 
     </td>
                         <td className="px-3 py-2 text-md bg-white border-b border-gray-200">{item.product_name}</td>
@@ -272,9 +349,16 @@ const searchKeywordOnSubmitHandler = (event) => {
         ))}
       </DataTable>
       {!isLoading && (
-        <div className="flex mx-auto">
-          <Pagination onPageChange={handlePageChange} currentPage={currentPage} totalPageCount={totalPages} />
-        </div>
+        <div className="flex justify-center my-3 mx-auto">
+              <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded"
+              className="mt-5 flex justify-center"
+            />
+                    </div>
       )}
     </div>
   );

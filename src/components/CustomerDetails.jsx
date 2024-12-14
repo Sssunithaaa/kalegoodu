@@ -50,10 +50,11 @@ const customerDetails = {
   name: `${firstName} ${lastName}`,
   address: fullAddress,
   phone_number: "91" + formattedPhone,
-  pincode: pincode
+  pincode: pincode,
+  visible: true
 };
 
-
+ 
 
 
     // Create order payload
@@ -65,9 +66,11 @@ const customerDetails = {
     quantity: item.quantity,
     price: item.discounted_price !== 0 ? item.discounted_price : item.price,
     image: import.meta.env.VITE_CLOUD_URL + item.images[0]?.image, // Include the image
+    visible: true
   })),
   total: total,
   count: cartItems.length,
+  visible: true
 },
 customerDetails : customerDetails
   
