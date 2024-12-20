@@ -81,13 +81,16 @@ useEffect(() => {
   if (data?.results) {
     setAllProducts((prev) => {
       const newProducts = data.results.filter(
-        (newProduct) => !prev.some((prevProduct) => prevProduct.product_id === newProduct.product_id)
+        (newProduct) =>
+          newProduct.visible && // Include only products with visible === true
+          !prev.some((prevProduct) => prevProduct.product_id === newProduct.product_id) // Check for uniqueness
       );
-      return [...prev, ...newProducts]; // Append only unique products
+      return [...prev, ...newProducts]; // Append only unique and visible products
     });
     setHasMore(!!data.next); // Check if there's more data
   }
 }, [data]);
+
 
 
 useEffect(() => {
@@ -187,30 +190,6 @@ const SamplePrevArrow = (props) => {
 };
 
 
-const SkeletonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
 
-const SkeletonCard = styled.div`
-  flex: 1;
-  padding: 10px;
-  @media (min-width: 1024px) and (max-width: 1500px) {
-    flex: 0 0 20%;
-    max-width: 20%;
-  }
-  @media (max-width: 1024px) {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-  @media (max-width: 768px) {
-    flex: 0 0 80%;
-    max-width: 80%;
-  }
-  @media (max-width: 480px) {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-`;
 
 export default SectionWrapper(ProductCarousel, "");

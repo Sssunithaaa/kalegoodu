@@ -4,7 +4,6 @@ import FullPageLoader from './components/FullPageLoader';
 import { CartContext } from './context/CartContext';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-
 const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));

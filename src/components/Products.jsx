@@ -1,37 +1,33 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Sidebar from "./SideBar";
 import ProductCard from "./ProductCard";
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { IoFilter } from "react-icons/io5";
 import { BiSort } from "react-icons/bi";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { ClipLoader } from "react-spinners";
-import styled from "styled-components";
-import Pagination from "@mui/material/Pagination"; // Material-UI Pagination
 import { SectionWrapper } from "../hoc";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import FullPageLoader from "./FullPageLoader";
 import { useStateContext } from "../context/ContextProvider";
+import Button from "./Button";
+
 const Products = () => {
   const {showSidebar,setShowSidebar} = useStateContext();
   
   const [showOverlay,setShowOverlay] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Products");
-  const [sortOption, setSortOption] = useState("dateNewToOld");
+  const [sortOption, setSortOption] = useState(null);
   const [sPrice, setSprice] = useState(0);
   const [ePrice, setEprice] = useState(null);
   const [price, setPrice] = useState(false);
   const [keyword, setKeyword] = useState(null);
   const [sort, setSort] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   
-const [itemsPerPage] = useState(4); // Fixed items per page
-
-
-
 
   const baseUrl = import.meta.env.VITE_APP_URL;
+
+
   const { id, name } = useParams();
   const categoryMode = Boolean(id);
   const location = useLocation();
@@ -46,76 +42,10 @@ const [itemsPerPage] = useState(4); // Fixed items per page
     }
   }, [name, location]);
 
-  // Fetch products using `useQuery`
-  const fetchProducts = async (page) => {
-    const endpoint = categoryMode
-      ? `${baseUrl}/api/products_by_category/${id}/?page=${page}`
-      : `${baseUrl}/api/list_products?page=${page}`;
 
-    const { data } = await axios.get(endpoint);
 
-  
-    return data;
-  };
-  
-  const { data, isLoading, error } = useQuery({
-    queryKey : ["products", currentPage,id],
-    queryFn : () => fetchProducts(currentPage),
-    
-});
 
-const products = data?.results || data?.products;
-const totalCount = data?.count || 0;
-const totalPages = Math.ceil(totalCount / itemsPerPage); // Total pages calculation
-useEffect(() => {
-  if (products?.length === 0 && currentPage > 1) {
-    // If the current page has no data and is beyond page 1, navigate back to a valid page
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  }
-}, [products, currentPage]);
 
-// Handle page change
-const handlePageChange = (event, value) => {
-  setCurrentPage(value);
-};
-useEffect(() => {
-  if (location) {
-    setCurrentPage(1); // Reset page to 1 on location change
-  }
-}, [location]);
-
-  // Memoized sorting function
-  const sortedProducts = useMemo(() => {
-    if (!products) return [];
-
-    const sorted = [...products];
-    switch (sortOption) {
-      case "dateNewToOld":
-        return sorted.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-      case "dateOldToNew":
-        return sorted.sort((a, b) => new Date(a.updated_at) - new Date(b.updated_at));
-      case "priceLowToHigh":
-        return sorted.sort((a, b) => a.price - b.price);
-      case "priceHighToLow":
-        return sorted.sort((a, b) => b.price - a.price);
-      case "alphabeticallyAZ":
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case "alphabeticallyZA":
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
-      default:
-        return sorted;
-    }
-  }, [sortOption, products]);
-
-  // Memoized filtering function
-  const filteredProducts = useMemo(() => {
-    return sortedProducts.filter(
-      (product) =>
-        (sPrice === null || product.price >= sPrice) &&
-        (ePrice === null || product.price <= ePrice) &&
-        (!keyword || new RegExp(keyword.split("").join(".*"), "i").test(product.name))
-    );
-  }, [sortedProducts, sPrice, ePrice, keyword]);
 
   const toggleSidebar = () =>{ setShowSidebar((prev) => !prev)
 
@@ -131,6 +61,18 @@ useEffect(() => {
     }
   }, []);
 
+const handlePriceChange = (start, end) => {
+  setSprice(start || 0);
+  setEprice(end || null);
+  console.log(products)
+  setCurrentPage(1); // Reset to first page
+};
+const handleSortChange = (event) => {
+  setSortOption(event.target.value);
+  setCurrentPage(1); // Reset to first page
+};
+
+
 
   useEffect(() => {
   const handleResize = () => {
@@ -143,6 +85,54 @@ useEffect(() => {
   window.addEventListener("resize", handleResize);
   return () => window.removeEventListener("resize", handleResize); // Cleanup listener
 }, []);
+
+const fetchProducts = async ({ pageParam = 1 }) => {
+  const endpoint = categoryMode
+    ? `${baseUrl}/api/products_by_category/${id}/?page=${pageParam}`
+    : `${baseUrl}/api/list_products?page=${pageParam}`;
+
+  const params = new URLSearchParams();
+  if (keyword) params.append("search", keyword);
+  if (sPrice) params.append("min_price", sPrice);
+  if (ePrice) params.append("max_price", ePrice);
+  if (sortOption) {
+    const [field, order] = sortOption.split("-");
+    params.append("sort_by", field);
+    params.append("sort_order", order);
+  }
+
+  const url = `${endpoint}${params.toString() ? "&" + params.toString() : ""}`;
+  const { data } = await axios.get(url);
+  return data;
+};
+const {
+  data,
+  isLoading,
+  isError,
+  error,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+} = useInfiniteQuery({
+  queryKey: ["products", categoryMode, id, keyword, sPrice, ePrice, sortOption],
+  queryFn: fetchProducts,
+  getNextPageParam: (lastPage, pages) => {
+    return lastPage.next ? pages.length + 1 : undefined; // Use 'next' from API response
+  },
+  
+});
+
+if (isError) {
+  console.error("Error fetching products:", error.message);
+}
+const products = data?.pages
+  .flatMap((page) => page.results) // Flatten the pages
+  .filter((product) => product.visible) || []; 
+const loadMoreHandler = () => {
+  if (hasNextPage) fetchNextPage();
+};
+
+
 
 
 
@@ -172,6 +162,7 @@ useEffect(() => {
               setEprice={setEprice}
               setKeyword={setKeyword}
               setPrice={setPrice}
+              handlePriceChange={handlePriceChange}
               toggleSidebar={toggleSidebar}
               searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
             />
@@ -192,63 +183,41 @@ useEffect(() => {
                   Sort by<span><BiSort /></span>
                 </h1>
                 {sort && (
-                  <FormControl
-  sx={{
-    m: 1,
-    minWidth: 120,
-    maxHeight: 60,
-    '& .MuiSelect-select': {
-      fontFamily: 'Amiri, serif', // Update font family
-      fontSize: '14px', // Update font size
-      color: 'black', // Use theme primary color
-      paddingBlock: '7px',
-      fontWeight: '20px'
-    },
-  }}
->
+            <FormControl>
   <Select
     labelId="sort-select-label"
     id="sort-select"
     value={sortOption}
-    onChange={(e) => setSortOption(e.target.value)}
+    onChange={handleSortChange}
     autoWidth
-     inputProps={{
-    style: {
-      fontFamily: 'Amiri serif',
-      fontSize: '14px',
-    },
-  }}
+    inputProps={{
+      style: {
+        fontFamily: 'Amiri serif',
+        fontSize: '14px',
+      },
+    }}
   >
-    <MenuItem sx={{ 
-    fontFamily: 'Amiri serif', 
-    fontSize: '14px', 
-    color: '#333' 
-  }} value="dateNewToOld">Date, new to old</MenuItem>
-    <MenuItem sx={{ 
-    fontFamily: 'Amiri serif', 
-    fontSize: '14px', 
-    color: '#333' 
-  }} value="dateOldToNew">Date, old to new</MenuItem>
-    <MenuItem sx={{ 
-    fontFamily: 'Amiri serif', 
-    fontSize: '14px', 
-    color: '#333' 
-  }} value="priceLowToHigh">Price, low to high</MenuItem>
-    <MenuItem sx={{ 
-    fontFamily: 'Amiri serif', 
-    fontSize: '14px', 
-    color: '#333' 
-  }} value="priceHighToLow">Price, high to low</MenuItem>
-    <MenuItem sx={{ 
-    fontFamily: 'Amiri serif', 
-    fontSize: '14px', 
-    color: '#333' 
-  }} value="alphabeticallyAZ">Alphabetically, A-Z</MenuItem>
-    <MenuItem sx={{ 
-    fontFamily: 'Amiri serif', 
-    fontSize: '14px', 
-    color: '#333' 
-  }} value="alphabeticallyZA">Alphabetically, Z-A</MenuItem>
+    {/* Date Sorting */}
+    <MenuItem sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }} value="created_at-desc">
+      Date, new to old
+    </MenuItem>
+    <MenuItem sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }} value="created_at-asc">
+      Date, old to new
+    </MenuItem>
+    {/* Price Sorting */}
+    <MenuItem sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }} value="price-asc">
+      Price, low to high
+    </MenuItem>
+    <MenuItem sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }} value="price-desc">
+      Price, high to low
+    </MenuItem>
+    {/* Name Sorting */}
+    <MenuItem sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }} value="name-asc">
+      Alphabetically, A-Z
+    </MenuItem>
+    <MenuItem sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }} value="name-desc">
+      Alphabetically, Z-A
+    </MenuItem>
   </Select>
 </FormControl>
 
@@ -273,36 +242,44 @@ useEffect(() => {
             <div className="flex w-full md:px-2">
               <div
                 className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
-                  ${filteredProducts?.length === 1 ? "grid-cols-1" : ""} 
-                  ${filteredProducts?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
+                  ${products?.length === 1 ? "grid-cols-1" : ""} 
+                  ${products?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
                   w-full`}
               >
                 {isLoading ? (
                  <FullPageLoader/>
-                ) : error ? (
+                ) : isError ? (
                   <p>Error fetching products.</p>
-                ) : (
-                  filteredProducts.map((product) => (
-                   <div key={product?.product_id}>
-                     <ProductCard
-                      
-                      productMode={true}
-                      product={product}
-                    />
-                   </div>
-                  ))
-                )}
+                ) : products?.map((product) => (
+    <div key={product?.product_id}>
+      <ProductCard
+        productMode={true}
+        product={product}
+      />
+    </div>
+  ))
+}
               </div>
             </div>
-            <Pagination
+            {hasNextPage && (
+    <Button
+      onClick={loadMoreHandler}
+      disabled={isFetchingNextPage}
+      className="my-3 px-4"
+    >
+      {isLoading ? "Loading..." : "Load More"}
+    </Button>
+  )}
+            {/* <Pagination
               count={totalPages}
               page={currentPage}
               onChange={handlePageChange}
               variant="outlined"
               shape="rounded"
               className="mt-5 flex justify-center"
-            />
+            /> */}
           </div>
+           
         </div>
       </div>
     </div>

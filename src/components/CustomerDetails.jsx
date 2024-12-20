@@ -106,27 +106,67 @@ handleOpenDialog();
     });
     message += `\nTotal: Rs. ${total}`;
 
-    try {
+    // try {
  
-      await Promise.all([
-        axios.post(`${baseUrl}/api/create-order/`, orderPayload),
-        // axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
-      ]);
+    //   await Promise.all([
+    //     axios.post(`${baseUrl}/api/create-order/`, orderPayload),
+    //     // axios.post(`${baseUrl}/api/send-message/`, { message }),  // Wrap message in an object if required by the API
+    //   ]);
 
       
-      toast.success("Order placed successfully!!");
-      setTimeout(()=>{
-        handleOpenDialog()
-          emptyCart();
-        navigate("/products")
-      },2000)
+    //   toast.success("Order placed successfully!!");
+    //   setTimeout(()=>{
+    //     handleOpenDialog()
+    //       emptyCart();
+    //     navigate("/products")
+    //   },2000)
 
       
       
+    // } catch (error) {
+    //   console.log(error);
+    //   toast.error("Couldn't place order");
+    // }
+    try {
+        // Call the backend to create an order
+        const response = await axios.post(`${baseUrl}/create-order/`, {
+            amount: total * 100, // Amount in paise
+        });
+
+        const { order_id, amount, currency } = response.data;
+
+        const options = {
+            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+            amount: amount.toString(),
+            currency: currency,
+            name: "Your Company Name",
+            description: "Test Transaction",
+            order_id: order_id,
+            handler: async function (response) {
+                // Handle payment success
+                toast.success("Payment successful!");
+                // Optional: Call backend to verify payment
+                await axios.post(`${baseUrl}/verify-payment/`, response);
+                emptyCart();
+                navigate("/products");
+            },
+            prefill: {
+                name: `${firstName} ${lastName}`,
+                email: email,
+                contact: `+91${phone}`,
+            },
+            theme: {
+                color: "#3399cc",
+            },
+        };
+
+        const razorpay = new window.Razorpay(options);
+        razorpay.open();
     } catch (error) {
-      console.log(error);
-      toast.error("Couldn't place order");
+        console.error(error);
+        toast.error("Payment failed!");
     }
+
   };
 
  

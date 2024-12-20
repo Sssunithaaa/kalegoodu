@@ -12,7 +12,7 @@ const ManageProducts = () => {
   const [selectedItems, setSelectedItems] = useState([]); // State for checked items
     const baseUrl = import.meta.env.VITE_APP_URL;
   const fetchOrders = async (page = 1) => {
-  const response = await axios.get(`https://kalegoodupractice.pythonanywhere.com/api/list-orders/?page=${page}`);
+  const response = await axios.get(`${baseUrl}/api/list-orders/?page=${page}`);
   return response.data;
 };
   const {

@@ -16,7 +16,7 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
     background-color: #9e7f6b; /* Slightly darker color */
   }
 `;
-const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSubmitHandler,setPrice}) => {
+const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSubmitHandler,handlePriceChange}) => {
   
 
   const [priceRange, setPriceRange] = useState([0, 100]);
@@ -37,10 +37,7 @@ const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSu
   const submitPriceInputChange = ()=> {
     setSprice(priceRange[0]);
     setEprice(priceRange[1])
-    setPrice(true)
-     if(window.innerWidth <= 768){
-        toggleSidebar()
-      }
+    handlePriceChange(priceRange[0],priceRange[1])
   }
 
 
