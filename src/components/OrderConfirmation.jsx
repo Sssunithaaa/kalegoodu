@@ -2,7 +2,7 @@ import React from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import Button from "./Button";
 const OrderConfirmation = ({ open, handleClose, customer }) => {
-    console.log(customer)
+   
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>

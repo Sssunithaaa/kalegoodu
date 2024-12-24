@@ -7,6 +7,7 @@ import { getSingleProduct, getProductsByCategory } from '../services/index/produ
 import { ClipLoader } from "react-spinners";
 import Testimonials from './Testimonials/Testimonials';
 import CompactProductCard from './CompactProductCard';
+import ReactPlayer from 'react-player';
 
 function ProductPage() {
   const [cartCounter, setCartCounter] = useState(1);
@@ -64,6 +65,7 @@ function ProductPage() {
         <div className="mt-4">
           <Testimonials comments={product?.comments || []} home={false} />
         </div>
+        
 
         {/* Similar Products Section */}
        {/* Similar Products Section */}

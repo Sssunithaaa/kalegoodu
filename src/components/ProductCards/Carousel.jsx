@@ -40,14 +40,16 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
   
   return (
     <div ref={productPageRef} className="flex flex-col">
-      <div className="overflow-hidden relative max-w-[350px] lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
+      <div  style={{ 
+    pointerEvents: curr === slides.length ? "None" : "auto" // Allow pointer events on video slide only
+  }} className="overflow-hidden relative max-w-[350px] z-[1001] hover:cursor-pointer lg:w-full lg:max-w-full md:max-w-[400px] mx-auto md:h-auto md:rounded-2xl">
         <div
-  className={`flex transition-transform w-full ease-out duration-500 ${
-    curr === slides.length ? "transition-none" : ""
-  }`}
+   className={`flex transition-transform hover:cursor-pointer w-full ease-out duration-500 ${
+     curr === slides.length ? "transition-none" : ""
+   }`}
   style={{ 
     transform: `translateX(-${curr}%)`,
-    pointerEvents: curr === slides.length ? "auto" : "none" // Allow pointer events on video slide only
+    pointerEvents: curr === slides.length ? "None" : "auto" // Allow pointer events on video slide only
   }}
 >
   {slides.map((slide, index) => (
@@ -64,9 +66,9 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
   ))}
 
   {videoUrl != null && curr === slides.length && (
-  <div className="flex-shrink-0 w-full">
+  <div className="flex-shrink-0 z-[100001] w-full">
     <div 
-      className="relative w-[330px] sm:w-[350px] lg:w-full h-[200px] sm:h-[200px] md:h-[400px]"
+      className="relative  h-[240px] sm:h-[200px] md:h-[400px]"
       style={{ maxHeight: "100vh" }} // Ensure it doesn't exceed the viewport height
     >
       &nbsp;&nbsp;
@@ -76,7 +78,7 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
         controls
         width="100%"
         height="100%"
-        className="absolute top-0 left-0"
+        className="hover:cursor-pointer top-0 left-0"
         style={{ pointerEvents: "auto", zIndex: 100 }}
       />
     </div>
