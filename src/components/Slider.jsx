@@ -57,24 +57,44 @@ const settings = {
   initialSlide: 0,
   afterChange: (index) => setCurrentSlide(index),
   prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-  nextArrow:
-   hasMore 
-      ? <SampleNextArrow />
-      :  null,
+  nextArrow: hasMore ? <SampleNextArrow /> : null,
   responsive: [
-    { breakpoint: 1500, settings: { slidesToShow: 4 } },
-    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-    { breakpoint: 768, settings: { slidesToShow: 2, initialSlide:0 } },
     {
-      breakpoint: 540,
+      breakpoint: 1500,
       settings: {
-        slidesToShow: 1,
-        centerMode: true,
-        centerPadding: "30px",
+        slidesToShow: Math.min(allProducts.length, 4),
+        centerMode: allProducts.length > 4,
+        centerPadding: allProducts.length > 4 ? "30px" : "0px",
+      },
+    },
+    {
+      breakpoint: 1024, // iPad and similar devices
+      settings: {
+        slidesToShow: Math.min(allProducts.length, 3),
+        centerMode: allProducts.length > 3,
+        centerPadding: allProducts.length > 3 ? "30px" : "0px",
+      },
+    },
+    {
+      breakpoint: 768, // Smaller tablets or larger phones
+      settings: {
+        slidesToShow: Math.min(allProducts.length, 2),
+        centerMode: allProducts.length > 2,
+        centerPadding: allProducts.length > 2 ? "30px" : "0px",
+      },
+    },
+    {
+      breakpoint: 540, // Small screens
+      settings: {
+        slidesToShow: Math.min(allProducts.length, 1),
+        centerMode: allProducts.length > 1,
+        centerPadding: allProducts.length > 1 ? "30px" : "0px",
       },
     },
   ],
 };
+
+
 
 
 useEffect(() => {
