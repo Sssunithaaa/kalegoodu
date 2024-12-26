@@ -103,7 +103,7 @@ const AddWorkshop = () => {
 
     },
     onError: (error) => {
-        console.log(error)
+        // console.log(error)
       toast.error("Couldn't add workshop!!");
     },
   });
@@ -114,7 +114,7 @@ const AddWorkshop = () => {
       toast.success("Workshop update successfully!");
     },
     onError: (error) => {
-        console.log(error)
+        // console.log(error)
       toast.error("Couldn't update workshop!!");
     },
   });

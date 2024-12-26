@@ -15,7 +15,7 @@ export const createPageContent = async (formData) => {
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
-    console.log(error)
+  
     throw new Error(error.message);
   }
 };
@@ -27,10 +27,9 @@ export const updatePageContent = async (pageId, formData) => {
   };
   try {
     const response = await axios.put(`${url}/api/update_page_contents/${pageId}/`, formData, config);
-    console.log(response.data)
     return response?.data;
   } catch (error) {
-    console.log('Error updating page content:', error);
+    // console.log('Error updating page content:', error);
     throw error;
   }
 };

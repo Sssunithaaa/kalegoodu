@@ -46,11 +46,11 @@ const ManageComments = () => {
     const response = await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
       display: !currentVisibility
     });
-    console.log(response)
+    // console.log(response)
     toast.success("Visibility updated successfully!");
     refetch(); 
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     toast.error("Couldn't update visibility");
   }
 };

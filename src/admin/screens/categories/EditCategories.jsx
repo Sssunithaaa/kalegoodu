@@ -146,9 +146,9 @@ if (newImages.length > 0) {
   });
 }
   // Log FormData content to verify
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
+  // for (let [key, value] of formData.entries()) {
+  //   console.log(key, value);
+  // }
 
   if (isEditMode) {
     mutateUpdateCategory({
@@ -171,7 +171,7 @@ if (newImages.length > 0) {
       refetch()
     } catch (error) {
       toast.error("Failed to delete image");
-      console.log("Error deleting image:", error);
+      // console.log("Error deleting image:", error);
     }
   };
   

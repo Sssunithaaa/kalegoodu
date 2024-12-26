@@ -61,7 +61,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     },
     customerDetails: details,
   };
-  console.log(orderPayload);
+  
 
   try {
     // Using Promise.all to handle multiple requests concurrently

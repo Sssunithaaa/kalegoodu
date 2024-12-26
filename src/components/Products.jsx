@@ -64,7 +64,7 @@ const Products = () => {
 const handlePriceChange = (start, end) => {
   setSprice(start || 0);
   setEprice(end || null);
-  console.log(products)
+
   setCurrentPage(1); // Reset to first page
 };
 const handleSortChange = (event) => {

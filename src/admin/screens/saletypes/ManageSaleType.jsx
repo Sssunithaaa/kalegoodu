@@ -90,7 +90,7 @@ const searchKeywordOnSubmitHandler = (event) => {
 
   // Callback when form is submitted successfully
   const handleFormSubmit = () => {
-    console.log("Sale type added successfully!");
+    // console.log("Sale type added successfully!");
   };
    
 const totalPages = Math.ceil(sales?.length / PAGE_SIZE);

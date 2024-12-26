@@ -28,7 +28,7 @@ const PolicyForm = ({ title, data, id }) => {
       await updatePageContent(id, formData);
       toast.success(`${title} updated successfully!`, { autoClose: 2000 });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(`Failed to update ${title}`, { autoClose: 2000 });
     } finally {
       setIsSubmitting(false);

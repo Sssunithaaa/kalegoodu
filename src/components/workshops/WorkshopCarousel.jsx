@@ -19,7 +19,7 @@ const WorkshopCarousel = () => {
   useEffect(()=> {
     setCompletedWorkshops(data?.filter((row)=>row?.completed))
   },[data])
-  console.log(completedWorkshops)
+
   const navigate = useNavigate();
 
 const Arrow = styled.div`

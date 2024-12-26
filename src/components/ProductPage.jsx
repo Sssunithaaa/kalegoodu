@@ -26,7 +26,7 @@ function ProductPage() {
   });
 
   const images = product?.images?.map((image) => image.image);
-  console.log(product)
+ 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

@@ -48,7 +48,7 @@ export const createWorkshop = async (formData) => {
     );
     return data;
   } catch (error) {
-    console.log(error)
+  
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);
@@ -70,7 +70,7 @@ export const updateWorkshop = async ({ formData, slug }) => {
     );
     return response.data;
   } catch (error) {
-    console.log(error)
+
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);

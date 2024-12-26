@@ -48,7 +48,7 @@ const handleExport = () => {
     const formattedEndDate = new Date(endDate).toISOString().split('T')[0];  // "YYYY-MM-DD"
     fileName = `customers_orders_${formattedStartDate}_to_${formattedEndDate}.xlsx`;
   }
-  console.log(url)
+  // console.log(url)
   axios
     .get(url, { responseType: "blob" })
     .then((response) => {
@@ -99,7 +99,7 @@ const handleQuantityChange = (orderId, item, quantity) => {
 };
 
 const handleCheckboxChange = (orderId, item, isChecked) => {
-console.log(isChecked)
+
   setSelectedItems((prevState) => {
     const orderSelectedItems = prevState[orderId] || {};
 

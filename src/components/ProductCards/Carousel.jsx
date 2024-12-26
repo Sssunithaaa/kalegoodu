@@ -56,7 +56,7 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
       if(curr === slides?.length)
         setPointer(true);
     },[curr])
-    console.log(pointer)
+   
   return (
     <div ref={productPageRef} className="flex flex-col">
       <div
@@ -111,7 +111,8 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
         </div>
 
         {/* Navigation buttons */}
-        <div className="absolute inset-0 flex items-center justify-between p-4">
+        {
+          slides.length !== 1 && <div className="absolute inset-0 flex items-center justify-between p-4">
           {/* Previous button */}
           <button
             onClick={prev}
@@ -129,7 +130,7 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
           <button
             onClick={next}
             className="bg-white rounded-full p-3 md:hidden"
-            style={{ visibility: curr === slides.length ? "hidden" : "visible" }} // Hide on last slide
+            style={{ visibility: curr === slides.length-1 ? "hidden" : "visible" }} // Hide on last slide
           >
             <img
               className="h-[10px] w-[10px]"
@@ -138,6 +139,7 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
             />
           </button>
         </div>
+        }
       </div>
 
       {/* Thumbnail navigation */}
@@ -173,9 +175,9 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
             className={`hover:cursor-pointer rounded-xl `}
           >
             <div
-              className={`relative w-28 h-28 bg-gray-200 rounded-xl flex items-center justify-center ${
+              className={`relative bg-gray-200 rounded-xl flex items-center justify-center ${
                 curr === slides.length ? "border-2 border-orange" : ""
-              }`}
+              } ${images.length === 1 ? "w-[200px]" : "w-24 h-24"}`}
             >
               {/* Static video preview */}
               <img

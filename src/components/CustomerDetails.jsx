@@ -213,7 +213,7 @@ const [loading,setIsLoading] = useState(false)
       pincode,
       visible: true,
     };
-    console.log("Hiii")
+
     // Send order details to backend and get Razorpay order ID
     try {
       const response = await axios.post("https://kalegoodupractice.pythonanywhere.com/api/create-payment/", {amount:100}, {
@@ -227,7 +227,6 @@ const [loading,setIsLoading] = useState(false)
 
       const { razorpay_order_id, amount, currency } = response.data;
 
-      console.log(response)
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -244,7 +243,7 @@ const [loading,setIsLoading] = useState(false)
             toast.success("Payment successful!");
             emptyCart();
             navigate("/products");
-            console.log(res)
+              
           } catch (error) {
             toast.error("Payment verification failed!");
             console.error(error);
@@ -260,12 +259,11 @@ const [loading,setIsLoading] = useState(false)
         },
       };
 
-      console.log(options)
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (error) {
-      console.log(error);
+     
       toast.error("Payment failed! Please try again.");
 
     }

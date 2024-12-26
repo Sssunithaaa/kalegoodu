@@ -119,9 +119,9 @@ const Hero = () => {
     queryKey: ["banner"],
     queryFn: async () => {
       const response = await fetch(`${baseUrl}/api/banner_images/`);
-      console.log(response)
+   
       const data = await response.json();
-      console.log(data)
+    
       return data;
     }
   });

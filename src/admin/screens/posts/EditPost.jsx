@@ -269,11 +269,11 @@ if (videoUrl) {
     });
     refetch()
   } else {
-    console.log(uploading)
+    
     mutateAddPostDetail(formData);
   }
   } catch (error) {
-    console.log(error)
+   
   } finally {
     setIsUploading(false);
     
@@ -315,7 +315,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
       toast.success("Image deleted successfully");
       refetch()
     } catch (error) {
-      console.log(error)
+
       toast.error("Failed to delete image");
       // console.error("Error deleting image:", error.message);
     }

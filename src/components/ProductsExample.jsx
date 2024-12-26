@@ -85,7 +85,7 @@ const fetchProducts = async ({ pageParam = 1 }) => {
 const handlePriceChange = (start, end) => {
   setSprice(start || 0);
   setEprice(end || null);
-  console.log(products)
+  
   setCurrentPage(1); // Reset to first page
 };
 const handleSortChange = (event) => {
@@ -126,7 +126,6 @@ const products = data?.pages
   .flatMap((page) => page.results) // Flatten the pages
   .filter((product) => product.visible) || []; // Filter products based on 'visible' field
 
-  console.log(products)
 const loadMoreHandler = () => {
   if (hasNextPage) fetchNextPage();
 };

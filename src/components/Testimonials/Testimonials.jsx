@@ -52,8 +52,8 @@ const Testimonials = ({ comments }) => {
     margin-bottom: 20px;
     margin-top: 20px;
   `;
-  console.log(data)
-  console.log(reviews?.length)
+  
+
  
   return (
     <div className={`${productMode ? 'w-full max-w-full' : 'bg-gradient-to-r w-full max-w-full from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 py-12'}`}>

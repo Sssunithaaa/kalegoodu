@@ -7,7 +7,7 @@ import 'hero-slider/dist/index.css';
 import { img24 } from "../../assets/images";
 
 const Hero = ({props}) => {
-  console.log(props)
+
   const { screenSize, navbarHeight, navbarHeightMobile } = useStateContext();
   const baseUrl = import.meta.env.VITE_APP_URL;
 

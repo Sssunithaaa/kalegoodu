@@ -36,7 +36,7 @@ export const getProductsByCategory = async (id) => {
     const response = await axios.get(
       `${url}/api/products_by_category/${id}/`
     );
-     console.log(response)
+
     return response.data?.results
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -82,12 +82,12 @@ export const updateProduct = async ({ updatedData, id }) => {
         'Content-Type': 'multipart/form-data',
       },
     };
-    console.log(updatedData)
+
     const response = await axios.put(`${url}/api/update_product/${id}/`, updatedData, config);
    
     return response.data;
   } catch (error) {
-    console.log(error)
+   
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);
@@ -106,7 +106,7 @@ export const createProduct = async ( formData ) => {
     
     return data;
   } catch (error) {
-    console.log(error)
+ 
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     
