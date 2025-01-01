@@ -17,7 +17,7 @@ const Products = () => {
   
   const [showOverlay,setShowOverlay] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Products");
-  const [sortOption, setSortOption] = useState(null);
+  const [sortOption, setSortOption] = useState("created_at-desc");
   const [sPrice, setSprice] = useState(0);
   const [ePrice, setEprice] = useState(null);
   const [price, setPrice] = useState(false);
@@ -61,16 +61,7 @@ const Products = () => {
     }
   }, []);
 
-const handlePriceChange = (start, end) => {
-  setSprice(start || 0);
-  setEprice(end || null);
 
-  setCurrentPage(1); // Reset to first page
-};
-const handleSortChange = (event) => {
-  setSortOption(event.target.value);
-  setCurrentPage(1); // Reset to first page
-};
 
 
 
@@ -122,6 +113,8 @@ const {
   
 });
 
+console.log(data)
+
 if (isError) {
   console.error("Error fetching products:", error.message);
 }
@@ -136,8 +129,25 @@ const loadMoreHandler = () => {
 
 
 
- 
-
+ useEffect(() => {
+  
+  // Reset sort and filter options when location changes
+  setSortOption(null); // Reset sorting
+  setSprice(0);        // Reset price start
+  setEprice(null);     // Reset price end
+  setKeyword(null);    // Reset search keyword
+  setPrice(false);     // Reset price toggle
+  setSort(false);      // Reset sort dropdown visibility
+  console.log(ePrice)
+}, [name,location]);
+const handlePriceChange = (start, end) => {
+  setSprice(start || 0);
+  setEprice(end || null);
+  
+};
+const handleSortChange = (event) => {
+  setSortOption(event.target.value);
+};
   return (
     <div className="w-screen mb-10">
       <div className="flex flex-col lg:mx-[20px] px-1 lg:px-0 relative">
@@ -162,8 +172,10 @@ const loadMoreHandler = () => {
               setEprice={setEprice}
               setKeyword={setKeyword}
               setPrice={setPrice}
+              
               handlePriceChange={handlePriceChange}
               toggleSidebar={toggleSidebar}
+              location={location}
               searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
             />
           </div>
@@ -184,19 +196,14 @@ const loadMoreHandler = () => {
                 </h1>
                 {sort && (
             <FormControl>
-  <Select
-    labelId="sort-select-label"
-    id="sort-select"
-    value={sortOption}
-    onChange={handleSortChange}
-    autoWidth
-    inputProps={{
-      style: {
-        fontFamily: 'Amiri serif',
-        fontSize: '14px',
-      },
-    }}
-  >
+<Select
+  labelId="sort-select-label"
+  id="sort-select"
+  value={sortOption || "created_at-desc"} // Default to "new to old"
+  onChange={handleSortChange}
+  autoWidth
+  sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }}
+>
     {/* Date Sorting */}
     <MenuItem sx={{ fontFamily: 'Amiri serif', fontSize: '14px', color: '#333' }} value="created_at-desc">
       Date, new to old
@@ -223,20 +230,22 @@ const loadMoreHandler = () => {
 
                 )}
               </div>
-              {price && sPrice !== null && ePrice !== null && (
-                <div className="flex md:w-[20%] lg:w-[15%] w-[40%] my-2 md:ml-[2%] ml-[5%] bg-dark-grayish-blue text-white text-sm px-2 py-2 rounded">
-                  Rs. {sPrice} - Rs. {ePrice}{" "}
-                  <span
-                    className="ml-auto hover:cursor-pointer"
-                    onClick={() => {
-                      setPrice(false);
-                      setEprice(null);
-                    }}
-                  >
-                    &times;
-                  </span>
-                </div>
-              )}
+              {sPrice !== null && ePrice !== null && (
+  <div className="flex md:w-[20%] lg:w-[15%] w-[40%] my-2 md:ml-[1%] ml-[5%] bg-dark-grayish-blue text-white text-sm px-2 py-2 rounded">
+    Rs. {sPrice} - Rs. {ePrice}{" "}
+    <span
+      className="ml-auto text-[18px] hover:cursor-pointer"
+      onClick={() => {
+        setPrice(false); // Hide the box
+        setSprice(0);   // Reset start price
+        setEprice(null); // Reset end price
+      }}
+    >
+      &times;
+    </span>
+  </div>
+)}
+
             </div>
 
             <div className="flex w-full md:px-2">

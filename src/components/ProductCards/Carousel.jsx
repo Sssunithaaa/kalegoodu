@@ -112,7 +112,7 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
 
         {/* Navigation buttons */}
         {
-          slides.length !== 1 && <div className="absolute inset-0 flex items-center justify-between p-4">
+         <div className="absolute inset-0 flex items-center justify-between p-4">
           {/* Previous button */}
           <button
             onClick={prev}
@@ -130,7 +130,16 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
           <button
             onClick={next}
             className="bg-white rounded-full p-3 md:hidden"
-            style={{ visibility: curr === slides.length-1 ? "hidden" : "visible" }} // Hide on last slide
+style={{
+  visibility:
+    videoUrl
+      ? curr === slides.length
+        ? "hidden"
+        : "visible"
+      : curr === slides.length - 1
+      ? "hidden"
+      : "visible",
+}}
           >
             <img
               className="h-[10px] w-[10px]"
@@ -165,29 +174,32 @@ const next = () => setCurr((curr) => (curr === slides.length ? 0 : curr + 1));
         ))}
 
         {/* Video thumbnail */}
-        {videoUrl && (
-          <div
-            onClick={() => {
-              setCurr(slides.length);
-              scrollToSection(productPageRef);
-              setPointer(true); // Set to video slide
-            }} // Set to video slide
-            className={`hover:cursor-pointer rounded-xl `}
-          >
-            <div
-              className={`relative bg-gray-200 rounded-xl flex items-center justify-center ${
-                curr === slides.length ? "border-2 border-orange" : ""
-              } ${images.length === 1 ? "w-[200px]" : "w-24 h-24"}`}
-            >
-              {/* Static video preview */}
-              <img
-                src={video} // Replace with a suitable placeholder or dynamically fetched thumbnail
-                alt="Video Thumbnail"
-                className="rounded-xl object-cover h-28"
-              />
-            </div>
-          </div>
-        )}
+       {/* Video thumbnail */}
+{videoUrl && (
+  <div
+    onClick={() => {
+      setCurr(slides.length);
+      scrollToSection(productPageRef);
+      setPointer(true); // Set to video slide
+    }}
+    className="hover:cursor-pointer rounded-xl"
+  >
+    <div
+      className={`relative bg-gray-200 rounded-xl flex items-center justify-center ${
+        curr === slides.length ? "border-2 border-orange" : ""
+      } ${images.length === 1 ? "w-[140px]" : "w-24 h-24"}`}
+     
+    >
+      {/* Static video preview */}
+      <img
+        src={video} // Replace with a suitable placeholder or dynamically fetched thumbnail
+        alt="Video Thumbnail"
+        className="rounded-xl object-cover w-full h-full"
+      />
+    </div>
+  </div>
+)}
+
       </div>
     </div>
   );

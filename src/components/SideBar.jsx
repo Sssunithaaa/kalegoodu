@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 import { Box, TextField, InputAdornment } from '@mui/material';
@@ -16,10 +16,10 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
     background-color: #9e7f6b; /* Slightly darker color */
   }
 `;
-const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSubmitHandler,handlePriceChange}) => {
+const Sidebar = ({setSprice,setEprice,handlePriceChange,location}) => {
   
 
-  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [priceRange, setPriceRange] = useState([0, null]);
 
  
 
@@ -39,6 +39,14 @@ const Sidebar = ({setSprice,setEprice,setKeyword,toggleSidebar,searchKeywordOnSu
     setEprice(priceRange[1])
     handlePriceChange(priceRange[0],priceRange[1])
   }
+  
+  // useEffect(()=>{
+  //   setEprice(null)
+  // },[])
+  useEffect(()=>{
+    setSprice(0);
+    setEprice(null);
+  },[location])
 
 
   return (
