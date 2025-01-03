@@ -145,10 +145,10 @@ if (newImages.length > 0) {
     formData.append("visible",true);
   });
 }
-  // Log FormData content to verify
-  // for (let [key, value] of formData.entries()) {
-  //   console.log(key, value);
-  // }
+ // Log FormData content to verify
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
 
   if (isEditMode) {
     mutateUpdateCategory({

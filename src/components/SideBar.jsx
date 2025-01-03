@@ -19,7 +19,7 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
 const Sidebar = ({setSprice,setEprice,handlePriceChange,location}) => {
   
 
-  const [priceRange, setPriceRange] = useState([0, null]);
+  const [priceRange, setPriceRange] = useState([null, null]);
 
  
 
@@ -92,6 +92,7 @@ const Sidebar = ({setSprice,setEprice,handlePriceChange,location}) => {
       <TextField
         type="number"
         label="From"
+        placeholder='0'
         value={priceRange[0]}
         onChange={(e) => handlePriceInputChange(e, 0)}
         variant="outlined"
@@ -110,6 +111,7 @@ const Sidebar = ({setSprice,setEprice,handlePriceChange,location}) => {
         label="To"
         value={priceRange[1]}
         onChange={(e) => handlePriceInputChange(e, 1)}
+        placeholder='1000'
         variant="outlined"
         InputProps={{
           startAdornment: <InputAdornment position="start">₹</InputAdornment>,

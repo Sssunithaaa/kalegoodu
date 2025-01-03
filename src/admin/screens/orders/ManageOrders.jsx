@@ -38,17 +38,21 @@ const [startDate, setStartDate] = useState('');
 
   const [exportAll, setExportAll] = useState(true);
 const handleExport = () => {
-  let url = `${baseUrl}/api/export-customers-orders/`;
+  let url = `${baseUrl}/api/export-customers-orders/`;  // Default URL
   let fileName = "customers_orders.xlsx";  // Default file name
 
+  // Check if dates are set and modify the URL and file name accordingly
   if (!exportAll && startDate && endDate) {
-    url += `?start_date=${startDate}&end_date=${endDate}`;
-    // Format the file name to include the start and end dates
+    url = `${baseUrl}/api/export-customers-orders-by-date/`;  // URL for date-based export
     const formattedStartDate = new Date(startDate).toISOString().split('T')[0];  // "YYYY-MM-DD"
     const formattedEndDate = new Date(endDate).toISOString().split('T')[0];  // "YYYY-MM-DD"
-    fileName = `customers_orders_${formattedStartDate}_to_${formattedEndDate}.xlsx`;
+    fileName = `customers_orders_${formattedStartDate}_to_${formattedEndDate}.xlsx`;  // Format file name with dates
+    url += `?start_date=${formattedStartDate}&end_date=${formattedEndDate}`;
   }
-  // console.log(url)
+
+  // console.log(url);  // Logging the final URL for debugging
+
+  // Perform the export using axios
   axios
     .get(url, { responseType: "blob" })
     .then((response) => {

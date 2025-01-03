@@ -52,7 +52,10 @@ const Categories = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const url = useMemo(() => import.meta.env.VITE_APP_URL, []);
-
+  const filteredCategories = useMemo(
+    () => data?.categories?.filter(category => category.visible),
+    [data]
+  );
   const handleMouseEnter = useCallback((categoryId) => {
     setHoveredCategory(categoryId);
   }, []);
@@ -82,7 +85,7 @@ const Categories = () => {
             </motion.div>
           ))
         ) : (
-          data?.categories?.map((category, index) => (
+          filteredCategories?.map((category, index) => (
             <motion.div
               key={category.category_id}
               className="md:mx-3 mx-2 my-[6px] text-center"

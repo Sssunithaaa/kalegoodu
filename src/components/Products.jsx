@@ -113,7 +113,7 @@ const {
   
 });
 
-console.log(data)
+
 
 if (isError) {
   console.error("Error fetching products:", error.message);
@@ -231,7 +231,7 @@ const handleSortChange = (event) => {
                 )}
               </div>
               {sPrice !== null && ePrice !== null && (
-  <div className="flex md:w-[20%] lg:w-[15%] w-[40%] my-2 md:ml-[1%] ml-[5%] bg-dark-grayish-blue text-white text-sm px-2 py-2 rounded">
+  <div className="flex md:w-[20%] lg:w-[15%] w-[40%] my-2 md:ml-[1%] ml-[1%] bg-dark-grayish-blue text-white text-sm px-2 py-2 rounded">
     Rs. {sPrice} - Rs. {ePrice}{" "}
     <span
       className="ml-auto text-[18px] hover:cursor-pointer"
