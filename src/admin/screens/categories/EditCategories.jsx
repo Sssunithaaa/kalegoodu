@@ -9,11 +9,13 @@ import {
   updateCategory,
   createCategory,
 } from "../../../services/index/postCategories";
+import { addImage,updateImage } from "../../api/ImageApi";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import styled from "styled-components";
 import BackButton from "../../BackButton";
 import { ClipLoader } from "react-spinners";
+import Button from "../../../components/Button";
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -26,6 +28,19 @@ const DeleteButton = styled.button`
   margin-top: 10px;
   &:hover {
     background-color: #c0392b;
+  }
+`;
+const UpdateButton = styled.button`
+  background-color: #0096FF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block:5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #0096FA;
   }
 `;
 const EditCategories = () => {
@@ -89,16 +104,17 @@ const EditCategories = () => {
     });
 const [files, setFiles] = useState([null, null, null]);
 const [previews, setPreviews] = useState([null, null, null]);
-
 const handleFileChange = (acceptedFiles, index) => {
   const updatedFiles = [...files];
-  updatedFiles[index] = acceptedFiles[0]; // assuming one file per dropzone
+  updatedFiles[index] = acceptedFiles[0]; 
   setFiles(updatedFiles);
 
   const updatedPreviews = [...previews];
   updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
   setPreviews(updatedPreviews);
+  
 };
+
   // Mutation for adding category
   const { mutate: mutateAddCategory, isLoading: isLoadingAddCategory } =
     useMutation({
@@ -121,30 +137,18 @@ const handleFileChange = (acceptedFiles, index) => {
    e.preventDefault();
    setIsLoading(true)
   const formData = new FormData();
-  
-  // Append product details to formData
   formData.append("name", categoryTitle);
   formData.append("description", description); // Ensure the key matches
   formData.append("visible", isEditMode ? visible : true); // Ensure the key matches
-
-  
-  // Append image files
- if(!isEditMode){
+  if(!isEditMode){
    files.forEach(file => {
     if (file) {
       formData.append("images", file); // Ensure the key matches
       formData.append("visible",true);
     }
   });
- }
-const newImages = files ? files.filter(file => file && file.hasOwnProperty('path')) : [];
+  }
 
-if (newImages.length > 0) {
-  newImages.forEach(file => {
-    formData.append('new_images', file);
-    formData.append("visible",true);
-  });
-}
  // Log FormData content to verify
   for (let [key, value] of formData.entries()) {
     console.log(key, value);
@@ -162,6 +166,19 @@ if (newImages.length > 0) {
   }
   setIsLoading(false)
 };
+
+
+const [isUpdatingImage, setIsUpdatingImage] = useState(false);
+  const [isAddingImage, setIsAddingImage] = useState(false);
+
+  const handleUpdate = (productImageId, file) => {
+    updateImage(baseUrl, productImageId, file, refetch, setIsUpdatingImage,`update_category_image/${productImageId}/`);
+  };
+
+  const handleAddImage = (productImageId, file) => {
+    addImage(baseUrl, productImageId, file, refetch, setIsAddingImage,`add_category_image/${productImageId}/`);
+  };
+
 
  const handleDelete = async (categoryImageId) => {
     try {
@@ -231,11 +248,23 @@ if (newImages.length > 0) {
         </div>
       )}
     </Dropzone>
-     {data?.images[index] && (
-                            <DeleteButton  type="button" onClick={() => handleDelete(data?.images[index]?.category_image_id)}>
-                              Delete
-                            </DeleteButton>
-                          )}
+      <div className="flex flex-row gap-x-2">
+             {data?.images[index] && files[index] ? (
+                                 <div className='flex flex-row gap-x-2'> 
+                           <UpdateButton className="disabled:cursor-not-allowed" disabled={isUpdatingImage} type="button" onClick={() => handleUpdate(data?.images[index]?.category_image_id, files[index])}>
+                          {isUpdatingImage ? <ClipLoader size={20}></ClipLoader> : " Update"}
+                         </UpdateButton>
+                      
+                     </div>
+                               ) : ( files[index] && ( <div>
+                                  <UpdateButton className="disabled:cursor-not-allowed" disabled={isAddingImage} type="button" onClick={() => handleAddImage(data?.category_id, files[index])}>
+                          {isAddingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
+                         </UpdateButton>
+                                 </div> )) }
+                                  <DeleteButton type="button" onClick={() => handleDelete(data?.images[index]?.category_image_id)}>
+                       Delete
+                     </DeleteButton>
+           </div>
   </div>
 ))}
 </div>
@@ -290,7 +319,7 @@ if (newImages.length > 0) {
         
 
         {/* Update/Add Button */}
-        <button
+        <Button
           disabled={
             isLoadingUpdateCategory ||
             isLoadingAddCategory ||
@@ -300,10 +329,10 @@ if (newImages.length > 0) {
           }
           type="submit"
           
-          className="w-fit mt-3 bg-green-500 text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
+          className=" px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isEditMode ? "Update Category" :loading ? <ClipLoader size={20}/> : "Add Category"}
-        </button>
+        </Button>
       </form>
     </div>
   );

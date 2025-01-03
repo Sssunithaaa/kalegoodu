@@ -219,14 +219,10 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
 const handleSubmit = async (e) => {
   e.preventDefault();
   const formData = new FormData();
-
-  // Append product details to formData
   formData.append("name", name);
   formData.append("price", price);
   formData.append("discounted_price", discountedPrice);
   formData.append("short_description", description); 
-  // Append video link only if it’s not empty
-  console.log(description)
 if (videoUrl) {
   formData.append("video_link", videoUrl);
 }
