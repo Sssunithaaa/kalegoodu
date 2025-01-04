@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import styled from "styled-components";
+import 'react-quill/dist/quill.snow.css'; 
+import ReactQuill from 'react-quill';
 import { createWorkshop, getSingleWorkshop, updateWorkshop } from "../../../services/index/workshops";
 import Button from "../../../components/Button";
 import BackButton from "../../BackButton";
@@ -159,8 +161,15 @@ const handleSubmit = async (e) => {
       }
       }
     }
+    if(!isEditMode){
+      files.forEach((file, index) => {
+      if (file) {
+        workshopFormData.append(`images`, file); // 'images' corresponds to `request.FILES.getlist('images')` in backend
+      }
+    });
+    }
    
-    const workshopResponse = isEditMode
+    isEditMode
       ? await updateWorkshop({ formData: workshopFormData, slug })
       : await createWorkshop(workshopFormData);
    
@@ -306,12 +315,23 @@ const handleSubmit = async (e) => {
 
         <div className="flex flex-col mt-4 gap-y-2">
           <label>Description: </label>
-          <textarea
-            value={description}
-            className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description"
-          />
+          <div className="mb-4">
+                    <ReactQuill
+                      theme="snow"
+                      value={description}
+                      onChange={setDescription}
+                      className="w-full h-full"
+                      placeholder="Add your description here..."
+                      modules={{
+                        toolbar: [
+                          [{ 'header': '1' }, { 'header': '2' }, { 'list': 'ordered' }, { 'list': 'bullet' }],
+                          ['bold', 'italic', 'underline'],
+                          [{ 'align': [] }, { 'color': [] }],
+                          ['link'],
+                        ],
+                      }}
+                    />
+                  </div>
         </div>
 
         <div className="flex flex-col mt-4 gap-y-2">

@@ -138,7 +138,10 @@ const searchKeywordOnSubmitHandler = (event) => {
             <p className="text-gray-900 whitespace-no-wrap">{workshop.place}</p>
           </td>
              <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{workshop.description}</p>
+           <div
+            className="prose prose-gray"
+            dangerouslySetInnerHTML={{ __html: workshop.description }}
+          ></div>
           </td>
        
          
