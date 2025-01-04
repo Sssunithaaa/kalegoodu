@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from '../../DataTable';
 
@@ -93,7 +93,10 @@ const searchKeywordOnSubmitHandler = (event) => {
     toast.error("Couldn't update visibility");
   }
 };
-  
+   const reversedData = useMemo(() => {
+    // Reverse the data only when `paginatedData` changes
+    return [...paginatedData]?.reverse();
+  }, [paginatedData]);
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
       <div className="flex w-full justify-start ml-4 self-start">
@@ -110,11 +113,12 @@ const searchKeywordOnSubmitHandler = (event) => {
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
+      url = "/admin/products/add"
       // setCurrentPage={setCurrentPage}
       // currentPage={currentPage}
     >
       <ToastContainer/>
-      {[...paginatedData]?.reverse().map((product) => (
+      {reversedData?.map((product) => (
         <tr key={product.product_id}>
           {/* <td className="py-5 text-md bg-white border-b border-gray-200">
             <div className="flex items-center">

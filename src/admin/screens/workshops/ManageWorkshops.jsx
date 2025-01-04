@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from '../../DataTable';
-
+import { useMemo } from 'react';
 import axios from 'axios';
 import Pagination from '../../../components/Pagination';
 import { useQuery } from '@tanstack/react-query';
@@ -81,7 +81,10 @@ const searchKeywordOnSubmitHandler = (event) => {
       toast.error("Failed to delete workshop!! Try again!!")
     }
   }
-  
+   const reversedData = useMemo(() => {
+    // Reverse the data only when `paginatedData` changes
+    return paginatedData?.reverse();
+  }, [paginatedData]);
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
       <div className="flex ml-4 w-full justify-start self-start">
@@ -98,10 +101,11 @@ const searchKeywordOnSubmitHandler = (event) => {
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
+      url = "/admin/workshops/add"
      
     >
       <ToastContainer/>
-      {paginatedData?.map((workshop) => (
+      {reversedData?.map((workshop) => (
         <tr key={workshop.workshop_id}>
           {/* <td className="py-5 text-md bg-white border-b border-gray-200">
             <div className="flex items-center">

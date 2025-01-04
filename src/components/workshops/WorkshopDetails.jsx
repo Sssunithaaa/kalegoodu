@@ -3,10 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getSingleWorkshop } from '../../services/index/workshops';
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
-
-import { CiCalendarDate } from "react-icons/ci";
-import { MdPlace } from "react-icons/md";
-import { IoIosPricetag } from "react-icons/io";
+import ReactPlayer from 'react-player';
+import FullPageLoader from '../FullPageLoader'
 const WorkshopDetailsPage = () => {
   const { workshopId } = useParams();
   const { data: workshop, error, isLoading } = useQuery({
@@ -14,7 +12,7 @@ const WorkshopDetailsPage = () => {
     queryFn: () => getSingleWorkshop({ slug: workshopId }),
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <div><FullPageLoader/></div>
   if (error) return <p>Error: {error.message}</p>;
 
   const url = import.meta.env.VITE_APP_URL;

@@ -62,33 +62,33 @@ const settings = {
     {
       breakpoint: 1500,
       settings: {
-        slidesToShow: Math.min(allProducts.length, 4),
-        centerMode: allProducts.length > 4,
-        centerPadding: allProducts.length > 4 ? "30px" : "0px",
+        slidesToShow: Math.min(allProducts?.length, 4),
+        centerMode: allProducts?.length > 4,
+        centerPadding: allProducts?.length > 4 ? "30px" : "0px",
       },
     },
     {
       breakpoint: 1024, // iPad and similar devices
       settings: {
-        slidesToShow: Math.min(allProducts.length, 3),
-        centerMode: allProducts.length > 3,
-        centerPadding: allProducts.length > 3 ? "30px" : "0px",
+        slidesToShow: Math.min(allProducts?.length, 3),
+        centerMode: allProducts?.length > 3,
+        centerPadding: allProducts?.length > 3 ? "30px" : "0px",
       },
     },
     {
       breakpoint: 768, // Smaller tablets or larger phones
       settings: {
-        slidesToShow: Math.min(allProducts.length, 2),
-        centerMode: allProducts.length > 2,
-        centerPadding: allProducts.length > 2 ? "30px" : "0px",
+        slidesToShow: Math.min(allProducts?.length, 2),
+        centerMode: allProducts?.length > 2,
+        centerPadding: allProducts?.length > 2 ? "30px" : "0px",
       },
     },
     {
       breakpoint: 540, // Small screens
       settings: {
         slidesToShow: Math.min(allProducts.length, 1),
-        centerMode: allProducts.length > 1,
-        centerPadding: allProducts.length > 1 ? "30px" : "0px",
+        centerMode: allProducts?.length > 1,
+        centerPadding: allProducts?.length > 1 ? "30px" : "0px",
       },
     },
   ],

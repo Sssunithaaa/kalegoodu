@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {  useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import styled from "styled-components";
@@ -130,7 +130,7 @@ const AddWorkshop = () => {
   };
  
   const [isAddingImage,setIsAddingImage] = useState(false)
-
+ const navigate = useNavigate()
  const handleAddImage = (workshopId, file) => {
     addImage(baseUrl, workshopId, file, refetch, setIsAddingImage,`workshops/${workshopId}/add-images/`);
   };
@@ -176,24 +176,34 @@ const handleSubmit = async (e) => {
     toast.success(isEditMode ? "Workshop updated successfully!" : "Workshop added successfully!");
     queryClient.invalidateQueries(["workshops"]);
 
-    // Clear Form Fields
-    if(!isEditMode){
-      setTitle("");
-    setDescription("");
-    setDate(new Date().toISOString().split("T")[0]);
-    setPlace("");
-    setVideoUrl("");
-    setFiles([null, null, null]);
-    setPreviews([null, null, null]);
-    } else {
-      refetch()
-    }
-    setIsAdding(false)
+// Clear Form Fields
+if (!isEditMode) {
+  setTitle("");
+  setDescription("");
+  setDate(new Date().toISOString().split("T")[0]);
+  setPlace("");
+  setVideoUrl("");
+  setFiles([null, null, null]);
+  setPreviews([null, null, null]);
+} else {
+  refetch();
+}
+setIsAdding(false);
+
+// Navigate after toast duration
+
 
   } catch (error) {
     console.error(error);
     setIsAdding(false)
     toast.error("An error occurred while submitting the workshop!");
+    
+  } finally {
+    if(!isEditMode){
+  setTimeout(() => {
+  navigate("/admin/workshops/manage");
+}, 3000); // Adjust this duration (e.g., 4000ms) based on your toast display time
+}
   }
 };
  useEffect(()=>{

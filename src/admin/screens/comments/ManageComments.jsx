@@ -74,6 +74,7 @@ const ManageComments = () => {
         searchKeywordOnSubmitHandler={(e) =>
           searchKeywordOnSubmitHandler(e, data, searchKeyword)
         }
+        url="/admin/comments/add"
       >
         <ToastContainer/>
         {paginatedData.map((comment) => (

@@ -10,14 +10,20 @@ import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@mui/material';
 
 const WorkshopCarousel = () => {
-  const url = import.meta.env.VITE_APP_URL;
+  
   const [completedWorkshops,setCompletedWorkshops] = useState([]);
+    const [upcomingWorkshops,setUpcomingWorkshops] = useState([]);
+
   const { data,isLoading } = useQuery({
     queryKey: ['workshops'],
     queryFn: getAllWorkshops,
   });
+
   useEffect(()=> {
     setCompletedWorkshops(data?.filter((row)=>row?.completed))
+  },[data])
+  useEffect(()=> {
+    setUpcomingWorkshops(data?.filter((row)=>!row?.completed))
   },[data])
 
   const navigate = useNavigate();
@@ -66,41 +72,87 @@ const SamplePrevArrow = (props) => {
 };
 
   // Slider settings with arrows
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    arrows: true, // Enable arrows
-    nextArrow: data?.length > 3 && <SampleNextArrow />,
-    prevArrow: data?.length > 3 && <SamplePrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
+const upcomingSettings = {
+  dots: true,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  initialSlide : 0,
+  arrows: upcomingWorkshops?.length > 3, // Conditionally show arrows if more than 3 workshops
+  nextArrow: upcomingWorkshops?.length > 3 && <SampleNextArrow />,
+  prevArrow: upcomingWorkshops?.length > 3 && <SamplePrevArrow />,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: Math.min(upcomingWorkshops?.length,2),
+        slidesToScroll: 1,
+        arrows: upcomingWorkshops?.length > 2,
+        nextArrow: upcomingWorkshops?.length > 2 && <SampleNextArrow />,
+        prevArrow: upcomingWorkshops?.length > 2 && <SamplePrevArrow />,
       },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: Math.min(upcomingWorkshops?.length,1),
+        slidesToScroll: 1,
+        arrows: upcomingWorkshops?.length > 1,
+        nextArrow: upcomingWorkshops?.length > 1 && <SampleNextArrow />,
+        prevArrow: upcomingWorkshops?.length > 1 && <SamplePrevArrow />,
+        centerMode: upcomingWorkshops?.length > 1,
+        centerPadding: upcomingWorkshops?.length > 1 ? "20px" : "0px",
       },
-    ],
-  };
+    },
+  ],
+};
+
+const completedSettings = {
+  dots: true,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  initialSlide:0,
+  arrows: completedWorkshops?.length > 3, // Conditionally show arrows if more than 3 workshops
+  nextArrow: completedWorkshops?.length > 3 && <SampleNextArrow />,
+  prevArrow: completedWorkshops?.length > 3 && <SamplePrevArrow />,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: Math.min(completedWorkshops?.length,2),
+        slidesToScroll: 1,
+        arrows: completedWorkshops?.length > 2,
+        nextArrow: completedWorkshops?.length > 2 && <SampleNextArrow />,
+        prevArrow: completedWorkshops?.length > 2 && <SamplePrevArrow />,
+      },
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: Math.min(completedWorkshops?.length,1),
+        slidesToScroll: 1,
+        arrows: completedWorkshops?.length > 1,
+        nextArrow: completedWorkshops?.length > 1 && <SampleNextArrow />,
+        prevArrow: completedWorkshops?.length > 1 && <SamplePrevArrow />,
+        centerMode: completedWorkshops?.length > 1,
+        centerPadding: completedWorkshops?.length > 1 ? "20px" : "0px",
+      },
+    },
+  ],
+};
+
 
 
   return (
     <div className="workshop-carousel-container mx-auto max-w-7xl mb-8 px-4">
       <h2 className="text-center text-2xl font-bold mb-3">Upcoming Workshops</h2>
       
-      <Slider {...settings}>
+      <Slider {...upcomingSettings}>
         {isLoading
-          ? Array.from({ length: data?.length }).map((_, index) => (
+          ? Array.from({ length: upcomingWorkshops?.length }).map((_, index) => (
               <div key={index} className="workshop-card px-2">
                 <Skeleton variant="rectangular" height={200} />
                 <Skeleton variant="text" width="60%" />
@@ -108,8 +160,8 @@ const SamplePrevArrow = (props) => {
                 <Skeleton variant="text" width="50%" />
               </div>
             ))
-          : data?.map((workshop) =>
-              !workshop.completed && (
+          : upcomingWorkshops?.map((workshop) =>
+             
                 <div
                   key={workshop.workshop_id}
                   onClick={() => navigate(`${workshop.workshop_id}/${workshop.name.replaceAll(" ", "-")}`)}
@@ -136,13 +188,13 @@ const SamplePrevArrow = (props) => {
                     </div>
                   </div>
                 </div>
-              )
+              
             )}
       </Slider>
 
       <h2 className="text-center text-2xl font-bold mt-4 mb-3">Completed Workshops</h2>
 
-      <Slider {...settings}>
+      <Slider {...completedSettings}>
         {isLoading ? Array.from({ length: completedWorkshops?.length }).map((_, index) => (
               <div key={index} className="workshop-card px-2">
                 <Skeleton variant="rectangular" height={200} />

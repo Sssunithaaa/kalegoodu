@@ -137,6 +137,7 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
           isLoading={isLoading}
           isFetching={isFetching}
           data={data}
+          url="/admin/categories/add"
          
         >
           {paginatedData?.map((category) => (
