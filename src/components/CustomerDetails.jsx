@@ -215,58 +215,58 @@ const [loading,setIsLoading] = useState(false)
     };
 
     // Send order details to backend and get Razorpay order ID
-//     try {
-//       const response = await axios.post("https://kalegoodupractice.pythonanywhere.com/api/create-payment/", {amount:100}, {
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
+    try {
+      const response = await axios.post("https://kalegoodupractice.pythonanywhere.com/api/create-payment/", {amount:100}, {
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 
       
 
-//       const { razorpay_order_id, amount, currency } = response.data;
+      const { razorpay_order_id, amount, currency } = response.data;
 
 
-//       const options = {
-//         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-//         amount: amount.toString(),
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: amount.toString(),
         
-//         currency: currency,
-//         name: "Kalegoodu",
-//         description: "Order Payment",
-//         order_id: razorpay_order_id,
-//         handler: async function (response) {
-//           try {
-//             // Verify payment with the backend
-//             const res = await axios.post(`${baseUrl}/api/verify-payment/`, response);
-//             toast.success("Payment successful!");
-//             emptyCart();
-//             navigate("/products");
+        currency: currency,
+        name: "Kalegoodu",
+        description: "Order Payment",
+        order_id: razorpay_order_id,
+        handler: async function (response) {
+          try {
+            // Verify payment with the backend
+            const res = await axios.post(`${baseUrl}/api/verify-payment/`, response);
+            toast.success("Payment successful!");
+            emptyCart();
+            navigate("/products");
               
-//           } catch (error) {
-//             toast.error("Payment verification failed!");
-//             console.error(error);
-//           }
-//         },
-//         prefill: {
-//           name: `${firstName} ${lastName}`,
-//           email,
-//           contact: `+91${phone}`,
-//         },
-//         theme: {
-//           color: "#3399cc",
-//         },
-//       };
+          } catch (error) {
+            toast.error("Payment verification failed!");
+            console.error(error);
+          }
+        },
+        prefill: {
+          name: `${firstName} ${lastName}`,
+          email,
+          contact: `+91${phone}`,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
 
 
-//       const razorpay = new window.Razorpay(options);
-//       razorpay.open();
-//     } catch (error) {
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
      
-//       toast.error("Payment failed! Please try again.");
+      toast.error("Payment failed! Please try again.");
 
-//     }
+    }
   setIsLoading(false)
   };
 
