@@ -130,3 +130,6 @@ export const deleteUser = async ({ slug, token }) => {
     throw new Error(error.message);
   }
 };
+
+
+

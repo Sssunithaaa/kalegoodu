@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect,useRef, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Sidebar from "./SideBar";
 import ProductCard from "./ProductCard";
@@ -96,24 +96,47 @@ const fetchProducts = async ({ pageParam = 1 }) => {
   const { data } = await axios.get(url);
   return data;
 };
-const {
-  data,
-  isLoading,
-  isError,
-  error,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-} = useInfiniteQuery({
-  queryKey: ["products", categoryMode, id, keyword, sPrice, ePrice, sortOption],
-  queryFn: fetchProducts,
-  getNextPageParam: (lastPage, pages) => {
-    return lastPage.next ? pages.length + 1 : undefined; // Use 'next' from API response
-  },
-  
-});
+
+ const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    isFetching,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["products_page",id,categoryMode,keyword,sPrice,ePrice,sortOption],
+    queryFn: fetchProducts,
+    getNextPageParam: (lastPage,allPages) => {
+    console.log(lastPage)
+    
+  return lastPage?.next ? allPages.length + 1 : undefined;
+}
+
+  });
 
 
+ const observerRef = useRef(null);
+
+  const lastProductRef = useCallback(
+    (node) => {
+      if (isFetchingNextPage) return;
+
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
+          fetchNextPage();
+        }
+
+      });
+         
+
+      if (node) observerRef.current.observe(node);
+    },
+    [isFetchingNextPage, fetchNextPage, hasNextPage,isLoading]
+  );
 
 if (isError) {
   console.error("Error fetching products:", error.message);
@@ -259,13 +282,13 @@ const handleSortChange = (event) => {
                  <FullPageLoader/>
                 ) : isError ? (
                   <p>Error fetching products.</p>
-                ) : products?.map((product) => (
-    <div key={product?.product_id}>
-      <ProductCard
-        productMode={true}
-        product={product}
-      />
-    </div>
+                ) : products?.map((product,index) => (
+   <div
+            key={product.id}
+            ref={index === products?.length - 1 ? lastProductRef : null}
+          >
+            <ProductCard productMode={true} product={product} />
+          </div>
   ))
 }
               </div>
