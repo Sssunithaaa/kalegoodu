@@ -1,99 +1,130 @@
-// CTASection.js
-import React, { useContext, useEffect, useState } from 'react';
-import { CartContext } from '../../context/CartContext';
-import styled from 'styled-components';
+import React, { useContext, useState } from "react";
+import { CartContext } from "../../context/CartContext";
+import styled from "styled-components";
+import { IoClose } from "react-icons/io5";
+
 const Button = styled.button`
   width: 100%;
   height: 45px;
-background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 79.6476490172856% 29.76095796117111%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 80.73001484309323% 71.025398036287%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 74.71274406155253% 92.17335404339366%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 41.223261123520594% 30.917984618376227%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 37.9520129096355% 60.069337551017334%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 67.69235280932718% 23.91998376199933%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 93.68255347726229% 18.89111181278711%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 13.215737665881534% 45.21500942396648%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 61.18443079724643% 88.41983116607912%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 10.575958325731749% 96.72193910560092%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 75.42341628599371% 53.31130723888271%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%);
+  background-image: radial-gradient(
+    at 19.8% 35%,
+    hsla(64.4, 83.2%, 74.3%, 1) 0%,
+    hsla(64.4, 83.2%, 74.3%, 0) 100%
+  ),
+  radial-gradient(
+    at 79.6% 29.8%,
+    hsla(140.5, 43.2%, 82.7%, 1) 0%,
+    hsla(140.5, 43.2%, 82.7%, 0) 100%
+  ),
+  radial-gradient(
+    at 80.7% 71%,
+    hsla(113.6, 77.2%, 62.2%, 1) 0%,
+    hsla(113.6, 77.2%, 62.2%, 0) 100%
+  );
   margin-top: 10px;
   border: none;
-  
   cursor: pointer;
   border-radius: 5px;
+
   &:hover {
-    background-color: #9e7f6b; /* Slightly darker color */
+    background-color: #9e7f6b;
   }
 `;
+
 export const CTASection = ({ product, cartCounter, setCartCounter }) => {
   const [productCounter, setProductCounter] = useState(1);
-  const { addToCart, setIsCartVisible,setLoading } = useContext(CartContext);
+  const { addToCart, setIsCartVisible, setLoading } = useContext(CartContext);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const addProduct = () => setProductCounter(prev => prev + 1);
-  const removeProduct = () => setProductCounter(prev => (prev > 0 ? prev - 1 : 0));
+  const addProduct = () => {
+    setProductCounter((prev) => prev + 1);
+  };
+
+  const removeProduct = () => {
+    setProductCounter((prev) => (prev > 1 ? prev - 1 : 1));
+    setErrorMessage(""); // Clear error if quantity is decreased
+  };
 
   const handleAddToCart = () => {
-    // Create a product object to pass to addToCart
-    
     const productDetails = {
       ...product,
       availableQuantity: product?.quantity,
       quantity: productCounter === 0 ? 1 : productCounter,
     };
-   
-
-  
 
     // Add the product to the cart
     addToCart(productDetails);
 
     // Update cart counter
-    setCartCounter(prev => prev + productCounter);
-    
+    setCartCounter((prev) => prev + productCounter);
+
     // Reset product counter
-    setProductCounter(0);
+    setProductCounter(1);
     setLoading(true);
-     setTimeout(()=> {
-      setLoading(false)
-     },1000)
-    setTimeout(()=> {
-      setIsCartVisible(true)
-    },1000)
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    setTimeout(() => {
+      setIsCartVisible(true);
+    }, 1000);
+  };
+
+  const handleIncreaseQuantity = () => {
+    if (productCounter < product.quantity) {
+      setProductCounter((prev) => prev + 1);
+      setErrorMessage(""); // Clear any previous error
+    } else {
+      setErrorMessage("Requested quantity exceeds available stock.");
+    }
   };
 
   return (
-    <div className='flex flex-col justify-center w-[100%] items-center px-4 gap-x-4 lg:flex-row'>
-      {/* Amount required */}
-      <div className='flex w-full bg-gray-50 justify-between items-center px-6 py-2 rounded-xl
-        md:w-1/4 md:mt-0'>
-        {/* Minus button */}
+    <div className="flex flex-col justify-center w-[100%] items-center px-4 gap-x-4 lg:flex-row">
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-[10001] bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">
+          <span>{errorMessage}</span>
+          <button
+            onClick={() => setErrorMessage("")}
+            className="ml-4 text-red-500"
+          >
+            <IoClose />
+          </button>
+        </div>
+      )}
+
+      {/* Quantity Selector */}
+      <div className="flex w-full bg-gray-50 justify-between items-center px-6 py-2 rounded-xl md:w-1/4 md:mt-0">
+        {/* Minus Button */}
         <div>
-          <button 
+          <button
             onClick={removeProduct}
-            className='font-bold text-gray-700 text-2xl pb-1'
+            className="font-bold text-gray-700 text-2xl pb-1"
           >
             -
           </button>
         </div>
 
         {/* Quantity */}
-        <div className='font-bold'>
-          {productCounter}
-        </div>
+        <div className="font-bold">{productCounter}</div>
 
-        {/* Plus button */}
+        {/* Plus Button */}
         <div>
-          <button 
-            onClick={addProduct}  
-            className='font-bold text-gray-700 text-2xl w-[1rem] pb-1'
+          <button
+            onClick={handleIncreaseQuantity}
+            className="font-bold text-gray-700 text-2xl w-[1rem] pb-1"
           >
             +
           </button>
         </div>
       </div>
 
-      {/* Add to cart Button */}
-     <div className='md:w-3/4 py-2 w-[100%]'>
-       <Button 
-        onClick={handleAddToCart}
-        className='py-2'
-      >
-        <div className='w-[100%] flex gap-4 justify-center'>
-          
-          Add to cart
-        </div>
-      </Button>
-     </div>
+      {/* Add to Cart Button */}
+      <div className="md:w-3/4 py-2 w-[100%]">
+        <Button onClick={handleAddToCart} className="py-2">
+          <div className="w-[100%] flex gap-4 justify-center">Add to cart</div>
+        </Button>
+      </div>
     </div>
   );
 };
