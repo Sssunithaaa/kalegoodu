@@ -46,6 +46,16 @@ const navButtons = [
 const SideBar = ({ isCartVisible, toggleCart }) => {
   const { cartItems, removeFromCart,increaseQuantity,decreaseQuantity ,cartItemCount,cartTotal} = useContext(CartContext);
   const navigate = useNavigate();
+   const [errorMessage, setErrorMessage] = useState("");
+
+const handleIncreaseQuantity = (productId, currentQuantity, availableStock) => {
+  if (currentQuantity < availableStock) {
+    increaseQuantity(productId);
+    setErrorMessage(""); // Clear any previous error
+  } else {
+    setErrorMessage("Requested quantity is not available");
+  }
+};
 
   return (
     <div
@@ -53,6 +63,14 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
         isCartVisible ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
+     {errorMessage && (
+      <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">
+        <span>{errorMessage}</span>
+        <button onClick={() => setErrorMessage("")} className="ml-4 text-red-500">
+          <IoClose />
+        </button>
+      </div>
+    )}
       <div className="p-4 overflow-y-auto">
         <button className=" mb-2 font-bold text-[28px]" onClick={toggleCart}>
           &times;
@@ -74,10 +92,15 @@ const SideBar = ({ isCartVisible, toggleCart }) => {
                     <div className="flex items-center">
                       <span className="text-gray-500">Quantity</span>
                       <div className="flex items-center ml-2 border px-2 py-1">
-                        <button className="text-[16px]" onClick={()=>decreaseQuantity(item.product_id)}>{"<"}</button>
-                        <span className="mx-2 text-left">{item.quantity}</span>
-                        <button className="text-[16px]" onClick={()=>increaseQuantity(item.product_id)}>{">"}</button>
-                      </div>
+          <button onClick={() => decreaseQuantity(item.product_id)}>{"<"}</button>
+          <span className="mx-2">{item.quantity}</span>
+        
+          <button
+            onClick={() => handleIncreaseQuantity(item.product_id, item.quantity, item.availableQuantity)}
+          >
+            {">"}
+          </button>
+        </div>
                     </div>
                   </div>
                   <div className="text-right">

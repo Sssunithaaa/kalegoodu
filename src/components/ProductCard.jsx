@@ -49,7 +49,7 @@ export default function ProductCard({ product, productMode, index, len }) {
   const displayValue = product?.name.replaceAll(" ", "-");
 
   const handleCartClick = () => {
-    addToCart({ ...product, quantity });
+    addToCart({ ...product, availableQuantity: product?.quantity, quantity : 1 });
     setLoading(true);
     setTimeout(() => {
       setLoading(false);

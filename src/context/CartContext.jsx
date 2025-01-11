@@ -18,6 +18,7 @@ export const CartProvider = ({ children }) => {
   const [paymentMethod, setPaymentMethod] = useState('upi');
 
   const addToCart = (item) => {
+    console.log(item)
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.product_id === item.product_id);
       if (existingItem) {
@@ -25,7 +26,7 @@ export const CartProvider = ({ children }) => {
           i.product_id === item.product_id ? { ...i, quantity: i.quantity + 1 } : i
         );
       } else {
-        return [...prevItems, { ...item, quantity: 1 }];
+        return [...prevItems, { ...item, quantity: item.quantity == 0 ? 1 : item.quantity }];
       }
     });
   };
@@ -97,6 +98,7 @@ export const CartProvider = ({ children }) => {
         cartItemCount,
         cartTotal,
         isCartVisible,
+        setCartItems,
         setIsCartVisible,
         toggleCart,
         loading,

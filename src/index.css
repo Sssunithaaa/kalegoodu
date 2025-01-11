@@ -18,6 +18,12 @@
   ;
 } */
 
+select {
+  appearance: none;
+  background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="%23999999"/></svg>') no-repeat right 10px center;
+  background-size: 10px;
+}
+
 .testimonial,
 .modal {
   font-family: "Amiri", serif;

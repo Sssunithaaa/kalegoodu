@@ -109,7 +109,7 @@ const fetchProducts = async ({ pageParam = 1 }) => {
     queryKey: ["products_page",id,categoryMode,keyword,sPrice,ePrice,sortOption],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage,allPages) => {
-    console.log(lastPage)
+    
     
   return lastPage?.next ? allPages.length + 1 : undefined;
 }
@@ -161,7 +161,7 @@ const loadMoreHandler = () => {
   setKeyword(null);    // Reset search keyword
   setPrice(false);     // Reset price toggle
   setSort(false);      // Reset sort dropdown visibility
-  console.log(ePrice)
+  
 }, [name,location]);
 const handlePriceChange = (start, end) => {
   setSprice(start || 0);
