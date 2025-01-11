@@ -196,7 +196,7 @@ const searchKeywordOnSubmitHandler = (event) => {
   // const startIndex = (currentPage - 1) * PAGE_SIZE;
   // const endIndex = startIndex + PAGE_SIZE;
   // const paginatedData = orders?.slice().reverse().slice(startIndex, endIndex);
-  const totalPages = Math.ceil(ordersData.count); // Assuming 10 items per page
+  const totalPages = Math.ceil(ordersData.length); // Assuming 10 items per page
 
   const handlePageChange = (event,page) => {
     setCurrentPage(page);

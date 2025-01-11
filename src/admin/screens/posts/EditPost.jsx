@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {  useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import 'react-quill/dist/quill.snow.css'; 
 import ReactQuill from 'react-quill';
 import { toast, ToastContainer } from "react-toastify";
@@ -174,6 +174,8 @@ const { mutate: mutateUpdatePostDetail, isLoading: isLoadingUpdatePostDetail } =
   onError: handleMutationError
 });
 
+const navigate = useNavigate()
+
 const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMutation({
   mutationFn: (formData) => createProduct(formData),
   onMutate: () => setIsUploading(true), // Start uploading state
@@ -189,6 +191,9 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
     setVideoUrl("");
     setQuantity(1);
     setIsUploading(false); // End uploading state on success
+    setTimeout(()=>{
+      navigate("/admin/products/manage")
+    },2000)
   },
   onError: (error) => {
     console.error(error);
@@ -338,6 +343,76 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
           onSubmit={handleSubmit}
           className="md:grid flex w-full flex-col md:grid-cols-2 gap-3 mt-3"
         >
+          <div className="flex md:col-span-2 flex-col gap-2 my-5">
+            <label className="">
+              Product Images:
+            </label>
+            
+        <div className="flex md:flex-row flex-col ">
+        {[0, 1, 2].map((index) => (
+  <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
+    <Dropzone
+      onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
+      accept="image/*"
+    >
+      {({ getRootProps, getInputProps }) => (
+        <div
+          {...getRootProps({
+            className: `${
+              previews[index] ? "bg-white" : "bg-black/20"
+            } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
+          })}
+        >
+          <input {...getInputProps()} />
+          {previews[index] ? (
+            <div>
+            <img
+              src={previews[index]}
+              alt={`Preview ${index + 1}`}
+              className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
+            />
+           
+            </div>
+          ) : (
+            <div className="p-3">
+              <BsFillArrowUpCircleFill
+                style={{
+                  fontSize: "16px",
+                  marginBottom: "5px",
+                  color: "black",
+                }}
+                className="w-full flex mx-auto"
+              />
+              <p className="text-center text-black font-medium">
+                Drag and drop an image here, or click to select file
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </Dropzone>
+      <div className="flex flex-row gap-x-2 ">
+        {product?.images[index] && files[index] ? (
+                            <div className='flex flex-row gap-x-2'> 
+                      <UpdateButton className="disabled:cursor-not-allowed" disabled={isUpdatingImage} type="button" onClick={() => handleUpdate(product?.images[index]?.product_image_id, files[index])}>
+                     {isUpdatingImage ? <ClipLoader size={20}></ClipLoader> : " Update"}
+                    </UpdateButton>
+                 
+                </div>
+                          ) : ( files[index] && isEditMode && ( <div>
+                             <UpdateButton className="disabled:cursor-not-allowed" disabled={isAddingImage} type="button" onClick={() => handleAddImage(product?.product_id, files[index])}>
+                     {isAddingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
+                    </UpdateButton>
+                            </div> )) }
+                             <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
+                  Delete
+                </DeleteButton>
+      </div>
+  </div>
+))}
+</div>
+
+       </div>
           {/* Form for post details */}
           <div className="flex flex-col gap-2">
             <label htmlFor="name" className="">
@@ -443,20 +518,44 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
             </label>
            <div className="mb-4">
           <ReactQuill
-            theme="snow"
-            value={description}
-            onChange={setDescription}
-            className="w-full h-full"
-            placeholder="Add your description here..."
-            modules={{
-              toolbar: [
-                [{ 'header': '1' }, { 'header': '2' }, { 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['bold', 'italic', 'underline'],
-                [{ 'align': [] }, { 'color': [] }],
-                ['link'],
-              ],
-            }}
-          />
+
+  theme="snow"
+  value={description}
+  onChange={setDescription}
+  className="w-full h-full"
+  placeholder="Add your content here..."
+  modules={{
+    toolbar: [
+      // Headings and Subheadings
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      
+      // Font Style, Size, and Weight
+      [{ font: [] }, { size: [] }],
+      
+      // Text Formatting
+      ['bold', 'italic', 'underline', 'strike'],
+      
+      // Text Color and Background Color
+      [{ color: [] }, { background: [] }],
+      
+      // Alignment Options
+      [{ align: [] }],
+      
+      // Lists and Indents
+      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      
+      // Inline Blocks
+      ['blockquote', 'code-block'],
+      
+      // Links and Images
+      ['link', 'image', 'video'],
+
+      // Clear Formatting
+      ['clean'],
+    ],
+  }}
+/>
+
         </div>
           </div>
           <div className="flex flex-col gap-2">
@@ -473,76 +572,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               
             />
           </div>
-          <div className="flex md:col-span-2 flex-col gap-2 ">
-            <label className="">
-              Product Images:
-            </label>
-            
-        <div className="flex md:flex-row flex-col ">
-        {[0, 1, 2].map((index) => (
-  <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
-    <Dropzone
-      onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
-      accept="image/*"
-    >
-      {({ getRootProps, getInputProps }) => (
-        <div
-          {...getRootProps({
-            className: `${
-              previews[index] ? "bg-white" : "bg-black/20"
-            } dropzone grid content-center h-full mx-auto lg:w-[70%] rounded-xl`,
-          })}
-        >
-          <input {...getInputProps()} />
-          {previews[index] ? (
-            <div>
-            <img
-              src={previews[index]}
-              alt={`Preview ${index + 1}`}
-              className="w-[80%] h-auto my-5 rounded-lg content-center mx-auto"
-            />
-           
-            </div>
-          ) : (
-            <div className="p-3">
-              <BsFillArrowUpCircleFill
-                style={{
-                  fontSize: "16px",
-                  marginBottom: "5px",
-                  color: "black",
-                }}
-                className="w-full flex mx-auto"
-              />
-              <p className="text-center text-black font-medium">
-                Drag and drop an image here, or click to select file
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-    </Dropzone>
-      <div className="flex flex-row gap-x-2">
-        {product?.images[index] && files[index] ? (
-                            <div className='flex flex-row gap-x-2'> 
-                      <UpdateButton className="disabled:cursor-not-allowed" disabled={isUpdatingImage} type="button" onClick={() => handleUpdate(product?.images[index]?.product_image_id, files[index])}>
-                     {isUpdatingImage ? <ClipLoader size={20}></ClipLoader> : " Update"}
-                    </UpdateButton>
-                 
-                </div>
-                          ) : ( files[index] && ( <div>
-                             <UpdateButton className="disabled:cursor-not-allowed" disabled={isAddingImage} type="button" onClick={() => handleAddImage(product?.product_id, files[index])}>
-                     {isAddingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
-                    </UpdateButton>
-                            </div> )) }
-                             <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
-                  Delete
-                </DeleteButton>
-      </div>
-  </div>
-))}
-</div>
-
-       </div>
+          
               
           <div className="md:col-span-2 mt-5 flex justify-end">
         

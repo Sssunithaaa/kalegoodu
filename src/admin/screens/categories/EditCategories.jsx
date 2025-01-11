@@ -115,6 +115,8 @@ const handleFileChange = (acceptedFiles, index) => {
   
 };
 
+
+const navigate = useNavigate()
   // Mutation for adding category
   const { mutate: mutateAddCategory, isLoading: isLoadingAddCategory } =
     useMutation({
@@ -124,7 +126,9 @@ const handleFileChange = (acceptedFiles, index) => {
       onSuccess: (data) => {
         queryClient.invalidateQueries(["categories"]);
         toast.success("Category added successfully!");
-      
+        setTimeout(()=>{
+          navigate("/admin/categories/manage")
+        },2000)
       },
       onError: (error) => {
         toast.error(error.message);
@@ -164,7 +168,8 @@ const handleFileChange = (acceptedFiles, index) => {
       formData,
     );
   }
-  setIsLoading(false)
+  setIsLoading(false);
+
 };
 
 
@@ -256,7 +261,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
                          </UpdateButton>
                       
                      </div>
-                               ) : ( files[index] && ( <div>
+                               ) : ( files[index] && isEditMode && ( <div>
                                   <UpdateButton className="disabled:cursor-not-allowed" disabled={isAddingImage} type="button" onClick={() => handleAddImage(data?.category_id, files[index])}>
                           {isAddingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
                          </UpdateButton>

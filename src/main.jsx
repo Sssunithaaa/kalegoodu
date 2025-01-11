@@ -26,7 +26,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
      <Provider store={store}>
-  <HashRouter>
+  <BrowserRouter>
      <QueryClientProvider client={queryClient}>
     <CartProvider>
       <ContextProvider>
@@ -40,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ContextProvider>
     </CartProvider>
     </QueryClientProvider>
-    </HashRouter>
+    </BrowserRouter>
         </Provider>
   </React.StrictMode>,
 )

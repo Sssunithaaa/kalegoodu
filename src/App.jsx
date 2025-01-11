@@ -90,11 +90,12 @@ const App = () => {
     <Route path="workshops/manage" element={<ManageWorkshops />} />
     <Route path="workshops/add" element={<AddWorkshop />} />
     <Route path="workshops/manage/edit/:slug" element={<AddWorkshop />} />
+
   </Route>
 ) : (
   <Route path="/admin" element={<Navigate to="/login" replace />} />
 )}
-
+<Route element={<div className="flex w-screen h-screen justify-center items-center">Page not found</div>}></Route>
           </Routes>
         </MainLayout>
       </Suspense>

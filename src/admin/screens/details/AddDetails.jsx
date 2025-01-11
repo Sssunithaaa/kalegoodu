@@ -52,21 +52,44 @@ const PolicyForm = ({ title, data, id }) => {
       <form onSubmit={handleSubmit} className="bg-white p-2 m-4 rounded-lg shadow-md">
         <div className="mb-4">
           <ReactQuill
-            ref={quillRef}
-            theme="snow"
-            value={text}
-            onChange={setText}
-            className="w-full h-full"
-            placeholder="Add your content here..."
-            modules={{
-              toolbar: [
-                [{ header: '1' }, { header: '2' }, { list: 'ordered' }, { list: 'bullet' }],
-                ['bold', 'italic', 'underline'],
-                [{ align: [] }, { color: [] }],
-                ['link'],
-              ],
-            }}
-          />
+  ref={quillRef}
+  theme="snow"
+  value={text}
+  onChange={setText}
+  className="w-full h-full"
+  placeholder="Add your content here..."
+  modules={{
+    toolbar: [
+      // Headings and Subheadings
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      
+      // Font Style, Size, and Weight
+      [{ font: [] }, { size: [] }],
+      
+      // Text Formatting
+      ['bold', 'italic', 'underline', 'strike'],
+      
+      // Text Color and Background Color
+      [{ color: [] }, { background: [] }],
+      
+      // Alignment Options
+      [{ align: [] }],
+      
+      // Lists and Indents
+      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      
+      // Inline Blocks
+      ['blockquote', 'code-block'],
+      
+      // Links and Images
+      ['link', 'image', 'video'],
+
+      // Clear Formatting
+      ['clean'],
+    ],
+  }}
+/>
+
         </div>
         <Button className="" type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Submitting...' : `Update ${title}`}
