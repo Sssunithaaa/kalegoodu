@@ -72,7 +72,7 @@ const settings = {
     { breakpoint: 1500, settings: { slidesToShow: Math.min(allProducts.length, 4) } },
     { breakpoint: 1024, settings: { slidesToShow: Math.min(allProducts.length, 3) } },
     { breakpoint: 768, settings: { slidesToShow: Math.min(allProducts.length, 2) } },
-    { breakpoint: 540, settings: { slidesToShow: 1 } },
+    { breakpoint: 540, settings: { slidesToShow: 1,centreMode: allProducts?.length > 1,centerPadding: allProducts?.length > 1 ? "30px" : "0px", } },
   ],
 };
 

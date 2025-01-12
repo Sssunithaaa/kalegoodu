@@ -4,6 +4,7 @@ import FullPageLoader from './components/FullPageLoader';
 import { CartContext } from './context/CartContext';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import OrderConfirmation from './components/OrderConfirmation';
 const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
@@ -68,6 +69,8 @@ const App = () => {
             <Route path="/Terms-and-Conditions" element={<TermsAndConditions />} />
             <Route path="/Returns-and-Refund" element={<Refund />} />
             <Route path="/Delivery-Details" element={<DeliveryDetails />} />
+            <Route path="/order-confirmation" element={<OrderConfirmation />} />
+
             <Route path="/login" element={<LoginForm />} />
       
             {isAuthenticated ? (
@@ -89,6 +92,7 @@ const App = () => {
     <Route path="orders/manage" element={<ManageOrders />} />
     <Route path="workshops/manage" element={<ManageWorkshops />} />
     <Route path="workshops/add" element={<AddWorkshop />} />
+    
     <Route path="workshops/manage/edit/:slug" element={<AddWorkshop />} />
 
   </Route>

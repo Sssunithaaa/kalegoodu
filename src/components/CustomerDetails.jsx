@@ -162,6 +162,7 @@ const handleOpenDialog = () => {
 
 const [loading,setIsLoading] = useState(false)
 
+
 //   const handleFormSubmit = async (e) => {
 //     e.preventDefault();
 //     setIsLoading(true)
@@ -236,8 +237,9 @@ const [loading,setIsLoading] = useState(false)
 const handleFormSubmit = async (e) => {
   e.preventDefault();
   setIsLoading(true);
+ 
 
-  // Prepare customer details
+  // Prepare customer and order payload
   const formattedPhone = phone.startsWith("0") ? phone.slice(1) : phone;
   const fullAddress = `${apartment}, ${add}, ${city}, ${state}`;
   const customerDetails = {
@@ -246,11 +248,9 @@ const handleFormSubmit = async (e) => {
     address: fullAddress,
     phone_number: "91" + formattedPhone,
     pincode,
-    visible: "True"
-    
+    visible: "True",
   };
 
-  // Prepare order payload for backend
   const orderPayload = {
     orderDetails: {
       items: cartItems.map((item) => ({
@@ -258,76 +258,78 @@ const handleFormSubmit = async (e) => {
         product_id: item.product_id,
         quantity: 1,
         price: item.discounted_price !== 0 ? item.discounted_price : item.price,
-        image : item.images[0].image
+        image: item.images[0].image,
       })),
       total: total,
       count: cartItems.length,
     },
-    customerDetails: customerDetails,
+    customerDetails,
   };
 
-  setCustomer(orderPayload)
- 
+  setCustomer(orderPayload);
 
-try {
-  // Create Razorpay order
-  const response = await axios.post(`${baseUrl}/api/create-payment/`, { amount: 100 }, {
-    headers: { "Content-Type": "application/json" },
-  });
+  try {
+    // Create Razorpay order
+    const response = await axios.post(`${baseUrl}/api/create-payment/`, { amount: 100 }, {
+      headers: { "Content-Type": "application/json" },
+    });
 
-  const { razorpay_order_id, amount, currency } = response.data;
+    const { razorpay_order_id, amount, currency } = response.data;
 
-  const options = {
-    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-    amount: amount.toString(),
-    currency: currency,
-    name: "Kalegoodu",
-    description: "Order Payment",
-    order_id: razorpay_order_id,
-    handler: async function (paymentResponse) {
-      try {
-        // Verify payment with backend
-        const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: amount.toString(),
+      currency,
+      name: "Kalegoodu",
+      description: "Order Payment",
+      order_id: razorpay_order_id,
+      handler: async function (paymentResponse) {
+        try {
+          // Verify payment
+          const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
 
-        if (verificationResponse.data.status === "success") {
-          setIsOrderLoading(true); // Start showing loader
-          
-          // Create order in the backend after successful payment
-          const res = await axios.post(`${baseUrl}/api/create-order/`, orderPayload);
-          
-          toast.success("Order placed successfully!");
-          emptyCart();
-          setDialogOpen(true);
-        } else {
-          toast.error("Payment verification failed!");
+          if (verificationResponse.data.status === "success") {
+            // setIsOrderLoading(true); // Show loader during backend processing
+
+            // Create order in the backend
+            const res = await axios.post(`${baseUrl}/api/create-order/`, orderPayload);
+
+            toast.success("Order placed successfully!");
+            emptyCart();
+            
+            // Navigate to Order Confirmation page with order details
+            setTimeout(()=>{
+              navigate("/Order-Confirmation", { state: { orderPayload } });
+            },2000)
+
+          } else {
+            toast.error("Payment verification failed!");
+          }
+        } catch (error) {
+          console.error("Payment verification or order creation failed:", error);
+          toast.error("Error placing order!");
+        } finally {
+          // setIsOrderLoading(false); // Stop loader
         }
-      } catch (error) {
-        console.error("Payment verification or order creation failed:", error);
-        toast.error("Error placing order!");
-      } finally {
-        setIsOrderLoading(false); // Stop showing loader
-      }
-    },
-    prefill: {
-      name: `${firstName} ${lastName}`,
-      email,
-      contact: `+91${phone}`,
-    },
-    theme: {
-      color: "#3399cc",
-    },
-  };
+      },
+      prefill: {
+        name: `${firstName} ${lastName}`,
+        email,
+        contact: `+91${phone}`,
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
 
-  const razorpay = new window.Razorpay(options);
-  razorpay.open();
-} catch (error) {
-  console.log("Payment initiation failed:", error);
-  toast.error("Payment initiation failed! Please try again.");
-} finally {
-  setIsLoading(false);
-}
-
-  
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  } catch (error) {
+    console.log("Payment initiation failed:", error);
+    toast.error("Payment initiation failed! Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
 };
  const updateQuantity = (productId, quantity) => {
   setCartItems(prevItems =>
@@ -343,7 +345,7 @@ try {
   return (
     <div className=" flex flex-col mx-auto justify-center items-center bg-white">
       {orderLoading && <FullPageLoader/>}
-      <OrderConfirmation open={dialogOpen} handleClose={handleCloseDialog} customer={customer}/>
+      {/* <OrderConfirmation open={dialogOpen} handleClose={handleCloseDialog} customer={customer}/> */}
       <div className="container max-w-full justify-center grid grid-cols-1 lg:grid-cols-2">
         {/* Mobile: Show Order Summary */}
         <ToastContainer/>
