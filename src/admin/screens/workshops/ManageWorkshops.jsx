@@ -97,7 +97,7 @@ const searchKeywordOnSubmitHandler = (event) => {
        searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
        searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
        searchKeyword={searchKeyword}
-      tableHeaderTitleList={[ "Name",  "Date", "Place", "Description"," "]}
+      tableHeaderTitleList={[ "Name",  "Date", "Place"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
@@ -141,12 +141,12 @@ const searchKeywordOnSubmitHandler = (event) => {
              <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{workshop.place}</p>
           </td>
-             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+             {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
            <div
             className="prose prose-gray"
             dangerouslySetInnerHTML={{ __html: workshop.description }}
           ></div>
-          </td>
+          </td> */}
        
          
           

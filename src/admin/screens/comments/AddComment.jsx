@@ -89,7 +89,7 @@ const AddTestimonialForm = () => {
     }
   };
   const {data:products,isLoading} = useQuery({
-    queryKey: ["products"],
+    queryKey: ["testimonial-products"],
     queryFn: getAllProducts
   })
   useEffect(()=> {

@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react';
-import { DownloadTableExcel } from 'react-export-table-to-excel';
+import React, { useState, useRef,useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import DataTable from '../../DataTable';
 import axios from 'axios';
@@ -173,23 +172,36 @@ const [searchKeyword, setSearchKeyword] = useState("");
 const searchKeywordOnChangeHandler = (event) => {
   setSearchKeyword(event.target.value);
 };
+const [filteredOrders, setFilteredOrders] = useState(orders);
+
 const searchKeywordOnSubmitHandler = (event) => {
   event.preventDefault();
- 
 
-  if (!searchKeyword || searchKeyword.trim() === "") {
-
-    // setOrders(orders);
+  if (!searchKeyword.trim()) {
+    setFilteredOrders(orders);  // Reset if no search keyword
   } else {
-
-    const filteredcategories = orders?.filter((product) =>
-      product.customer_name.toLowerCase().includes(searchKeyword.toLowerCase())
-    );
-   
-    // setOrders(filteredcategories);
-    
+    const result = orders.filter((order) => {
+      const orderId = String(order.order_id || '').toLowerCase();
+      const customerName = String(order.customer_name || '').toLowerCase();
+      return orderId.includes(searchKeyword.toLowerCase()) ||
+             customerName.includes(searchKeyword.toLowerCase());
+    });
+    setFilteredOrders(result);
   }
 };
+
+
+// Update filteredOrders when orders data changes
+useEffect(() => {
+  // Set filtered orders while maintaining serial numbers
+  setFilteredOrders(
+    orders.map((order, index) => ({
+      ...order,
+      slNo: index + 1,  // Dynamically assign serial number
+    }))
+  );
+}, [orders]);
+
 
  const url = import.meta.env.VITE_APP_URL;
   // const totalPages = Math.ceil(data?.length / PAGE_SIZE);
@@ -261,14 +273,14 @@ const searchKeywordOnSubmitHandler = (event) => {
         searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
         searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
         searchKeyword={searchKeyword}
-        data={orders}
+        data={filteredOrders}
         ref={tableRef}
       >
         <ToastContainer />
-        {orders?.map((order, index) => (
+        {filteredOrders?.map((order, index) => (
           <tr key={order.order_id}>
             <td className="px-3 py-5 text-md bg-white border-b border-gray-200">
-              <p className="text-gray-900 whitespace-no-wrap">{index + 1}</p>
+              <p className="text-gray-900 whitespace-no-wrap">{order?.slNo}</p>
             </td>
             <td className="px-3 py-5 text-md bg-white border-b border-gray-200">
               <p className="text-gray-900 font-bold whitespace-no-wrap">{order?.order_id}</p>

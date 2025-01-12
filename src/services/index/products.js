@@ -13,11 +13,11 @@ export const getAllProducts = async () => {
     throw new Error(error.message);
   }
 };
-export const getAllProductss = async (page = 1) => {
+export const getAllProductss = async (page = 1,search="") => {
   try {
     const response = await axios.get(
       `${url}/api/list_products/`,
-      { params: { page } } // Pass the page as a query parameter
+      { params: { page ,search} } // Pass the page as a query parameter
     );
     return {
       products: response.data.results, // List of products

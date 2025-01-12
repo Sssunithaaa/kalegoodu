@@ -49,50 +49,34 @@ const ProductCarousel = ( {saleTypeId} ) => {
 
 });
   const [currentSlide, setCurrentSlide] = useState(0);
+const computeSlidesToShow = (productsLength) => {
+  if (window.innerWidth <= 540) return 1;
+  if (window.innerWidth <= 768) return Math.min(productsLength, 2);
+  if (window.innerWidth <= 1024) return Math.min(productsLength, 3);
+  if (window.innerWidth <= 1500) return Math.min(productsLength, 4);
+  return 5;
+};
+
+const slidesToShow = computeSlidesToShow(allProducts.length);
+
 const settings = {
   infinite: false,
   speed: 500,
-  slidesToShow: 5,
+  slidesToShow,
   slidesToScroll: 1,
   initialSlide: 0,
   afterChange: (index) => setCurrentSlide(index),
   prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-  nextArrow: hasMore ? <SampleNextArrow /> : null,
+  nextArrow: currentSlide + slidesToShow < allProducts.length ? <SampleNextArrow /> : null,
   responsive: [
-    {
-      breakpoint: 1500,
-      settings: {
-        slidesToShow: Math.min(allProducts?.length, 4),
-        centerMode: allProducts?.length > 4,
-        centerPadding: allProducts?.length > 4 ? "30px" : "0px",
-      },
-    },
-    {
-      breakpoint: 1024, // iPad and similar devices
-      settings: {
-        slidesToShow: Math.min(allProducts?.length, 3),
-        centerMode: allProducts?.length > 3,
-        centerPadding: allProducts?.length > 3 ? "30px" : "0px",
-      },
-    },
-    {
-      breakpoint: 768, // Smaller tablets or larger phones
-      settings: {
-        slidesToShow: Math.min(allProducts?.length, 2),
-        centerMode: allProducts?.length > 2,
-        centerPadding: allProducts?.length > 2 ? "30px" : "0px",
-      },
-    },
-    {
-      breakpoint: 540, // Small screens
-      settings: {
-        slidesToShow: Math.min(allProducts.length, 1),
-        centerMode: allProducts?.length > 1,
-        centerPadding: allProducts?.length > 1 ? "30px" : "0px",
-      },
-    },
+    { breakpoint: 1500, settings: { slidesToShow: Math.min(allProducts.length, 4) } },
+    { breakpoint: 1024, settings: { slidesToShow: Math.min(allProducts.length, 3) } },
+    { breakpoint: 768, settings: { slidesToShow: Math.min(allProducts.length, 2) } },
+    { breakpoint: 540, settings: { slidesToShow: 1 } },
   ],
 };
+
+console.log(currentSlide + slidesToShow )
 
 
 

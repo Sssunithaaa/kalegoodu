@@ -2,7 +2,7 @@ import React from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import Button from "./Button";
 const OrderConfirmation = ({ open, handleClose, customer }) => {
-   
+     console.log(customer)
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -22,7 +22,7 @@ const OrderConfirmation = ({ open, handleClose, customer }) => {
       <DialogContent className="slider">
         <div className="max-w-lg mx-auto my-2 p-2 px-4 bg-white border border-gray-200 rounded-lg shadow-md">
           {/* Header Section */}
-          <div className="text-center mb-4 md:mb-6">
+          <div className="text-center mb-4 md:mb-2">
             <p className="text-gray-600 mt-2">
               Thank you for your order, <strong>{customer.customerDetails?.name}</strong>!
             </p>
@@ -46,7 +46,7 @@ const OrderConfirmation = ({ open, handleClose, customer }) => {
               {customer?.orderDetails?.items?.map((item, index) => (
                 <li key={item.product_id} className="flex items-center gap-4 my-3">
                 <img
-                  src={item.image}
+                  src={import.meta.env.VITE_CLOUD_URL + item.image}
                   alt={item.name}
                   className="w-[20%] h-auto object-cover"
                 />

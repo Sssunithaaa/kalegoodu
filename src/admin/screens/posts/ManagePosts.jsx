@@ -1,235 +1,177 @@
-import React, { useState, useEffect,useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import DataTable from '../../DataTable';
-
-import axios from 'axios';
-import Pagination from '../../../components/Pagination';
-import { useQuery } from '@tanstack/react-query';
-import { getAllProducts } from '../../../services/index/products';
-import { toast, ToastContainer } from 'react-toastify';
-import BackButton from '../../BackButton';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import DataTable from "../../DataTable";
+import axios from "axios";
+import { Pagination } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { getAllProductss } from "../../../services/index/products";
+import { toast, ToastContainer } from "react-toastify";
+import BackButton from "../../BackButton";
 
 const ManageProducts = () => {
-
- 
-    const baseUrl = import.meta.env.VITE_APP_URL;
-
-
- 
-const PAGE_SIZE = 5;
-
+  const baseUrl = import.meta.env.VITE_APP_URL;
   const [currentPage, setCurrentPage] = useState(1);
-    const {data=[],isLoading,refetch,isFetching} = useQuery({
-    queryKey: ["products"],
-    queryFn: getAllProducts
-  })
-  const [products,setProducts] = useState([]);
-  useEffect(()=> {
-    setProducts(data)
-  },[data])
-const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-const searchKeywordOnChangeHandler = (event) => {
-  setSearchKeyword(event.target.value);
-};
-const searchKeywordOnSubmitHandler = (event) => {
-  event.preventDefault();
- 
-
-  if (!searchKeyword || searchKeyword.trim() === "") {
-
-    setProducts(products);
-  } else {
-
-    const filteredcategories = products?.filter((product) =>
-      product.name.toLowerCase().includes(searchKeyword.toLowerCase())
-    );
-   
-    setProducts(filteredcategories);
-    
-  }
-};
-  
-  useEffect(()=>{
-    if(searchKeyword.trim()==""){
-      setProducts(data)
+  // Fetch products with pagination and search
+  const fetchProducts = async (page, keyword) => {
+    try {
+      const response = await getAllProductss(page, keyword);
+      return response;
+    } catch (error) {
+      toast.error("Failed to fetch products.");
     }
-  },[searchKeyword])
- 
-  const url = import.meta.env.VITE_APP_URL
-  
-   
-    const isLoadingDeleteData = false;
-  const totalPages = Math.ceil(data?.length / PAGE_SIZE);
+  };
 
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = products?.slice(startIndex, endIndex);
+  const {
+    data: productsData = { products: [], totalCount: 0 },
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["productss", currentPage, searchKeyword],
+    queryFn: () => fetchProducts(currentPage, searchKeyword),
+    keepPreviousData: true,
+  });
 
-  const handlePageChange = (page) => {
+  const products = productsData.products || [];
+  const totalPages = Math.ceil(productsData.totalCount/4); // Assuming 10 items per page
+
+  // Handle search input changes
+  const searchKeywordOnChangeHandler = (event) => {
+    setSearchKeyword(event.target.value);
+  };
+
+  const searchKeywordOnSubmitHandler = (event) => {
+    event.preventDefault();
+    setCurrentPage(1); // Reset to first page on search
+    refetch();
+  };
+
+  // Handle page change
+  const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
-  const deleteDataHandler=async (id)=> {
-    try {
-      await axios.delete(`${url}/api/product/${id}/delete/`)
-      toast.success("Product deleted successfully")
-      refetch()
-    } catch (error) {
-      toast.error("Failed to delete product!! Try again!!")
-    }
-  }
 
+  // Delete product
+  const deleteDataHandler = async (id) => {
+    try {
+      await axios.delete(`${baseUrl}/api/product/${id}/delete/`);
+      toast.success("Product deleted successfully");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to delete product. Try again!");
+    }
+  };
+
+  // Toggle product visibility
   const handleToggleVisibility = async (id, currentVisibility) => {
-  try {
-   
-   await axios.put(`${baseUrl}/api/update_product/${id}/`, {
-      visible: !currentVisibility
-    });
-    
-    toast.success("Visibility updated successfully!");
-    refetch(); 
-  } catch (error) {
-    console.log(error)
-    toast.error("Couldn't update visibility");
-  }
-};
-   const reversedData = useMemo(() => {
-    // Reverse the data only when `paginatedData` changes
-    return [...paginatedData]?.reverse();
-  }, [paginatedData]);
+    try {
+      await axios.put(`${baseUrl}/api/update_product/${id}/`, {
+        visible: !currentVisibility,
+      });
+      toast.success("Visibility updated successfully!");
+      refetch();
+    } catch (error) {
+      toast.error("Couldn't update visibility");
+    }
+  };
+
   return (
-    <div className='overflow-y-auto overflow-x-auto w-full'>
+    <div className="overflow-y-auto overflow-x-auto w-full">
       <div className="flex w-full justify-start ml-4 self-start">
-    <BackButton />
-  </div>
-    <DataTable
-      // pageTitle="Manage Products"
-      dataListName="Products"
-      searchInputPlaceHolder="Product name..."
-      searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
-      searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
-      searchKeyword={searchKeyword}
-      tableHeaderTitleList={[ "Name","Price","Discount Price","Quantity", "Categories"," "]}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      data={paginatedData}
-      url = "/admin/products/add"
-      // setCurrentPage={setCurrentPage}
-      // currentPage={currentPage}
-    >
-      <ToastContainer/>
-      {reversedData?.map((product) => (
-        <tr key={product.product_id}>
-          {/* <td className="py-5 text-md bg-white border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="flex flex-wrap gap-x-2">
-                {
-                  product?.images.map((image)=> (
-                   
-                  <img
-                    src={
-                      product.images.length > 0
-                        ? "https://res.cloudinary.com/dgkgxokru/"+`${image.image}` // Construct full image URL
-                        : 'path/to/sampleProductImage' // Replace with your sample image path
-                    }
-                    alt={product.name}
-                    className="mx-auto object-cover rounded-lg w-10 md:w-4 aspect-square"
-                  />
-              
-                  ))
-                }
-              </div>
-             
-            </div>
-          </td> */}
-         <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{product.name}</p>
-          </td>
-          {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{product.short_description}</p>
-          </td> */}
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{product.price}</p>
-          </td>
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
-              {product.discounted_price !== '0' ? (
-                <>
-                  <span className="line-through text-gray-500">
-                    {product.price}
-                  </span>
-                  <span className="text-red-600"> {product.discounted_price}</span>
-                </>
-              ) : (
-                product.price
-              )}
-            </p>
-          </td>
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{product.quantity}</p>
-          </td>
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
-              {product.categories.length > 0
-                ? product.categories
-                    .map((category, index) => `${category.name}`)
-                    .join(', ')
-                : "Uncategorized"}
-            </p>
-          </td>
-          {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <div className="flex gap-x-2">
-              {product.sale_types.length > 0
-                ? product.sale_types.map((sale_type, index) => (
-                    <p key={index}>
-                      {sale_type.name}
-                      {product.sale_types.length - 1 !== index && ","}
-                    </p>
-                  ))
-                : "No tags"}
-            </div>
-          </td> */}
-           <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-  <div className="flex items-center">
-    <button
-      className={`py-1 px-4 rounded ${product?.visible ? "bg-green-500" : "bg-red-500"} text-white`}
-      onClick={() => handleToggleVisibility(product?.product_id, product?.visible)}
-    >
-      {product?.visible ? "Visible" : "Hidden"}
-    </button>
-  </div>
-</td>
-        
-          <td className="px-5 py-5 text-md bg-white border-b border-gray-200 ">
-            <div className='flex flex-row gap-x-5'>
-              <Link
-              to={`/admin/products/manage/edit/${product.product_id}`} // Make sure the slug field is correctly used here
-              className="text-green-600 hover:text-green-900"
-            >
-              Edit
-            </Link>
+        <BackButton />
+      </div>
+      <DataTable
+        dataListName="Products"
+        searchInputPlaceHolder="Product name..."
+        searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
+        searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
+        searchKeyword={searchKeyword}
+        tableHeaderTitleList={[
+          "Name",
+          "Price",
+          "Discount Price",
+          "Quantity",
+          "Categories",
+          " ",
+        ]}
+        isLoading={isLoading}
+      >
+        <ToastContainer />
+        {products?.map((product) => (
+          <tr key={product.product_id}>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">{product.name}</p>
+            </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">{product.price}</p>
+            </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">
+                {product.discounted_price !== "0" ? (
+                  <>
+                    <span className="line-through text-gray-500">
+                      {product.price}
+                    </span>
+                    <span className="text-red-600"> {product.discounted_price}</span>
+                  </>
+                ) : (
+                  product.price
+                )}
+              </p>
+            </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">{product.quantity}</p>
+            </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">
+                {product.categories.length > 0
+                  ? product.categories.map((cat) => cat.name).join(", ")
+                  : "Uncategorized"}
+              </p>
+            </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <button
-              disabled={isLoadingDeleteData}
-              type="button"
-              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-              onClick={() => {
-                deleteDataHandler(
-                   product.product_id, // Make sure the slug field is correctly used here
-                 
-                );
-              }}
-            >
-              Delete
-            </button>
-            
-            </div>
-          </td>
-        </tr>
-      ))}
-    </DataTable>
-    {!isLoading && <Pagination  onPageChange={handlePageChange}
-          currentPage={currentPage}
-          totalPageCount={totalPages}/>}
+                className={`py-1 px-4 rounded ${
+                  product?.visible ? "bg-green-500" : "bg-red-500"
+                } text-white`}
+                onClick={() =>
+                  handleToggleVisibility(product?.product_id, product?.visible)
+                }
+              >
+                {product?.visible ? "Visible" : "Hidden"}
+              </button>
+            </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <div className="flex flex-row gap-x-5">
+                <Link
+                  to={`/admin/products/manage/edit/${product.product_id}`}
+                  className="text-green-600 hover:text-green-900"
+                >
+                  Edit
+                </Link>
+                <button
+                  type="button"
+                  className="text-red-600 hover:text-red-900"
+                  onClick={() => deleteDataHandler(product.product_id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))}
+      </DataTable>
+      {!isLoading && (
+        <Pagination
+          onChange={handlePageChange}
+          page={currentPage}
+          count={totalPages}
+          variant="outlined"
+          shape="rounded"
+          className="mt-5 flex justify-center"
+        />
+      )}
     </div>
   );
 };

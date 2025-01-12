@@ -75,7 +75,7 @@ export const updateCategory = async ({ updatedData, slug }) => {
     };
 
     const response = await axios.put(
-      `${url}/api/update_full_category/${slug}/`,
+      `${url}/api/update_category/${slug}/`,
       updatedData,
       config
     );

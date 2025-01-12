@@ -57,6 +57,7 @@ const handleOpenDialog = () => {
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
+    navigate("/products")
   };
 
   useEffect(() => {
@@ -256,6 +257,7 @@ const handleFormSubmit = async (e) => {
         product_id: item.product_id,
         quantity: 1,
         price: item.discounted_price !== 0 ? item.discounted_price : item.price,
+        image : item.images[0].image
       })),
       total: total,
       count: cartItems.length,
@@ -263,8 +265,9 @@ const handleFormSubmit = async (e) => {
     customerDetails: customerDetails,
   };
 
+  setCustomer(orderPayload)
   try {
-    // Create Razorpay order
+    //Create Razorpay order
     const response = await axios.post(`${baseUrl}/api/create-payment/`, { amount: 100 }, {
       headers: { "Content-Type": "application/json" },
     });
@@ -285,9 +288,9 @@ const handleFormSubmit = async (e) => {
 
           if (verificationResponse.data.status === "success") {
             // Create order in the backend after successful payment
-             console.log(orderPayload)
+          
              const res =await axios.post(`${baseUrl}/api/create-order/`, orderPayload);
-            console.log(res)
+           
             toast.success("Order placed successfully!");
             emptyCart();
            
@@ -297,7 +300,7 @@ const handleFormSubmit = async (e) => {
           }
         } catch (error) {
           console.error("Payment verification or order creation failed:", error);
-          toast.error("Order creation failed after payment!");
+          toast.error(res.data.error);
         }
       },
       prefill: {
@@ -312,6 +315,8 @@ const handleFormSubmit = async (e) => {
 
     const razorpay = new window.Razorpay(options);
     razorpay.open();
+    setDialogOpen(true)
+
   } catch (error) {
     console.log("Payment initiation failed:", error);
     toast.error("Payment initiation failed! Please try again.");
@@ -565,6 +570,7 @@ finally {
       type="text"
       value={phone}
       onChange={(e) => setPhone(e.target.value)}
+      length={10}
       maxLength={10}  // Allow only 10 digits for the phone number
       className="mt-1 block w-full p-2 pl-2 border-l-0 rounded-md"
       required
