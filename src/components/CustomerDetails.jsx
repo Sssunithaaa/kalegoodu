@@ -285,7 +285,7 @@ const handleFormSubmit = async (e) => {
         try {
           // Verify payment with backend
           const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
-
+        
           if (verificationResponse.data.status === "success") {
             // Create order in the backend after successful payment
           
@@ -293,8 +293,9 @@ const handleFormSubmit = async (e) => {
            
             toast.success("Order placed successfully!");
             emptyCart();
+            setDialogOpen(true)
            
-            navigate("/products");
+         
           } else {
             toast.error("Payment verification failed!");
           }
@@ -315,7 +316,7 @@ const handleFormSubmit = async (e) => {
 
     const razorpay = new window.Razorpay(options);
     razorpay.open();
-    setDialogOpen(true)
+    
 
   } catch (error) {
     console.log("Payment initiation failed:", error);
