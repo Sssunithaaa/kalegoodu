@@ -1,9 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Header from '../admin/header/Header'
-import { useQuery } from "@tanstack/react-query";
-// import { getUserProfile } from "../../services/index/users";
-// import { useSelector } from "react-redux";
-// import { toast } from "react-hot-toast";
+
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 const AdminLayout = () => {

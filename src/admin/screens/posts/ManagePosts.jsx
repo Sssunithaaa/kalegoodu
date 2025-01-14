@@ -4,7 +4,7 @@ import DataTable from "../../DataTable";
 import axios from "axios";
 import { Pagination } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { getAllProductss } from "../../../services/index/products";
+import { getAllProducts } from "../../../services/index/products";
 import { toast, ToastContainer } from "react-toastify";
 import BackButton from "../../BackButton";
 
@@ -16,7 +16,7 @@ const ManageProducts = () => {
   // Fetch products with pagination and search
   const fetchProducts = async (page, keyword) => {
     try {
-      const response = await getAllProductss(page, keyword);
+      const response = await getAllProducts(page, keyword);
       return response;
     } catch (error) {
       toast.error("Failed to fetch products.");
@@ -96,6 +96,7 @@ const ManageProducts = () => {
           " ",
         ]}
         isLoading={isLoading}
+        url="/admin/products/add"
       >
         <ToastContainer />
         {products?.map((product) => (

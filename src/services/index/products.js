@@ -1,18 +1,26 @@
 import axios from "axios";
  const url = import.meta.env.VITE_APP_URL;
-export const getAllProducts = async () => {
+export const getAllProducts = async (page=1,search="") => {
   try {
     const response = await axios.get(
-      `${url}/api/products/`
+      `${url}/api/products/`,
+      { params: { page ,search} } // Pass the page as a query parameter
     );
    
-    return response.data?.products
+     return {
+      products: response.data.results.products, // List of products
+      totalCount: response.data.count, // Total number of products
+      next: response.data.next, // URL for the next page
+      previous: response.data.previous, // URL for the previous page
+    };
   } catch (error) {
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);
   }
 };
+
+
 export const getAllProductss = async (page = 1,search="") => {
   try {
     const response = await axios.get(
@@ -57,6 +65,20 @@ export const getSingleProduct = async (id) => {
     throw new Error(error.message);
   }
 };
+
+export const getProductNames = async (id) => {
+  try {
+  
+    const response = await axios.get(`${url}/api/products-product-id/`);
+   
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
+
 
 export const deleteProduct = async ({ slug, token }) => {
   try {

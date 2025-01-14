@@ -5,6 +5,7 @@ import { CartContext } from './context/CartContext';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import OrderConfirmation from './components/OrderConfirmation';
+import EmailForm from './admin/screens/emails/EmailForm';
 const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
@@ -94,6 +95,7 @@ const App = () => {
     <Route path="workshops/add" element={<AddWorkshop />} />
     
     <Route path="workshops/manage/edit/:slug" element={<AddWorkshop />} />
+    <Route path='send-emails' element={<EmailForm/>}/>
 
   </Route>
 ) : (

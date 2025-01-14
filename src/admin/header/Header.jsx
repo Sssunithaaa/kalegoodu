@@ -225,6 +225,14 @@ const Header = () => {
                 </Link>
                 {/* <Link to="/admin/categories/manage">Categories</Link> */}
               </NavItemCollapse>
+               <NavItem
+                title="Promotional Emails"
+                link="/admin/send-emails"
+                icon={<AiFillDashboard className="text-xl" />}
+                name="emails"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              />
             </div>
             <Button className="px-8 mt-5" onClick={handleLogout}>Logout</Button>
           </div>

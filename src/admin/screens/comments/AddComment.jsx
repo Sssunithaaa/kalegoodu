@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
-import { getAllProducts } from '../../../services/index/products';
+import {  getProductNames } from '../../../services/index/products';
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom';
 import BackButton from '../../BackButton';
@@ -90,8 +90,10 @@ const AddTestimonialForm = () => {
   };
   const {data:products,isLoading} = useQuery({
     queryKey: ["testimonial-products"],
-    queryFn: getAllProducts
+    queryFn: getProductNames
   })
+
+  
   useEffect(()=> {
    if(comment){
      setProductId(comment?.product);
