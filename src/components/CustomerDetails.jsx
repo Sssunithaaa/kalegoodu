@@ -196,6 +196,8 @@ const handleFormSubmit = async (e) => {
   );
 };
 
+
+
  
   return (
     <div className=" flex flex-col mx-auto justify-center items-center bg-white">
@@ -287,7 +289,7 @@ const handleFormSubmit = async (e) => {
             onChange={(e) => updateQuantity(item.product_id, parseInt(e.target.value))} 
             className="border rounded px-2 py-1 text-sm cursor-pointer w-[60px]"
           >
-            {Array.from({ length: 10 }, (_, i) => i + 1).map(num => (
+            {Array.from({ length: item.availableQuantity }, (_, i) => i + 1).map(num => (
               <option key={num} value={num}>{num}</option>
             ))}
           </select></span>
