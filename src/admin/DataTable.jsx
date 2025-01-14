@@ -14,6 +14,7 @@ const DataTable = forwardRef(({
   data,
   url,
   children,
+  search
   
 }, ref) => {
   const navigate = useNavigate()
@@ -29,7 +30,7 @@ const DataTable = forwardRef(({
             <div>
               <h2 className="text-2xl font-bold leading-tight">Manage {dataListName}</h2>
             </div>
-            <div className="text-center flex justify-center items-center">
+       {search !== "not-visible" &&      <div className="text-center flex justify-center items-center">
   <form
     onSubmit={searchKeywordOnSubmitHandler}
     className="flex gap-3 mx-auto md:max-w-sm md:flex-row md:w-full md:space-x-3"
@@ -51,7 +52,7 @@ const DataTable = forwardRef(({
       </Button>
     </div>
   </form>
-</div>
+</div> }
             <div>
               {url && <Button className='px-4' onClick={()=>navigate(url)}>Add {name}</Button>
               }

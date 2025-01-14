@@ -153,10 +153,7 @@ const navigate = useNavigate()
   });
   }
 
- // Log FormData content to verify
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
+
 
   if (isEditMode) {
     mutateUpdateCategory({
@@ -336,7 +333,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
           
           className=" px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isEditMode ? "Update Category" :loading ? <ClipLoader size={20}/> : "Add Category"}
+          {isEditMode ? loading ? <ClipLoader size={20}/> : "Update Category" :loading ? <ClipLoader size={20}/> : "Add Category"}
         </Button>
       </form>
     </div>

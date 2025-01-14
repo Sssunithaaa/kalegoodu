@@ -74,15 +74,16 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   // Check if cart items exist in products data and update localStorage
-  useEffect(() => {
-    if (products && cartItems.length > 0) {
-      const updatedCartItems = cartItems.filter((cartItem) =>
-        products?.some((product) => product.product_id === cartItem.product_id)
-      );
-      setCartItems(updatedCartItems);
-      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-    }
-  }, [products]);
+useEffect(() => {
+  if (Array.isArray(products) && cartItems.length > 0) {
+    const updatedCartItems = cartItems.filter((cartItem) =>
+      products.some((product) => product.product_id === cartItem.product_id)
+    );
+    setCartItems(updatedCartItems);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+  }
+}, [products]);
+
 
   return (
     <CartContext.Provider

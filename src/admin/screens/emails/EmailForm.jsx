@@ -31,11 +31,13 @@ const EmailForm = () => {
       products: selectedProducts.map((product) => product.value),
     };
 
-    console.log(emailData);
-
     try {
       setLoading(true);
-      const response = await axios.post("/api/send-promotional-emails/", emailData);
+      const response = await axios.post(`${import.meta.env.VITE_APP_URL}/api/send-promotional-emails/`,  {
+      title: emailTitle,
+      body: emailBody,
+      products: selectedProducts.map((product) => product.value),
+    });
       toast.success(response.data.message);
     } catch (error) {
       console.log("Error sending email:", error);
@@ -92,7 +94,7 @@ const EmailForm = () => {
   <CreatableSelect
     isMulti
     name="products"
-    options={products.map((product) => ({
+    options={products?.map((product) => ({
       value: product.product_id,
       label: product.name,
     }))}
