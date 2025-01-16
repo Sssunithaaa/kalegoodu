@@ -46,7 +46,7 @@ const MainPage = () => {
 
       <Suspense fallback={<FullPageLoader />}>
         <div className="scroll-section my-6" ref={categoriesRef}>
-          <Title>Shop By Collection</Title>
+          <Title>Shop By Category</Title>
           <Categories />
         </div>
         <div className="scroll-section w-full my-6" ref={newArrivalsRef}>

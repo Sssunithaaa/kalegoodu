@@ -23,7 +23,7 @@ const CustomerDetails = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [customer, setCustomer] = useState([])
    const navigate = useNavigate()
-  const { cartItems,setCartItems, cartTotal,emptyCart } = useContext(CartContext);
+  const { cartItems,setCartItems, cartTotal,emptyCart,checkItems } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
     const [dialogOpen, setDialogOpen] = useState(false);
     const { error, isLoading, Razorpay } = useRazorpay();
@@ -114,25 +114,26 @@ const handleFormSubmit = async (e) => {
 
   try {
     // Create Razorpay order
-    const response = await axios.post(`${baseUrl}/api/create-payment/`, { amount: 100 }, {
-      headers: { "Content-Type": "application/json" },
-    });
+  //   const response = await axios.post(`${baseUrl}/api/create-payment/`, { amount: 100 }, {
+  //     headers: { "Content-Type": "application/json" },
+  //   });
 
-    const { razorpay_order_id, amount, currency } = response.data;
+  //   const { razorpay_order_id, amount, currency } = response.data;
 
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: amount.toString(),
-      currency,
-      name: "Kalegoodu",
-      description: "Order Payment",
-      order_id: razorpay_order_id,
-      handler: async function (paymentResponse) {
-  try {
-    // Verify payment
-    const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
+  //   const options = {
+  //     key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+  //     amount: amount.toString(),
+  //     currency,
+  //     name: "Kalegoodu",
+  //     description: "Order Payment",
+  //     order_id: razorpay_order_id,
+  //     handler: async function (paymentResponse) {
+  // try {
+  //   // Verify payment
+  //   const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
 
-    if (verificationResponse.data.status === "success") {
+    // if (verificationResponse.data.status === "success") {
+    checkItems();
       setIsOrderLoading(true); // Show loader during backend processing
 
       // Attempt to create order in the backend
@@ -156,29 +157,29 @@ const handleFormSubmit = async (e) => {
           "If the amount was deducted, please contact us at kalegoodu@gmail.com with your payment details."
         );
       }
-    } else {
-      toast.error("Payment verification failed!");
-    }
-  } catch (error) {
-    console.error("Payment verification or order creation failed:", error);
-    toast.error("Error processing payment or placing order.");
-  } finally {
-    setIsOrderLoading(false); // Stop loader
-  }
-},
+//     } else {
+//       toast.error("Payment verification failed!");
+//     }
+//   } catch (error) {
+//     console.error("Payment verification or order creation failed:", error);
+//     toast.error("Error processing payment or placing order.");
+//   } finally {
+//     setIsOrderLoading(false); // Stop loader
+//   }
+// },
 
-      prefill: {
-        name: `${firstName} ${lastName}`,
-        email,
-        contact: `+91${phone}`,
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
+//       prefill: {
+//         name: `${firstName} ${lastName}`,
+//         email,
+//         contact: `+91${phone}`,
+//       },
+//       theme: {
+//         color: "#3399cc",
+//       },
+//     };
 
-    const razorpay = new window.Razorpay(options);
-    razorpay.open();
+//     const razorpay = new window.Razorpay(options);
+//     razorpay.open();
   } catch (error) {
     console.log("Payment initiation failed:", error);
     toast.error("Payment initiation failed! Please try again.");

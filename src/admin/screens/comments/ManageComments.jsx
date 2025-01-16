@@ -7,6 +7,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import BackButton from '../../BackButton';
+import { deleteItem } from '../../hooks/utils';
+import DeleteConfirmationDialog from '../../ConfirmationDialog';
 const ManageComments = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const PAGE_SIZE = 5;
@@ -31,26 +33,29 @@ const ManageComments = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const handleDelete=async (id)=> {
-    try {
-      await axios.delete(`${baseUrl}/api/comment/${id}/delete/`);
-      toast.success("Testimonial deleted successfully!!")
-      refetch()
-    } catch (error) {
-      toast.error("Couldn't delete testimonial")
-    }
-  }
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [selectedItemId, setSelectedItemId] = useState(null);
+  
+    const handleDeleteClick = (itemId) => {
+      setSelectedItemId(itemId);
+      setDeleteDialogOpen(true);
+    };
+  
+    const handleConfirmDelete = async () => {
+      const deleteUrl = `${baseUrl}/api/comment/${selectedItemId}/delete/`;
+      await deleteItem(deleteUrl, refetch);
+      setDeleteDialogOpen(false);
+    };
+  
   const handleToggleVisibility = async (id, currentVisibility) => {
   try {
    
-    const response = await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
+    await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
       display: !currentVisibility
     });
-    // console.log(response)
     toast.success("Visibility updated successfully!");
     refetch(); 
   } catch (error) {
-    // console.log(error)
     toast.error("Couldn't update visibility");
   }
 };
@@ -58,6 +63,11 @@ const ManageComments = () => {
 
   return (
     <div>
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
        <div className="flex ml-4 w-full justify-start self-start">
     <BackButton />
   </div>
@@ -77,7 +87,7 @@ const ManageComments = () => {
         url="/admin/comments/add"
       >
         <ToastContainer/>
-        {paginatedData.map((comment) => (
+        {paginatedData?.map((comment) => (
           <tr key={comment.comment_id}>
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <div className="flex items-center">
@@ -128,7 +138,7 @@ const ManageComments = () => {
               <button
                 type="button"
                 className="text-red-600 hover:text-red-900"
-                onClick={()=>handleDelete(comment?.comment_id)}
+                onClick={()=>handleDeleteClick(comment?.comment_id)}
               >
                 Delete
               </button>

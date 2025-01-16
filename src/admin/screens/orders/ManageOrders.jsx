@@ -6,6 +6,8 @@ import { Pagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Button from '../../../components/Button';
 import { getAllOrderss } from '../../../services/index/orders';
+import DeleteConfirmationDialog from '../../ConfirmationDialog';
+import { deleteItem } from '../../hooks/utils';
 const ManageProducts = () => {
   const PAGE_SIZE = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -164,15 +166,7 @@ const handleCheckboxChange = (orderId, item, isChecked) => {
     }
   };
 
-    const deleteDataHandler=async (id)=> {
-    try {
-      await axios.delete(`${url}/api/orders/${id}/delete/`)
-      toast.success("Order deleted successfully")
-      refetch()
-    } catch (error) {
-      toast.error("Failed to delete order!! Try again!!")
-    }
-  }
+    
 const handleInTransit = async (orderId,order) => {
   const itemsToSend = selectedItems[orderId];
 
@@ -221,9 +215,28 @@ const searchKeywordOnChangeHandler = (event) => {
    refetch();
   };
 
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [selectedItemId, setSelectedItemId] = useState(null);
+  
+    const handleDeleteClick = (itemId) => {
+      setSelectedItemId(itemId);
+      setDeleteDialogOpen(true);
+    };
+  
+    const handleConfirmDelete = async () => {
+      const deleteUrl = `${baseUrl}/api/orders/${selectedItemId}/delete/`;
+      await deleteItem(deleteUrl, refetch);
+      setDeleteDialogOpen(false);
+    };
   
   return (
     <div className="w-full overflow-x-auto">
+       <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
      <div className='flex flex-col justify-center mx-auto'>
       <h1 className='font-bold text-2xl mb-2 text-center'>Export Customers Orders</h1>
       <div className='flex mx-auto mb-2 gap-x-2'>
@@ -429,7 +442,7 @@ const searchKeywordOnChangeHandler = (event) => {
 </td>
 
 
-          {/* <td onClick={()=>deleteDataHandler(item.order_item_id)} className="px-3 py-2 text-md bg-white border-b border-gray-200">Delete</td> */}
+         <td onClick={()=>handleDeleteClick(order.order_id)} className="px-3 py-2 text-md hover:cursor-pointer bg-white border-b border-gray-200">Delete</td> 
 
 
           </tr>

@@ -196,7 +196,7 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
     },2000)
   },
   onError: (error) => {
-    console.error(error);
+    console.log(error);
     toast.error("Error adding product");
     setIsUploading(false); // End uploading state on error
   },
@@ -224,9 +224,10 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
 const handleSubmit = async (e) => {
   e.preventDefault();
   const formData = new FormData();
+  console.log(discountedPrice)
   formData.append("name", name);
   formData.append("price", price);
-  formData.append("discounted_price", discountedPrice);
+  formData.append("discounted_price", discountedPrice || 0);
   formData.append("short_description", description); 
 if (videoUrl) {
   formData.append("video_link", videoUrl);
@@ -417,6 +418,8 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
           <div className="flex flex-col gap-2">
             <label htmlFor="name" className="">
               Product Name:
+                  <span className="text-red-500 text-2xl font-bold ml-1">*</span>
+
             </label>
             <input
               type="text"
@@ -473,6 +476,8 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
           <div className="flex flex-col gap-2">
             <label htmlFor="price" className="">
               Price:
+                  <span className="text-red-500 text-2xl font-bold ml-1">*</span>
+
             </label>
             <input
               type="number"
@@ -582,7 +587,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   disabled={uploading || isLoadingUpdatePostDetail || isLoadingAddPostDetail}
 >
   {isEditMode
-    ? isLoadingUpdatePostDetail
+    ? uploading
       ? <ClipLoader size={20}/>
       : "Update Product"
     : isLoadingAddPostDetail || uploading

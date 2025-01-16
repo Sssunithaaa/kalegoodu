@@ -77,6 +77,9 @@ const AddTestimonialForm = () => {
       setUserName('');
       setText('');
       setRating(1);
+      setTimeout(()=>{
+      navigate("/admin/comments/manage")
+    },2000)
       }
 
       

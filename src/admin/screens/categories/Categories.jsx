@@ -13,6 +13,9 @@ import { useState, useEffect } from "react";
 import styled from 'styled-components'
 import Pagination from '../../../components/Pagination'
 import BackButton from "../../BackButton";
+import ConfirmationDialog from "../../ConfirmationDialog";
+import DeleteConfirmationDialog from "../../ConfirmationDialog";
+import { deleteItem } from "../../hooks/utils";
 const Button = styled.button`
   width: 200px;
   height: 45px;
@@ -90,9 +93,21 @@ const { mutate: deleteCategoryMutation, isLoading: isLoadingDeleteData } = useMu
   },
 });
 
-const deleteDataHandler = (categoryId) => {
-  deleteCategoryMutation(categoryId);
-};
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+   const [selectedItemId, setSelectedItemId] = useState(null);
+ 
+   const handleDeleteClick = (itemId) => {
+     setSelectedItemId(itemId);
+     setDeleteDialogOpen(true);
+   };
+ 
+   const handleConfirmDelete = async () => {
+     const deleteUrl = `${baseUrl}/api/category/${selectedItemId}/delete/`;
+     await deleteItem(deleteUrl, refetch);
+     setDeleteDialogOpen(false);
+   };
+ 
+
 
   const navigate = useNavigate()
 const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
@@ -121,6 +136,11 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
 };
   return (
     <div className="flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">
+     <DeleteConfirmationDialog
+     open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+     />
  <div className="flex w-full justify-start self-start">
     <BackButton />
   </div>      
@@ -180,16 +200,16 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
   </div>
 </td>
               <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
-                {/* <button
+                <button
                   disabled={isLoadingDeleteData}
                   type="button"
                   className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
                   onClick={() => {
-                    deleteDataHandler(category.category_id);
+                    handleDeleteClick(category.category_id);
                   }}
                 >
                   Delete
-                </button> */}
+                </button>
                 <Link
                   to={`/admin/categories/manage/edit/${category.category_id}`}
                   className="text-green-600 hover:text-green-900"

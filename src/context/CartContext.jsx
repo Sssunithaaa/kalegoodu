@@ -1,13 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query'; // Assuming useQuery is from react-query
-import { getAllProducts } from '../services/index/products';
+import { getAllProducts, getProductNames } from '../services/index/products';
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const { data: products, isLoading: pLoading, isFetching: pFetching } = useQuery({
-    queryKey: ['products'],
-    queryFn: getAllProducts,
-  });
+  
 
   const [cartItems, setCartItems] = useState(() => {
     const storedCartItems = localStorage.getItem('cartItems');
@@ -30,6 +27,29 @@ export const CartProvider = ({ children }) => {
       }
     });
   };
+
+   const {data:products,isLoading} = useQuery({
+      queryKey: ["testimonial-products"],
+      queryFn: getProductNames
+    })
+    const checkItems = () => {
+       if (Array.isArray(products) && cartItems.length > 0) {
+    const validCartItems = cartItems.filter((cartItem) =>
+      products.some((product) => product.product_id === cartItem.product_id)
+    );
+    
+    // Update the cart if there are changes
+    if (validCartItems.length !== cartItems.length) {
+      setCartItems(validCartItems);
+      localStorage.setItem('cartItems', JSON.stringify(validCartItems));
+    }
+    return;
+  }
+    }
+  useEffect(() => {
+ checkItems()
+}, [products]);
+
 
   const increaseQuantity = (id) => {
     setCartItems((prevItems) =>
@@ -74,21 +94,13 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   // Check if cart items exist in products data and update localStorage
-useEffect(() => {
-  if (Array.isArray(products) && cartItems.length > 0) {
-    const updatedCartItems = cartItems.filter((cartItem) =>
-      products.some((product) => product.product_id === cartItem.product_id)
-    );
-    setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-  }
-}, [products]);
 
 
   return (
     <CartContext.Provider
       value={{
         cartItems,
+        checkItems,
         paymentMethod,
         setPaymentMethod,
         addToCart,

@@ -60,6 +60,7 @@ export const getSingleProduct = async (id) => {
    
     return response.data.product;
   } catch (error) {
+
     if (error.response && error.response.data.message)
       throw new Error(error.response.data.message);
     throw new Error(error.message);
@@ -128,8 +129,8 @@ export const createProduct = async ( formData ) => {
     
     return data;
   } catch (error) {
- 
-    if (error.response && error.response.data.message)
+    console.log(error)
+    if (error.response && error.response.data)
       throw new Error(error.response.data.message);
     
     throw new Error(error.message);

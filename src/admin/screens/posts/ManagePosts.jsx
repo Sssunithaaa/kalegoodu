@@ -7,7 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllProducts } from "../../../services/index/products";
 import { toast, ToastContainer } from "react-toastify";
 import BackButton from "../../BackButton";
-
+import ConfirmationDialog from "../../ConfirmationDialog";
+import DeleteConfirmationDialog from "../../ConfirmationDialog";
 const ManageProducts = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,16 +53,22 @@ const ManageProducts = () => {
     setCurrentPage(page);
   };
 
-  // Delete product
-  const deleteDataHandler = async (id) => {
-    try {
-      await axios.delete(`${baseUrl}/api/product/${id}/delete/`);
-      toast.success("Product deleted successfully");
-      refetch();
-    } catch (error) {
-      toast.error("Failed to delete product. Try again!");
-    }
+ const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  const handleDeleteClick = (itemId) => {
+    setSelectedItemId(itemId);
+    setDeleteDialogOpen(true);
   };
+
+  const handleConfirmDelete = async () => {
+    const deleteUrl = `${baseUrl}/api/product/${selectedItemId}/delete/`;
+    await deleteItem(deleteUrl, refetch);
+    setDeleteDialogOpen(false);
+  };
+
+
+  
 
   // Toggle product visibility
   const handleToggleVisibility = async (id, currentVisibility) => {
@@ -78,6 +85,12 @@ const ManageProducts = () => {
 
   return (
     <div className="overflow-y-auto overflow-x-auto w-full">
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
+
       <div className="flex w-full justify-start ml-4 self-start">
         <BackButton />
       </div>
@@ -154,8 +167,8 @@ const ManageProducts = () => {
                 <button
                   type="button"
                   className="text-red-600 hover:text-red-900"
-                  onClick={() => deleteDataHandler(product.product_id)}
-                >
+                  onClick={() => handleDeleteClick(product.product_id)}
+>
                   Delete
                 </button>
               </div>

@@ -210,9 +210,9 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               Category Images:
             </label>
             
-        <div className="flex md:flex-row flex-col ">
-        {[0, 1, 2].map((index) => (
-  <div key={index} className="mx-auto w-[100%] content-center p-2 rounded-md">
+        <div className="flex ">
+        {[0].map((index) => (
+  <div key={index} className="mx-auto content-center p-2 rounded-md">
     <Dropzone
       onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
       accept="image/*"
@@ -222,7 +222,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
           {...getRootProps({
             className: `${
               previews[index] ? "bg-white" : "bg-black/20"
-            } dropzone grid content-center h-full mx-auto lg:w-[80%] rounded-xl`,
+            } dropzone grid content-center h-full mx-auto lg:w-[100%] rounded-xl`,
           })}
         >
           <input {...getInputProps()} />
@@ -230,7 +230,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
             <img
               src={previews[index]}
               alt={`Preview ${index + 1}`}
-              className="w-[90%] h-auto  rounded-lg content-center mx-auto"
+              className="w-[100%] h-auto  rounded-lg content-center mx-auto"
             />
           ) : (
             <div className="p-3">
@@ -275,18 +275,25 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
         {/* )} */}
 
         <div className="flex flex-col mt-6 gap-y-2">
-          <label>Category title: </label>
-          <input
-            value={categoryTitle}
-            className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"
-            onChange={(e) => setCategoryTitle(e.target.value)}
-            placeholder="Category Title"
-          />
-        </div>
+  <label className="font-medium">
+    Category Title: 
+    <span className="text-red-500 text-2xl font-bold ml-1">*</span>
+  </label>
+  <input
+    required
+    aria-required
+    value={categoryTitle}
+    className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"
+    onChange={(e) => setCategoryTitle(e.target.value)}
+    placeholder="Category Title"
+  />
+</div>
+
 
         <div className="flex flex-col mt-4 gap-y-2">
           <label>Description: </label>
           <textarea
+            
             value={description}
             className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-md font-medium font-roboto text-dark-hard"
             onChange={(e) => setDescription(e.target.value)}

@@ -9,6 +9,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import { QueryClient } from '@tanstack/react-query';
 import BackButton from '../BackButton';
 import { ClipLoader } from 'react-spinners';
+import { deleteItem } from '../hooks/utils';
+import DeleteConfirmationDialog from '../ConfirmationDialog';
 const AdminContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -192,22 +194,29 @@ const handleUpload = async (e) => {
   
 
 
-  const handleDelete = async (bannerImageId) => {
-    try {
-      await axios.delete(`${baseUrl}/api/banner_image/${bannerImageId}/delete/`);
-      
-      toast.success("Image deleted successfully");
-      refetch();
-    } catch (error) {
-      toast.error("Failed to delete image");
-      console.error("Error deleting image:", error.message);
-    }
-  };
+ const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+   const [selectedItemId, setSelectedItemId] = useState(null);
+ 
+   const handleDeleteClick = (itemId) => {
+     setSelectedItemId(itemId);
+     setDeleteDialogOpen(true);
+   };
+ 
+   const handleConfirmDelete = async () => {
+     const deleteUrl = `${baseUrl}/api/banner_image/${selectedItemId}/delete/`;
+     await deleteItem(deleteUrl, refetch);
+     setDeleteDialogOpen(false);
+   };
 
 
 
   return (
     <AdminContainer>
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
       <div className="flex w-full justify-start self-start">
     <BackButton />
   </div>
@@ -274,7 +283,7 @@ const handleUpload = async (e) => {
             </UpdateButton>
           </div>
         )}
-        <DeleteButton type="button" onClick={() => handleDelete(banner?.banner_images[index].banner_image_id)}>
+        <DeleteButton type="button" onClick={() => handleDeleteClick(banner?.banner_images[index].banner_image_id)}>
           Delete
         </DeleteButton>
       </div>

@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import { getAllWorkshops } from '../../../services/index/workshops';
 import BackButton from '../../BackButton';
+import { deleteItem } from '../../hooks/utils';
+import DeleteConfirmationDialog from '../../ConfirmationDialog';
 
 const ManageWorkshops = () => {
 
@@ -69,24 +71,32 @@ const searchKeywordOnSubmitHandler = (event) => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const deleteDataHandler=async (id)=> {
-    try {
-      await axios.delete(`${url}/api/workshops/${id}/delete/`)
-      toast.success("Workshop deleted successfully")
-     setTimeout(()=>{
-       refetch()
-     },2000)
-    } catch (error) {
-      // console.log(error)
-      toast.error("Failed to delete workshop!! Try again!!")
-    }
-  }
+   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [selectedItemId, setSelectedItemId] = useState(null);
+  
+    const handleDeleteClick = (itemId) => {
+      setSelectedItemId(itemId);
+      setDeleteDialogOpen(true);
+    };
+  
+    const handleConfirmDelete = async () => {
+      const deleteUrl = `${url}/api/workshops/${selectedItemId}/delete/`;
+      await deleteItem(deleteUrl, refetch);
+      setDeleteDialogOpen(false);
+    };
+  
+  
    const reversedData = useMemo(() => {
     // Reverse the data only when `paginatedData` changes
     return paginatedData?.reverse();
   }, [paginatedData]);
   return (
     <div className='overflow-y-auto overflow-x-auto w-full'>
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
       <div className="flex ml-4 w-full justify-start self-start">
     <BackButton />
   </div>
@@ -163,7 +173,7 @@ const searchKeywordOnSubmitHandler = (event) => {
               type="button"
               className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={() => {
-                deleteDataHandler(
+                handleDeleteClick(
                    workshop.workshop_id, // Make sure the slug field is correctly used here
                  
                 );
