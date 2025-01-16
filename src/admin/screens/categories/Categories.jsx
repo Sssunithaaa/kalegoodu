@@ -33,14 +33,18 @@ const Button = styled.button`
 const Categories = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const [categories, setCategories] = useState([]);
+  const [keyword,setKeyword] = useState("");
+  const [sortOption, setSortOption] = useState("created_at-desc");
   const queryClient = useQueryClient(); 
  const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
-  const { data=[], isLoading, isFetching,refetch } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getAllCategories // Pass the function directly without parentheses
+const { data = { categories: [] }, isLoading, isFetching, refetch } = useQuery({
+  queryKey: ['categories', keyword, sortOption],
+  queryFn: () => getAllCategories(keyword, sortOption), // Pass the search and sort options
+  keepPreviousData: true,
 });
+
  useEffect(()=> {
   setCategories(data?.categories)
  },[data])
@@ -134,6 +138,12 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
     toast.error("Couldn't update visibility");
   }
 };
+ const sortOptions = [
+    { label: "Date, new to old", value: "created_at-desc" },
+    { label: "Date, old to new", value: "created_at-asc" },
+    { label: "Alphabetically, A-Z", value: "name-asc" },
+    { label: "Alphabetically, Z-A", value: "name-desc" },
+  ];
   return (
     <div className="flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">
      <DeleteConfirmationDialog
@@ -152,12 +162,19 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
           searchInputPlaceHolder="Category title..."
           searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
           searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
-          searchKeyword={searchKeyword}
+          keyword={keyword}
+          setKeyword={setKeyword}
+          setCurrentPage={setCurrentPage}
+          refetch={refetch}
           tableHeaderTitleList={["Name","Description", "Images","",""]}
           isLoading={isLoading}
           isFetching={isFetching}
+          sortOptions={sortOptions}
+          sortOption = {sortOption}
+          setSortOption = {setSortOption}
           data={data}
           url="/admin/categories/add"
+          
          
         >
           {paginatedData?.map((category) => (

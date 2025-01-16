@@ -13,29 +13,36 @@ const ManageProducts = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState("");
-
+    const [keyword, setKeyword] = useState(null);
+  const [sortOption, setSortOption] = useState("created_at-desc");
   // Fetch products with pagination and search
-  const fetchProducts = async (page, keyword) => {
-    try {
-      const response = await getAllProducts(page, keyword);
-      return response;
-    } catch (error) {
-      toast.error("Failed to fetch products.");
+ const fetchProducts = async ({ pageParam = 1 }) => {
+    const params = new URLSearchParams();
+    if (keyword) params.append("search", keyword);
+    if (sortOption) {
+      const [field, order] = sortOption.split("-");
+      params.append("sort_by", field);
+      params.append("sort_order", order);
     }
+
+    const url = `${baseUrl}/api/products/?page=${pageParam}${
+      params.toString() ? "&" + params.toString() : ""
+    }`;
+    console.log(url)
+    const { data } = await axios.get(url);
+    return data;
   };
 
-  const {
-    data: productsData = { products: [], totalCount: 0 },
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["productss", currentPage, searchKeyword],
-    queryFn: () => fetchProducts(currentPage, searchKeyword),
+  const { data: productsData = { products: [], totalCount: 0 }, isLoading, refetch } = useQuery({
+    queryKey: ["products", currentPage, keyword, sortOption],
+    queryFn: () => fetchProducts({ pageParam: currentPage }),
     keepPreviousData: true,
   });
 
-  const products = productsData.products || [];
-  const totalPages = Math.ceil(productsData.totalCount/4); // Assuming 10 items per page
+
+  console.log(productsData);
+  const products = productsData?.results?.products || [];
+const totalPages = Math.ceil(productsData.count / 4); // Adjust this if you use a different page size
 
   // Handle search input changes
   const searchKeywordOnChangeHandler = (event) => {
@@ -83,8 +90,16 @@ const ManageProducts = () => {
     }
   };
 
+  const sortOptions = [
+    { label: "Date, new to old", value: "created_at-desc" },
+    { label: "Date, old to new", value: "created_at-asc" },
+    { label: "Price, low to high", value: "price-asc" },
+    { label: "Price, high to low", value: "price-desc" },
+    { label: "Alphabetically, A-Z", value: "name-asc" },
+    { label: "Alphabetically, Z-A", value: "name-desc" },
+  ];
   return (
-    <div className="overflow-y-auto overflow-x-auto w-full">
+    <div className="overflow-y-auto overflow-x-auto example w-full">
       <DeleteConfirmationDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
@@ -110,6 +125,13 @@ const ManageProducts = () => {
         ]}
         isLoading={isLoading}
         url="/admin/products/add"
+        sortOptions={sortOptions}
+        sortOption={sortOption}
+        setSortOption={setSortOption}
+        keyword={keyword}
+        setKeyword={setKeyword}
+        refetch={refetch}
+        setCurrentPage={setCurrentPage}
       >
         <ToastContainer />
         {products?.map((product) => (
