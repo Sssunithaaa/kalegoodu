@@ -13,17 +13,20 @@ import DeleteConfirmationDialog from '../../ConfirmationDialog';
 
 const ManageWorkshops = () => {
 
- 
+ const [searchKeyword, setSearchKeyword] = useState("");
+ const [currentPage, setCurrentPage] = useState(1);
 
 
  
 const PAGE_SIZE = 5;
 
-  const [currentPage, setCurrentPage] = useState(1);
-    const {data=[],isLoading,refetch,isFetching} = useQuery({
-    queryKey: ["workshops"],
-    queryFn: getAllWorkshops
-  })
+const { data = [], isLoading, isFetching, refetch } = useQuery({
+    queryKey: ['workshops', searchKeyword], // Query key now includes 'keyword'
+    queryFn: () => getAllWorkshops(searchKeyword), // Passing the keyword as a parameter
+    
+      refetchOnWindowFocus: false, // Optional: Prevent refetch on window focus
+    
+});
 
   const [workshops,setWorkshops] = useState([]);
   useEffect(()=> {
@@ -31,7 +34,7 @@ const PAGE_SIZE = 5;
   },[data])
   
   
-const [searchKeyword, setSearchKeyword] = useState("");
+
 
 const searchKeywordOnChangeHandler = (event) => {
   setSearchKeyword(event.target.value);
@@ -91,7 +94,7 @@ const searchKeywordOnSubmitHandler = (event) => {
     return paginatedData?.reverse();
   }, [paginatedData]);
   return (
-    <div className='overflow-y-auto overflow-x-auto w-full'>
+    <div className='overflow-y-auto overflow-x-auto example w-full'>
       <DeleteConfirmationDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
@@ -106,11 +109,14 @@ const searchKeywordOnSubmitHandler = (event) => {
       searchInputPlaceHolder="Workshop name..."
        searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
        searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
-       searchKeyword={searchKeyword}
+       keyword={searchKeyword}
+       setKeyword={setSearchKeyword}
       tableHeaderTitleList={[ "Name",  "Date", "Place"," "]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={paginatedData}
+      setCurrentPage={setCurrentPage}
+      refetch={refetch}
       url = "/admin/workshops/add"
      
     >

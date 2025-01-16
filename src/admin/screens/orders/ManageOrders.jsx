@@ -328,7 +328,10 @@ const searchKeywordOnChangeHandler = (event) => {
         isFetching={isFetching}
         searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
         // searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
-        searchKeyword={searchKeyword}
+        keyword={searchKeyword}
+        setKeyword={setSearchKeyword}
+        setCurrentPage={setCurrentPage}
+        refetch={refetch}
         // data={filteredOrders}
         ref={tableRef}
         search="not-visible"

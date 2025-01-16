@@ -155,7 +155,7 @@ const handleFormSubmit = async (e) => {
         toast.error(
           "Order placement failed after successful payment. " +
           "If the amount was deducted, please contact us at kalegoodu@gmail.com with your payment details."
-        );
+        , { autoClose: false });
       }
 //     } else {
 //       toast.error("Payment verification failed!");

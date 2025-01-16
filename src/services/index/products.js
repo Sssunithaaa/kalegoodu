@@ -116,25 +116,31 @@ export const updateProduct = async ({ updatedData, id }) => {
     throw new Error(error.message);
   }
 };
-
-export const createProduct = async ( formData ) => {
+export const createProduct = async (formData) => {
   try {
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     };
-   
-    const { data } = await axios.post(`${url}/api/add_product/`, formData,config);
-    
-    return data;
+
+    const { data } = await axios.post(`${url}/api/add_product/`, formData, config);
+
+    return data; // Return the response data if successful
   } catch (error) {
-    console.log(error)
-    if (error.response && error.response.data)
-      throw new Error(error.response.data.message);
-    
+    // Check if the error response exists and contains validation messages
+    if (error.response && error.response.data) {
+      const validationErrors = error.response.data; // Get the error response data
+
+      // Format validation errors for better readability
+      const errorMessages = Object.entries(validationErrors).map(
+        ([field, messages]) => `${field.charAt(0).toUpperCase() + field.slice(1)}: ${messages.join(', ')}`
+      ).join('\n');
+
+      throw new Error(errorMessages);
+    }
+
+    // For other errors (like network issues)
     throw new Error(error.message);
   }
 };
-
-

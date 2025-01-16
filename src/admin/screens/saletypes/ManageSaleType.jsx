@@ -149,10 +149,12 @@ await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
           searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
           searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
           tableHeaderTitleList={["Name","", ""]}
-          searchKeyword={searchKeyword}
+          keyword={searchKeyword}
+          setKeyword={setSearchKeyword}
           isLoading={isLoading}
           isFetching={isFetching}
           data={data}
+          setCurrentPage={setCurrentPage}
           
         >
              {paginatedData?.map((sale)=>(

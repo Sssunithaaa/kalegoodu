@@ -30,6 +30,8 @@ const promiseOptions = async (inputValue) => {
   const { data: categoriesData } = await getAllCategories();
   return filterCategories(inputValue, categoriesData);
 };
+
+
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -73,7 +75,8 @@ const EditPost = () => {
   const isEditMode = Boolean(id); 
    const { data: categoriesData, isLoadingg, isFetching } = useQuery({
     queryKey: ["categories"],
-    queryFn: getAllCategories 
+    queryFn: getAllCategories,
+
 });
 const baseUrl = import.meta.env.VITE_APP_URL
  const {data:saleTypesData,isFetching:isFetchingg} = useQuery({
@@ -197,7 +200,7 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
   },
   onError: (error) => {
     console.log(error);
-    toast.error("Error adding product");
+    toast.error(error.message);
     setIsUploading(false); // End uploading state on error
   },
 });

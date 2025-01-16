@@ -1,25 +1,20 @@
 import axios from "axios";
  const url = import.meta.env.VITE_APP_URL;
-export const getAllCategories = async (search = '', sort = '') => {
+export const getAllCategories = async (search = "", sort = "") => {
   try {
-    // Create query parameters based on search and sort options
-    const params = new URLSearchParams();
-    if (search) params.append('search', search);
-    if (sort) {
-      const [sortBy, sortOrder] = sort.split('-');
-      params.append('sort_by', sortBy);
-      params.append('sort_order', sortOrder);
-    }
-
-    const response = await axios.get(`${url}/api/categories/?${params.toString()}`);
+    const response = await axios.get(`${url}/api/categories/`, {
+      params: search || sort ? { search, sort } : undefined, // Avoid sending empty params
+    });
+    console.log(response.data)
     return response.data;
   } catch (error) {
-    if (error.response && error.response.data.message)
+    if (error.response && error.response.data.message) {
       throw new Error(error.response.data.message);
-
+    }
     throw new Error(error.message);
   }
 };
+
 
 
 export const getCategoryImages = async () => {

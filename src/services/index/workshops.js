@@ -1,14 +1,14 @@
 import axios from "axios";
  const url = import.meta.env.VITE_APP_URL;
 export const getAllWorkshops = async (
- 
+ search=""
 ) => {
   try {
    
     const response = await axios.get(
-      `${url}/api/workshops/`
+      `${url}/api/workshops/`,{ params:  search }
     );
- 
+    console.log(response)
     return response.data?.workshops;
   } catch (error) {
     if (error.response && error.response.data.message)

@@ -14,12 +14,14 @@ const ManageComments = () => {
   const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [keyword, setKeyword] = useState('');
 
   const { data = [], isLoading, isFetching,refetch } = useQuery({
-    queryKey: ['comments'],
+    queryKey: ['comments',keyword],
     queryFn: async () => {
-      const response = await axios.get(`${baseUrl}/api/allcomments/`);
+      const response = await axios.get(`${baseUrl}/api/allcomments/`,{
+        params:{search:keyword}
+      });
       return response.data?.comments || [];
     },
   });
@@ -79,13 +81,13 @@ const ManageComments = () => {
         isLoading={isLoading}
         isFetching={isFetching}
         data={paginatedData}
-        searchKeyword={searchKeyword}
-        searchKeywordOnChangeHandler={(e) => setSearchKeyword(e.target.value)}
-        searchKeywordOnSubmitHandler={(e) =>
-          searchKeywordOnSubmitHandler(e, data, searchKeyword)
-        }
+        keyword={keyword}
+        setKeyword={setKeyword}
+        setCurrentPage={setCurrentPage}
         url="/admin/comments/add"
+        refetch={refetch}
       >
+
         <ToastContainer/>
         {paginatedData?.map((comment) => (
           <tr key={comment.comment_id}>
