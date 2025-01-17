@@ -1,13 +1,12 @@
-// MainPage.js
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, Suspense, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import Hero from './components/Hero';
 import Title from './Title';
-
+import { useQuery } from '@tanstack/react-query';
 import FullPageLoader from './FullPageLoader';
 import { useStateContext } from '../context/ContextProvider';
 import ScrollToTop from './ScrollToTop';
-
+import axios from 'axios';
 
 const ProductCarousel = React.lazy(() => import('./Slider'));
 const Categories = React.lazy(() => import('./Categories'));
@@ -15,13 +14,27 @@ const Testimonials = React.lazy(() => import('./Testimonials/Testimonials'));
 const AboutUs = React.lazy(() => import('./AboutUs'));
 
 const MainPage = () => {
- 
-  
-  
+  const baseUrl = import.meta.env.VITE_APP_URL;
 
-  const {marqueeRef,heroRef, categoriesRef, newArrivalsRef, bestSellersRef } = useStateContext();
-  
-    const location = useLocation();
+  const { marqueeRef, heroRef, categoriesRef, newArrivalsRef, bestSellersRef } = useStateContext();
+  const location = useLocation();
+
+  const { data: saleTypes, isLoading, refetch } = useQuery({
+    queryKey: ["saletypes"],
+    queryFn: async () => {
+      try {
+        const response = await axios.get(`${baseUrl}/api/sale_types/`);
+        return response.data?.sale_types;
+      } catch (error) {
+        console.log('Error fetching sale types:', error);
+      }
+    },
+  });
+
+  // Filter sale types based on 'visible' field using useMemo
+  const visibleSaleTypes = useMemo(() => {
+    return saleTypes?.filter((saleType) => saleType.visible); // Only include visible sale types
+  }, [saleTypes]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -49,19 +62,19 @@ const MainPage = () => {
           <Title>Shop By Category</Title>
           <Categories />
         </div>
-        <div className="scroll-section w-full my-6" ref={newArrivalsRef}>
-          <div className='relative mx-auto'>
-            <Title>Trendiest New Arrivals</Title>
-            <ProductCarousel saleTypeId={9} />
-          </div>
-        </div>
-        <div className="scroll-section w-full my-6" ref={bestSellersRef}>
-          <div className='relative mx-auto'>
-            <Title>Best Sellers</Title>
-            <ProductCarousel saleTypeId={2} />
-          </div>
-        </div>
-        <div className='scroll-section my-6' >
+        {
+          // Dynamically render visible sale types
+          visibleSaleTypes?.map((saleType) => (
+            <div className="scroll-section w-full my-6" key={saleType.sale_type_id} ref={saleType?.name === "Best Sellers" ? bestSellersRef : saleType?.name === "New Arrivals" ? newArrivalsRef : null}>
+              <div className='relative mx-auto'>
+                <Title>{saleType?.name}</Title>
+                <ProductCarousel saleTypeId={saleType?.sale_type_id} />
+              </div>
+            </div>
+          ))
+        }
+
+        <div className='scroll-section my-6'>
           <Title>About Us</Title>
           <AboutUs />
         </div>
@@ -71,7 +84,6 @@ const MainPage = () => {
       </Suspense>
 
       {/* Render CTA and pass refs */}
-      
     </div>
   );
 };

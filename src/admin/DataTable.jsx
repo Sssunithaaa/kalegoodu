@@ -44,45 +44,46 @@ const DataTable = forwardRef(({
 
       <div className="w-full mx-auto">
         <div className="pt-4">
-          <div className="flex flex-col md:flex-row gap-y-3 justify-between max-w-screen w-screen md:w-full md:max-w-full mb-1 sm:mb-0">
-            <div>
-              <h2 className="text-2xl font-bold leading-tight">Manage {dataListName}</h2>
+          <div>
+              <h2 className="text-2xl font-bold leading-tight text-center my-3">Manage {dataListName}</h2>
             </div>
-       {search !== "not-visible" &&      <div className="text-center flex justify-center items-center">
-  <form
-    className="flex gap-3 mx-auto md:max-w-sm md:flex-row md:w-full md:space-x-3"
-  >
-    <div className="flex flex-row gap-3 md:flex-row md:gap-x-4 w-full">
-      <input
-        type="text"
-        id="form-subscribe-Filter"
-        className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-        placeholder={searchInputPlaceHolder}
-        onChange={searchKeywordOnChangeHandler}
-        value={keyword}
-      />
-      <Button
-      className='px-4'
-        type="submit"
-      >
-        Filter
-      </Button>
+       <div className="flex flex-wrap items-center justify-between max-w-screen w-screen md:w-full md:max-w-full gap-3 mb-1 sm:mb-0">
+  {search !== "not-visible" && (
+    <div className="flex items-center">
+      <form className="flex gap-3">
+        <input
+          type="text"
+          
+          className=" md:max-w-60 rounded-lg border border-gray-300 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600"
+          placeholder={searchInputPlaceHolder}
+          onChange={searchKeywordOnChangeHandler}
+          value={keyword}
+        />
+        <Button className="px-4" type="submit">Filter</Button>
+      </form>
     </div>
-  </form>
-</div> }
-            <div>
-              {url && <Button className='px-4' onClick={()=>navigate(url)}>Add {name}</Button>
-              }
-            </div>
-          </div>
-          {sortOptions && (<div className='flex flex-row justify-center my-3'>
-            <span className='my-auto mx-3 text-lg font-semibold'>Sort by: </span>
-            <SortDropdown 
-            options={sortOptions}
-            sortOption={sortOption}
-            handleSortChange={handleSortChange}
-            />
-          </div>)}
+  )}
+  
+  {url && (
+    <Button className="px-4" onClick={() => navigate(url)}>
+      Add {name}
+    </Button>
+  )}
+  
+  {sortOptions && (
+    <div className="flex items-center">
+      <span className="mx-3 text-lg font-semibold">Filter: </span>
+      <SortDropdown 
+        options={sortOptions}
+        sortOption={sortOption}
+        handleSortChange={handleSortChange}
+      />
+    </div>
+  )}
+</div>
+
+
+
           <div className="px-2 py-4  sm:-mx-8 sm:px-8">
             <div className="inline-block min-w-full rounded-lg shadow">
               <table ref={ref} className="min-w-full leading-normal">

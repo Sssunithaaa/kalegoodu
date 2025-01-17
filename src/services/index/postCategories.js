@@ -1,19 +1,51 @@
 import axios from "axios";
- const url = import.meta.env.VITE_APP_URL;
+const url = import.meta.env.VITE_APP_URL;
+
 export const getAllCategories = async (search = "", sort = "") => {
   try {
-    const response = await axios.get(`${url}/api/categories/`, {
-      params: search || sort ? { search, sort } : undefined, // Avoid sending empty params
-    });
-    console.log(response.data)
+    const params = new URLSearchParams();
+
+    if (search) params.append("search", search);
+
+    if (sort === "visible-true" || sort === "visible-false") {
+      params.append("sort_by", "visible");
+      params.append("sort_order", "asc");
+      params.append("visible", sort === "visible-true");
+    } else if (sort) {
+      const [field, order] = sort.split("-");
+      params.append("sort_by", field);
+      params.append("sort_order", order);
+    }
+
+    // If there are query parameters, append them; otherwise, use the base URL
+    const urlWithParams = params.toString()
+      ? `${url}/api/categories/?${params.toString()}`
+      : `${url}/api/categories/`;
+    console.log(urlWithParams); // Debugging URL
+    const response = await axios.get(urlWithParams);
     return response.data;
   } catch (error) {
-    if (error.response && error.response.data.message) {
+    if (error.response?.data?.message) {
       throw new Error(error.response.data.message);
     }
     throw new Error(error.message);
   }
 };
+export const getAllCategoriess = async () => {
+  try {
+   const response =await axios.get(`${url}/api/categories/`);
+   console.log(response);
+   return response.data;
+
+    
+  } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error(error.message);
+  }
+};
+
 
 
 

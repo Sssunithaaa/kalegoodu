@@ -65,6 +65,8 @@ const settings = {
   slidesToShow,
   slidesToScroll: 1,
   initialSlide: 0,
+   centerMode: allProducts.length >1 && window.innerWidth <=1024, // Enable center mode if more than 1 product
+  centerPadding: allProducts.length > 1 && window.innerWidth <=1024 ? "30px" : "0px",
   afterChange: (index) => setCurrentSlide(index),
   prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
   nextArrow: currentSlide + slidesToShow < allProducts.length ? <SampleNextArrow /> : null,
@@ -76,7 +78,7 @@ const settings = {
   ],
 };
 
-console.log(currentSlide + slidesToShow )
+
 
 
 

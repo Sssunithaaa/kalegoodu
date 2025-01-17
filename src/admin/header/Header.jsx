@@ -223,6 +223,14 @@ const Header = () => {
                 >
                    Policy, Terms and conditions
                 </Link>
+                 <Link
+                to="/admin/text/manage"
+                  // disabled={isLoadingCreatePost}
+                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                  
+                >
+                   Scrolling-text and banner-text
+                </Link>
                 {/* <Link to="/admin/categories/manage">Categories</Link> */}
               </NavItemCollapse>
                <NavItem

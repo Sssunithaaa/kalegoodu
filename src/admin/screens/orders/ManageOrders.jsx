@@ -150,7 +150,7 @@ const handleCheckboxChange = (orderId, item, isChecked) => {
   };
 
    const handleSaveNote = async (orderId, note) => {
-    console.log("Saving note:", orderId, note);
+   
     try {
       await axios.put(`${url}/api/acknowledge_order/`, {
         order_id: orderId,
@@ -231,7 +231,7 @@ const searchKeywordOnChangeHandler = (event) => {
     };
   
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto example">
        <DeleteConfirmationDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}

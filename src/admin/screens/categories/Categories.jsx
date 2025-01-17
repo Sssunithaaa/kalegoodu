@@ -13,7 +13,6 @@ import { useState, useEffect } from "react";
 import styled from 'styled-components'
 import Pagination from '../../../components/Pagination'
 import BackButton from "../../BackButton";
-import ConfirmationDialog from "../../ConfirmationDialog";
 import DeleteConfirmationDialog from "../../ConfirmationDialog";
 import { deleteItem } from "../../hooks/utils";
 const Button = styled.button`
@@ -49,6 +48,25 @@ const { data = { categories: [] }, isLoading, isFetching, refetch } = useQuery({
   setCategories(data?.categories)
  },[data])
  
+ const settings = {
+  infinite: false,
+  speed: 500,
+  slidesToShow,
+  slidesToScroll: 1,
+  initialSlide: 0,
+  centerMode: allProducts.length > 1, // Enable center mode if more than 1 product
+  centerPadding: allProducts.length > 1 ? "30px" : "0px", // Apply padding only if needed
+  afterChange: (index) => setCurrentSlide(index),
+  prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
+  nextArrow: currentSlide + slidesToShow < allProducts.length ? <SampleNextArrow /> : null,
+  responsive: [
+    { breakpoint: 1500, settings: { slidesToShow: Math.min(allProducts.length, 4) } },
+    { breakpoint: 1024, settings: { slidesToShow: Math.min(allProducts.length, 3) } },
+    { breakpoint: 768, settings: { slidesToShow: Math.min(allProducts.length, 2) } },
+    { breakpoint: 540, settings: { slidesToShow: 1 } }, // Removed centerMode from here
+  ],
+};
+
 const [searchKeyword, setSearchKeyword] = useState("");
 
 const searchKeywordOnChangeHandler = (event) => {
@@ -139,10 +157,13 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
   }
 };
  const sortOptions = [
+    { label: "Visible", value: "visible-true" },
+    { label: "Hidden", value: "visible-false" },
     { label: "Date, new to old", value: "created_at-desc" },
     { label: "Date, old to new", value: "created_at-asc" },
     { label: "Alphabetically, A-Z", value: "name-asc" },
     { label: "Alphabetically, Z-A", value: "name-desc" },
+   
   ];
   return (
     <div className="flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">

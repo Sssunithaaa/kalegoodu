@@ -166,7 +166,7 @@ await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
                   </p>
                 </div>
               </td>
-               {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+               <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
   <div className="flex items-center">
     <button
       className={`py-1 px-4 rounded ${sale.visible ? "bg-green-500" : "bg-red-500"} text-white`}
@@ -175,7 +175,7 @@ await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
       {sale.visible ? "Visible" : "Hidden"}
     </button>
   </div>
-</td> */}
+</td>
                <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
                   <button
   onClick={() => handleEditClick(sale)}

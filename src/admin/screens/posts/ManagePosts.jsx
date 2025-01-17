@@ -1,48 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import DataTable from "../../DataTable";
 import axios from "axios";
 import { Pagination } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { getAllProducts } from "../../../services/index/products";
 import { toast, ToastContainer } from "react-toastify";
 import BackButton from "../../BackButton";
-import ConfirmationDialog from "../../ConfirmationDialog";
 import DeleteConfirmationDialog from "../../ConfirmationDialog";
 const ManageProducts = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState("");
-    const [keyword, setKeyword] = useState(null);
+  const [keyword, setKeyword] = useState("");
   const [sortOption, setSortOption] = useState("created_at-desc");
+
   // Fetch products with pagination and search
- const fetchProducts = async ({ pageParam = 1 }) => {
+  const fetchProducts = async ({ pageParam = 1 }) => {
     const params = new URLSearchParams();
     if (keyword) params.append("search", keyword);
-    if (sortOption) {
+
+    if (sortOption === "visible-true" || sortOption === "visible-false") {
+      params.append("sort_by", "visible");
+      params.append("sort_order", "asc");
+      params.append("visible", sortOption === "visible-true");
+    } else {
       const [field, order] = sortOption.split("-");
       params.append("sort_by", field);
       params.append("sort_order", order);
     }
 
-    const url = `${baseUrl}/api/products/?page=${pageParam}${
-      params.toString() ? "&" + params.toString() : ""
-    }`;
-    console.log(url)
+    const url = `${baseUrl}/api/products/?page=${pageParam}&${params.toString()}`;
+    console.log(url); // Debugging URL
     const { data } = await axios.get(url);
     return data;
   };
 
-  const { data: productsData = { products: [], totalCount: 0 }, isLoading, refetch } = useQuery({
+  const { data: productsData = { products: [], count: 0 }, isLoading, refetch } = useQuery({
     queryKey: ["products", currentPage, keyword, sortOption],
     queryFn: () => fetchProducts({ pageParam: currentPage }),
     keepPreviousData: true,
   });
 
-
   console.log(productsData);
   const products = productsData?.results?.products || [];
-const totalPages = Math.ceil(productsData.count / 4); // Adjust this if you use a different page size
+  const totalPages = Math.ceil(productsData.count / 4); // Adjust page size accordingly
 
   // Handle search input changes
   const searchKeywordOnChangeHandler = (event) => {
@@ -51,6 +52,7 @@ const totalPages = Math.ceil(productsData.count / 4); // Adjust this if you use 
 
   const searchKeywordOnSubmitHandler = (event) => {
     event.preventDefault();
+    setKeyword(searchKeyword);
     setCurrentPage(1); // Reset to first page on search
     refetch();
   };
@@ -60,7 +62,7 @@ const totalPages = Math.ceil(productsData.count / 4); // Adjust this if you use 
     setCurrentPage(page);
   };
 
- const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
 
   const handleDeleteClick = (itemId) => {
@@ -73,9 +75,6 @@ const totalPages = Math.ceil(productsData.count / 4); // Adjust this if you use 
     await deleteItem(deleteUrl, refetch);
     setDeleteDialogOpen(false);
   };
-
-
-  
 
   // Toggle product visibility
   const handleToggleVisibility = async (id, currentVisibility) => {
@@ -91,12 +90,15 @@ const totalPages = Math.ceil(productsData.count / 4); // Adjust this if you use 
   };
 
   const sortOptions = [
+     { label: "Visible", value: "visible-true" },
+    { label: "Hidden", value: "visible-false" },
     { label: "Date, new to old", value: "created_at-desc" },
     { label: "Date, old to new", value: "created_at-asc" },
     { label: "Price, low to high", value: "price-asc" },
     { label: "Price, high to low", value: "price-desc" },
     { label: "Alphabetically, A-Z", value: "name-asc" },
     { label: "Alphabetically, Z-A", value: "name-desc" },
+   
   ];
   return (
     <div className="overflow-y-auto overflow-x-auto example w-full">

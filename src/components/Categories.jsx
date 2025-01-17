@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { img28 } from '../assets/images';
-import { getAllCategories } from '../services/index/postCategories';
+import { getAllCategories, getAllCategoriess } from '../services/index/postCategories';
 import { SectionWrapper } from '../hoc';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fadeIn } from '../utils/motion';
@@ -41,8 +41,8 @@ const ShinyPlaceholder = styled.div`
 const Categories = () => {
   const navigate = useNavigate();
   const { data, isLoading, isLoadingError } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getAllCategories,
+    queryKey: ["categories"," "," "],
+    queryFn: getAllCategoriess,
     refetchOnMount: true, // Ensures data refetches on component mount
     staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
     cacheTime: 1000 * 60 * 30, // Cache for 30 minutes

@@ -52,7 +52,7 @@ const formatResult = (item) => {
   if(!isSearchBarVisible){
     return null;
   }
-   console.log(data)
+
   return (
     <div className=' top-0 w-[80%] z-[1000001] md:w-[50%]' style={{ position: 'relative',marginInline:'auto',marginBlock:'10px',borderRadius:'0px' }}>
    <ReactSearchAutocomplete

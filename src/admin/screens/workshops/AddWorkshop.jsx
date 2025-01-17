@@ -124,7 +124,7 @@ const AddWorkshop = () => {
   const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 
   const handleUpdate = async (workshopImageId, file) => {
-    console.log(workshopImageId)
+ 
     await updateImage(baseUrl, workshopImageId, file, refetch, setIsUpdatingImage,`update_workshop_image/${workshopImageId}/`);
     
   };

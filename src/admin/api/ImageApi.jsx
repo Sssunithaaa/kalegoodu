@@ -40,7 +40,7 @@ import { toast } from 'react-toastify';
  const addImage = async (baseUrl, productImageId, file, refetch, setLoading,url) => {
   const formData = new FormData();
   formData.append('image', file);
-  console.log(file)
+ 
   setLoading(true);
   try {
     await axios.post(

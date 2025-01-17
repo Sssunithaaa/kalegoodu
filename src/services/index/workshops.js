@@ -8,7 +8,7 @@ export const getAllWorkshops = async (
     const response = await axios.get(
       `${url}/api/workshops/`,{ params:  search }
     );
-    console.log(response)
+ 
     return response.data?.workshops;
   } catch (error) {
     if (error.response && error.response.data.message)

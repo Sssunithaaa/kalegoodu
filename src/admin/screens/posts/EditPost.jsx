@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {  useNavigate, useParams } from "react-router-dom";
 import 'react-quill/dist/quill.snow.css'; 
@@ -27,8 +27,8 @@ import BackButton from "../../BackButton";
 import { ClipLoader } from "react-spinners";
 
 const promiseOptions = async (inputValue) => {
-  const { data: categoriesData } = await getAllCategories();
-  return filterCategories(inputValue, categoriesData);
+  const { data: categoryData } = await getAllCategories();
+  return filterCategories(inputValue, categoryData);
 };
 
 
@@ -73,18 +73,21 @@ const EditPost = () => {
   const [uploading,setIsUploading] = useState(false)
   const [quantity,setQuantity] = useState(1);
   const isEditMode = Boolean(id); 
-   const { data: categoriesData, isLoadingg, isFetching } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getAllCategories,
-
+  const { data: categoriesData, isLoadingg, isFetching } = useQuery({
+  queryKey: ["categories"],
+  queryFn: getAllCategories,
 });
+
+const categoryData = useMemo(() => {
+  return categoriesData?.categories?.filter((category) => category?.visible === true);
+}, [categoriesData]);
+
+
 const baseUrl = import.meta.env.VITE_APP_URL
  const {data:saleTypesData,isFetching:isFetchingg} = useQuery({
   queryKey: ["saletypes"],
   queryFn: async () => {
     const response = await axios.get(`${baseUrl}/api/sale_types/`);
-    
-  
     return response.data?.sale_types
   },
   onError: (error)=> {
@@ -144,7 +147,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
   useEffect(()=> {
      if(!isEditMode){
        setCategories(
-        categoriesData?.categories?.map((item) => ({
+        categoryData?.map((item) => ({
           value: item.category_id,
           label: item.name,
         }))
@@ -158,7 +161,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       );
      }
       
-  },[categoriesData,saleTypesData])
+  },[categoryData,saleTypesData])
 
  const handleMutationError = (error) => {
   setIsUploading(false);
@@ -227,7 +230,7 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
 const handleSubmit = async (e) => {
   e.preventDefault();
   const formData = new FormData();
-  console.log(discountedPrice)
+ 
   formData.append("name", name);
   formData.append("price", price);
   formData.append("discounted_price", discountedPrice || 0);
@@ -442,7 +445,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
              <CreatableSelect
               isMulti
               name="categories"
-              options={categoriesData?.categories?.map((category)=>(
+              options={categoryData?.map((category)=>(
                 {
                   value: category.category_id,
                   label: category.name
