@@ -4,11 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { img28 } from '../assets/images';
-import { getAllCategories, getAllCategoriess } from '../services/index/postCategories';
+import {  getAllCategoriess } from '../services/index/postCategories';
 import { SectionWrapper } from '../hoc';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeIn } from '../utils/motion';
-import { Skeleton } from '@mui/material';
+
 
 const ImageWrapper = styled.div`
   width: 10rem;
@@ -40,7 +39,7 @@ const ShinyPlaceholder = styled.div`
 
 const Categories = () => {
   const navigate = useNavigate();
-  const { data, isLoading, isLoadingError } = useQuery({
+  const { data, isLoading,isFetching } = useQuery({
     queryKey: ["categories"," "," "],
     queryFn: getAllCategoriess,
     refetchOnMount: true, // Ensures data refetches on component mount
@@ -52,10 +51,11 @@ const Categories = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const url = useMemo(() => import.meta.env.VITE_APP_URL, []);
-  const filteredCategories = useMemo(
-    () => data?.categories?.filter(category => category.visible),
-    [data]
-  );
+ const filteredCategories = useMemo(() => {
+  if (!data || !data.categories) return [];
+  return data.categories.filter(category => category.visible);
+}, [data]);
+
   const handleMouseEnter = useCallback((categoryId) => {
     setHoveredCategory(categoryId);
   }, []);
@@ -72,7 +72,7 @@ const Categories = () => {
   return (
     <div className="grid relative md:w-[90%] lg:w-[70%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-1 mx-auto">
       <AnimatePresence>
-        {isLoading || isLoadingError ? (
+        {isLoading || isFetching  ? (
           Array.from({ length: 6 }).map((_, index) => (
             <motion.div
               key={index}
