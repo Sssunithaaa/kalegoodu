@@ -24,17 +24,17 @@ const MainPage = () => {
     queryFn: async () => {
       try {
         const response = await axios.get(`${baseUrl}/api/sale_types/`);
-        return response.data?.sale_types;
+        return response.data?.sale_types?.filter((saleType) => saleType.visible);
       } catch (error) {
         console.log('Error fetching sale types:', error);
       }
     },
   });
 
-  // Filter sale types based on 'visible' field using useMemo
-  const visibleSaleTypes = useMemo(() => {
-    return saleTypes?.filter((saleType) => saleType.visible); // Only include visible sale types
-  }, [saleTypes]);
+  // // Filter sale types based on 'visible' field using useMemo
+  // const visibleSaleTypes = useMemo(() => {
+  //   return saleTypes?.filter((saleType) => saleType.visible); // Only include visible sale types
+  // }, [saleTypes]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -64,7 +64,10 @@ const MainPage = () => {
         </div>
         {
           // Dynamically render visible sale types
-          visibleSaleTypes?.map((saleType) => (
+          isLoading ? (
+            <FullPageLoader />
+          ) : (
+            saleTypes?.map((saleType) => (
             <div className="scroll-section w-full my-6" key={saleType.sale_type_id} ref={saleType?.name === "Best Sellers" ? bestSellersRef : saleType?.name === "New Arrivals" ? newArrivalsRef : null}>
               <div className='relative mx-auto'>
                 <Title>{saleType?.name}</Title>
@@ -72,6 +75,7 @@ const MainPage = () => {
               </div>
             </div>
           ))
+        )
         }
 
         <div className='scroll-section my-6'>

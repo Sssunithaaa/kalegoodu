@@ -10,6 +10,8 @@ import axios from 'axios';
 import BackButton from '../../BackButton';
 import 'react-quill/dist/quill.snow.css'; 
 import ReactQuill from 'react-quill';
+import { ClipLoader } from 'react-spinners';
+
 const AboutUsForm = () => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -17,7 +19,7 @@ const AboutUsForm = () => {
   const [pageId, setPageId] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading,refetch } = useQuery({
     queryKey: ['page-contents'],
     queryFn: () => getPageContents(),
     
@@ -84,22 +86,28 @@ const AboutUsForm = () => {
     }
   };
 
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const handleDelete = async (id) => {
+    setDeleteLoading(true);
     try {
       await axios.delete(`${baseUrl}/api/page-images/delete/${id}`);
       // queryClient.invalidateQueries(['page-contents']);
       toast.success('Image deleted successfully');
       setFile(null)
       setPreview(null)
+      refetch()
     } catch (error) {
       toast.error('Failed to delete image');
       console.error('Error deleting image:', error.message);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
   const aboutUsData = data?.[0]; // Move it here so it is accessible in JSX
+  const [imageUploading,setImageUploading] = useState(false)
   const handleImageUpload =  async () => {
-    
+    setImageUploading(true)
     try {
       const formData = new FormData();
       formData.append("image",file)
@@ -110,8 +118,13 @@ const AboutUsForm = () => {
     };
       const response = await axios.post(`${baseUrl}/api/add_page_image/1/`,formData,config);
       toast.success(response?.data?.message)
+      setFile(null);
+      setPreview(null);
+      refetch()
     } catch (error) {
       toast.error("Couldn't upload image!! Try again")
+    } finally {
+      setImageUploading(false)
     }
   }
   return (
@@ -159,9 +172,9 @@ const AboutUsForm = () => {
           </Dropzone>
           {aboutUsData?.images?.[0]?.image ? (
                       <DeleteButton type='button' onClick={() => handleDelete(aboutUsData?.pagecontent_id)}>
-                        Delete
+                       {deleteLoading ? <ClipLoader size={20}/> : "Delete image"}
                       </DeleteButton>
-                    ) : file ? <Button type='button' onClick={handleImageUpload}>Upload image</Button> : <div></div>}
+                    ) : file ? <Button type='button' onClick={handleImageUpload}>{imageUploading ? <ClipLoader size={20}/> : "Upload image"}</Button> : <div></div>}
         </div>
 
         <div className="mb-4">

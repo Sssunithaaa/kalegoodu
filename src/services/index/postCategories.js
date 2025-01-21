@@ -34,8 +34,9 @@ export const getAllCategories = async (search = "", sort = "") => {
 export const getAllCategoriess = async () => {
   try {
    const response =await axios.get(`${url}/api/categories/`);
-   console.log(response);
-   return response.data;
+ 
+     return response.data.categories.filter(category => category.visible);
+   
 
     
   } catch (error) {

@@ -47,25 +47,7 @@ const { data = { categories: [] }, isLoading, isFetching, refetch } = useQuery({
  useEffect(()=> {
   setCategories(data?.categories)
  },[data])
- 
- const settings = {
-  infinite: false,
-  speed: 500,
-  slidesToShow,
-  slidesToScroll: 1,
-  initialSlide: 0,
-  centerMode: allProducts.length > 1, // Enable center mode if more than 1 product
-  centerPadding: allProducts.length > 1 ? "30px" : "0px", // Apply padding only if needed
-  afterChange: (index) => setCurrentSlide(index),
-  prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-  nextArrow: currentSlide + slidesToShow < allProducts.length ? <SampleNextArrow /> : null,
-  responsive: [
-    { breakpoint: 1500, settings: { slidesToShow: Math.min(allProducts.length, 4) } },
-    { breakpoint: 1024, settings: { slidesToShow: Math.min(allProducts.length, 3) } },
-    { breakpoint: 768, settings: { slidesToShow: Math.min(allProducts.length, 2) } },
-    { breakpoint: 540, settings: { slidesToShow: 1 } }, // Removed centerMode from here
-  ],
-};
+
 
 const [searchKeyword, setSearchKeyword] = useState("");
 

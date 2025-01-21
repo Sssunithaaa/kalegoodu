@@ -51,10 +51,10 @@ const Categories = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const url = useMemo(() => import.meta.env.VITE_APP_URL, []);
- const filteredCategories = useMemo(() => {
-  if (!data || !data.categories) return [];
-  return data.categories.filter(category => category.visible);
-}, [data]);
+//  const filteredCategories = useMemo(() => {
+//   if (!data || !data.categories) return [];
+//   return data.categories.filter(category => category.visible);
+// }, [data]);
 
   const handleMouseEnter = useCallback((categoryId) => {
     setHoveredCategory(categoryId);
@@ -68,11 +68,11 @@ const Categories = () => {
     const url = category.name.replaceAll(" ", "-");
     navigate(`/Categories/${category?.category_id}/${url}`);
   }, [navigate]);
-
+  console.log(isLoading,isFetching)
   return (
     <div className="grid relative md:w-[90%] lg:w-[70%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-1 mx-auto">
       <AnimatePresence>
-        {isLoading || isFetching  ? (
+        {isLoading || isFetching || !data?.length  ? (
           Array.from({ length: 6 }).map((_, index) => (
             <motion.div
               key={index}
@@ -85,7 +85,7 @@ const Categories = () => {
             </motion.div>
           ))
         ) : (
-          filteredCategories?.map((category, index) => (
+          data?.map((category, index) => (
             <motion.div
               key={category.category_id}
               className="md:mx-3 mx-2 my-[6px] text-center"
