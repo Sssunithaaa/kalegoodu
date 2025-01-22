@@ -190,9 +190,10 @@ const AddTestimonialForm = () => {
 
         <Button
           type="submit"
+          isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Submitting...' : isEditMode ? "Update Testimonial" : 'Add Testimonial'}
+          {isEditMode ? "Update Testimonial" : 'Add Testimonial'}
         </Button>
       </form>
     </div>

@@ -336,11 +336,12 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
             isError ||
             loading
           }
+          isLoading={loading}
           type="submit"
           
           className=" px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isEditMode ? loading ? <ClipLoader size={20}/> : "Update Category" :loading ? <ClipLoader size={20}/> : "Add Category"}
+          {isEditMode ?  "Update Category" : "Add Category"}
         </Button>
       </form>
     </div>

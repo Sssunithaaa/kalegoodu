@@ -174,7 +174,7 @@ const AboutUsForm = () => {
                       <DeleteButton type='button' onClick={() => handleDelete(aboutUsData?.pagecontent_id)}>
                        {deleteLoading ? <ClipLoader size={20}/> : "Delete image"}
                       </DeleteButton>
-                    ) : file ? <Button type='button' onClick={handleImageUpload}>{imageUploading ? <ClipLoader size={20}/> : "Upload image"}</Button> : <div></div>}
+                    ) : file ? <Button isLoading={imageUploading} type='button' onClick={handleImageUpload}>{"Upload image"}</Button> : <div></div>}
         </div>
 
         <div className="mb-4">
@@ -197,8 +197,8 @@ const AboutUsForm = () => {
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : pageId ? 'Update About Us' : 'Add About Us'}
+        <Button isLoading={isSubmitting} type="submit" disabled={isSubmitting}>
+          {pageId ? 'Update About Us' : 'Add About Us'}
         </Button>
       </form>
     </div>

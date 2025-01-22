@@ -33,10 +33,11 @@ export const getAllCategories = async (search = "", sort = "") => {
 };
 export const getAllCategoriess = async () => {
   try {
-   const response =await axios.get(`${url}/api/categories/`);
- 
-     return response.data.categories.filter(category => category.visible);
-   
+   const response =await axios.get(`${url}/api/visible-categories`);
+    
+  //  const filteredCategories = await response.data.categories.filter(category => category.visible);
+  //  return filteredCategories;
+    return response.data.categories
 
     
   } catch (error) {

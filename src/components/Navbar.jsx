@@ -45,6 +45,7 @@ const navButtons = [
 
 const SideBar = ({ isCartVisible, toggleCart }) => {
   const { cartItems, removeFromCart,increaseQuantity,decreaseQuantity ,cartItemCount,cartTotal} = useContext(CartContext);
+
   const navigate = useNavigate();
    const [errorMessage, setErrorMessage] = useState("");
 
@@ -145,9 +146,9 @@ const handleIncreaseQuantity = (productId, currentQuantity, availableStock) => {
 
 const MegaMenu = () => {
   
-  const { screenSize ,aboutUsRef,scrollToSection} = useStateContext();
+  const { screenSize} = useStateContext();
   const [isMenuVisible, setIsMenuVisible] = useState(screenSize === "large");
-
+  const [navButton,setNavButton] = useState("Shop all");
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
   const { cartItemCount, isCartVisible, toggleCart } = useContext(CartContext);
 
@@ -241,12 +242,12 @@ const MegaMenu = () => {
   <li 
     id="nav" 
     // onClick={() => item.href === "/about-us" ? {scrollToSection(aboutUsRef); handleMenuToggleOff(true);} : navigate("/</ul>")} 
-    onClick={()=>{navigate(`${item.href}`);handleMenuToggleOff(true)}}
+    onClick={()=>{navigate(`${item.href}`);setNavButton(`${item.name}`);handleMenuToggleOff(true)}}
     key={index} 
     className='lg:flex lg:mx-auto py-2 px-3 hover:cursor-pointer transition-all duration-500'
   >
     <div className="lg:flex lg:mx-auto block pb-1  px-3 text-gray-900 lg:p-0" aria-current="page">
-      <span className='hover:text-black text-center hover:font-semibold'>{item.name}</span>
+      <span className={`${navButton === item.name ? "font-semibold" : ""} hover:text-black text-center hover:font-semibold`}>{item.name}</span>
     </div>
   </li>
 )}

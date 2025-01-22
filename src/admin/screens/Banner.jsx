@@ -292,7 +292,7 @@ const handleUpload = async (e) => {
 </div>
 
           {addingImages && <div className="flex mx-auto mt-4">
-            <Button type="submit disabled:cursor-none" disabled={isAddingImage}>{isAddingImage ? <ClipLoader size={20}/> : "Upload Images"}</Button>
+            <Button isLoading={isAddingImage}  type="submit disabled:cursor-none" disabled={isAddingImage}>{"Upload Images"}</Button>
           </div>}
         </div>
       </form>
