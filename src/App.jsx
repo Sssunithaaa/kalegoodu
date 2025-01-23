@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import OrderConfirmation from './components/OrderConfirmation';
 import EmailForm from './admin/screens/emails/EmailForm';
+import ManageText from './admin/screens/details/ManageText';
 const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
@@ -90,6 +91,7 @@ const App = () => {
     <Route path="categories/add" element={<EditCategories />} />
     <Route path="about-us/manage" element={<ManageAboutUs />} />
     <Route path="details/manage" element={<ManageDetails />} />
+    <Route path="text/manage" element={<ManageText />} />
     <Route path="orders/manage" element={<ManageOrders />} />
     <Route path="workshops/manage" element={<ManageWorkshops />} />
     <Route path="workshops/add" element={<AddWorkshop />} />

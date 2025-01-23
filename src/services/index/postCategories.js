@@ -9,8 +9,7 @@ export const getAllCategories = async (search = "", sort = "") => {
 
     if (sort === "visible-true" || sort === "visible-false") {
       params.append("sort_by", "visible");
-      params.append("sort_order", "asc");
-      params.append("visible", sort === "visible-true");
+      params.append("sort_order", sort === "visible-true");
     } else if (sort) {
       const [field, order] = sort.split("-");
       params.append("sort_by", field);

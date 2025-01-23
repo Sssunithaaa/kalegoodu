@@ -123,46 +123,18 @@ const searchKeywordOnSubmitHandler = (event) => {
       <ToastContainer/>
       {reversedData?.map((workshop) => (
         <tr key={workshop.workshop_id}>
-          {/* <td className="py-5 text-md bg-white border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="flex flex-wrap gap-x-2">
-                {
-                  workshop?.images.map((image)=> (
-                   
-                  <img
-                    src={
-                      workshop.images.length > 0
-                        ? "https://res.cloudinary.com/dgkgxokru/"+`${image.image}` // Construct full image URL
-                        : 'path/to/sampleworkshopImage' // Replace with your sample image path
-                    }
-                    alt={workshop.name}
-                    className="mx-auto object-cover rounded-lg w-10 md:w-4 aspect-square"
-                  />
-              
-                  ))
-                }
-              </div>
-             
-            </div>
-          </td> */}
+          
          <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{workshop.name}</p>
           </td>
-          {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{workshop.short_description}</p>
-          </td> */}
+          
           <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{workshop.date}</p>
           </td>
              <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
             <p className="text-gray-900 whitespace-no-wrap">{workshop.place}</p>
           </td>
-             {/* <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
-           <div
-            className="prose prose-gray"
-            dangerouslySetInnerHTML={{ __html: workshop.description }}
-          ></div>
-          </td> */}
+           
        
          
           

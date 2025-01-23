@@ -10,7 +10,7 @@ import {
   updateProduct,
   createProduct,
 } from "../../../services/index/products"; // Make sure to import the createProduct service
-import { getAllCategories } from "../../../services/index/postCategories";
+import { getAllCategories, getAllCategoriess } from "../../../services/index/postCategories";
 import {
   
   filterCategories,
@@ -75,12 +75,11 @@ const EditPost = () => {
   const isEditMode = Boolean(id); 
   const { data: categoriesData, isLoadingg, isFetching } = useQuery({
   queryKey: ["categories"],
-  queryFn: getAllCategories,
+  queryFn: getAllCategoriess,
 });
 
-const categoryData = useMemo(() => {
-  return categoriesData?.categories?.filter((category) => category?.visible === true);
-}, [categoriesData]);
+
+
 
 
 const baseUrl = import.meta.env.VITE_APP_URL
@@ -146,12 +145,12 @@ const baseUrl = import.meta.env.VITE_APP_URL
   }, [product]);
   useEffect(()=> {
      if(!isEditMode){
-       setCategories(
-        categoryData?.map((item) => ({
-          value: item.category_id,
-          label: item.name,
-        }))
-      )
+      //  setCategories(
+      //   categoriesData?.map((item) => ({
+      //     value: item.category_id,
+      //     label: item.name,
+      //   }))
+      // )
 
       setTags(
         saleTypesData?.map((tag) => ({
@@ -161,7 +160,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       );
      }
       
-  },[categoryData,saleTypesData])
+  },[categoriesData,saleTypesData])
 
  const handleMutationError = (error) => {
   setIsUploading(false);
@@ -294,15 +293,32 @@ if (videoUrl) {
 const [files, setFiles] = useState([null, null, null]);
 const [previews, setPreviews] = useState([null, null, null]);
 const handleFileChange = (acceptedFiles, index) => {
-  const updatedFiles = [...files];
-  updatedFiles[index] = acceptedFiles[0]; 
-  setFiles(updatedFiles);
+  const allowedTypes = ["image/jpeg", "image/png"];
+  const maxSize = 10 * 1024 * 1024; // 10MB in bytes
 
-  const updatedPreviews = [...previews];
-  updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
-  setPreviews(updatedPreviews);
-  
+  if (acceptedFiles.length > 0) {
+    const file = acceptedFiles[0];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Invalid file type. Only JPEG and PNG images are allowed.");
+      return;
+    }
+
+    if (file.size > maxSize) {
+      toast.error("File size exceeds 10MB. Please upload a smaller image.");
+      return;
+    }
+
+    const updatedFiles = [...files];
+    updatedFiles[index] = file;
+    setFiles(updatedFiles);
+
+    const updatedPreviews = [...previews];
+    updatedPreviews[index] = URL.createObjectURL(file);
+    setPreviews(updatedPreviews);
+  }
 };
+
 
 
 const [isUpdatingImage, setIsUpdatingImage] = useState(false);
@@ -360,7 +376,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
     <Dropzone
       onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
-      accept="image/*"
+       accept="image/jpeg, image/png"
     >
       {({ getRootProps, getInputProps }) => (
         <div
@@ -393,6 +409,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               <p className="text-center text-black font-medium">
                 Drag and drop an image here, or click to select file
               </p>
+               <em>(Only *.jpeg and *.png images will be accepted)</em>
             </div>
           )}
         </div>
@@ -445,7 +462,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
              <CreatableSelect
               isMulti
               name="categories"
-              options={categoryData?.map((category)=>(
+              options={categoriesData?.map((category)=>(
                 {
                   value: category.category_id,
                   label: category.name

@@ -22,8 +22,8 @@ const ManageProducts = () => {
 
     if (sortOption === "visible-true" || sortOption === "visible-false") {
       params.append("sort_by", "visible");
-      params.append("sort_order", "asc");
-      params.append("visible", sortOption === "visible-true");
+      params.append("sort_order", sortOption === "visible-true");
+      // params.append("visible", sortOption === "visible-true");
     } else {
       const [field, order] = sortOption.split("-");
       params.append("sort_by", field);
@@ -31,7 +31,7 @@ const ManageProducts = () => {
     }
 
     const url = `${baseUrl}/api/products/?page=${pageParam}&${params.toString()}`;
-    console.log(url); // Debugging URL
+    
     const { data } = await axios.get(url);
     return data;
   };

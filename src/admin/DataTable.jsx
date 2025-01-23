@@ -1,8 +1,7 @@
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef } from 'react';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import SortDropdown from './SortDropDown';
-import { set } from 'react-hook-form';
 const DataTable = forwardRef(({
   pageTitle,
   dataListName,
@@ -20,7 +19,11 @@ const DataTable = forwardRef(({
   keyword,
   setKeyword,
   refetch,
-  setCurrentPage={setCurrentPage}
+  setCurrentPage={setCurrentPage},
+  saleType = false, // New prop
+  handleOpenDialog, // New prop
+  handleCloseDialog, // New prop
+  
 
   
 }, ref) => {
@@ -38,6 +41,8 @@ const DataTable = forwardRef(({
     setCurrentPage(1);
     refetch();
   };
+  
+  
   return (
     <div className='mt-4'>
       <h1 className="text-2xl ml-4 font-semibold">{pageTitle}</h1>
@@ -69,7 +74,13 @@ const DataTable = forwardRef(({
       Add {name}
     </Button>
   )}
-  
+ {
+  saleType && (
+    <Button className="px-4" onClick={handleOpenDialog}>
+      Add New Sale Type
+    </Button>
+  )
+ }
   {sortOptions && (
     <div className="flex items-center">
       <span className="mx-3 text-lg font-semibold">Sort: </span>

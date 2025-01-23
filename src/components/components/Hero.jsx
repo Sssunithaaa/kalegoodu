@@ -5,6 +5,7 @@ import Wrapper from "./Wrapper";
 import { useStateContext } from "../../context/ContextProvider";
 import 'hero-slider/dist/index.css';
 import { img24 } from "../../assets/images";
+import { getPageContents } from "../../services/index/pageContent";
 
 const Hero = ({props}) => {
 
@@ -40,6 +41,11 @@ const Hero = ({props}) => {
     refetchOnWindowFocus: false, // No automatic refetch on focus
   });
 
+   const {data,isLoadingg} = useQuery({
+      queryKey: ["page-contents"],
+      queryFn: getPageContents
+    })
+
   return (
     <div style={{ height: sliderHeight }}>
       <HeroSlider
@@ -56,8 +62,9 @@ const Hero = ({props}) => {
       >
         <Overlay>
           <Wrapper>
-            <h2 className="text-3xl uppercase">Transform your space</h2>
-            <h3 className="text-xl">Discover the best home decor ideas.</h3>
+            {data?.[5]?.visible && (            <h2 className="text-3xl uppercase"> <div dangerouslySetInnerHTML={{ __html: data?.[5]?.content }} /></h2>
+)}
+            {/* <h3 className="text-xl">Discover the best home decor ideas.</h3> */}
           </Wrapper>
         </Overlay>
 

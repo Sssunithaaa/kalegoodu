@@ -6,6 +6,9 @@ import CTA from '../CTA';
 import Breadcrumbs from '../BreadCrumbs';
 import Marquee from "react-fast-marquee";
 import { useStateContext } from '../../context/ContextProvider';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { getPageContents } from '../../services/index/pageContent';
 
 const MainLayout = ({ children }) => {
   const location = useLocation();
@@ -15,6 +18,10 @@ const MainLayout = ({ children }) => {
   if (isAdminPage) {
     return <div>{children}</div>;
   }
+  const {data,isLoading} = useQuery({
+    queryKey: ["page-contents"],
+    queryFn: getPageContents
+  })
  const {marqueeRef,showSidebar} = useStateContext()
 
  useEffect(() => {
@@ -39,7 +46,8 @@ const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; 
   style={{ position: 'relative',zIndex:10 }}
 >
   {!showSidebar && <Marquee speed={100} style={{zIndex:1,paddingBlock:"6px"}} gradient={false}>
-    {message}{spacing}{spacing}{spacing}{spacing}{spacing}{spacing}{message}
+           <div dangerouslySetInnerHTML={{ __html: data?.[4]?.content }} />
+{spacing}{spacing}{spacing}{spacing}{spacing}{spacing} <div dangerouslySetInnerHTML={{ __html: data?.[4]?.content }} />
   </Marquee>}
 </div>
 

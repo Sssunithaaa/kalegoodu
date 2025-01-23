@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { first, img12, img24 } from '../assets/images';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../context/ContextProvider';
+import { getPageContents } from '../services/index/pageContent';
 
 // Hero section styling
 const HeroSection = styled.div`
@@ -126,6 +127,10 @@ const Hero = () => {
     }
   });
 
+   const {data,isLoadingg} = useQuery({
+      queryKey: ["page-contents"],
+      queryFn: getPageContents
+    })
   const navigate = useNavigate();
 
   // Slick slider settings
@@ -157,8 +162,7 @@ const Hero = () => {
       )}
       {!isLoading && (
         <HeroContent>
-          <h1>Transform Your Space</h1>
-          <p>Discover the best home decor ideas to beautify your home.</p>
+           <div dangerouslySetInnerHTML={{ __html: data?.[5]?.content }} />
           <HeroButton onClick={() => navigate("/products")}>Shop Now</HeroButton>
         </HeroContent>
       )}

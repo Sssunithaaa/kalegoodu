@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import {toast, ToastContainer } from "react-toastify";
 
-const AddSaleTypeDialog = ({ open, handleClose, onSubmit, editSaleType }) => {
+const AddSaleTypeDialog = ({ open, handleClose, editSaleType }) => {
   const [saleTypeName, setSaleTypeName] = useState("");
   useEffect(()=> {
     setSaleTypeName(editSaleType?.name)
@@ -30,8 +30,7 @@ const AddSaleTypeDialog = ({ open, handleClose, onSubmit, editSaleType }) => {
       toast.success("Sale type added successfully");
     }
 
-    // Trigger parent refresh and close the dialog only on success
-    onSubmit();
+   
     setTimeout(() => {
       setSaleTypeName("");
       handleClose();

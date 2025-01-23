@@ -1,42 +1,46 @@
 import React,{useEffect, useState} from 'react'
 import DataTable from '../../DataTable'
 import { useQuery } from '@tanstack/react-query'
-import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify'
-
 import AddSaleTypeDialog from './AddSaleType'
-
-import styled from 'styled-components'
 import Pagination from '../../../components/Pagination'
-const Button = styled.button`
-  width: 200px;
-  height: 45px;
-  background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 79.6476490172856% 29.76095796117111%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 80.73001484309323% 71.025398036287%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 74.71274406155253% 92.17335404339366%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 41.223261123520594% 30.917984618376227%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 37.9520129096355% 60.069337551017334%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 67.69235280932718% 23.91998376199933%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 93.68255347726229% 18.89111181278711%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 13.215737665881534% 45.21500942396648%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%), radial-gradient(at 61.18443079724643% 88.41983116607912%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 1) 0%, hsla(64.40366972477065, 83.20610687022904%, 74.31372549019608%, 0) 100%), radial-gradient(at 10.575958325731749% 96.72193910560092%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 1) 0%, hsla(140.5263157894737, 43.18181818181818%, 82.74509803921568%, 0) 100%), radial-gradient(at 75.42341628599371% 53.31130723888271%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 1) 0%, hsla(113.55704697986577, 77.20207253886008%, 62.15686274509804%, 0) 100%);
-  background-color: #4CAF50;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  &:hover {
-    background-color: #45a049;
-  }
-`;
+
+
 const ManageSaleType = () => {
    const [sales,setSales] = useState([])
-      const baseUrl = import.meta.env.VITE_APP_URL
+  const baseUrl = import.meta.env.VITE_APP_URL
       const PAGE_SIZE = 5;
+ const [searchKeyword, setSearchKeyword] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
- const {data=[],isLoading,isFetching,refetch} = useQuery({
-  queryKey: ["saletypes"],
+    const [sortOption, setSortOption] = useState("created_at-desc");
+const { data = [], isLoading, isFetching, refetch } = useQuery({
+  queryKey: ["saletypes", searchKeyword, sortOption], // Ensure query refetches when searchKeyword changes
   queryFn: async () => {
-    const response = await axios.get(`${baseUrl}/api/sale_types/`);
-    
-    return response.data?.sale_types
+    let field = sortOption.split("-")[0];
+    let order = sortOption.split("-")[1];
+
+    let queryParams = {};
+
+    if (searchKeyword) {
+      queryParams.search = searchKeyword;  // Ensure search parameter is included
+    }
+
+    if (sortOption === "visible-true" || sortOption === "visible-false") {
+      queryParams.sort_by = "visible";
+      queryParams.sort_order = sortOption === "visible-true";
+    } else {
+      queryParams.sort_by = field;
+      queryParams.sort_order = order;
+    }
+
+    const response = await axios.get(`${baseUrl}/api/sale_types/`, { params: queryParams });
+
+    return response.data?.sale_types;
   }
- })
+});
+
  const [selectedSaleType, setSelectedSaleType] = useState(null);
 
 const handleEditClick = (saleType) => {
@@ -49,34 +53,19 @@ useEffect(()=>{
  useEffect(()=> {
   setSales(data)
  },[data])
- const [searchKeyword, setSearchKeyword] = useState("");
 
 const searchKeywordOnChangeHandler = (event) => {
   setSearchKeyword(event.target.value);
 };
+
 const searchKeywordOnSubmitHandler = (event) => {
   event.preventDefault();
-  
-
-  if (!searchKeyword || searchKeyword.trim() === "") {
-
-    setSales(sales);
-  } else {
-
-    const filteredSales = sales?.filter((sale) =>
-      sale.name.toLowerCase().includes(searchKeyword.toLowerCase())
-    );
-    setSales(filteredSales);
-  }
+  setCurrentPage(1); // Reset to first page on search
 };
 
-
-
  const [dialogOpen, setDialogOpen] = useState(false);
-
-  // Handle opening the dialog
- const handleOpenDialog = (saleType = null) => {
-
+  
+ const handleOpenDialog = () => {
   setDialogOpen(true);
 };
 
@@ -88,10 +77,7 @@ const searchKeywordOnSubmitHandler = (event) => {
     refetch()
   };
 
-  // Callback when form is submitted successfully
-  const handleFormSubmit = () => {
-    // console.log("Sale type added successfully!");
-  };
+ 
    
 const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
 
@@ -128,16 +114,23 @@ await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
   }
 };
 
+  const sortOptions = [
+     { label: "Visible", value: "visible-true" },
+    { label: "Hidden", value: "visible-false" },
+    { label: "Date, new to old", value: "created_at-desc" },
+    { label: "Date, old to new", value: "created_at-asc" },
+    { label: "Alphabetically, A-Z", value: "name-asc" },
+    { label: "Alphabetically, Z-A", value: "name-desc" },
+   
+  ];
+
   return (
     <div>
         <div>
-      <Button onClick={handleOpenDialog}>
-        Add New Sale Type
-      </Button>
+     
      <AddSaleTypeDialog
   open={dialogOpen}
   handleClose={handleCloseDialog}
-  onSubmit={handleFormSubmit}
   editSaleType={selectedSaleType}
 />
     </div>
@@ -149,12 +142,19 @@ await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
           searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
           searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
           tableHeaderTitleList={["Name","", ""]}
+          sortOptions={sortOptions}
+          sortOption={sortOption}
+          setSortOption={setSortOption}
           keyword={searchKeyword}
           setKeyword={setSearchKeyword}
           isLoading={isLoading}
           isFetching={isFetching}
           data={data}
           setCurrentPage={setCurrentPage}
+          saleType={true} // Enables AddSaleTypeDialog
+          refetch={refetch}
+          handleOpenDialog={handleOpenDialog}
+          handleCloseDialog={handleCloseDialog}
           
         >
              {paginatedData?.map((sale)=>(

@@ -1,9 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"; // Import useQueryClient
-import { toast, ToastContainer } from "react-toastify";
+import { Link } from "react-router-dom";
+import {  useQuery } from "@tanstack/react-query"; // Import useQueryClient
+import {  ToastContainer } from "react-toastify";
 import {
   
-  deleteCategory,
   getAllCategories,
   
 } from "../../../services/index/postCategories";
@@ -31,22 +30,18 @@ const Button = styled.button`
 `;
 const Categories = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
-  const [categories, setCategories] = useState([]);
   const [keyword,setKeyword] = useState("");
   const [sortOption, setSortOption] = useState("created_at-desc");
-  const queryClient = useQueryClient(); 
- const PAGE_SIZE = 5;
+  const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
-const { data = { categories: [] }, isLoading, isFetching, refetch } = useQuery({
+  const { data = { categories: [] }, isLoading, isFetching, refetch } = useQuery({
   queryKey: ['categories', keyword, sortOption],
   queryFn: () => getAllCategories(keyword, sortOption), // Pass the search and sort options
   keepPreviousData: true,
-});
+  refetchOnWindowFocus: false});
 
- useEffect(()=> {
-  setCategories(data?.categories)
- },[data])
+ 
 
 
 const [searchKeyword, setSearchKeyword] = useState("");
@@ -54,48 +49,15 @@ const [searchKeyword, setSearchKeyword] = useState("");
 const searchKeywordOnChangeHandler = (event) => {
   setSearchKeyword(event.target.value);
 };
-const searchKeywordOnSubmitHandler = (event) => {
-  event.preventDefault();
+
+
  
-
-  if (!searchKeyword || searchKeyword.trim() === "") {
-
-    setCategories(categories);
-  } else {
-
-    const filteredcategories = categories?.filter((category) =>
-      category.name.toLowerCase().includes(searchKeyword.toLowerCase())
-    );
-   
-    setCategories(filteredcategories);
-    
-  }
-};
-
- useEffect(()=>{
-    if(searchKeyword.trim()==""){
-      setCategories(data?.categories)
-    }
-  },[searchKeyword])
-
 
 
 
   
 
-  // Delete category mutation
-const { mutate: deleteCategoryMutation, isLoading: isLoadingDeleteData } = useMutation({
-  mutationFn: (categoryId) => deleteCategory(categoryId), 
-  onSuccess: () => {
-    toast.success("Category deleted successfully");
-    queryClient.invalidateQueries(["categories"]);
-    refetch()
-  },
-  onError: (error) => {
-    toast.error("Failed to delete category");
-    console.error("Error deleting category:", error.message);
-  },
-});
+
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
    const [selectedItemId, setSelectedItemId] = useState(null);
@@ -113,31 +75,19 @@ const { mutate: deleteCategoryMutation, isLoading: isLoadingDeleteData } = useMu
  
 
 
-  const navigate = useNavigate()
-const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
+
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-  const paginatedData = categories?.slice(startIndex, endIndex);
+const totalPages = Math.ceil(data?.categories?.length / PAGE_SIZE);
+const paginatedData = data?.categories?.slice(startIndex, endIndex);
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-//    const handleToggleVisibility = async (id, currentVisibility) => {
-//   try {
-   
-//    await axios.put(`${baseUrl}/api/update_category/${id}/`, {
-//       visible: !currentVisibility
-//     });
-    
-//     toast.success("Visibility updated successfully!");
-//     refetch(); 
-//   } catch (error) {
-//     console.log(error)
-//     toast.error("Couldn't update visibility");
-//   }
-// };
+
 const handleToggleVisibility = async (categoryId, currentValue,category) => {
   updateCategory(categoryId, { visible: !currentValue,header:category.header,home_page:category.home_page });
 }
@@ -184,7 +134,7 @@ const updateCategory = async (categoryId, updatedField) => {
           pageTitle=""
           dataListName="Categories"
           searchInputPlaceHolder="Category title..."
-          searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
+          // searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
           searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
           keyword={keyword}
           setKeyword={setKeyword}
@@ -261,8 +211,15 @@ const updateCategory = async (categoryId, updatedField) => {
       </div>
     </td>
               <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
+                
+                <Link
+                  to={`/admin/categories/manage/edit/${category.category_id}`}
+                  className="text-green-600 hover:text-green-900"
+                >
+                  Edit
+                </Link>
                 <button
-                  disabled={isLoadingDeleteData}
+                  
                   type="button"
                   className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
                   onClick={() => {
@@ -271,12 +228,6 @@ const updateCategory = async (categoryId, updatedField) => {
                 >
                   Delete
                 </button>
-                <Link
-                  to={`/admin/categories/manage/edit/${category.category_id}`}
-                  className="text-green-600 hover:text-green-900"
-                >
-                  Edit
-                </Link>
               </td>
             </tr>
           ))}
