@@ -5,12 +5,13 @@ import { CiSearch } from "react-icons/ci";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
 import { img1, img2, logo } from '../assets/images';
-
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { useStateContext } from '../context/ContextProvider';
 import SearchBar from '../searchbar/SearchBar';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Button = styled.button`
   width: 100%;
@@ -148,10 +149,10 @@ const MegaMenu = () => {
   
   const { screenSize} = useStateContext();
   const [isMenuVisible, setIsMenuVisible] = useState(screenSize === "large");
-  const [navButton,setNavButton] = useState("Shop all");
+  const [navButton,setNavButton] = useState("");
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
   const { cartItemCount, isCartVisible, toggleCart } = useContext(CartContext);
-
+  
   const [display, setDisplay] = useState("static");
 
   const toggleSearchbar = () => {
@@ -198,6 +199,23 @@ const MegaMenu = () => {
 
   const navigate = useNavigate();
 
+
+ const { data, isLoading } = useQuery({
+  queryKey: ["header"],
+  queryFn: async () => {
+    const res = await axios.get(`${import.meta.env.VITE_APP_URL}/api/visible-categories-header/`);
+    const categories = res.data.categories;
+
+    return [
+      { name: "Shop All", category_id: "shop-all" }, // Add "Shop All" at the beginning
+      ...categories, // Spread API response categories
+      { name: "Workshops", category_id: "workshop" },
+      { name: "Contact Us", category_id: "contact-us" },
+      { name: "About Us", category_id: "about-us" }, // Add extra items at the end
+    ];
+  }
+});
+
   return (
    <div className="navbar">
       <div className={`${display} lg:static  w-full  bg-white z-[100001]`}>
@@ -238,19 +256,36 @@ const MegaMenu = () => {
           {isMenuVisible && (
             <div id="mega-menu-full-image" className={`items-start justify-between z-40 py-0 w-full block lg:flex lg:w-auto`}>
               <ul className="flex flex-col md:text-[18px]  font-medium lg:flex-row lg:mt-0 lg:space-x-8 rtl:space-x-reverse">
-              {navButtons.map((item, index) =>
-  <li 
-    id="nav" 
-    // onClick={() => item.href === "/about-us" ? {scrollToSection(aboutUsRef); handleMenuToggleOff(true);} : navigate("/</ul>")} 
-    onClick={()=>{navigate(`${item.href}`);setNavButton(`${item.name}`);handleMenuToggleOff(true)}}
-    key={index} 
-    className='lg:flex lg:mx-auto py-2 px-3 hover:cursor-pointer transition-all duration-500'
-  >
-    <div className="lg:flex lg:mx-auto block pb-1  px-3 text-gray-900 lg:p-0" aria-current="page">
-      <span className={`${navButton === item.name ? "font-semibold" : ""} hover:text-black text-center hover:font-semibold`}>{item.name}</span>
-    </div>
-  </li>
-)}
+             {data?.map((item, index) => {
+  const formattedName = item.name.replace(/\s+/g, "-"); // Convert spaces to hyphens for consistency
+  console.log(formattedName)
+  return (
+    <li 
+      id="nav"
+      key={index}
+      onClick={() => {
+        if (formattedName === "About-Us") {
+          navigate("/About-Us");
+        } else if (formattedName === "Contact-Us" || formattedName === "Workshops") {
+          navigate(`/${formattedName}`);
+        } else if (formattedName === "Shop-All") {
+          navigate("/Products");
+        } else {
+          navigate(`/Categories/${item.category_id}/${formattedName}`);
+        }
+        setNavButton(item.name);
+        handleMenuToggleOff(true);
+      }}
+      className="lg:flex lg:mx-auto py-2 px-3 hover:cursor-pointer transition-all duration-500"
+    >
+      <div className="lg:flex lg:mx-auto block pb-1 px-3 text-gray-900 lg:p-0" aria-current="page">
+        <span className={`${navButton === item.name ? "font-semibold" : ""} hover:text-black text-center hover:font-semibold`}>
+          {item.name}
+        </span>
+      </div>
+    </li>
+  );
+})}
 
 
          </ul>

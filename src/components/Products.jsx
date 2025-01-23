@@ -139,7 +139,7 @@ const fetchProducts = async ({ pageParam = 1 }) => {
   );
 
 if (isError) {
-  console.error("Error fetching products:", error.message);
+  console.error("Error fetching products");
 }
 const products = data?.pages
   .flatMap((page) => page.results) // Flatten the pages

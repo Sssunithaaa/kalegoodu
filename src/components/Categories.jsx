@@ -68,24 +68,11 @@ const Categories = () => {
     const url = category.name.replaceAll(" ", "-");
     navigate(`/Categories/${category?.category_id}/${url}`);
   }, [navigate]);
-  console.log(isLoading,isFetching,data)
+
   return (
     <div className="grid relative md:w-[90%] lg:w-[70%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-1 mx-auto">
       <AnimatePresence>
-        {isLoading  ? (
-  
-  Array.from({ length: 6 }).map((_, index) => (
-    <motion.div
-      key={index}
-      className="md:mx-4 mx-2 my-[6px] text-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <ShinyPlaceholder />
-    </motion.div>
-  ))
-) :  data?.map((category, index) => (
+  {(data || [])?.map((category, index) => (
     
     <motion.div
       key={category.category_id}
@@ -99,8 +86,8 @@ const Categories = () => {
       transition={{ delay: 0.3 * index, duration: 0.6 }}
     >
       <LazyLoadImage
-        src={import.meta.env.VITE_CLOUD_URL+ `${category?.images[0]?.image}`}
-        alt={category.name}
+        src={import.meta.env.VITE_CLOUD_URL+ `${category?.images?.[0]?.image}`}
+        alt={category?.name}
         placeholderSrc={img28}
         wrapperClassName="md:w-36 w-32 md:h-36 h-32 rounded-full object-cover mx-auto"
         placeholder={<ShinyPlaceholder />}

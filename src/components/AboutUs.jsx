@@ -29,7 +29,8 @@ const AboutUs = () => {
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
       <div className="flex flex-col md:flex-row md:h-[70vh]  border border-gray-300 shadow-lg rounded-lg overflow-hidden">
         {/* Image Section */}
-        <motion.div
+       <AnimatePresence>
+         <motion.div
           variants={fadeIn("right", "", 0.3, 1)}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -51,6 +52,7 @@ const AboutUs = () => {
             />
           )}
         </motion.div>
+       </AnimatePresence>
 
         {/* Description Section */}
         <div className="md:w-1/2 h-1/2 md:h-full bg-gray-100 flex flex-col justify-center items-center px-6">

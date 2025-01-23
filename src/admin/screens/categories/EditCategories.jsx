@@ -16,6 +16,7 @@ import styled from "styled-components";
 import BackButton from "../../BackButton";
 import { ClipLoader } from "react-spinners";
 import Button from "../../../components/Button";
+import { set } from "react-hook-form";
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -58,7 +59,8 @@ const EditCategories = () => {
   );
 
   const [visible,setVisible] = useState(false)
-
+  const [header,setHeader] = useState(false);
+  const [homePage,setHomePage] = useState(false);
 
   // Fetching single category (only in edit mode)
   const {data, isLoading, isError,refetch } = useQuery({
@@ -79,6 +81,8 @@ const EditCategories = () => {
       
       setPreviews(data?.images?.map((image)=>"https://res.cloudinary.com/dgkgxokru/"+image?.image) || [null,null,null])
       setVisible(data?.visible)
+      setHeader(data?.header)
+      setHomePage(data?.home_page)
  },[data])
  
   
@@ -144,6 +148,8 @@ const navigate = useNavigate()
   formData.append("name", categoryTitle);
   formData.append("description", description); // Ensure the key matches
   formData.append("visible", isEditMode ? visible : true); // Ensure the key matches
+  formData.append("header",isEditMode ? header : false);
+  formData.append("home_page",isEditMode ? homePage : false);
   if(!isEditMode){
    files.forEach(file => {
     if (file) {
@@ -300,7 +306,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
             placeholder="Description"
           />
         </div>
-       <div className="mb-4">
+       <div className="mb-4 mt-4">
   <label htmlFor="visibility" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
     <input
       type="checkbox"
@@ -310,6 +316,30 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
       className="mx-2 border border-gray-300 rounded-md shadow-sm"
     />
     {visible ? "Visible" : "Hidden"}
+  </label>
+</div>
+<div className="mb-4">
+  <label htmlFor="header" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
+    <input
+      type="checkbox"
+      id="header"
+      checked={header}
+      onChange={(e) => setHeader(e.target.checked)}
+      className="mx-2 border border-gray-300 rounded-md shadow-sm"
+    />
+    {visible ? "Header" : "Hidden"}
+  </label>
+</div>
+<div className="mb-4">
+  <label htmlFor="homePage" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
+    <input
+      type="checkbox"
+      id="homePage"
+      checked={homePage}
+      onChange={(e) => setHomePage(e.target.checked)}
+      className="mx-2 border border-gray-300 rounded-md shadow-sm"
+    />
+    {visible ? "Homepage" : "Hidden"}
   </label>
 </div>
 
@@ -336,12 +366,12 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
             isError ||
             loading
           }
-          isLoading={loading}
+          
           type="submit"
           
           className=" px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isEditMode ?  "Update Category" : "Add Category"}
+          { isEditMode ? loading ? <ClipLoader size={20}/> :   "Update Category" : "Add Category"}
         </Button>
       </form>
     </div>

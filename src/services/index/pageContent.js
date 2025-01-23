@@ -29,8 +29,9 @@ export const updatePageContent = async (pageId, formData) => {
     const response = await axios.put(`${url}/api/update_page_contents/${pageId}/`, formData, config);
     return response?.data;
   } catch (error) {
-    // console.log('Error updating page content:', error);
-    throw error;
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message); 
+    throw new Error(error.message);
   }
 };
 

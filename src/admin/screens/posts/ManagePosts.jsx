@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast, ToastContainer } from "react-toastify";
 import BackButton from "../../BackButton";
 import DeleteConfirmationDialog from "../../ConfirmationDialog";
+import { deleteItem } from "../../hooks/utils";
 const ManageProducts = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +42,7 @@ const ManageProducts = () => {
     keepPreviousData: true,
   });
 
-  console.log(productsData);
+  
   const products = productsData?.results?.products || [];
   const totalPages = Math.ceil(productsData.count / 4); // Adjust page size accordingly
 

@@ -118,7 +118,7 @@ export default function ProductCard({ product, productMode, index, len }) {
       </CardBody>
 
       {/* Show button based on screen size */}
-      {productMode && (isHovered || screenSize !== "large") && (
+      {productMode && (isHovered ) && (
         <CardFooter className={`relative flex  justify-center items-center px-2 py-2`}>
           <Button
             onClick={handleCartClick}

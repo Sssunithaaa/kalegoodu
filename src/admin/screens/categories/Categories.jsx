@@ -124,20 +124,41 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
     setCurrentPage(page);
   };
 
-   const handleToggleVisibility = async (id, currentVisibility) => {
-  try {
+//    const handleToggleVisibility = async (id, currentVisibility) => {
+//   try {
    
-   await axios.put(`${baseUrl}/api/update_category/${id}/`, {
-      visible: !currentVisibility
-    });
+//    await axios.put(`${baseUrl}/api/update_category/${id}/`, {
+//       visible: !currentVisibility
+//     });
     
-    toast.success("Visibility updated successfully!");
-    refetch(); 
+//     toast.success("Visibility updated successfully!");
+//     refetch(); 
+//   } catch (error) {
+//     console.log(error)
+//     toast.error("Couldn't update visibility");
+//   }
+// };
+const handleToggleVisibility = async (categoryId, currentValue,category) => {
+  updateCategory(categoryId, { visible: !currentValue,header:category.header,home_page:category.home_page });
+}
+const handleToggleHeader = (categoryId, currentValue,category) => {
+  updateCategory(categoryId, { header: !currentValue,visible:category.visible,home_page:category.home_page });
+};
+
+const handleToggleHomePage = (categoryId, currentValue,category) => {
+  updateCategory(categoryId, { home_page: !currentValue,visible:category.visible,header:category.header });
+};
+
+const updateCategory = async (categoryId, updatedField) => {
+  try {
+    await axios.put(`${import.meta.env.VITE_APP_URL}/api/update_category/${categoryId}/`, updatedField);
+    refetch(); // Refresh data after update
+
   } catch (error) {
-    console.log(error)
-    toast.error("Couldn't update visibility");
+    console.error("Error updating category");
   }
 };
+
  const sortOptions = [
     { label: "Visible", value: "visible-true" },
     { label: "Hidden", value: "visible-false" },
@@ -213,12 +234,32 @@ const totalPages = Math.ceil(categories?.length / PAGE_SIZE);
   <div className="flex items-center">
     <button
       className={`py-1 px-4 rounded ${category.visible ? "bg-green-500" : "bg-red-500"} text-white`}
-      onClick={() => handleToggleVisibility(category.category_id, category.visible)}
+      onClick={() => handleToggleVisibility(category.category_id, category.visible,category)}
     >
       {category.visible ? "Visible" : "Hidden"}
     </button>
   </div>
 </td>
+ <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+      <div className="flex flex-col gap-2">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={category.header}
+            onChange={() => handleToggleHeader(category.category_id, category.header,category)}
+          />
+          <span>Header</span>
+        </label>
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={category.home_page}
+            onChange={() => handleToggleHomePage(category.category_id, category.home_page,category)}
+          />
+          <span>Home Page</span>
+        </label>
+      </div>
+    </td>
               <td className="px-5 py-5 gap-y-4 text-md bg-white border-b border-gray-200 space-x-5">
                 <button
                   disabled={isLoadingDeleteData}

@@ -72,7 +72,7 @@ const DataTable = forwardRef(({
   
   {sortOptions && (
     <div className="flex items-center">
-      <span className="mx-3 text-lg font-semibold">Filter: </span>
+      <span className="mx-3 text-lg font-semibold">Sort: </span>
       <SortDropdown 
         options={sortOptions}
         sortOption={sortOption}

@@ -58,6 +58,23 @@ const AboutUsForm = () => {
     setPreview(URL.createObjectURL(acceptedFiles[0]));
   };
 
+  const [isUpdatingImage, setIsUpdatingImage] = useState(false);
+  const handleUpdate = async () => {
+    setIsUpdatingImage(true);
+    const formData = new FormData();
+    formData.append('page_name', 'About Us');
+    formData.append('page_image', file);
+    try {
+      await updatePageContent(pageId, formData);
+      toast.success('Image updated successfully!');
+    } catch (error) {
+      console.log('Error updating image:', error);
+      toast.error('Failed to update image');
+    } finally {
+      setIsUpdatingImage(false);
+    }
+
+  }
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -170,11 +187,11 @@ const AboutUsForm = () => {
               </div>
             )}
           </Dropzone>
-          {aboutUsData?.images?.[0]?.image ? (
-                      <DeleteButton type='button' onClick={() => handleDelete(aboutUsData?.pagecontent_id)}>
+          {aboutUsData?.images?.[0]?.image && file ? (
+                      <Button type='button' onClick={handleUpdate}>{isUpdatingImage ? <ClipLoader size={20}/> : "Upload image"}</Button>
+                    ) : <DeleteButton type='button' onClick={() => handleDelete(aboutUsData?.pagecontent_id)}>
                        {deleteLoading ? <ClipLoader size={20}/> : "Delete image"}
-                      </DeleteButton>
-                    ) : file ? <Button isLoading={imageUploading} type='button' onClick={handleImageUpload}>{"Upload image"}</Button> : <div></div>}
+                      </DeleteButton>}
         </div>
 
         <div className="mb-4">
