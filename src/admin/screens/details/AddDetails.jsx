@@ -8,11 +8,13 @@ import { updatePageContent } from '../../../services/index/pageContent';
 const PolicyForm = ({ title, data, id }) => {
   const [text, setText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const quillRef = useRef(null); // Reference for Quill instance
-
+  const [isVisible, setIsVisible] = useState(data?.visible || true); // Track visibility
+  const quillRef = useRef(null);
+  console.log(data);
   useEffect(() => {
     if (data) {
       setText(data.content || '');
+      setIsVisible(data.visible); // Initialize visibility state
     }
   }, [data]);
 
@@ -28,17 +30,29 @@ const PolicyForm = ({ title, data, id }) => {
       await updatePageContent(id, formData);
       toast.success(`${title} updated successfully!`, { autoClose: 2000 });
     } catch (error) {
-      // console.log(error);
       toast.error(`Failed to update ${title}`, { autoClose: 2000 });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const handleToggleVisibility = async () => {
+    const newVisibility = !isVisible;
+    const formData = new FormData();
+    formData.append('visible', newVisibility);
+
+    try {
+      await updatePageContent(id, formData);
+      setIsVisible(newVisibility);
+      toast.success(`Visibility set to ${newVisibility ? 'Visible' : 'Hidden'}`, { autoClose: 2000 });
+    } catch (error) {
+      toast.error('Failed to update visibility', { autoClose: 2000 });
+    }
+  };
+
   useEffect(() => {
     return () => {
       toast.dismiss();
-      // Cleanup Quill instance
       if (quillRef.current) {
         quillRef.current = null;
       }
@@ -52,48 +66,43 @@ const PolicyForm = ({ title, data, id }) => {
       <form onSubmit={handleSubmit} className="bg-white p-2 m-4 rounded-lg shadow-md">
         <div className="mb-4">
           <ReactQuill
-  ref={quillRef}
-  theme="snow"
-  value={text}
-  onChange={setText}
-  className="w-full h-full"
-  placeholder="Add your content here..."
-  modules={{
-    toolbar: [
-      // Headings and Subheadings
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      
-      // Font Style, Size, and Weight
-      [{ font: [] }, { size: [] }],
-      
-      // Text Formatting
-      ['bold', 'italic', 'underline', 'strike'],
-      
-      // Text Color and Background Color
-      [{ color: [] }, { background: [] }],
-      
-      // Alignment Options
-      [{ align: [] }],
-      
-      // Lists and Indents
-      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-      
-      // Inline Blocks
-      ['blockquote', 'code-block'],
-      
-      // Links and Images
-      ['link', 'image', 'video'],
-
-      // Clear Formatting
-      ['clean'],
-    ],
-  }}
-/>
-
+            ref={quillRef}
+            theme="snow"
+            value={text}
+            onChange={setText}
+            className="w-full h-full"
+            placeholder="Add your content here..."
+            modules={{
+              toolbar: [
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                [{ font: [] }, { size: [] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ color: [] }, { background: [] }],
+                [{ align: [] }],
+                [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+                ['blockquote', 'code-block'],
+                ['link', 'image', 'video'],
+                ['clean'],
+              ],
+            }}
+          />
         </div>
-        <Button className="" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : `Update ${title}`}
-        </Button>
+        
+        <div className="flex flex-col gap-4">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : `Update ${title}`}
+          </Button>
+
+          {(id === 9 || id === 10) && (
+            <button
+              type="button"
+              onClick={handleToggleVisibility}
+              className={`bg-${isVisible ? 'red' : 'green'}-500 text-black w-auto mx-auto px-4 py-1 rounded`}
+            >
+              {isVisible ? 'Hide Content' : 'Show Content'}
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );

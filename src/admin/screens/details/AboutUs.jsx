@@ -62,11 +62,13 @@ const AboutUsForm = () => {
   const handleUpdate = async () => {
     setIsUpdatingImage(true);
     const formData = new FormData();
-    formData.append('page_name', 'About Us');
-    formData.append('page_image', file);
+    formData.append('image', file);
     try {
-      await updatePageContent(pageId, formData);
+      await axios.put(`${baseUrl}/api/page-images/${data?.[0].images[0].pageimage_id}/`, formData);
       toast.success('Image updated successfully!');
+      setFile(null);
+      setPreview(null);
+      refetch()
     } catch (error) {
       console.log('Error updating image:', error);
       toast.error('Failed to update image');

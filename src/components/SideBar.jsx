@@ -50,7 +50,7 @@ const Sidebar = ({setSprice,setEprice,handlePriceChange,location}) => {
 
 
   return (
-    <div className="flex flex-col z-40 p-4 w-64">
+    <div className="flex flex-col z-40 p-3 w-60">
       <div className="mb-4">
         {/* <h3 className="text-lg font-semibold mb-2">Filter</h3> */}
         {/* <div className="mb-4">

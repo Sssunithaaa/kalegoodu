@@ -40,7 +40,9 @@ const MainLayout = ({ children }) => {
 const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; // Adds extra non-breaking spaces
   return (
     <div className='example'>
-      <div 
+      {
+        data?.[4]?.visible && (
+          <div 
   ref={marqueeRef} 
   className="static overflow-hidden w-full z-10  bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5"
   style={{ position: 'relative',zIndex:10 }}
@@ -50,6 +52,8 @@ const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; 
 {spacing}{spacing}{spacing}{spacing}{spacing}{spacing} <div dangerouslySetInnerHTML={{ __html: data?.[4]?.content }} />
   </Marquee>}
 </div>
+        )
+      }
 
       <Navbar />
       {!isHomePage && <Breadcrumbs />}
