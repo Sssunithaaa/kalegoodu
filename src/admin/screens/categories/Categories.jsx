@@ -44,11 +44,11 @@ const Categories = () => {
  
 
 
-const [searchKeyword, setSearchKeyword] = useState("");
+// const [searchKeyword, setSearchKeyword] = useState("");
 
-const searchKeywordOnChangeHandler = (event) => {
-  setSearchKeyword(event.target.value);
-};
+// const searchKeywordOnChangeHandler = (event) => {
+//   setSearchKeyword(event.target.value);
+// };
 
 
  
@@ -119,7 +119,7 @@ const updateCategory = async (categoryId, updatedField) => {
    
   ];
   return (
-    <div className="flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">
+    <div className="example flex flex-col gap-x-4 overflow-x-auto mx-auto w-full">
      <DeleteConfirmationDialog
      open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
@@ -135,12 +135,12 @@ const updateCategory = async (categoryId, updatedField) => {
           dataListName="Categories"
           searchInputPlaceHolder="Category title..."
           // searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
-          searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
+          // searchKeywordOnChangeHandler={searchKeywordOnChangeHandler}
           keyword={keyword}
           setKeyword={setKeyword}
           setCurrentPage={setCurrentPage}
           refetch={refetch}
-          tableHeaderTitleList={["Name","Description", "Images","",""]}
+          tableHeaderTitleList={["Name","Description", "Images","","",""]}
           isLoading={isLoading}
           isFetching={isFetching}
           sortOptions={sortOptions}
@@ -233,7 +233,7 @@ const updateCategory = async (categoryId, updatedField) => {
           ))}
         </DataTable>
         {!isLoading && (
-              <div className="flex mx-auto">
+              <div className="flex mx-auto justify-center">
                 <Pagination onPageChange={handlePageChange}
           currentPage={currentPage}
           totalPageCount={totalPages}/>

@@ -40,7 +40,7 @@ const ShinyPlaceholder = styled.div`
 const Categories = () => {
   const navigate = useNavigate();
  const { data, isLoading, isFetching } = useQuery({
-  queryKey: ["categories"],
+  queryKey: ["visible-categories"],
   queryFn: getAllCategoriess, 
   refetchOnMount: true,
   // staleTime: 1000 * 60 * 5,
@@ -48,6 +48,7 @@ const Categories = () => {
   refetchOnWindowFocus: false,
 });
 
+console.log(data)
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const url = useMemo(() => import.meta.env.VITE_APP_URL, []);
@@ -71,8 +72,21 @@ const Categories = () => {
 
   return (
     <div className="grid relative md:w-[90%] lg:w-[70%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-1 mx-auto">
-      <AnimatePresence>
-  {(data || [])?.map((category, index) => (
+      {/* <AnimatePresence> */}
+  {isLoading ? (
+    <div>
+      {   Array.from({ length: 6 }).map((_, index) => 
+      <motion.div
+    key="loading"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-6 flex justify-center items-center mx-2 my-2">
+    <ShinyPlaceholder />
+      </motion.div>    
+    )} </div>
+  ) : (
+     data?.map((category, index) => (
     
     <motion.div
       key={category.category_id}
@@ -98,10 +112,11 @@ const Categories = () => {
       </div>
     </motion.div>
   )
-)}
+)
+    )}
 
-
-      </AnimatePresence>
+{/* 
+      </AnimatePresence> */}
     </div>
   );
 };

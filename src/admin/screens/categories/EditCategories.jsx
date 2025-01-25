@@ -61,16 +61,12 @@ const EditCategories = () => {
   const [visible,setVisible] = useState(false)
   const [header,setHeader] = useState(false);
   const [homePage,setHomePage] = useState(false);
+  const [loading,setIsLoading] = useState(false)
 
   // Fetching single category (only in edit mode)
   const {data, isLoading, isError,refetch } = useQuery({
     queryFn: () => getSingleCategory({ slug }),
     queryKey: ["categories", slug],
-    onSuccess: (data) => {
-   
-     
-      
-    },
     enabled: isEditMode, // Only fetch when in edit mode
   
   });
@@ -96,9 +92,12 @@ const EditCategories = () => {
           slug
         });
       },
+        onMutate: () => setIsLoading(true),
       onSuccess: (data) => {
         queryClient.invalidateQueries(["categories", slug]);
         toast.success("Category updated successfully!");
+        setIsLoading(false)
+        refetch()
         
       },
       onError: (error) => {
@@ -109,14 +108,30 @@ const EditCategories = () => {
 const [files, setFiles] = useState([null, null, null]);
 const [previews, setPreviews] = useState([null, null, null]);
 const handleFileChange = (acceptedFiles, index) => {
-  const updatedFiles = [...files];
-  updatedFiles[index] = acceptedFiles[0]; 
-  setFiles(updatedFiles);
+  const allowedTypes = ["image/jpeg", "image/png","image/webp"];
+  const maxSize = 10 * 1024 * 1024; // 10MB in bytes
 
-  const updatedPreviews = [...previews];
-  updatedPreviews[index] = URL.createObjectURL(acceptedFiles[0]);
-  setPreviews(updatedPreviews);
-  
+  if (acceptedFiles.length > 0) {
+    const file = acceptedFiles[0];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Invalid file type. Only JPEG, PNG and WEBP images are allowed.");
+      return;
+    }
+
+    if (file.size > maxSize) {
+      toast.error("File size exceeds 10MB. Please upload a smaller image.");
+      return;
+    }
+
+    const updatedFiles = [...files];
+    updatedFiles[index] = file;
+    setFiles(updatedFiles);
+
+    const updatedPreviews = [...previews];
+    updatedPreviews[index] = URL.createObjectURL(file);
+    setPreviews(updatedPreviews);
+  }
 };
 
 
@@ -127,9 +142,13 @@ const navigate = useNavigate()
       mutationFn: (formData) => {
         return createCategory(formData);
       },
+      onMutate: () => {
+        setIsLoading(true)
+      },
       onSuccess: (data) => {
         queryClient.invalidateQueries(["categories"]);
         toast.success("Category added successfully!");
+        setIsLoading(false)
         setTimeout(()=>{
           navigate("/admin/categories/manage")
         },2000)
@@ -139,11 +158,10 @@ const navigate = useNavigate()
      
       },
     });
-  const [loading,setIsLoading] = useState(false)
   // Handle Submit Function for both Add and Update
   const handleSubmit = (e) => {
    e.preventDefault();
-   setIsLoading(true)
+  
   const formData = new FormData();
   formData.append("name", categoryTitle);
   formData.append("description", description); // Ensure the key matches
@@ -171,7 +189,7 @@ const navigate = useNavigate()
       formData,
     );
   }
-  setIsLoading(false);
+
 
 };
 
@@ -221,7 +239,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   <div key={index} className="mx-auto content-center p-2 rounded-md">
     <Dropzone
       onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
-      accept="image/*"
+      accept="image/jpeg, image/png,image/webp"
     >
       {({ getRootProps, getInputProps }) => (
         <div
@@ -251,6 +269,8 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               <p className="text-center text-black font-medium">
                 Drag and drop an image here, or click to select file
               </p>
+                             <em>(Only *.jpeg, *.png and *.webp images will be accepted)</em>
+
             </div>
           )}
         </div>

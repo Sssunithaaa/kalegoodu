@@ -62,7 +62,7 @@ const Hero = ({props}) => {
       >
         <Overlay>
           <Wrapper>
-            {data?.[5]?.visible && (            <h2 className="text-3xl uppercase"> <div dangerouslySetInnerHTML={{ __html: data?.[5]?.content }} /></h2>
+            {data?.[5]?.visible && (            <h2 className="text-3xl uppercase text-center px-2"> <div dangerouslySetInnerHTML={{ __html: data?.[5]?.content }} /></h2>
 )}
             {/* <h3 className="text-xl">Discover the best home decor ideas.</h3> */}
           </Wrapper>

@@ -125,6 +125,7 @@ const ManageProducts = () => {
           "Quantity",
           "Categories",
           " ",
+          " "
         ]}
         isLoading={isLoading}
         url="/admin/products/add"

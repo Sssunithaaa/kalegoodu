@@ -15,7 +15,7 @@ const FoundersImage = styled.img`
 `;
 
 const AboutUs = () => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading,isError } = useQuery({
     queryKey: ["page-contents"],
     queryFn: getPageContents,
     staleTime: 1000 * 60 * 5,
@@ -47,42 +47,47 @@ const AboutUs = () => {
           ) : (
             <FoundersImage
               src={import.meta.env.VITE_CLOUD_URL + `${data?.[0]?.images[0]?.image}`}
-              alt="Founder"
+   
               loading="lazy"
             />
           )}
         </motion.div>
        </AnimatePresence>
 
-        {/* Description Section */}
-        <div className="md:w-1/2 h-1/2 md:h-full bg-gray-100 flex flex-col justify-center items-center px-6">
-          {isLoading ? (
-            <div className="w-full">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton
-                  key={index}
-                  variant="text"
-                  width={index % 2 === 0 ? "80%" : "90%"}
-                  height={30}
-                  className="my-2"
-                />
-              ))}
-            </div>
-          ) : (
-            <AnimatePresence>
-              <motion.div
-                variants={fadeIn("left", "", 0.3, 1)}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-gray-900 text-lg text-center md:text-left"
-              >
-                <p className="font-bold text-xl mb-2">HELLO, From the Founders</p>
-                <div dangerouslySetInnerHTML={{ __html: data?.[0]?.content }} />
-              </motion.div>
-            </AnimatePresence>
-          )}
-        </div>
+      {/* Description Section */}
+<div className="md:w-1/2 h-1/2 md:h-full bg-gray-100 flex flex-col justify-center items-center px-6">
+  {isLoading ? (
+    <div className="w-full">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <Skeleton
+          key={index}
+          variant="text"
+          width={index % 2 === 0 ? "80%" : "90%"}
+          height={30}
+          className="my-2"
+        />
+      ))}
+    </div>
+  ) : isError ? (
+    <div className="text-red-500 text-lg text-center md:text-left">
+      Failed to load content. Please try again later.
+    </div>
+  ) : (
+    <AnimatePresence>
+      <motion.div
+        variants={fadeIn("left", "", 0.3, 1)}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="text-gray-900 text-lg text-center md:text-left"
+      >
+        <p className="font-bold text-xl mb-2">HELLO, From the Founders</p>
+        <div dangerouslySetInnerHTML={{ __html: data?.[0]?.content }} />
+      </motion.div>
+    </AnimatePresence>
+  )}
+</div>
+
       </div>
     </div>
   );

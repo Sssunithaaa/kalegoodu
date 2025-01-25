@@ -7,10 +7,9 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { motion,AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { getAllProducts } from '../services/index/products';
 import ProductCard from './ProductCard';
 import { SectionWrapper } from '../hoc';
-import { fadeIn } from '../utils/motion';
+
 
 const fetchProductsBySaleType = async (saleTypeId, page=1) => {
   if (!saleTypeId) {
@@ -65,8 +64,8 @@ const settings = {
   slidesToShow,
   slidesToScroll: 1,
   initialSlide: 0,
-   centerMode: allProducts.length >1 && window.innerWidth <=1024, // Enable center mode if more than 1 product
-  centerPadding: allProducts.length > 1 && window.innerWidth <=1024 ? "30px" : "0px",
+   centerMode: allProducts.length >1 && window.innerWidth <=768, // Enable center mode if more than 1 product
+  centerPadding: allProducts.length > 1 && window.innerWidth <=768 ? "30px" : "0px",
   afterChange: (index) => setCurrentSlide(index),
   prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
   nextArrow: currentSlide + slidesToShow < allProducts.length ? <SampleNextArrow /> : null,

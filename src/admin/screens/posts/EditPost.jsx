@@ -293,7 +293,7 @@ if (videoUrl) {
 const [files, setFiles] = useState([null, null, null]);
 const [previews, setPreviews] = useState([null, null, null]);
 const handleFileChange = (acceptedFiles, index) => {
-  const allowedTypes = ["image/jpeg", "image/png"];
+  const allowedTypes = ["image/jpeg", "image/png","image/webp"];
   const maxSize = 10 * 1024 * 1024; // 10MB in bytes
 
   if (acceptedFiles.length > 0) {
@@ -376,7 +376,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   <div key={index} className="mx-auto w-[80%] content-center p-2 rounded-md">
     <Dropzone
       onDrop={(acceptedFiles) => handleFileChange(acceptedFiles, index)}
-       accept="image/jpeg, image/png"
+       accept="image/jpeg, image/png,image/webp"
     >
       {({ getRootProps, getInputProps }) => (
         <div
@@ -409,7 +409,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               <p className="text-center text-black font-medium">
                 Drag and drop an image here, or click to select file
               </p>
-               <em>(Only *.jpeg and *.png images will be accepted)</em>
+               <em>(Only *.jpeg, *.png and *webp images will be accepted)</em>
             </div>
           )}
         </div>
