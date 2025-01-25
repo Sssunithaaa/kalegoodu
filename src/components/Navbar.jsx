@@ -276,9 +276,9 @@ const MegaMenu = () => {
         setNavButton(item.name);
         handleMenuToggleOff(true);
       }}
-      className="lg:flex lg:mx-auto py-3 px-2 hover:cursor-pointer transition-all duration-500"
+      className="lg:flex lg:mx-auto py-2 md:py-3 px-2 hover:cursor-pointer transition-all duration-500"
     >
-      <div className="lg:flex lg:mx-auto block pb-1 px-1 lg:px-1 text-gray-900 lg:p-0" aria-current="page">
+      <div className="lg:flex lg:mx-auto block pb-1 px-3 md:px-1 lg:px-1 text-gray-900 lg:p-0" aria-current="page">
         <span className={`${navButton === item.name ? "font-semibold" : ""} hover:text-black text-center hover:font-semibold`}>
           {item.name}
         </span>
