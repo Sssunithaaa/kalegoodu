@@ -30,18 +30,66 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
     background-color: #9e7f6b; /* Slightly darker color */
   }
 `;
-const navButtons = [
-   { name: "Shop all", href: "/Products" },
-  { name: "Kitchen decor", href: "/Categories/5/Kitchen-Decor" },
+// const navButtons = [
+//    { name: "Shop all",category_id:"shop-all", href: "/Products" },
+//   { name: "Kitchen decor",category_id:5 ,href: "/Categories/5/Kitchen-Decor" },
  
-  { name: "Living room decor", href: "/Categories/6/Living-Room-Decor" },
-  { name: "Office decor", href: "/Categories/7/Office-Decor" },
-  { name: "Gifting combos", href: "/Categories/8/Gifting-Combos" },
-  {name: "Workshops",href:"/Workshops"},
-  { name: "Contact us", href: "/Contact-us" },
-  {name: "About us",href: "/About-Us"}
-  // { name: "About us", href: "/about-us" }
-];
+//   { name: "Living room decor", href: "/Categories/6/Living-Room-Decor" },
+//   { name: "Office decor", href: "/Categories/7/Office-Decor" },
+//   { name: "Gifting combos", href: "/Categories/8/Gifting-Combos" },
+//   {name: "Workshops",href:"/Workshops"},
+//   { name: "Contact us", href: "/Contact-us" },
+//   {name: "About us",href: "/About-Us"}
+//   // { name: "About us", href: "/about-us" }
+// ];
+const navButtons = 
+  [
+    {
+        name: "Shop All",
+        category_id: "shop-all"
+    },
+    {
+        category_id: 5,
+        name: "Kitchen And Dining Decor",
+        visible: true,
+        header: true,
+        home_page: true
+    },
+    {
+        category_id: 6,
+        name: "Living Room Decor",
+        visible: true,
+        header: true,
+        home_page: true
+    },
+    {
+        category_id: 7,
+        name: "Office Decor",
+        visible: true,
+        header: true,
+        home_page: true
+    },
+    {
+        category_id: 8,
+        name: "Gifting Combos",
+        visible: true,
+        header: true,
+        home_page: true
+    },
+    {
+        name: "Workshops",
+        category_id: "workshop"
+    },
+    {
+        name: "Contact Us",
+        category_id: "contact-us"
+    },
+    {
+        name: "About Us",
+        category_id: "about-us"
+    }
+
+]
 
 
 const SideBar = ({ isCartVisible, toggleCart }) => {
@@ -152,7 +200,7 @@ const MegaMenu = () => {
   const [navButton,setNavButton] = useState("");
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
   const { cartItemCount, isCartVisible, toggleCart } = useContext(CartContext);
-  
+  const [nav,setNav] = useState(navButtons)
   const [display, setDisplay] = useState("static");
 
   const toggleSearchbar = () => {
@@ -215,7 +263,11 @@ const MegaMenu = () => {
     ];
   }
 });
-
+useEffect(() => {
+  if (data) {
+    setNav(data);
+  }
+}, [data]);
   return (
    <div className="navbar">
       <div className={`${display} lg:static  w-full  bg-white z-[100001]`}>
@@ -256,9 +308,9 @@ const MegaMenu = () => {
           {isMenuVisible && (
             <div id="mega-menu-full-image" className={`items-start justify-between z-40 py-0 w-full block lg:flex lg:w-auto`}>
               <ul className="flex flex-col md:text-[18px]  font-medium lg:flex-row lg:mt-0 lg:space-x-8 rtl:space-x-reverse">
-             {data?.map((item, index) => {
+             {nav?.map((item, index) => {
   const formattedName = item.name.replace(/\s+/g, "-"); // Convert spaces to hyphens for consistency
-  console.log(formattedName)
+
   return (
     <li 
       id="nav"

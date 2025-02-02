@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import FullPageLoader from './FullPageLoader';
-import { getAllCategories } from '../services/index/postCategories';
+import { getAllCategoriess } from '../services/index/postCategories';
 import { useNavigate } from 'react-router-dom';
 
 const CollectionCard = styled.div`
@@ -28,69 +27,18 @@ const CarouselImage = styled.img`
   }
 `;
 
-const ArrowButton = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  z-index: 1;
-  border-radius: 50%;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-`;
-
-const LeftArrow = styled(ArrowButton)`
-  left: 8px;
-`;
-
-const RightArrow = styled(ArrowButton)`
-  right: 8px;
-`;
-
 const Collections = () => {
   const [categories, setCategories] = useState(null);
-  const baseUrl = import.meta.env.VITE_APP_URL;
-  const navigate = useNavigate(); // Move useNavigate hook outside any function
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getAllCategories
+    queryKey: ['visible-categories'],
+    queryFn: getAllCategoriess
   });
 
   useEffect(() => {
-    if (data) {
-      setCategories(data?.categories);
-    }
+    setCategories(data);
   }, [data]);
 
-  const handlePrevImage = (categoryIndex) => {
-    setCategories((prevCategories) => {
-      const newCategories = [...prevCategories];
-      const category = newCategories[categoryIndex];
-      const images = category.images;
-      images.unshift(images.pop()); // Move last image to first position
-      return newCategories;
-    });
-  };
-
-  const handleNextImage = (categoryIndex) => {
-    setCategories((prevCategories) => {
-      const newCategories = [...prevCategories];
-      const category = newCategories[categoryIndex];
-      const images = category.images;
-      images.push(images.shift()); // Move first image to last position
-      return newCategories;
-    });
-  };
-
-  if (!Array.isArray(categories)) {
-    return <div>No categories available</div>;
-  }
   if (isLoading) return <FullPageLoader />;
   if (isError) return <div>Error fetching data</div>;
 
@@ -101,27 +49,19 @@ const Collections = () => {
 
   return (
     <div className="flex flex-wrap justify-center items-center px-[10%] mx-auto gap-x-10">
-      {categories &&
-        categories.map((category, index) => (
+      {
+        categories?.map((category) => (
           <CollectionCard key={category.category_id}>
             <ImageContainer>
-              <LeftArrow onClick={() => handlePrevImage(index)}>
-                <AiOutlineLeft />
-              </LeftArrow>
-              {category?.images.map((image, imgIndex) => (
+              {category?.images.length > 0 && (
                 <CarouselImage
-                  key={image.category_image_id}
-                  src={"https://res.cloudinary.com/dgkgxokru/"+`${image.image}`}
-                  alt={image.alt_text || category.name}
-                  style={{ display: imgIndex === 0 ? 'block' : 'none' }}
+                  src={"https://res.cloudinary.com/dgkgxokru/" + category.images[0].image}
+                  alt={category.images[0].alt_text || category.name}
                 />
-              ))}
-              <RightArrow onClick={() => handleNextImage(index)}>
-                <AiOutlineRight />
-              </RightArrow>
+              )}
             </ImageContainer>
             <h2
-              onClick={() => handleCategoryClick(category)} // Fix: Pass function as a callback
+              onClick={() => handleCategoryClick(category)}
               className="my-3 hover:cursor-pointer text-lg font-semibold text-gray-900"
             >
               {category.name}

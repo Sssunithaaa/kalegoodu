@@ -9,6 +9,8 @@ import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
 import FullPageLoader from './FullPageLoader';
 import { Spinner } from '@material-tailwind/react';
 import { ClipLoader } from 'react-spinners';
+import { useQuery } from '@tanstack/react-query';
+import { getAllProducts } from '../services/index/products';
 
 const CustomerDetails = () => {
   const [email, setEmail] = useState('');
@@ -23,7 +25,7 @@ const CustomerDetails = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [customer, setCustomer] = useState([])
    const navigate = useNavigate()
-  const { cartItems,setCartItems, cartTotal,emptyCart,checkItems } = useContext(CartContext);
+  const { cartItems,setCartItems, cartTotal,emptyCart,checkItems,validateCartQuantities } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
     const [dialogOpen, setDialogOpen] = useState(false);
     const { error, isLoading, Razorpay } = useRazorpay();
@@ -78,11 +80,28 @@ const handleOpenDialog = () => {
 const [loading,setIsLoading] = useState(false)
 
 const [orderLoading, setIsOrderLoading] = useState(false);
+
+// useEffect(() => {
+//   window.location.reload();
+// }, [cartItems]);
+
+
+const handleCartUpdate = () => {
+  const updatedCart = validateCartQuantities(cartItems);
+  setCartItems(updatedCart); // Update state with adjusted quantities
+  
+  setCartItems((prevItems) => {
+    if (prevItems !== updatedCart) {
+      window.location.reload(); // Reload the page after state update
+    }
+    return updatedCart; // Returning the updated cart
+  });
+};
 const handleFormSubmit = async (e) => {
   e.preventDefault();
-  setIsLoading(true);
+  // setIsLoading(true);
  
-
+  handleCartUpdate()
   // Prepare customer and order payload
   const formattedPhone = phone.startsWith("0") ? phone.slice(1) : phone;
   const fullAddress = `${apartment}, ${add}, ${city}, ${state}`;
@@ -95,12 +114,14 @@ const handleFormSubmit = async (e) => {
     visible: "True",
   };
 
+
+
   const orderPayload = {
     orderDetails: {
       items: cartItems.map((item) => ({
         name: item.name,
         product_id: item.product_id,
-        quantity: 1,
+        quantity: item.quantity,
         price: item.discounted_price !== 0 ? item.discounted_price : item.price,
         image: item.images[0].image,
       })),
@@ -133,7 +154,7 @@ const handleFormSubmit = async (e) => {
   //   const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
 
     // if (verificationResponse.data.status === "success") {
-    checkItems();
+      // checkItems();
       setIsOrderLoading(true); // Show loader during backend processing
 
       // Attempt to create order in the backend
@@ -233,44 +254,7 @@ const handleFormSubmit = async (e) => {
    {showSummary && "Order summary"}
  </div>
   {cartItems.length !== 0 && cartItems.map((item) => (
-    // <tr className="" key={item.product_id}>
-    //   <td className="text-center py-3">
-    //     <div>
-    //       <img 
-    //         src={import.meta.env.VITE_CLOUD_URL + item.images[0]?.image} 
-    //         alt="" 
-    //         className="h-auto max-w-8 md:max-w-16 flex justify-center lg:ml-10" 
-    //       />
-    //     </div>
-    //   </td>
-    //   <td className="text-center flex flex-col">
-    //     {/* <div className="flex text-[14px] md:text-[16px] items-center justify-between gap-x-4"> */}
-    //       {/* Product Name */}
-    //       <span className="whitespace-nowrap">{item.name}</span>
-          
-        
-    //       {/* Quantity Selector */}
-    // //       {/* <td className='text-center'> */}
-    //       <select 
-    //         value={item.quantity} 
-    //         onChange={(e) => updateQuantity(item.product_id, parseInt(e.target.value))} 
-    //         className="border rounded px-2 py-1 text-sm cursor-pointer w-[60px]"
-    //       >
-    //         {Array.from({ length: 10 }, (_, i) => i + 1).map(num => (
-    //           <option key={num} value={num}>{num}</option>
-    //         ))}
-    //       </select>
-    //       {/* </td>
-    //       <td className='text-center'> */}
-
-    //       {/* Price Display */}
-    //       <span className="">
-    //         Rs {item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity}
-    //       </span>
-    //     {/* </div> */}
-    //   {/* </td> */}
-    //     </td>
-    // </tr>
+  
     <div className="bg-[#edf3ed] w-full md:w-1/2 md:px-4 py-4">
   <div className="flex items-center gap-3 md:space-x-10 border-b pb-4">
     {/* Product Image */}
@@ -303,22 +287,7 @@ const handleFormSubmit = async (e) => {
 </div>
 
   ))}
-  {/* <tr className=" ">
-        <td className="py-2   text-center" colSpan="4">
-          <div className="px-2  text-md md:text-lg flex justify-between">
-            <span>Shipping</span>
-            <span>Free shipping</span>
-          </div>
-        </td>
-      </tr>
-      <tr className="">
-        <td className="py-2  text-center font-semibold " colSpan="4">
-          <div className="px-2  text-md md:text-lg flex justify-between">
-            <span>Total</span>
-            <span>Rs. {total}</span>
-          </div>
-        </td>
-      </tr> */}
+
        <div className="mt-4">
     <div className="flex justify-between text-md">
       <span>Sub total</span>
@@ -333,11 +302,7 @@ const handleFormSubmit = async (e) => {
       <span>₹{total}</span>
     </div>
   </div>
-{/* </tbody> */}
 
-
-
-  {/* </table> */}
 </div>
 
 
@@ -431,15 +396,17 @@ const handleFormSubmit = async (e) => {
   <label className="block text-md font-medium text-gray-700">Phone number</label>
   <div className="flex items-center border rounded-md">
     <span className="px-3 py-3 text-gray-700 bg-gray-200">+91</span>
-    <input
-      type="text"
-      value={phone}
-      onChange={(e) => setPhone(e.target.value)}
-      length={10}
-      maxLength={10}  // Allow only 10 digits for the phone number
-      className="mt-1 block w-full p-2 pl-2 border-l-0 rounded-md"
-      required
-    />
+   <input
+  type="text"
+  value={phone}
+  onChange={(e) => {
+    const input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+    if (input.length <= 10) setPhone(input);
+  }}
+  maxLength={10}
+  className="mt-1 block w-full p-2 pl-2 border-l-0 rounded-md"
+  required
+/>
   </div>
 </div>
 

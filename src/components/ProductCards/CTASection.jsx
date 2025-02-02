@@ -31,13 +31,116 @@ const Button = styled.button`
   }
 `;
 
+// export const CTASection = ({ product, cartCounter, setCartCounter }) => {
+//   const [productCounter, setProductCounter] = useState(1);
+//   const { addToCart, setIsCartVisible, setLoading } = useContext(CartContext);
+//   const [errorMessage, setErrorMessage] = useState("");
+
+//   const addProduct = () => {
+//     setProductCounter((prev) => prev + 1);
+//   };
+
+//   const removeProduct = () => {
+//     setProductCounter((prev) => (prev > 1 ? prev - 1 : 1));
+//     setErrorMessage(""); // Clear error if quantity is decreased
+//   };
+
+//   const handleAddToCart = () => {
+//     const productDetails = {
+//       ...product,
+//       availableQuantity: product?.quantity,
+//       quantity: productCounter === 0 ? 1 : productCounter,
+//     };
+
+//     // Add the product to the cart
+//     addToCart(productDetails);
+
+//     // Update cart counter
+//     setCartCounter((prev) => prev + productCounter);
+
+//     // Reset product counter
+//     setProductCounter(1);
+//     setLoading(true);
+//     setTimeout(() => {
+//       setLoading(false);
+//     }, 1000);
+//     setTimeout(() => {
+//       setIsCartVisible(true);
+//     }, 1000);
+//   };
+
+//   const handleIncreaseQuantity = () => {
+//     if (productCounter < product.quantity) {
+//       setProductCounter((prev) => prev + 1);
+//       setErrorMessage(""); // Clear any previous error
+//     } else {
+//       setErrorMessage("Requested quantity exceeds available stock.");
+//     }
+//   };
+
+//   return (
+//     <div className="flex flex-col justify-center w-[100%] items-center px-4 gap-x-4 lg:flex-row">
+//       {/* Error Message */}
+//       {errorMessage && (
+//         <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-[10001] bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">
+//           <span>{errorMessage}</span>
+//           <button
+//             onClick={() => setErrorMessage("")}
+//             className="ml-4 text-red-500"
+//           >
+//             <IoClose />
+//           </button>
+//         </div>
+//       )}
+
+//       {/* Quantity Selector */}
+//       <div className="flex w-full bg-gray-50 justify-between items-center px-6 py-2 rounded-xl md:w-1/4 md:mt-0">
+//         {/* Minus Button */}
+//         <div>
+//           <button
+//             onClick={removeProduct}
+//             className="font-bold text-gray-700 text-2xl pb-1"
+//           >
+//             -
+//           </button>
+//         </div>
+
+//         {/* Quantity */}
+//         <div className="font-bold">{productCounter}</div>
+
+//         {/* Plus Button */}
+//         <div>
+//           <button
+//             onClick={handleIncreaseQuantity}
+//             className="font-bold text-gray-700 text-2xl w-[1rem] pb-1"
+//           >
+//             +
+//           </button>
+//         </div>
+//       </div>
+
+//       {/* Add to Cart Button */}
+//       <div className="md:w-3/4 py-2 w-[100%]">
+//         <Button onClick={handleAddToCart} className="py-2">
+//           <div className="w-[100%] flex gap-4 justify-center">Add to cart</div>
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// };
+
 export const CTASection = ({ product, cartCounter, setCartCounter }) => {
   const [productCounter, setProductCounter] = useState(1);
   const { addToCart, setIsCartVisible, setLoading } = useContext(CartContext);
   const [errorMessage, setErrorMessage] = useState("");
 
   const addProduct = () => {
-    setProductCounter((prev) => prev + 1);
+    if (productCounter < product.quantity) {
+      setProductCounter((prev) => prev + 1);
+      setErrorMessage(""); // Clear any previous error
+    } else {
+      setErrorMessage("Requested quantity exceeds available stock.");
+    }
   };
 
   const removeProduct = () => {
@@ -46,36 +149,22 @@ export const CTASection = ({ product, cartCounter, setCartCounter }) => {
   };
 
   const handleAddToCart = () => {
+    if (product.quantity === 0) return; // Prevent adding out-of-stock products
+
     const productDetails = {
       ...product,
       availableQuantity: product?.quantity,
-      quantity: productCounter === 0 ? 1 : productCounter,
+      quantity: productCounter,
     };
 
-    // Add the product to the cart
     addToCart(productDetails);
-
-    // Update cart counter
     setCartCounter((prev) => prev + productCounter);
-
-    // Reset product counter
     setProductCounter(1);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
-    setTimeout(() => {
       setIsCartVisible(true);
     }, 1000);
-  };
-
-  const handleIncreaseQuantity = () => {
-    if (productCounter < product.quantity) {
-      setProductCounter((prev) => prev + 1);
-      setErrorMessage(""); // Clear any previous error
-    } else {
-      setErrorMessage("Requested quantity exceeds available stock.");
-    }
   };
 
   return (
@@ -93,38 +182,44 @@ export const CTASection = ({ product, cartCounter, setCartCounter }) => {
         </div>
       )}
 
-      {/* Quantity Selector */}
-      <div className="flex w-full bg-gray-50 justify-between items-center px-6 py-2 rounded-xl md:w-1/4 md:mt-0">
-        {/* Minus Button */}
-        <div>
-          <button
-            onClick={removeProduct}
-            className="font-bold text-gray-700 text-2xl pb-1"
-          >
-            -
-          </button>
-        </div>
+      {/* Quantity Selector - Disabled when out of stock */}
+      <div
+        className={`flex w-full justify-between items-center px-6 py-2 rounded-xl md:w-1/4 md:mt-0 ${
+          product.quantity === 0 ? "bg-gray-200 opacity-50" : "bg-gray-50"
+        }`}
+      >
+        <button
+          onClick={removeProduct}
+          className="font-bold text-gray-900 text-2xl pb-1"
+          disabled={product.quantity === 0}
+        >
+          -
+        </button>
 
-        {/* Quantity */}
-        <div className="font-bold">{productCounter}</div>
+        <div className="font-bold">{product.quantity === 0 ? "0" : productCounter}</div>
 
-        {/* Plus Button */}
-        <div>
-          <button
-            onClick={handleIncreaseQuantity}
-            className="font-bold text-gray-700 text-2xl w-[1rem] pb-1"
-          >
-            +
-          </button>
-        </div>
+        <button
+          onClick={addProduct}
+          className="font-bold text-gray-900 text-2xl w-[1rem] pb-1"
+          disabled={product.quantity === 0 || productCounter >= product.quantity}
+        >
+          +
+        </button>
       </div>
 
-      {/* Add to Cart Button */}
+      {/* Add to Cart Button - Disabled when out of stock */}
       <div className="md:w-3/4 py-2 w-[100%]">
-        <Button onClick={handleAddToCart} className="py-2">
-          <div className="w-[100%] flex gap-4 justify-center">Add to cart</div>
-        </Button>
+        {product.quantity === 0 ? (
+          <div className="w-full text-center bg-gray-500 text-gray-900 py-2 rounded">
+            Out of Stock
+          </div>
+        ) : (
+          <Button onClick={handleAddToCart} className="py-2">
+            <div className="w-[100%] flex gap-4 justify-center">Add to cart</div>
+          </Button>
+        )}
       </div>
     </div>
   );
 };
+

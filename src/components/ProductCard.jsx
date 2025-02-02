@@ -119,14 +119,18 @@ export default function ProductCard({ product, productMode, index, len }) {
 
       {/* Show button based on screen size */}
       {productMode && (isHovered ) && (
-        <CardFooter className={`relative flex  justify-center items-center px-2 py-2`}>
-          <Button
-            onClick={handleCartClick}
-            className="w-full text-black"
-          >
-            Add to cart
-          </Button>
-        </CardFooter>
+        <CardFooter className={`relative flex justify-center items-center px-2 py-2`}>
+  {product?.quantity === 0 ? (
+    <div className="w-full text-center bg-gray-400 text-black py-2 rounded">
+      Out of Stock
+    </div>
+  ) : (
+    <Button onClick={handleCartClick} className="w-full text-black">
+      Add to cart
+    </Button>
+  )}
+</CardFooter>
+
       )}
     </Card>
   );

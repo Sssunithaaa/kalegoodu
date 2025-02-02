@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query'; // Assuming useQuery is from react-query
 import { getAllProducts, getProductNames } from '../services/index/products';
+ import { toast } from "react-toastify";
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
@@ -15,7 +16,7 @@ export const CartProvider = ({ children }) => {
   const [paymentMethod, setPaymentMethod] = useState('upi');
 
   const addToCart = (item) => {
-    console.log(item)
+ 
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.product_id === item.product_id);
       if (existingItem) {
@@ -32,20 +33,31 @@ export const CartProvider = ({ children }) => {
       queryKey: ["testimonial-products"],
       queryFn: getProductNames
     })
-    const checkItems = () => {
-       if (Array.isArray(products) && cartItems.length > 0) {
-    const validCartItems = cartItems.filter((cartItem) =>
-      products.some((product) => product.product_id === cartItem.product_id)
-    );
-    
-    // Update the cart if there are changes
-    if (validCartItems.length !== cartItems.length) {
+const checkItems = () => {
+  if (Array.isArray(products) && cartItems.length > 0) {
+    const validCartItems = cartItems
+      .map((cartItem) => {
+        // Find the corresponding product based on product_id
+        const product = products.find((product) => product.product_id === cartItem.product_id);
+        if (product) {
+          // Adjust the cartItem's quantity based on available stock
+          cartItem.availableQuantity = Math.min(cartItem.availableQuantity, product.quantity);
+        }
+        return cartItem;
+      })
+      .filter((cartItem) => cartItem.availableQuantity > 0); // Remove items with 0 quantity
+
+    // If there are changes in the cart items, update the state and local storage
+    if (JSON.stringify(validCartItems) !== JSON.stringify(cartItems)) {
       setCartItems(validCartItems);
       localStorage.setItem('cartItems', JSON.stringify(validCartItems));
+      window.location.reload(); // Reload the page if there are changes
     }
     return;
   }
-    }
+};
+
+
   useEffect(() => {
  checkItems()
 }, [products]);
@@ -93,9 +105,29 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Check if cart items exist in products data and update localStorage
+ 
+
+const validateCartQuantities = (cartItems) => {
+    return cartItems.reduce((updatedCart, item) => {
+        if (item.availableQuantity === 0) {
+            toast.warn(`Removed ${item.name} from the cart as it's out of stock.`);
+            return updatedCart; // Skip adding this item to the updated cart
+        }
+
+        if (item.quantity > item.availableQuantity) {
+            toast.warn(
+                `Quantity of ${item.name} adjusted to available stock (${item.availableQuantity}).`
+            );
+            item = { ...item, quantity: item.availableQuantity }; // Adjust quantity
+        }
+
+        updatedCart.push(item);
+        return updatedCart;
+    }, []);
+};
 
 
+  console.log(cartItems)
   return (
     <CartContext.Provider
       value={{
@@ -115,7 +147,8 @@ export const CartProvider = ({ children }) => {
         setIsCartVisible,
         toggleCart,
         loading,
-        setLoading
+        setLoading,
+        validateCartQuantities
       }}
     >
       {children}
