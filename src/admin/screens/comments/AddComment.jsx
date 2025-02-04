@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import {  getProductNames } from '../../../services/index/products';
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import BackButton from '../../BackButton';
 
 const Button = styled.button`
@@ -36,6 +36,7 @@ const AddTestimonialForm = () => {
     const [visible, setVisible] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {id} = useParams()
+  const navigate = useNavigate()
    const isEditMode = Boolean(id)
   const {data:comment,isFetching} = useQuery({
     queryKey: ["comment",id],
@@ -79,7 +80,7 @@ const AddTestimonialForm = () => {
       setRating(1);
       setTimeout(()=>{
       navigate("/admin/comments/manage")
-    },2000)
+    },1500)
       }
 
       
@@ -174,7 +175,7 @@ const AddTestimonialForm = () => {
           </select>
         </div> */}
 
-         <div className="mb-4">
+         {/* <div className="mb-4">
            
           <label htmlFor="visibility" className="flex flex-row text-gray-700 text-lg font-medium mb-2"><input
             type="checkbox"
@@ -186,7 +187,7 @@ const AddTestimonialForm = () => {
             
           /> {visible ? "Visible" : "Hidden"}</label>
          
-        </div>
+        </div> */}
 
         <Button
           type="submit"

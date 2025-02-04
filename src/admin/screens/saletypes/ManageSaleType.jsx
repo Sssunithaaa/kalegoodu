@@ -88,29 +88,30 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const deleteDataHandler = async ({ saleTypeId }) => {
+const handleToggleVisibility = async (id, currentVisibility) => {
+  try {
+    await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
+      visible: !currentVisibility
+    });
+
+    // Only show success toast after the update succeeds
+    toast.success("Visibility updated successfully!");
+    refetch(); // Re-fetch data after the change
+  } catch (error) {
+    // Show the error toast only if there was an error
+    toast.error("Couldn't update visibility");
+    console.log(error);
+  }
+};
+
+const deleteDataHandler = async ({ saleTypeId }) => {
   try {
     await axios.delete(`${baseUrl}/api/sale_type/${saleTypeId}/delete/`);
     toast.success("Sale type deleted successfully");
-    refetch()
-    queryClient.invalidateQueries(["saletypes"]);
+    refetch(); // Re-fetch data after deletion
   } catch (error) {
     toast.error("Failed to delete sale type");
     console.error("Error deleting sale type:", error.message);
-  }
-};
- const handleToggleVisibility = async (id, currentVisibility) => {
-  try {
-   
-await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
-      visible: !currentVisibility
-    });
-    
-    toast.success("Visibility updated successfully!");
-    refetch(); 
-  } catch (error) {
-    console.log(error)
-    toast.error("Couldn't update visibility");
   }
 };
 

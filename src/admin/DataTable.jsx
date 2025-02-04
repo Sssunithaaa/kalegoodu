@@ -71,7 +71,7 @@ const DataTable = forwardRef(({
   
   {url && (
     <Button className="px-4" onClick={() => navigate(url)}>
-      Add {name}
+      Add {name === "comments" ? "Testimonials" : name}
     </Button>
   )}
  {

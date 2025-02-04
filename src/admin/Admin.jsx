@@ -9,19 +9,19 @@ const Admin = () => {
       <Title>Admin Dashboard</Title>
       <h1>Admin pages links</h1>
        <NavList>
+        <NavItem><Link to="/admin/products/manage">Manage Products</Link></NavItem>   
+        <NavItem><Link to="/admin/products/add">Add Product</Link></NavItem>
+        <NavItem><Link to="/admin/categories/manage">Manage Categories</Link></NavItem>
+        <NavItem><Link to="/admin/categories/add">Add Category</Link></NavItem>
+        <NavItem><Link to="/admin/orders/manage">Manage orders</Link></NavItem>
+        <NavItem><Link to="/admin/banner">Manage Banners</Link></NavItem>
+        <NavItem><Link to="/admin/workshops/manage">Manage Workshops</Link></NavItem>
+        <NavItem><Link to="/admin/workshops/add">Add Workshop</Link></NavItem>
         <NavItem><Link to="/admin/sale-types/manage">Manage Sale Types</Link></NavItem>
         <NavItem><Link to="/admin/comments/manage">Manage Comments</Link></NavItem>
         <NavItem><Link to="/admin/comments/add">Add Comment/Testimonial</Link></NavItem>
-        <NavItem><Link to="/admin/products/manage">Manage Products</Link></NavItem>
-        <NavItem><Link to="/admin/products/add">Add Product</Link></NavItem>
-        <NavItem><Link to="/admin/banner">Manage Banners</Link></NavItem>
-        <NavItem><Link to="/admin/categories/manage">Manage Categories</Link></NavItem>
-        <NavItem><Link to="/admin/categories/add">Add Category</Link></NavItem>
-        <NavItem><Link to="/admin/workshops/manage">Manage Workshops</Link></NavItem>
-         <NavItem><Link to="/admin/workshops/add">Add Workshop</Link></NavItem>
-          <NavItem><Link to="/admin/orders/manage">Manage orders</Link></NavItem>
-         <NavItem><Link to="/admin/about-us/manage">Manage about us</Link></NavItem>
-         <NavItem><Link to="/admin/details/manage">Manage details</Link></NavItem>
+        <NavItem><Link to="/admin/about-us/manage">Manage about us</Link></NavItem>
+        <NavItem><Link to="/admin/details/manage">Manage details</Link></NavItem>
       </NavList>
       <h1>Website navigation links</h1>
       <NavList>

@@ -232,7 +232,7 @@ const handleSubmit = async (e) => {
  
   formData.append("name", name);
   formData.append("price", price);
-  formData.append("discounted_price", discountedPrice || 0);
+  formData.append("discounted_price", discountedPrice < price ? discountedPrice : 0 || 0);
   formData.append("short_description", description); 
 if (videoUrl) {
   formData.append("video_link", videoUrl);
@@ -496,36 +496,48 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   }}
 />
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="price" className="">
-              Price:
-                  <span className="text-red-500 text-2xl font-bold ml-1">*</span>
+    <div className="flex flex-col gap-2">
+  <label htmlFor="price" className="">
+    Price:
+    <span className="text-red-500 text-2xl font-bold ml-1">*</span>
+  </label>
+  <input
+    type="number"
+    id="price"
+    className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+    value={price}
+    onChange={(e) => {
+      const value = e.target.value;
+      if (value >= 0) {
+        setPrice(value);
+      }
+    }}
+    placeholder="Price"
+    required
+  />
+</div>
+<div className="flex flex-col gap-2">
+  <label htmlFor="discountedPrice" className="">
+    Discounted Price:
+  </label>
+  <input
+  type="number"
+  id="discountedPrice"
+  className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
+  value={discountedPrice}
+  onChange={(e) => {
+    let value = e.target.value;
 
-            </label>
-            <input
-              type="number"
-              id="price"
-              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="Price"
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="discountedPrice" className="">
-              Discounted Price:
-            </label>
-            <input
-              type="number"
-              id="discountedPrice"
-              className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
-              value={discountedPrice}
-              onChange={(e) => setDiscountPrice(e.target.value)}
-              placeholder="Discounted Price"
-              
-            />
-          </div>
+    // Ensure the value is a positive number and less than or equal to price
+    if (value >= 0) {
+      setDiscountPrice(value);
+    } 
+  }}
+  placeholder="Discounted Price"
+/>
+
+</div>
+
           <div className="flex flex-col gap-2">
             <label htmlFor="quantity" className="">
               Quantity:
@@ -535,7 +547,12 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               id="quantity"
               className="ring-1 ring-slate-300 rounded-md px-2 py-1 focus:outline-blue-500 bg-white"
               value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={(e) => {
+      const value = e.target.value;
+      if (value >= 0) {
+        setQuantity(value);
+      }
+    }}
               placeholder="Quantity"
               
             />

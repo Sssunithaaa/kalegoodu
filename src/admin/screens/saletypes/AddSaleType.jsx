@@ -36,9 +36,9 @@ const AddSaleTypeDialog = ({ open, handleClose, editSaleType }) => {
       handleClose();
     }, 1000);
   } catch (error) {
-    console.error("Error adding/updating sale type:", error.response || error);
+    console.error("Error adding/updating sale type:", error.response.data || error);
     toast.error(
-      error.response?.data?.message || "Failed to add/update sale type"
+      error.response?.data?.detail || "Failed to add/update sale type"
     );
   }
 };

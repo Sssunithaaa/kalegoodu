@@ -165,9 +165,11 @@ const navigate = useNavigate()
   const formData = new FormData();
   formData.append("name", categoryTitle);
   formData.append("description", description); // Ensure the key matches
-  formData.append("visible", isEditMode ? visible : true); // Ensure the key matches
-  formData.append("header",isEditMode ? header : false);
-  formData.append("home_page",isEditMode ? homePage : false);
+  formData.append("visible", visible); // Ensure the key matches
+  formData.append("header",header ? header : false);
+  formData.append("home_page",homePage ? homePage : false);
+  console.log(header)
+  console.log(homePage)
   if(!isEditMode){
    files.forEach(file => {
     if (file) {
@@ -328,6 +330,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
         </div>
        <div className="mb-4 mt-4">
   <label htmlFor="visibility" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
+    <span>Category visibility: </span>
     <input
       type="checkbox"
       id="visibility"
@@ -338,8 +341,12 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
     {visible ? "Visible" : "Hidden"}
   </label>
 </div>
-<div className="mb-4">
+{
+  visible && <div>
+    <div className="mb-4">
   <label htmlFor="header" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
+        <span>Header category: </span>
+
     <input
       type="checkbox"
       id="header"
@@ -352,6 +359,8 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 </div>
 <div className="mb-4">
   <label htmlFor="homePage" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
+        <span>Homepage category: </span>
+
     <input
       type="checkbox"
       id="homePage"
@@ -363,6 +372,8 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   </label>
 </div>
 
+  </div>
+}
         <ToastContainer/>
         {/* Created At Field (Display Only, Non-editable in edit mode)
         {isEditMode && (
