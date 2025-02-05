@@ -7,7 +7,8 @@ import FullPageLoader from './FullPageLoader';
 import { useStateContext } from '../context/ContextProvider';
 import ScrollToTop from './ScrollToTop';
 import axios from 'axios';
-
+import { motion } from 'framer-motion';
+import Skeleton from 'react-loading-skeleton';
 const ProductCarousel = React.lazy(() => import('./Slider'));
 const Categories = React.lazy(() => import('./Categories'));
 const Testimonials = React.lazy(() => import('./Testimonials/Testimonials'));
@@ -65,7 +66,25 @@ const MainPage = () => {
         {
           // Dynamically render visible sale types
           isLoading ? (
-            <FullPageLoader />
+              <div className='scroll-section my-6'>
+                <Title>Best Sellers</Title>
+                <div className="flex mx-3 slider overflow-x-auto space-x-4">
+  {Array.from({ length: 5 }).map((_, index) => (
+    <motion.div
+      key={index}
+      className="flex-shrink-0 w-72"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="rounded-md shadow-md bg-gray-100 p-4">
+        <Skeleton height={230} className="mb-2" />
+        <Skeleton count={2} />
+      </div>
+    </motion.div>
+  ))}
+</div>
+              </div>
           ) : (
             saleTypes?.map((saleType) => (
             <div className="scroll-section w-full my-6" key={saleType.sale_type_id} ref={saleType?.name === "Best Sellers" ? bestSellersRef : saleType?.name === "New Arrivals" ? newArrivalsRef : null}>

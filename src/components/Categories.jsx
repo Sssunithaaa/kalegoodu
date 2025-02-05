@@ -73,9 +73,9 @@ console.log(data)
   return (
     <div className="grid relative md:w-[90%] lg:w-[70%] w-[100%] justify-center my-2 overflow-x-auto grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 md:gap-x-1 mx-auto">
       {/* <AnimatePresence> */}
-       <AnimatePresence>
+  
   {isLoading ? (
-   
+        <AnimatePresence>
       <div className='flex flex-wrap mx-auto justify-center'>
       {   Array.from({ length: 6 }).map((_, index) => 
       <motion.div
@@ -87,7 +87,7 @@ console.log(data)
     <ShinyPlaceholder />
       </motion.div>    
     )} </div>
-   
+    </AnimatePresence>
   ) : (
      data?.map((category, index) => (
     
@@ -119,7 +119,7 @@ console.log(data)
   )
 )
     )}
- </AnimatePresence>
+
 {/* 
       </AnimatePresence> */}
     </div>

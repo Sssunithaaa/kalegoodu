@@ -23,7 +23,7 @@ const fetchProductsBySaleType = async (saleTypeId, page=1) => {
   return response.json();
 };
 
-const ProductCarousel = ( {saleTypeId} ) => {
+const ProductCarousel = ( {saleTypeId,isHomeLoading} ) => {
 
    const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState([]);

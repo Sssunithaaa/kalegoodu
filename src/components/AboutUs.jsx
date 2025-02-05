@@ -37,7 +37,7 @@ const AboutUs = () => {
           exit={{ opacity: 0 }}
           className="md:w-1/2 h-[60vh] md:h-full"
         >
-          {isLoading ? (
+          {isLoading || isError ? (
             <Skeleton
               variant="rectangular"
               height="100%"
@@ -68,8 +68,8 @@ const AboutUs = () => {
         />
       ))}
     </div>
-  ) : isError ? (
-    <div className="text-red-500 text-lg text-center md:text-left">
+  ) : true ? (
+    <div className="py-5 text-lg text-center md:text-left">
       Failed to load content. Please try again later.
     </div>
   ) : (
@@ -79,7 +79,7 @@ const AboutUs = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="text-gray-900 text-lg text-center md:text-left"
+        className="text-gray-900 py-3 text-lg text-center md:text-left"
       >
         <p className="font-bold text-xl mb-2">HELLO, From the Founders</p>
         <div dangerouslySetInnerHTML={{ __html: data?.[0]?.content }} />
