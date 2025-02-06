@@ -43,7 +43,7 @@ const Testimonials = ({ comments }) => {
   };
 
   return (
-    <div className={`${productMode ? 'w-full max-w-full' : 'bg-opacity-5 py-12'}`}>
+    <div className={`${productMode ? 'w-full max-w-full' : 'bg-opacity-5 py-2'}`}>
       <div className="mx-auto px-4">
         <Title>
           {productMode && reviews?.length !== 0 ? 'Customers would like to say this about our product' : productMode ? '' : "Testimonials"}

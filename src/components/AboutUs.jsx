@@ -26,7 +26,7 @@ const AboutUs = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 pt-6">
       <div className="flex flex-col md:flex-row md:h-[70vh]  border border-gray-300 shadow-lg rounded-lg overflow-hidden">
         {/* Image Section */}
        <AnimatePresence>
