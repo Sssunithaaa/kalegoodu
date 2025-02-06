@@ -25,6 +25,7 @@
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
     "primereact": "^10.6.6",
+    "quill-emoji": "^0.2.0",
     "react": "^18.2.0",
     "react-admin": "^5.0.3",
     "react-anchor-link-smooth-scroll": "^1.0.12",

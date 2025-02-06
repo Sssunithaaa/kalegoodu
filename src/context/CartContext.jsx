@@ -127,7 +127,6 @@ const validateCartQuantities = (cartItems) => {
 };
 
 
-  console.log(cartItems)
   return (
     <CartContext.Provider
       value={{

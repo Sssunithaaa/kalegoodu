@@ -108,7 +108,8 @@ const ManageComments = () => {
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
               <div className="flex items-center">
                 <p className="text-gray-900 whitespace-no-wrap">
-                  {comment.text}
+                         <div dangerouslySetInnerHTML={{ __html: comment?.text }} />
+
                 </p>
               </div>
             </td>

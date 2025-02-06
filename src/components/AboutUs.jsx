@@ -68,7 +68,7 @@ const AboutUs = () => {
         />
       ))}
     </div>
-  ) : true ? (
+  ) : isError ? (
     <div className="py-5 text-lg text-center md:text-left">
       Failed to load content. Please try again later.
     </div>

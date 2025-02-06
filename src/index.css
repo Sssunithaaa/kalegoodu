@@ -33,6 +33,29 @@ select {
   margin-left: clamp(1rem, 3.5vw, 5rem);
 }
 
+.custom-dot-list-style {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; /* Adjust spacing from carousel */
+  gap: 5px; /* Reduce space between dots */
+}
+
+.react-multi-carousel-dot button {
+  width: 8px;  /* Smaller dot size */
+  height: 8px;
+  background-color: #aaa; /* Light gray */
+  border-radius: 50%;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  padding: 0; /* Remove default padding */
+}
+
+.react-multi-carousel-dot--active button {
+  background-color: black; /* Active dot color */
+  transform: scale(1.2); /* Slightly enlarge active dot */
+}
+
+
 :root {
   --navbar-height: 90px;
   /* Replace with your actual navbar height */

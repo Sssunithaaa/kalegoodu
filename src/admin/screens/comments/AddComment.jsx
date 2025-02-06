@@ -6,6 +6,13 @@ import {  getProductNames } from '../../../services/index/products';
 import styled from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom';
 import BackButton from '../../BackButton';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "quill-emoji/dist/quill-emoji.css"; // Emoji styles
+import { Quill } from "react-quill";
+import * as Emoji from "quill-emoji";
+
+Quill.register("modules/emoji", Emoji);
 
 const Button = styled.button`
   width: 200px;
@@ -38,6 +45,16 @@ const AddTestimonialForm = () => {
   const {id} = useParams()
   const navigate = useNavigate()
    const isEditMode = Boolean(id)
+
+  useEffect(() => {
+       import("quill-emoji")
+         .then((quillEmoji) => {
+           Quill.register("modules/emoji", quillEmoji.default); // Register emoji module
+           setIsEmojiLoaded(true); // Ensure re-render after registration
+         })
+         .catch((err) => console.error("Error loading quill-emoji:", err));
+     }, []);
+    
   const {data:comment,isFetching} = useQuery({
     queryKey: ["comment",id],
     queryFn: async ()=> {
@@ -148,14 +165,59 @@ const AddTestimonialForm = () => {
 
         <div className="mb-4">
           <label htmlFor="text" className="block text-gray-700 text-lg font-medium mb-2">Testimonial</label>
-          <textarea
+          {/* <textarea
             id="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             rows="4"
             required
-          ></textarea>
+          ></textarea> */}
+            <div className="mb-4">
+                    <ReactQuill
+            theme="snow"
+            value={text}
+            onChange={setText}
+            className="w-full h-full"
+            placeholder="Add your content here..."
+            modules={{
+              toolbar: [
+                // Headings and Subheadings
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                
+                // Font Style, Size, and Weight
+                [{ font: [] }, { size: [] }],
+                
+                // Text Formatting
+                ['bold', 'italic', 'underline', 'strike'],
+                
+                // Text Color and Background Color
+                [{ color: [] }, { background: [] }],
+                
+                // Alignment Options
+                [{ align: [] }],
+                
+                // Lists and Indents
+                [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+                
+                // Inline Blocks
+                ['blockquote', 'code-block'],
+                
+                // Links and Images
+             
+          
+                // Clear Formatting
+                ['clean'],
+                ['emoji']
+              ],
+              "emoji-toolbar":true,
+              "emoji-textarea": false, // Disable emoji in textarea
+              "emoji-shortname": true, 
+            }}
+          />
+          
+                  </div>
+
         </div>
 
         {/* <div className="mb-4">

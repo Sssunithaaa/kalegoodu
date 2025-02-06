@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {  useNavigate, useParams } from "react-router-dom";
-import 'react-quill/dist/quill.snow.css'; 
-import ReactQuill from 'react-quill';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "quill-emoji/dist/quill-emoji.css"; // Emoji styles
+import { Quill } from "react-quill";
 import { toast, ToastContainer } from "react-toastify";
 import CreatableSelect from "react-select/creatable";
 import {
@@ -25,11 +27,15 @@ import axios from "axios";
 import Button from "../../../components/Button";
 import BackButton from "../../BackButton";
 import { ClipLoader } from "react-spinners";
+import * as Emoji from "quill-emoji";
+Quill.register("modules/emoji", Emoji);
 
 const promiseOptions = async (inputValue) => {
   const { data: categoryData } = await getAllCategories();
   return filterCategories(inputValue, categoryData);
 };
+
+
 
 
 const DeleteButton = styled.button`
@@ -79,7 +85,14 @@ const EditPost = () => {
 });
 
 
-
+ useEffect(() => {
+    import("quill-emoji")
+      .then((quillEmoji) => {
+        Quill.register("modules/emoji", quillEmoji.default); // Register emoji module
+        setIsEmojiLoaded(true); // Ensure re-render after registration
+      })
+      .catch((err) => console.error("Error loading quill-emoji:", err));
+  }, []);
 
 
 const baseUrl = import.meta.env.VITE_APP_URL
@@ -563,7 +576,6 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
             </label>
            <div className="mb-4">
           <ReactQuill
-
   theme="snow"
   value={description}
   onChange={setDescription}
@@ -597,7 +609,11 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 
       // Clear Formatting
       ['clean'],
+      ['emoji']
     ],
+    "emoji-toolbar":true,
+    "emoji-textarea": false, // Disable emoji in textarea
+    "emoji-shortname": true, 
   }}
 />
 
