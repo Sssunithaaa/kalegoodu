@@ -48,7 +48,6 @@ const Categories = () => {
   refetchOnWindowFocus: false,
 });
 
-console.log(data)
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const url = useMemo(() => import.meta.env.VITE_APP_URL, []);

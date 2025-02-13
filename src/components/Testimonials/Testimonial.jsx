@@ -6,7 +6,7 @@ const Testimonial = ({productMode, text,product_name, user_name,rating }) => {
   return (
     <div className={`bg-white testimonial p-5 m-4 rounded-none border-[2px] shadow-sm flex flex-col items-center space-y-4`}>
       <div>
-          <h4 className=" text-md font-semibold">{product_name}</h4>
+          {!productMode && <h4 className=" text-md font-semibold">{product_name}</h4>}
         </div>
       <p className="text-gray-900 text-md text-center">       <div dangerouslySetInnerHTML={{ __html: text }} />
 </p>

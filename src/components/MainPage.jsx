@@ -68,18 +68,18 @@ const MainPage = () => {
           isLoading ? (
               <div className='scroll-section my-6'>
                 <Title>Best Sellers</Title>
-                <div className="flex mx-3 slider overflow-x-auto space-x-4">
+                <div className="flex mx-3 slider overflow-x-auto py-3 space-x-4">
   {Array.from({ length: 5 }).map((_, index) => (
     <motion.div
       key={index}
-      className="flex-shrink-0 w-72"
+      className="flex-shrink-0 h-72 w-72"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="rounded-md shadow-md bg-gray-100 p-4">
+      <div className="rounded-md shadow-md bg-gray-100 h-full p-4">
         <Skeleton height={230} className="mb-2" />
-        <Skeleton count={2} />
+        <Skeleton height={10} count={2} />
       </div>
     </motion.div>
   ))}

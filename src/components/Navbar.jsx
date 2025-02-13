@@ -6,7 +6,7 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
 import { img1, img2, logo } from '../assets/images';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { useStateContext } from '../context/ContextProvider';
 import SearchBar from '../searchbar/SearchBar';
@@ -202,7 +202,12 @@ const MegaMenu = () => {
   const { cartItemCount, isCartVisible, toggleCart } = useContext(CartContext);
   const [nav,setNav] = useState(navButtons)
   const [display, setDisplay] = useState("static");
-
+  const location = useLocation();
+  useEffect(()=>{
+    if(location.pathname === "/" || location.pathname === "/Customer-details"){
+      setNavButton("")
+    }
+  },[location.pathname])
   const toggleSearchbar = () => {
   
     setIsSearchBarVisible(!isSearchBarVisible);

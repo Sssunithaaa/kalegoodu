@@ -44,8 +44,8 @@ const Testimonials = ({ comments }) => {
 
   return (
     <div className={`${productMode ? 'w-full max-w-full' : 'bg-opacity-5 py-2'}`}>
-      <div className="mx-auto px-4">
-        <Title>
+      <div className="mx-auto px-4 md:py-0 py-4">
+        <Title className="md:my-0 mt-5">
           {productMode && reviews?.length !== 0 ? 'Customers would like to say this about our product' : productMode ? '' : "Testimonials"}
         </Title>
 
@@ -66,7 +66,7 @@ const Testimonials = ({ comments }) => {
   arrows={false}
   removeArrowOnDeviceType={["laptop","tablet", "mobile"]}
   containerClass="carousel-container"
-  itemClass="py-4" // Adjust spacing between slides
+  itemClass="md:py-4 py-2" // Adjust spacing between slides
   dotListClass="custom-dot-list-style" 
   // Custom styling for dots
   

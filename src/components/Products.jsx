@@ -31,7 +31,7 @@ const Products = () => {
   const { id, name } = useParams();
   const categoryMode = Boolean(id);
   const location = useLocation();
-
+  
   // Set the selected category on location/name change
   useEffect(() => {
     if (name) {

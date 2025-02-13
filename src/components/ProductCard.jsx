@@ -36,9 +36,7 @@ import { zoomIn, zoomOut } from "../utils/motion";
 // `;
 export default function ProductCard({ product, productMode, index, len }) {
   const { addToCart, setIsCartVisible, setLoading } = useContext(CartContext);
-  const quantity = 1;
-
-  const { screenSize } = useStateContext();
+  
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_APP_URL;

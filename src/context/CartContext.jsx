@@ -15,13 +15,13 @@ export const CartProvider = ({ children }) => {
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('upi');
 
-  const addToCart = (item) => {
+  const addToCart = (item,card) => {
  
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.product_id === item.product_id);
       if (existingItem) {
         return prevItems.map((i) =>
-          i.product_id === item.product_id ? { ...i, quantity: i.quantity + 1 } : i
+          i.product_id === item.product_id ? { ...i, quantity: i.quantity } : i
         );
       } else {
         return [...prevItems, { ...item, quantity: item.quantity == 0 ? 1 : item.quantity }];

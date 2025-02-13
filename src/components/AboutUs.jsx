@@ -27,7 +27,7 @@ const AboutUs = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 pt-6">
-      <div className="flex flex-col md:flex-row md:h-[70vh]  border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row md:h-[70vh]  border border-gray-200 shadow-lg rounded-lg overflow-hidden">
         {/* Image Section */}
        <AnimatePresence>
          <motion.div
@@ -55,14 +55,22 @@ const AboutUs = () => {
        </AnimatePresence>
 
       {/* Description Section */}
-<div className="md:w-1/2 h-1/2 md:h-full bg-gray-100 flex flex-col justify-center items-center px-6">
+<div className="md:w-1/2 h-1/2 md:h-full bg-gray-50 flex flex-col justify-center items-center px-2">
   {isLoading ? (
     <div className="w-full">
-      {Array.from({ length: 6 }).map((_, index) => (
+      <div className="w-full">
+         <Skeleton
+          variant="text"
+          width={"60%"}
+          height={30}
+          className="my-2"
+        />
+      </div>
+      {Array.from({ length: 10 }).map((_, index) => (
         <Skeleton
           key={index}
           variant="text"
-          width={index % 2 === 0 ? "80%" : "90%"}
+          width={index % 2 === 0 ? "90%" : "95%"}
           height={30}
           className="my-2"
         />
@@ -79,10 +87,10 @@ const AboutUs = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="text-gray-900 py-3 text-lg text-center md:text-left"
+        className="text-gray-900 py-3 text-md text-center md:text-left"
       >
-        <p className="font-bold text-xl mb-2">HELLO, From the Founders</p>
-        <div dangerouslySetInnerHTML={{ __html: data?.[0]?.content }} />
+        <p className="font-bold text-xl mb-2 ml-2">HELLO, From the Founders</p>
+        <div className="px-2" dangerouslySetInnerHTML={{ __html: data?.[0]?.content }} />
       </motion.div>
     </AnimatePresence>
   )}

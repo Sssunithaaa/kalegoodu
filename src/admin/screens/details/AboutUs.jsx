@@ -9,8 +9,13 @@ import styled from 'styled-components';
 import axios from 'axios';
 import BackButton from '../../BackButton';
 import 'react-quill/dist/quill.snow.css'; 
-import ReactQuill from 'react-quill';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "quill-emoji/dist/quill-emoji.css"; // Emoji styles
+import { Quill } from "react-quill";
 import { ClipLoader } from 'react-spinners';
+import * as Emoji from "quill-emoji";
+Quill.register("modules/emoji", Emoji);
 
 const AboutUsForm = () => {
   const [file, setFile] = useState(null);
@@ -53,6 +58,15 @@ const AboutUsForm = () => {
     }
   }, [data]);
 
+   useEffect(() => {
+      import("quill-emoji")
+        .then((quillEmoji) => {
+          Quill.register("modules/emoji", quillEmoji.default); // Register emoji module
+          setIsEmojiLoaded(true); // Ensure re-render after registration
+        })
+        .catch((err) => console.error("Error loading quill-emoji:", err));
+    }, []);
+  
   const handleFileChange = (acceptedFiles) => {
     setFile(acceptedFiles[0]);
     setPreview(URL.createObjectURL(acceptedFiles[0]));
@@ -211,7 +225,12 @@ const AboutUsForm = () => {
                 ['bold', 'italic', 'underline'],
                 [{ 'align': [] }, { 'color': [] }],
                 ['link'],
+                ['emoji'],
+                ['clean'],
               ],
+               "emoji-toolbar":true,
+    "emoji-textarea": false, // Disable emoji in textarea
+    "emoji-shortname": true, 
             }}
           />
         </div>
