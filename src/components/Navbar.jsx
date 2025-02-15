@@ -107,7 +107,6 @@ const handleIncreaseQuantity = (productId, currentQuantity, availableStock) => {
   }
 };
 
-console.log(cartItems)
 
   return (
     <div
@@ -140,10 +139,13 @@ console.log(cartItems)
 />
 
                   <div className="ml-4 flex-1">
-                    <h2 className="text-[16px] text-left font-medium">{item.name}</h2>
+                    <div className='overflow-hidden max-w-44'>
+                      <h2 className="text-[15px] md:text-[16px] text-left truncate w-full font-medium">{item.name}</h2>
+                    </div>
+                    
                     {item.availableQuantity > 0 ? (<div className="flex items-center">
                       <span className="text-gray-500">Quantity</span>
-                      <div className="flex items-center ml-2 border px-2 py-1">
+                      <div className="flex text-[14px] md:text-[16px] items-center ml-2 border px-2 py-1">
           <button onClick={() => decreaseQuantity(item.product_id)}>{"<"}</button>
           <span className="mx-2">{item.cartQuantity}</span>
         
@@ -156,14 +158,14 @@ console.log(cartItems)
                     </div>) : (<span className="text-red-500">Out of stock</span>)}
                   </div>
                   <div className="text-right">
-                    <p className="text-[16px] font-medium">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
+                    <p className="text-[15px] md:text-[16px] font-medium">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>
                     <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 text-[26px] hover:text-red-700">&times;</button>
                   </div>
                 </div>
               ))}
               <div className="border-t py-4 flex justify-between items-center">
-                <span className="text-[16px] font-bold">TOTAL:</span>
-                <span className="text-[16px] font-bold">Rs. {cartTotal}</span>
+                <span className=" text-[15px] md:text-[16px] font-bold">TOTAL:</span>
+                <span className=" text-[15px] md:text-[16px] font-bold">Rs. {cartTotal}</span>
               </div>
                <div className='flex flex-row gap-x-2'>
                 <Button onClick={() => {

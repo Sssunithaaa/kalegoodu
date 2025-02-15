@@ -40,9 +40,7 @@ const Sidebar = ({setSprice,setEprice,handlePriceChange,location}) => {
     handlePriceChange(priceRange[0],priceRange[1])
   }
   
-  // useEffect(()=>{
-  //   setEprice(null)
-  // },[])
+ 
   useEffect(()=>{
     setSprice(0);
     setEprice(null);

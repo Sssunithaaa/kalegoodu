@@ -292,8 +292,7 @@ export const CartProvider = ({ children }) => {
       })
       .filter(Boolean); // Remove null values
 
-    console.log("Products:", products);
-    console.log("Valid Cart Items:", validCartItems);
+    
 
     if (JSON.stringify(validCartItems) !== JSON.stringify(cartItems)) {
       setCartItems(validCartItems);

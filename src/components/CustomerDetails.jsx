@@ -25,7 +25,7 @@ const CustomerDetails = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [customer, setCustomer] = useState([])
    const navigate = useNavigate()
-  const { cartItems,setCartItems, cartTotal,emptyCart,checkItems,validateCartQuantities } = useContext(CartContext);
+  const { cartItems,setCartItems, cartTotal,emptyCart,checkItems,removeFromCart,validateCartQuantities } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
     const [dialogOpen, setDialogOpen] = useState(false);
     const { error, isLoading, Razorpay } = useRazorpay();
@@ -237,9 +237,10 @@ const handleFormSubmit = async (e) => {
   {cartItems.length !== 0 && cartItems.map((item) => (
   
     <div className="bg-[#edf3ed] w-full md:w-1/2 md:px-4 py-4">
-  <div className="flex items-center gap-3 md:space-x-10 border-b pb-4">
+  <div className="flex flex-row justify-between items-center gap-3 md:space-x-10 border-b pb-4">
     {/* Product Image */}
-    <img 
+    <div className='flex flex-row items-center gap-3'>
+      <img 
       onClick={()=> navigate(`/Products/${item.product_id}/${item.name}`)}
       src={import.meta.env.VITE_CLOUD_URL + item.images[0]?.image} 
       alt={item.name} 
@@ -262,6 +263,10 @@ const handleFormSubmit = async (e) => {
           </select></span> : <span className='text-red-500'>Out of stock</span>
      }
       <span className="font-bold text-gray-900">₹{item.availableQuantity === 0 ? item.discounted_price !== 0 ? item.discounted_price : item.price :  item.discounted_price !== 0 ? item.discounted_price * item.cartQuantity : item.price * item.cartQuantity}</span>
+    </div>
+    </div>
+    <div>
+       <button onClick={() => removeFromCart(item.product_id)} className="text-red-500 text-[26px] hover:text-red-700">&times;</button>
     </div>
   </div>
 

@@ -37,8 +37,8 @@ function ProductGallery() {
 
 const images = [
    ...(product?.images?.map((img) => ({
-    original: `https://res.cloudinary.com/dgkgxokru/${img.image}`,
-    thumbnail: `https://res.cloudinary.com/dgkgxokru/${img.image}`,
+    original: `https://res.cloudinary.com/dgkgxokru/${img?.image}`,
+    thumbnail: `https://res.cloudinary.com/dgkgxokru/${img?.image}`,
     alt: `${product?.name} Image`,
   })) || []),
   ...(product?.video_link
@@ -79,7 +79,7 @@ const images = [
   items={images} 
   // loading="lazy"
   // lazyLoad={true}
-
+  lazyLoad={true}
   showThumbnails={showThumbnails} 
   showFullscreenButton={true} 
   showPlayButton={false} 

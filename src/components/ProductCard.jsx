@@ -93,13 +93,14 @@ export default function ProductCard({ product, productMode, index, len }) {
         onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
         className="hover:cursor-pointer pb-2 p-[10px] px-[20px]"
       >
-        <div className="mb-[2px] flex h-12 items-center justify-between">
-          <Typography className="font-medium my-2 text-[15px] md:text-[16px]">
-            {product?.name}
-          </Typography>
+        <div className="mb-[2px] flex items-center justify-between">
+         <Typography className="font-medium my-2 text-[15px] md:text-[16px] truncate w-full">
+  {product?.name}
+</Typography>
+
         </div>
 
-        <div className="h-10 flex items-center">
+        <div className="flex items-center">
           {hasDiscount ? (
             <div className="flex flex-col text-[15px]">
               <Typography color="red">
