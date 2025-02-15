@@ -1,7 +1,7 @@
 import React from 'react'
-import Title from './Title'
+import Title from '../Title'
 import { useQuery } from '@tanstack/react-query'
-import { getPageContents } from '../services/index/pageContent';
+import { getPageContents } from '../../services/index/pageContent';
 
 const TermsAndConditions = () => {
    const { data, isLoading } = useQuery({

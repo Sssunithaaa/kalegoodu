@@ -12,7 +12,7 @@ import Skeleton from 'react-loading-skeleton';
 const ProductCarousel = React.lazy(() => import('./Slider'));
 const Categories = React.lazy(() => import('./Categories'));
 const Testimonials = React.lazy(() => import('./Testimonials/Testimonials'));
-const AboutUs = React.lazy(() => import('./AboutUs'));
+const AboutUs = React.lazy(() => import('./details/AboutUs'));
 
 const MainPage = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;

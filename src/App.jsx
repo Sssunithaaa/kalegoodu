@@ -7,10 +7,11 @@ import { Navigate } from 'react-router-dom';
 import OrderConfirmation from './components/OrderConfirmation';
 import EmailForm from './admin/screens/emails/EmailForm';
 import ManageText from './admin/screens/details/ManageText';
+import ProductGallery from './components/ProductCards/ProductGallery';
 const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
-const ProductPage = lazy(() => import('./components/ProductPage'));
+const ProductPage = lazy(() => import('./components/ProductCards/ProductPage'));
 const CheckOut = lazy(() => import('./components/CheckOut'));
 const AdminLayout = lazy(() => import('./admin/AdminLayout'));
 const Admin = lazy(() => import('./admin/Admin'));
@@ -19,14 +20,14 @@ const EditCategories = lazy(() => import('./admin/screens/categories/EditCategor
 const MainLayout = lazy(() => import('./components/MainComponents/MainLayout'));
 const ManagePosts = lazy(() => import('./admin/screens/posts/ManagePosts'));
 const Banner = lazy(() => import('./admin/screens/Banner'));
-const AboutUs = lazy(() => import('./components/AboutUs'));
+const AboutUs = lazy(() => import('./components/details/AboutUs'));
 const EditPost = lazy(() => import('./admin/screens/posts/EditPost'));
 const ManageComments = lazy(() => import('./admin/screens/comments/ManageComments'));
 const ManageSaleType = lazy(() => import('./admin/screens/saletypes/ManageSaleType'));
 const AddTestimonialForm = lazy(() => import('./admin/screens/comments/AddComment'));
-const ContactUs = lazy(() => import('./components/ContactUs'));
-const TermsAndConditions = lazy(() => import('./components/TermsAndConditions'));
-const Refund = lazy(() => import('./components/Refund'));
+const ContactUs = lazy(() => import('./components/details/ContactUs'));
+const TermsAndConditions = lazy(() => import('./components/details/TermsAndConditions'));
+const Refund = lazy(() => import('./components/details/Refund'));
 const Collections = lazy(() => import('./components/Collections'));
 const ManageAboutUs = lazy(() => import('./admin/screens/details/AboutUs'));
 const ManageDetails = lazy(() => import('./admin/screens/details/ManageDetails'));
@@ -35,7 +36,7 @@ const CustomerDetails = lazy(() => import('./components/CustomerDetails'));
 const WorkshopCarousel = lazy(() => import('./components/workshops/WorkshopCarousel'));
 const AddWorkshop = lazy(() => import('./admin/screens/workshops/AddWorkshop'));
 const ManageWorkshops = lazy(() => import('./admin/screens/workshops/ManageWorkshops'));
-const DeliveryDetails = lazy(() => import('./components/DeliveryDetails'));
+const DeliveryDetails = lazy(() => import('./components/details/DeliveryDetails'));
 const WorkshopDetailsPage = lazy(() => import('./components/workshops/WorkshopDetails'));
 const LoginForm = lazy(() => import('./components/login/LoginForm'));
 const Hero = lazy(() => import('./components/components/Hero'));
@@ -59,7 +60,7 @@ const App = () => {
             <Route path="/Hero" element={<Hero />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Products/:id" element={<Products />} />
-            <Route path="/Products/:id/:name" element={<ProductPage />} />
+            <Route path="/Products/:id/:name" element={<ProductGallery />} />
             <Route path="/Categories/:id/:name/" element={<Products />} />
             <Route path="/Categories" element={<Collections />} />
             <Route path="/Checkout" element={<CheckOut />} />

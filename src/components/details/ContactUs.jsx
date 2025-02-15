@@ -1,9 +1,9 @@
 import React from 'react';
 import { FaPhoneAlt, FaWhatsapp, FaEnvelope, FaMapMarkerAlt, FaInstagram } from 'react-icons/fa';
-import Title from './Title';
-import { SectionWrapper } from '../hoc';
+import Title from '../Title';
+import { SectionWrapper } from '../../hoc';
 import { motion } from 'framer-motion';
-import { fadeIn } from '../utils/motion';
+import { fadeIn } from '../../utils/motion';
 import { useNavigate } from 'react-router-dom';
 const ContactUs = () => {
   const navigate = useNavigate()

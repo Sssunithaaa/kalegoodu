@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { DetailsSection, Slider } from './ProductCards';
-import '../App.css';
+import { DetailsSection, Slider } from '.';
 import { useQuery } from '@tanstack/react-query';
-import { getSingleProduct, getProductsByCategory } from '../services/index/products'; // Make sure to import the new function
+import { getSingleProduct, getProductsByCategory } from '../../services/index/products'; // Make sure to import the new function
 import { ClipLoader } from "react-spinners";
-import Testimonials from './Testimonials/Testimonials';
-import CompactProductCard from './CompactProductCard';
+import Testimonials from '../Testimonials/Testimonials';
+import CompactProductCard from '../CompactProductCard';
 import ReactPlayer from 'react-player';
 
 function ProductPage() {
@@ -25,7 +24,7 @@ function ProductPage() {
     enabled: !!product, // Only run this query if the product data is available
   });
 
-  const images = product?.images?.map((image) => image.image);
+  const images = product?.images?.map((image) => (image.image));
  
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -9,7 +9,7 @@ import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
 import FullPageLoader from './FullPageLoader';
 import { Spinner } from '@material-tailwind/react';
 import { ClipLoader } from 'react-spinners';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
 
 const CustomerDetails = () => {
@@ -29,50 +29,19 @@ const CustomerDetails = () => {
   const [total, setTotal] = useState(cartTotal);
     const [dialogOpen, setDialogOpen] = useState(false);
     const { error, isLoading, Razorpay } = useRazorpay();
-
-  // const handlePayment = () => {
-  //   const options = {
-  //     key: "rzp_live_ux3J6SlCY0eJYi",
-  //     amount: 50000, // Amount in paise
-  //     currency: "INR",
-  //     name: "Test Company",
-  //     description: "Test Transaction",
-  //     order_id: "order_9A33XWu170gUtm", // Generate order_id on server
-  //     handler: (response) => {
-  //       console.log(response);
-  //       alert("Payment Successful!");
-  //     },
-  //     prefill: {
-  //       name: "John Doe",
-  //       email: "john.doe@example.com",
-  //       contact: "9999999999",
-  //     },
-  //     theme: {
-  //       color: "#F37254",
-  //     },
-  //   };
-
-  //   const razorpayInstance = new Razorpay(options);
-  //   razorpayInstance.open();
-  // };
-
-const handleOpenDialog = () => {
-    setDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-    navigate("/products")
-  };
-
-  useEffect(() => {
-    let totalPrice = 0;
-    cartItems?.forEach((item) => {
-      totalPrice += item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity;
-    });
-    setTotal(totalPrice);
-  }, [cartItems]);
-
+  console.log(cartItems)
+useEffect(() => {
+  let totalPrice = 0;
+  cartItems?.forEach((item) => {
+    if (item.availableQuantity > 0) {  // Ensure item is in stock
+      totalPrice += item.discounted_price !== 0 
+        ? item.discounted_price * item.cartQuantity 
+        : item.price * item.cartQuantity;
+    }
+  });
+  setTotal(totalPrice);
+}, [cartItems]);
+  console.log(total)
   const baseUrl = import.meta.env.VITE_APP_URL;
   
 
@@ -81,27 +50,33 @@ const [loading,setIsLoading] = useState(false)
 
 const [orderLoading, setIsOrderLoading] = useState(false);
 
-// useEffect(() => {
-//   window.location.reload();
-// }, [cartItems]);
 
 
 const handleCartUpdate = () => {
-  const updatedCart = validateCartQuantities(cartItems);
-  setCartItems(updatedCart); // Update state with adjusted quantities
-  
-  setCartItems((prevItems) => {
-    if (prevItems !== updatedCart) {
-      window.location.reload(); // Reload the page after state update
-    }
-    return updatedCart; // Returning the updated cart
-  });
-};
+    const updatedCart = validateCartQuantities(cartItems);
+    setCartItems(updatedCart);
+    // window.location.reload();
+  };
+
+
+const validateStockMutation = useMutation({
+  mutationFn: async (cartItems) => {
+    const response = await axios.post(`${baseUrl}/api/validate-stock/`, { cartItems });
+    return response.data;
+  }
+});
+
 const handleFormSubmit = async (e) => {
   e.preventDefault();
   // setIsLoading(true);
- 
+
   handleCartUpdate()
+  const { valid, outOfStockItems } = await validateStockMutation.mutateAsync(cartItems);
+
+    if (!valid) {
+      toast.error(`These items are out of stock: ${outOfStockItems.join(', ')}`);
+      return;
+    }
   // Prepare customer and order payload
   const formattedPhone = phone.startsWith("0") ? phone.slice(1) : phone;
   const fullAddress = `${apartment}, ${add}, ${city}, ${state}`;
@@ -121,7 +96,7 @@ const handleFormSubmit = async (e) => {
       items: cartItems.map((item) => ({
         name: item.name,
         product_id: item.product_id,
-        quantity: item.quantity,
+        quantity: item.cartQuantity,
         price: item.discounted_price !== 0 ? item.discounted_price : item.price,
         image: item.images[0].image,
       })),
@@ -132,6 +107,7 @@ const handleFormSubmit = async (e) => {
   };
 
   setCustomer(orderPayload);
+   
 
   try {
     // Create Razorpay order
@@ -212,11 +188,16 @@ const handleFormSubmit = async (e) => {
   setCartItems(prevItems =>
     prevItems.map(item => 
       item.product_id === productId 
-        ? { ...item, quantity } 
+        ? { ...item, cartQuantity: quantity } 
         : item
     )
   );
 };
+
+
+// useEffect(()=>{
+//   checkItems()
+// },[])
 
 
 
@@ -268,17 +249,19 @@ const handleFormSubmit = async (e) => {
     {/* Product Details */}
     <div className="flex flex-col justify-between">
       <span onClick={()=> navigate(`/Products/${item.product_id}/${item.name}`)} className="hover:cursor-pointer font-semibold text-gray-800">{item.name}</span>
-      <span className="text-gray-800">Qty:     {/* <td className='text-center'> */}
+     {
+      item.availableQuantity >= 1 ?  <span className="text-gray-800">Qty:     {/* <td className='text-center'> */}
           <select 
-            value={item.quantity} 
+            value={item.cartQuantity} 
             onChange={(e) => updateQuantity(item.product_id, parseInt(e.target.value))} 
             className="border rounded px-2 py-1 text-sm cursor-pointer w-[60px]"
           >
             {Array.from({ length: item.availableQuantity }, (_, i) => i + 1).map(num => (
               <option key={num} value={num}>{num}</option>
             ))}
-          </select></span>
-      <span className="font-bold text-gray-900">₹{item.discounted_price !== 0 ? item.discounted_price * item.quantity : item.price * item.quantity}</span>
+          </select></span> : <span className='text-red-500'>Out of stock</span>
+     }
+      <span className="font-bold text-gray-900">₹{item.availableQuantity === 0 ? item.discounted_price !== 0 ? item.discounted_price : item.price :  item.discounted_price !== 0 ? item.discounted_price * item.cartQuantity : item.price * item.cartQuantity}</span>
     </div>
   </div>
 

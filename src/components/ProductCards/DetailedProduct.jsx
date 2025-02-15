@@ -29,7 +29,7 @@ export const DetailedProduct = ({ product }) => {
       </div>
 
       <h2 className="my-2 text-lg md:text-xl">Description</h2>
-      <div className="text-dark-grayish-blue lg:w-full mb-5 text-md  md:text-base space-y-4 ">
+      <div className="text-gray-900 lg:w-full mb-5 text-md  md:text-base space-y-4 ">
        <div dangerouslySetInnerHTML={{ __html: product?.short_description }} />
       </div>
     </div>

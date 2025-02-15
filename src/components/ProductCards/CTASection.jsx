@@ -133,7 +133,7 @@ export const CTASection = ({ product, setCartCounter }) => {
 
   // Get the current quantity of the product in the cart
   const cartItem = cartItems.find((item) => item.product_id === product.product_id);
-  const initialQuantity = cartItem ? cartItem.quantity : 1;
+  const initialQuantity = cartItem ? cartItem.cartQuantity : 1;
 
   const [productCounter, setProductCounter] = useState(initialQuantity);
   const [errorMessage, setErrorMessage] = useState("");
@@ -144,9 +144,11 @@ export const CTASection = ({ product, setCartCounter }) => {
   }, [cartItems, product.product_id]);
 
   const handleIncreaseQuantity = () => {
-    if (productCounter < product.quantity) {
+    if (productCounter < product.availableQuantity) {
       setProductCounter((prev) => prev + 1);
-      increaseQuantity(product.product_id);
+      if(cartItem){
+        increaseQuantity(product.product_id);
+      }
       setErrorMessage("");
     } else {
       setErrorMessage("Requested quantity exceeds available stock.");
@@ -156,7 +158,9 @@ export const CTASection = ({ product, setCartCounter }) => {
   const handleDecreaseQuantity = () => {
     if (productCounter > 1) {
       setProductCounter((prev) => prev - 1);
-      decreaseQuantity(product.product_id);
+      if(cartItem){
+        decreaseQuantity(product.product_id);
+      }
       setErrorMessage("");
     } else {
       removeFromCart(product.product_id);
@@ -171,14 +175,17 @@ export const CTASection = ({ product, setCartCounter }) => {
       ...product,
       availableQuantity: product?.quantity,
       quantity: productCounter,
+      cartQuantity: productCounter,
     };
 
     addToCart(productDetails);
     
    
-    setLoading(true);
+   
     setTimeout(() => {
       setLoading(false);
+    }, 1000);
+    setTimeout(() => {
       setIsCartVisible(true);
     }, 1000);
   };

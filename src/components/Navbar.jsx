@@ -107,6 +107,8 @@ const handleIncreaseQuantity = (productId, currentQuantity, availableStock) => {
   }
 };
 
+console.log(cartItems)
+
   return (
     <div
       className={`fixed top-0 right-0 overflow-y-auto sm:w-[400px] w-full lg:max-w-[450px] bg-white h-full shadow-lg transition-transform transform z-[10000001] ${
@@ -139,19 +141,19 @@ const handleIncreaseQuantity = (productId, currentQuantity, availableStock) => {
 
                   <div className="ml-4 flex-1">
                     <h2 className="text-[16px] text-left font-medium">{item.name}</h2>
-                    <div className="flex items-center">
+                    {item.availableQuantity > 0 ? (<div className="flex items-center">
                       <span className="text-gray-500">Quantity</span>
                       <div className="flex items-center ml-2 border px-2 py-1">
           <button onClick={() => decreaseQuantity(item.product_id)}>{"<"}</button>
-          <span className="mx-2">{item.quantity}</span>
+          <span className="mx-2">{item.cartQuantity}</span>
         
           <button
-            onClick={() => handleIncreaseQuantity(item.product_id, item.quantity, item.availableQuantity)}
+            onClick={() => handleIncreaseQuantity(item.product_id, item.cartQuantity, item.availableQuantity)}
           >
             {">"}
           </button>
         </div>
-                    </div>
+                    </div>) : (<span className="text-red-500">Out of stock</span>)}
                   </div>
                   <div className="text-right">
                     <p className="text-[16px] font-medium">Rs. {item.discounted_price !== 0 ? item.discounted_price : item.price}</p>

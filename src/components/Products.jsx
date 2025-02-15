@@ -113,6 +113,8 @@ const fetchProducts = async ({ pageParam = 1 }) => {
     
   return lastPage?.next ? allPages.length + 1 : undefined;
 }
+,
+refetchOnWindowFocus:true
 
   });
 

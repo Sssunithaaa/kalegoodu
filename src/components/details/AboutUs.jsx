@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { Skeleton } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { getPageContents } from "../services/index/pageContent";
+import { getPageContents } from "../../services/index/pageContent";
 import { motion } from "framer-motion";
-import { fadeIn } from "../utils/motion";
-import { SectionWrapper } from "../hoc";
+import { fadeIn } from "../../utils/motion";
+import { SectionWrapper } from "../../hoc";
 import { AnimatePresence } from "framer-motion";
 
 const FoundersImage = styled.img`

@@ -67,8 +67,6 @@ const UpdateButton = styled.button`
 const EditPost = () => {
   const { id } = useParams(); 
   const queryClient = useQueryClient();
-  
-
   const [categories, setCategories] = useState([]); 
   const [name, setName] = useState(""); 
   const [tags, setTags] = useState([]);
@@ -83,8 +81,6 @@ const EditPost = () => {
   queryKey: ["categories"],
   queryFn: getAllCategoriess,
 });
-
-
  useEffect(() => {
     import("quill-emoji")
       .then((quillEmoji) => {
@@ -107,9 +103,6 @@ const baseUrl = import.meta.env.VITE_APP_URL
   }
  }) 
  
-
- 
- 
   const { data:product, isLoading, isError,refetch } = useQuery({
     queryFn: () => getSingleProduct(id),
     queryKey: ["product", id],
@@ -118,7 +111,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     refetchOnWindowFocus: false, 
   });
  
-   const BURL = import.meta.env.VITE_APP_URL;
+
   useEffect(() => {
     if (product) {
       setCategories(
@@ -142,12 +135,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
       setPrice(product.price); 
 
       setDiscountPrice(product.discounted_price);
-  
-      // const initialFiles = product.images.map((image) => {
-      //   const fileName = image.image.split("/").pop(); // Extract the file name from the URL
-      //   return new File([], fileName, { type: "image/jpeg" }); // Creating a placeholder file
-      // });
-      // setFiles(initialFiles);
+
       setVideoUrl(product.video_link)
       setPreviews(
         product.images?.map((image) => "https://res.cloudinary.com/dgkgxokru/"+`${image.image}`) // Assuming image.image is a URL string

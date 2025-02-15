@@ -110,9 +110,9 @@ export const updateProduct = async ({ updatedData, id }) => {
    
     return response.data;
   } catch (error) {
-   
-    if (error.response && error.response.data.message)
-      throw new Error(error.response.data.message);
+    console.log(error)
+    if (error.response && error.response.data.error)
+      throw new Error(error.response.data.error);
     throw new Error(error.message);
   }
 };

@@ -65,14 +65,13 @@ export default function CompactProductCard({ product }) {
   onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
   className="hover:cursor-pointer pb-1 p-[10px] px-[20px]"
 >
-  <div className="mb-[2px] flex h-10 items-center justify-between">
-    <Typography className="font-medium my-1 text-[14px] md:text-[16px]">
+    <Typography className="font-medium text-wrap h-12 my-1 text-[14px] md:text-[16px]">
       {product?.name}
     </Typography>
-  </div>
+  
 
   {/* Fixed height for price container to align cards with and without discounts */}
-  <div className="h-12 flex items-center">
+  <div className="h-10 flex items-center">
     {hasDiscount ? (
       <div className="flex flex-col text-[12px]">
         <Typography color="red">

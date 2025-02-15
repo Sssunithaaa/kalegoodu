@@ -39,6 +39,14 @@ select {
   margin-top: 10px; /* Adjust spacing from carousel */
   gap: 5px; /* Reduce space between dots */
 }
+.image-gallery-thumbnail img {
+  height: 80px !important; /* Adjust as needed */
+  object-fit: cover;
+}
+.image-gallery-thumbnail {
+  margin-block: 10px;
+}
+
 
 .react-multi-carousel-dot button {
   width: 8px;  /* Smaller dot size */
