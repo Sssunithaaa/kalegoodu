@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import axios from "axios";
+import api from "../../../services/index/api";
 import {toast, ToastContainer } from "react-toastify";
 
 const AddSaleTypeDialog = ({ open, handleClose, editSaleType }) => {
@@ -13,8 +13,7 @@ const AddSaleTypeDialog = ({ open, handleClose, editSaleType }) => {
   useEffect(()=> {
     setSaleTypeName(editSaleType?.name)
   },[editSaleType])
- 
-  const baseUrl = import.meta.env.VITE_APP_URL;
+
   const handleSubmit = async (event) => {
   event.preventDefault();
   const newSaleType = { name: saleTypeName, visible: true };
@@ -22,24 +21,21 @@ const AddSaleTypeDialog = ({ open, handleClose, editSaleType }) => {
   try {
     if (editSaleType) {
       // Edit existing sale type
-      await axios.put(`${baseUrl}/api/update_sale_type/${editSaleType.sale_type_id}/`, newSaleType);
+      await api.put(`/api/update_sale_type/${editSaleType.sale_type_id}/`, newSaleType);
       toast.success("Sale type updated successfully");
     } else {
       // Add new sale type
-      await axios.post(`${baseUrl}/api/sale_types/`, newSaleType);
+      await api.post("/api/sale_types/", newSaleType);
       toast.success("Sale type added successfully");
     }
 
-   
     setTimeout(() => {
       setSaleTypeName("");
       handleClose();
     }, 1000);
   } catch (error) {
-    console.error("Error adding/updating sale type:", error.response.data || error);
-    toast.error(
-      error.response?.data?.detail || "Failed to add/update sale type"
-    );
+    console.error("Error adding/updating sale type:", error.response?.data || error);
+    toast.error(error.response?.data?.detail || "Failed to add/update sale type");
   }
 };
 

@@ -4,11 +4,11 @@ import Pagination from '../../../components/Pagination';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import BackButton from '../../BackButton';
 import { deleteItem } from '../../hooks/utils';
 import DeleteConfirmationDialog from '../../ConfirmationDialog';
+import api from '../../../services/index/api';
 const ManageComments = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const PAGE_SIZE = 5;
@@ -52,7 +52,7 @@ const ManageComments = () => {
   const handleToggleVisibility = async (id, currentVisibility) => {
   try {
    
-    await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
+    await api.put(`/api/update_comment/${id}/`, {
       display: !currentVisibility
     });
     toast.success("Visibility updated successfully!");

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { logo } from '../../assets/images'
 import Button from '../Button';
@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '../../store/actions';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { ClipLoader } from 'react-spinners';
 const LoginForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [loading,setIsLoading] = useState(false)
     const {isAuthenticated} = useSelector((state)=>state.auth)
     useEffect(()=> {
         if(isAuthenticated)
@@ -19,33 +21,33 @@ const LoginForm = () => {
 
 
   const url = import.meta.env.VITE_APP_URL
-  const onSubmit = async (data) => {
+const onSubmit = async (data) => {
     try {
-      const response = await fetch(`${url}/api/login/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: data.username,
-          password: data.password,
-        }),
-      });
-      
-      if (response.ok) {
-        dispatch(loginSuccess(data.username))
-        toast.success('Login successful');
-        setTimeout(()=>{
-            navigate("/admin")
-        },1000)
-      } else {
-    
-        toast.error('Login failed');
-      }
+        setIsLoading(true)
+        const response = await fetch(`${url}/api/token/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: data.username,
+                password: data.password,
+            }),
+        });
+
+        if (response.ok) {
+            const { access, refresh } = await response.json();
+            dispatch(loginSuccess(data.username, access, refresh));
+
+            toast.success("Login successful");
+            setTimeout(() => navigate("/admin"), 1000);
+        } else {
+            toast.error("Invalid credentials");
+        }
     } catch (error) {
-      console.error('Error during login:', error);
+        console.error("Login error:", error);
+    } finally {
+      setIsLoading(false)
     }
-  };
+};
 
   return (
     <div>
@@ -108,7 +110,7 @@ const LoginForm = () => {
                   type="submit"
                   className="w-full"
                 >
-                  Sign in
+                  {loading ? <ClipLoader size={20}/> : "Sign in"}
                 </Button>
                 {/* <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>

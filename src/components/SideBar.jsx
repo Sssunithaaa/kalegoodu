@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-
+import { ChevronDown,ChevronUp } from 'lucide-react';
 
 import { Box, TextField, InputAdornment } from '@mui/material';
 
 import styled from 'styled-components';
+import { Transition } from '@headlessui/react';
 const Button = styled.button`
   width: 100%;
   height: 45px;
@@ -16,114 +17,156 @@ background-image: radial-gradient(at 19.76895305229651% 35.01358402821006%, hsla
     background-color: #9e7f6b; /* Slightly darker color */
   }
 `;
-const Sidebar = ({setSprice,setEprice,handlePriceChange,location}) => {
-  
+// const ToggleButton = styled.button`
+//   width: 100%;
+//   height: 45px;
+//   background-color: #4a5568;
+//   color: white;
+//   border: none;
+//   cursor: pointer;
+//   border-radius: 5px;
+//   margin-bottom: 10px;
+//   &:hover {
+//     background-color: #2d3748;
+//   }
+// `;
 
-  const [priceRange, setPriceRange] = useState([null, null]);
+const Sidebar = ({priceRange,setPriceRange ,setSprice, setEprice,availability,setAvailability, handlePriceChange, location }) => {
+  const [showPriceFilter, setShowPriceFilter] = useState(false);
+    const [showAvailabilityFilter, setShowAvailabilityFilter] = useState(false);
 
- 
+const handleAvailabilityChange = (e) => {
+  setAvailability({
+    ...availability,
+    [e.target.name]: e.target.checked,
+  });
+};
 
- 
+const handlePriceInputChange = (e, index) => {
+  const value = parseInt(e.target.value, 10) || null;
+  setPriceRange((prev) => {
+    const newRange = [...prev];
+    newRange[index] = value;
+    return newRange;
+  });
 
-  const handlePriceInputChange = (e, index) => {
-    const value = parseInt(e.target.value, 10);
-    setPriceRange((prev) => {
-      const newRange = [...prev];
-      newRange[index] = value;
-      
-      return newRange;
-    });
-  };
-  const submitPriceInputChange = ()=> {
+};
+
+  const submitPriceInputChange = () => {
     setSprice(priceRange[0]);
-    setEprice(priceRange[1])
-    handlePriceChange(priceRange[0],priceRange[1])
-  }
-  
- 
-  useEffect(()=>{
+    setEprice(priceRange[1]);
+    // handlePriceChange(priceRange[0], priceRange[1]);
+  };
+
+  useEffect(() => {
     setSprice(0);
     setEprice(null);
-  },[location])
-
+  }, [location]);
 
   return (
     <div className="flex flex-col z-40 p-3 w-60">
-      <div className="mb-4">
-        {/* <h3 className="text-lg font-semibold mb-2">Filter</h3> */}
-        {/* <div className="mb-4">
-          
-          <div className="relative mt-1">
-            <input
-              type="text"
-              id="search"
-              onChange={(e)=>setKeyword(e.target.value)}
-              className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Search..."
-            />
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg
-                className="h-6 w-6 text-gray-400"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 2a8 8 0 105.293 14.293l4.388 4.387a1 1 0 001.415-1.415l-4.388-4.387A8 8 0 0010 2zm-6 8a6 6 0 1112 0 6 6 0 01-12 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-              <Button onClick={searchKeywordOnSubmitHandler} >Search</Button>
-
-        </div> */}
-
-        
-
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Filter By Price Range:</h3>
-         
-           <Box display="flex" flexDirection="column" mt={2}>
-      <TextField
-        type="number"
-        label="From"
-        placeholder='0'
-        value={priceRange[0]}
-        onChange={(e) => handlePriceInputChange(e, 0)}
-        variant="outlined"
-        InputProps={{
-          startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-        }}
-        inputProps={{
-          min: 0,
-          max: priceRange[1],
-        }}
-        className="mb-2"
-        fullWidth
-      />
-      <TextField
-        type="number"
-        label="To"
-        value={priceRange[1]}
-        onChange={(e) => handlePriceInputChange(e, 1)}
-        placeholder='1000'
-        variant="outlined"
-        InputProps={{
-          startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-        }}
-        inputProps={{
-          min: priceRange[0],
-          max: 100,
-        }}
-        fullWidth
-      />
-    </Box>
-    <Button onClick={submitPriceInputChange}>Apply</Button>
-        </div>
+      <span style={{fontFamily: "Poppins,sans-serif"}} className="text-sm md:text-md mb-2 font-medium">FILTERS</span>
+      <div className='border-b-2 border-gray-300 h-1'/>
+      <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowPriceFilter(!showPriceFilter)}>
+        <h3 className="text-lg text-[#1D1D1D] font-semibold my-2">Price</h3>
+        {showPriceFilter ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </div>
+      <div className='border-b-2 border-gray-300 h-1'/>
+            <Transition
+        show={showPriceFilter}
+        enter="transition-opacity duration-200"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-200"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div className="mb-4">
+          <Box display="flex" flexDirection="column" mt={2}>
+  <TextField
+    type="text"
+    placeholder="From"
+    size='small'
+    value={priceRange[0] || ''}
+    onChange={(e) => handlePriceInputChange(e, 0)}
+    variant="outlined"
+    // InputProps={{
+    //   startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+    // }}
+    inputProps={{
+      inputMode: "numeric",
+      pattern: "\\d*",
+      min: 0,
+      max: priceRange[1] || 1000,
+      style: { appearance: "textfield" } // Removes the number input spinner
+    }}
+    className="mb-2"
+    fullWidth
+  />
+  <TextField
+    type="text"
+    placeholder="To"
+    value={priceRange[1] || ''}
+    size='small'
+    onChange={(e) => handlePriceInputChange(e, 1)}
+    variant="outlined"
+    // InputProps={{
+    //   startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+    // }}
+    inputProps={{
+      inputMode: "numeric",
+      pattern: "\\d*",
+      min: priceRange[0] || 0,
+      max: 10000,
+      style: { appearance: "textfield" } // Removes the number input spinner
+    }}
+    sx={{ ":-ms-input-placeholder":{fontWeight:500} }}
+    fullWidth
+  />
+</Box>
+
+          <Button onClick={submitPriceInputChange}>Apply</Button> 
+        </div>
+      </Transition>
+      <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowAvailabilityFilter(!showAvailabilityFilter)}>
+  <h3 className="text-lg text-[#1D1D1D] font-semibold my-2">Availability</h3>
+  {showAvailabilityFilter ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+</div>
+<div className='border-b-2 border-gray-300 h-1' />
+
+<Transition
+  show={showAvailabilityFilter}
+  enter="transition-opacity duration-200"
+  enterFrom="opacity-0"
+  enterTo="opacity-100"
+  leave="transition-opacity duration-200"
+  leaveFrom="opacity-100"
+  leaveTo="opacity-0"
+>
+  <div className="flex flex-col gap-2 mt-2">
+    <label className="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        name="inStock"
+        checked={availability.inStock}
+        onChange={handleAvailabilityChange}
+        className="w-4 h-4"
+      />
+      <span>In Stock</span>
+    </label>
+    <label className="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        name="outOfStock"
+        checked={availability.outOfStock}
+        onChange={handleAvailabilityChange}
+        className="w-4 h-4"
+      />
+      <span>Out of Stock</span>
+    </label>
+  </div>
+</Transition>
+
     </div>
   );
 };

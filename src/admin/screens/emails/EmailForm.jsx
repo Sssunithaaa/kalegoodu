@@ -7,6 +7,7 @@ import { getProductNames } from "../../../services/index/products";
 import { filterProducts } from "../../../utils/multiSelectTagUtils";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../components/Button";
+import api from "../../../services/index/api";
 const promiseOptions = async (inputValue) => {
   const { data: productsData } = await getProductNames();
   return filterProducts(inputValue, productsData);
@@ -33,15 +34,15 @@ const EmailForm = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post(`${import.meta.env.VITE_APP_URL}/api/send-promotional-emails/`,  {
+      const response = await api.post(`/api/send-promotional-emails/`,  {
       title: emailTitle,
       body: emailBody,
-      products: selectedProducts.map((product) => product.value),
+      products: [54],
     });
       toast.success(response.data.message);
     } catch (error) {
       console.log("Error sending email:", error);
-      toast.error("Failed to send promotional emails.");
+      toast.error(error.response.data.error);
     } finally {
       setLoading(false);
     }

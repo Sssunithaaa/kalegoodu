@@ -8,6 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import BackButton from "../../BackButton";
 import DeleteConfirmationDialog from "../../ConfirmationDialog";
 import { deleteItem } from "../../hooks/utils";
+import api from "../../../services/index/api";
 const ManageProducts = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,21 +45,17 @@ const ManageProducts = () => {
 
   
   const products = productsData?.results?.products || [];
-  const totalPages = Math.ceil(productsData.count / 4); // Adjust page size accordingly
-
-  // Handle search input changes
+  const totalPages = Math.ceil(productsData.count / 4);
   const searchKeywordOnChangeHandler = (event) => {
     setSearchKeyword(event.target.value);
   };
-
   const searchKeywordOnSubmitHandler = (event) => {
     event.preventDefault();
     setKeyword(searchKeyword);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1); 
     refetch();
   };
 
-  // Handle page change
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
@@ -80,7 +77,7 @@ const ManageProducts = () => {
   // Toggle product visibility
   const handleToggleVisibility = async (id, currentVisibility) => {
     try {
-      await axios.put(`${baseUrl}/api/update_product/${id}/`, {
+      await api.put(`/api/update_product/${id}/`, {
         visible: !currentVisibility,
       });
       toast.success("Visibility updated successfully!");

@@ -2,12 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
+import CreatableSelect from "react-select/creatable";
 import axios from "axios";
 import {
   getSingleCategory,
   updateCategory,
   createCategory,
+  getSubcategoriesByCategory,
 } from "../../../services/index/postCategories";
 import { addImage,updateImage } from "../../api/ImageApi";
 import Dropzone from "react-dropzone";
@@ -16,7 +17,13 @@ import styled from "styled-components";
 import BackButton from "../../BackButton";
 import { ClipLoader } from "react-spinners";
 import Button from "../../../components/Button";
-import { set } from "react-hook-form";
+import api from "../../../services/index/api";
+
+const promiseOptions = async (inputValue) => {
+  const { data: categoryData } = await getAllCategories();
+  return filterCategories(inputValue, categoryData);
+};
+
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -48,7 +55,8 @@ const EditCategories = () => {
   const queryClient = useQueryClient();
   
   const { slug } = useParams();
-
+   const [keyword,setKeyword] = useState("");
+  const [sortOption, setSortOption] = useState("created_at-desc");
   const isEditMode = Boolean(slug);
 
   const [categoryTitle, setCategoryTitle] = useState(
@@ -57,7 +65,7 @@ const EditCategories = () => {
   const [description, setDescription] = useState(
     isEditMode ? "Sample Description" : ""
   );
-
+  const [subCategories,setSubCategories] = useState([]);
   const [visible,setVisible] = useState(false)
   const [header,setHeader] = useState(false);
   const [homePage,setHomePage] = useState(false);
@@ -70,12 +78,23 @@ const EditCategories = () => {
     enabled: isEditMode, // Only fetch when in edit mode
   
   });
+
+  const {data: subcategories} = useQuery({
+    queryKey: ["sub-categories",slug],
+    queryFn: () => getSubcategoriesByCategory({id:slug}),
+    enabled: isEditMode, 
+  })
+
+  console.log(subcategories)
   const baseUrl = import.meta.env.VITE_APP_URL
  useEffect(()=> {
   setCategoryTitle(data?.name || "");
-      setDescription(data?.description || "");
-      
-      setPreviews(data?.images?.map((image)=>"https://res.cloudinary.com/dgkgxokru/"+image?.image) || [null,null,null])
+  setDescription(data?.description || "");
+      setSubCategories(subcategories?.map((sub)=> ({
+        value: sub.subcategory_id,
+        label: sub.name
+      })))
+      setPreviews(data?.images?.map((image)=>import.meta.env.VITE_CLOUD_URL+image?.image) || [null,null,null])
       setVisible(data?.visible)
       setHeader(data?.header)
       setHomePage(data?.home_page)
@@ -168,8 +187,7 @@ const navigate = useNavigate()
   formData.append("visible", visible); // Ensure the key matches
   formData.append("header",header ? header : false);
   formData.append("home_page",homePage ? homePage : false);
-  console.log(header)
-  console.log(homePage)
+
   if(!isEditMode){
    files.forEach(file => {
     if (file) {
@@ -179,6 +197,10 @@ const navigate = useNavigate()
   });
   }
 
+
+  for(let pair of formData.entries()) {
+    console.log(pair[0]+ ', '+ pair[1]);
+  }
 
 
   if (isEditMode) {
@@ -210,7 +232,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 
  const handleDelete = async (categoryImageId) => {
     try {
-      await axios.delete(`${baseUrl}/api/category_image/${categoryImageId}/delete/`);
+      await api.delete(`/api/category_image/${categoryImageId}/delete/`);
       // queryClient.invalidateQueries(["banner"]);
       toast.success("Image deleted successfully");
       refetch()
@@ -223,9 +245,9 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
 
   return (
     <div className="col-span-4 py-8">
-       <div className="flex w-full justify-start self-start">
-    <BackButton />
-  </div>
+        <div className="flex w-full justify-start self-start">
+        <BackButton />
+        </div>
       <h4 className="text-lg leading-tight my-4">
         {isEditMode ? "Update Category" : "Add New Category"}
       </h4>
@@ -248,7 +270,7 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
           {...getRootProps({
             className: `${
               previews[index] ? "bg-white" : "bg-black/20"
-            } dropzone grid content-center h-full mx-auto lg:w-[100%] rounded-xl`,
+            } dropzone grid content-center h-full mx-auto lg:max-w-[250px] max-w-[200px] rounded-xl`,
           })}
         >
           <input {...getInputProps()} />
@@ -328,6 +350,23 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
             placeholder="Description"
           />
         </div>
+        {/* {isEditMode && <div className="flex flex-col mt-4 gap-y-2">
+          <label>Sub Categories: </label>
+          <CreatableSelect
+              isMulti
+              name="categories"
+              options={subCategories}
+              value={subCategories}
+               onChange={(selectedOptions) => {
+    setSubCategories(selectedOptions); // Update with only selected options
+  }}
+              loadOptions={promiseOptions}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select or create categories"
+              // isDisabled={isEditMode}
+            />
+        </div>} */}
        <div className="mb-4 mt-4">
   <label htmlFor="visibility" className="flex flex-row text-gray-700 text-lg font-medium mb-2">
     <span>Category visibility: </span>

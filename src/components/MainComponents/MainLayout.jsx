@@ -18,7 +18,7 @@ const MainLayout = ({ children }) => {
   if (isAdminPage) {
     return <div>{children}</div>;
   }
-  const {data,isLoading} = useQuery({
+  const {data,isLoading,isFetching} = useQuery({
     queryKey: ["page-contents"],
     queryFn: getPageContents
   })
@@ -39,30 +39,36 @@ const MainLayout = ({ children }) => {
    const message = "Flat 5% off on your first order, use code: FIRST5 | For express shipping, DM us.";
 const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; // Adds extra non-breaking spaces
   return (
-    <div className='example'>
-      {
-        data?.[4]?.visible && (
-          <div 
+  <div className='example'>
+    {data?.[4]?.visible ? (
+      <div 
   ref={marqueeRef} 
-  className="static overflow-hidden w-full z-10  bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5"
-  style={{ position: 'relative',zIndex:10 }}
+  className="static overflow-hidden w-full z-10 bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 min-h-[40px] flex items-center"
 >
-  {!showSidebar && <Marquee speed={100} style={{zIndex:1,paddingBlock:"6px"}} gradient={false}>
-           <div dangerouslySetInnerHTML={{ __html: data?.[4]?.content }} />
-{spacing}{spacing}{spacing}{spacing}{spacing}{spacing} <div dangerouslySetInnerHTML={{ __html: data?.[4]?.content }} />
-  </Marquee>}
+  {isLoading || isFetching ? (
+    <div className="w-full text-center text-gray-600">Loading announcements...</div>
+  ) : (
+    data?.[4]?.visible && !showSidebar && (
+      <Marquee speed={100} style={{ zIndex: 1, paddingBlock: "6px" }} gradient={false}>
+        <div dangerouslySetInnerHTML={{ __html: data?.[4]?.content }} />
+        {spacing}{spacing}{spacing}{spacing}{spacing}{spacing} 
+        <div dangerouslySetInnerHTML={{ __html: data?.[4]?.content }} />
+      </Marquee>
+    )
+  )}
 </div>
-        )
-      }
 
-      <Navbar />
-      {!isHomePage && <Breadcrumbs />}
-      <main className='h-[100%] min-h-screen flex-grow'>
-        {children}
-      </main>
-    {<CTA/>}
-    </div>
-  );
+    ) : null }
+
+    <Navbar />
+    {!isHomePage && <Breadcrumbs />}
+    <main className='h-[100%] min-h-screen flex-grow'>
+      {children}
+    </main>
+    <CTA />
+  </div>
+);
+
 };
 
 export default MainLayout;

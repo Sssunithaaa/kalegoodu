@@ -12,7 +12,7 @@ import {
   updateProduct,
   createProduct,
 } from "../../../services/index/products"; // Make sure to import the createProduct service
-import { getAllCategories, getAllCategoriess } from "../../../services/index/postCategories";
+import { getAllCategories, getAllCategoriess, getSubcategoriesByCategories } from "../../../services/index/postCategories";
 import {
   
   filterCategories,
@@ -68,6 +68,7 @@ const EditPost = () => {
   const { id } = useParams(); 
   const queryClient = useQueryClient();
   const [categories, setCategories] = useState([]); 
+  const [subCategories,setSubCategories] = useState([]);
   const [name, setName] = useState(""); 
   const [tags, setTags] = useState([]);
   const [discountedPrice, setDiscountPrice] = useState(0); 
@@ -76,11 +77,31 @@ const EditPost = () => {
   const [videoUrl, setVideoUrl] = useState("")
   const [uploading,setIsUploading] = useState(false)
   const [quantity,setQuantity] = useState(1);
+  const [emojiLoaded,setIsEmojiLoaded] = useState(false)
   const isEditMode = Boolean(id); 
   const { data: categoriesData, isLoadingg, isFetching } = useQuery({
-  queryKey: ["categories"],
+  queryKey: ["visible-categories"],
   queryFn: getAllCategoriess,
+});  
+
+
+
+const categoryIds = useMemo(() => categories?.map(category => category.value), [categories]);
+
+
+
+const { data: subCategoriesData,isFetching: subcategoriesFetching } = useQuery({
+  queryKey: ["subcategories", categoryIds],
+  queryFn: () => getSubcategoriesByCategories(categoryIds),
+  enabled: categoryIds.length > 1
+ // Ensure we only fetch when categories are selected
+  
 });
+
+    
+
+  
+
  useEffect(() => {
     import("quill-emoji")
       .then((quillEmoji) => {
@@ -120,47 +141,38 @@ const baseUrl = import.meta.env.VITE_APP_URL
           label: item.name,
         }))
       );
-
+       setSubCategories(
+        product?.subcategories?.map((item)=>({
+          label: item.name,
+          value: item.subcategory_id
+        }))
+      )
       setName(product.name);
-
       setTags(
         product?.sale_types?.map((tag) => ({
           value: tag.sale_type_id,
           label: tag.name,
         }))
       );
-    
       setDescription(product.short_description);
-
       setPrice(product.price); 
-
       setDiscountPrice(product.discounted_price);
-
       setVideoUrl(product.video_link)
       setPreviews(
-        product.images?.map((image) => "https://res.cloudinary.com/dgkgxokru/"+`${image.image}`) // Assuming image.image is a URL string
+        product.images?.map((image) => import.meta.env.VITE_CLOUD_URL +`${image.image}`) // Assuming image.image is a URL string
       );
       setQuantity(product?.quantity)
-
     }
   }, [product]);
   useEffect(()=> {
      if(!isEditMode){
-      //  setCategories(
-      //   categoriesData?.map((item) => ({
-      //     value: item.category_id,
-      //     label: item.name,
-      //   }))
-      // )
-
       setTags(
         saleTypesData?.map((tag) => ({
           value: tag.sale_type_id,
           label: tag.name,
         }))
       );
-     }
-      
+     }  
   },[categoriesData,saleTypesData])
 
  const handleMutationError = (error) => {
@@ -221,11 +233,7 @@ const { mutate: mutateAddPostDetail, isLoading: isLoadingAddPostDetail } = useMu
     }
   },[isEditMode])
   
-  // Determine if post data is loaded
   let isPostDataLoaded = !isLoading && !isError;
- 
-
-
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -239,10 +247,11 @@ if (videoUrl) {
   formData.append("video_link", videoUrl);
 }
 
-
-  // Append categories as a JSON array of objects
   const categoryObjects = categories.map(category => category.value);
   formData.append("categories", JSON.stringify(categoryObjects));
+
+  const subCategoryObjects = subCategories.map(sub => sub.value);
+  formData.append("subcategories",JSON.stringify(subCategoryObjects))
   
   const tagObjects = tags.map(tag => tag.value);
   formData.append("sale_types", JSON.stringify(tagObjects));
@@ -257,9 +266,9 @@ if (videoUrl) {
     }
   }); 
   } 
-  // for(let [key,value] of formData.entries()){
-  //   console.log(key+" "+value)
-  // }
+  for(let [key,value] of formData.entries()){
+    console.log(key+" "+value)
+  }
  
 
 
@@ -477,6 +486,31 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
               className="basic-multi-select"
               classNamePrefix="select"
               placeholder="Select or create categories"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="categories" className="">
+              Sub Categories:
+            </label>
+           
+             <CreatableSelect
+              isMulti
+              name="sub-categories"
+              isLoading={subcategoriesFetching}
+              options={subCategoriesData?.map((category)=>(
+                {
+                  value: category.subcategory_id,
+                  label: category.name
+                }
+              ))}
+              value={subCategories}
+               onChange={(selectedOptions) => {
+    setSubCategories(selectedOptions); // Update with only selected options
+  }}
+              loadOptions={promiseOptions}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select or create sub categories"
             />
           </div>
           <div className="flex flex-col gap-2">

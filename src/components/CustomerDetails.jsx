@@ -11,6 +11,7 @@ import { Spinner } from '@material-tailwind/react';
 import { ClipLoader } from 'react-spinners';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAllProducts } from '../services/index/products';
+import api from '../services/index/api';
 
 const CustomerDetails = () => {
   const [email, setEmail] = useState('');
@@ -21,15 +22,15 @@ const CustomerDetails = () => {
   const [add,setAdd] = useState('');
   const [state, setState] = useState('');
   const [pincode, setPincode] = useState('');
-   const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('');
   const [showSummary, setShowSummary] = useState(false);
   const [customer, setCustomer] = useState([])
-   const navigate = useNavigate()
+  const navigate = useNavigate()
   const { cartItems,setCartItems, cartTotal,emptyCart,checkItems,removeFromCart,validateCartQuantities } = useContext(CartContext);
   const [total, setTotal] = useState(cartTotal);
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const { error, isLoading, Razorpay } = useRazorpay();
-  console.log(cartItems)
+  const [dialogOpen, setDialogOpen] = useState(false);
+  // const { error, isLoading, Razorpay } = useRazorpay();
+  
 useEffect(() => {
   let totalPrice = 0;
   cartItems?.forEach((item) => {
@@ -68,15 +69,15 @@ const validateStockMutation = useMutation({
 
 const handleFormSubmit = async (e) => {
   e.preventDefault();
-  // setIsLoading(true);
-
+  setIsLoading(true);
+  checkItems();
   handleCartUpdate()
   const { valid, outOfStockItems } = await validateStockMutation.mutateAsync(cartItems);
 
     if (!valid) {
       toast.error(`These items are out of stock: ${outOfStockItems.join(', ')}`);
       return;
-    }
+    } 
   // Prepare customer and order payload
   const formattedPhone = phone.startsWith("0") ? phone.slice(1) : phone;
   const fullAddress = `${apartment}, ${add}, ${city}, ${state}`;
@@ -88,8 +89,6 @@ const handleFormSubmit = async (e) => {
     pincode,
     visible: "True",
   };
-
-
 
   const orderPayload = {
     orderDetails: {
@@ -107,36 +106,35 @@ const handleFormSubmit = async (e) => {
   };
 
   setCustomer(orderPayload);
-   
-
+  
   try {
     // Create Razorpay order
-  //   const response = await axios.post(`${baseUrl}/api/create-payment/`, { amount: 100 }, {
-  //     headers: { "Content-Type": "application/json" },
-  //   });
+    const response = await axios.post(`${baseUrl}/api/create-payment/`, { amount: 100 }, {
+      headers: { "Content-Type": "application/json" },
+    });
 
-  //   const { razorpay_order_id, amount, currency } = response.data;
+    const { razorpay_order_id, amount, currency } = response.data;
+   
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: amount.toString(),
+      currency,
+      name: "Kalegoodu",
+      description: "Order Payment",
+      order_id: razorpay_order_id,
+      handler: async function (paymentResponse) {
+  try {
+    // Verify payment
+    const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
 
-  //   const options = {
-  //     key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-  //     amount: amount.toString(),
-  //     currency,
-  //     name: "Kalegoodu",
-  //     description: "Order Payment",
-  //     order_id: razorpay_order_id,
-  //     handler: async function (paymentResponse) {
-  // try {
-  //   // Verify payment
-  //   const verificationResponse = await axios.post(`${baseUrl}/api/verify-payment/`, paymentResponse);
-
-    // if (verificationResponse.data.status === "success") {
-      // checkItems();
+    if (verificationResponse.data.status === "success") {
+      
       setIsOrderLoading(true); // Show loader during backend processing
 
       // Attempt to create order in the backend
       try {
         const res = await axios.post(`${baseUrl}/api/create-order/`, orderPayload);
-        
+     
         toast.success("Order placed successfully!");
         emptyCart();
 
@@ -147,36 +145,37 @@ const handleFormSubmit = async (e) => {
 
       } catch (orderError) {
         // Handle order creation failure
-        console.error("Order creation failed:", orderError);
+        console.log("Order creation failed:", orderError);
 
         toast.error(
           "Order placement failed after successful payment. " +
           "If the amount was deducted, please contact us at kalegoodu@gmail.com with your payment details."
         , { autoClose: false });
       }
-//     } else {
-//       toast.error("Payment verification failed!");
-//     }
-//   } catch (error) {
-//     console.error("Payment verification or order creation failed:", error);
-//     toast.error("Error processing payment or placing order.");
-//   } finally {
-//     setIsOrderLoading(false); // Stop loader
-//   }
-// },
+    } else {
+      toast.error("Payment verification failed!");
+    }
+  } catch (error) {
+    console.error("Payment verification or order creation failed:", error);
+    toast.error("Error processing payment or placing order.");
+  } finally {
+    setIsOrderLoading(false); // Stop loader
+    setIsLoading(false)
+  }
+},
 
-//       prefill: {
-//         name: `${firstName} ${lastName}`,
-//         email,
-//         contact: `+91${phone}`,
-//       },
-//       theme: {
-//         color: "#3399cc",
-//       },
-//     };
+      prefill: {
+        name: `${firstName} ${lastName}`,
+        email,
+        contact: `+91${phone}`,
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
 
-//     const razorpay = new window.Razorpay(options);
-//     razorpay.open();
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
   } catch (error) {
     console.log("Payment initiation failed:", error);
     toast.error("Payment initiation failed! Please try again.");
@@ -226,9 +225,9 @@ const handleFormSubmit = async (e) => {
           </button>
         </div>
         
-
+{/*bg-[#edf3ed]  */}
         {/* Order Summary */}
-     <div className={`bg-[#edf3ed] w-[100%] md:w-[50%] md:max-w-[50%] md:col-span-1 md:sticky md:top-0 px-4 pb-4 md:pb-6 transition-all duration-300 md:block ${showSummary ? 'block' : 'hidden'}`}>
+     <div className={`bg-gray-50 w-[100%] md:w-[50%] md:max-w-[50%] md:col-span-1 md:sticky md:top-0 px-4 pb-4 md:pb-6 transition-all duration-300 md:block ${showSummary ? 'block' : 'hidden'}`}>
   {/* <table className="md:min-w-full table-fixed md:px-3 min-w-full justify-center divide-y divide-gray-500"> */}
   {/* <tbody className="divide-y max-w-[100%] divide-gray-300"> */}
  <div className='text-lg md:text-2xl text-center font-bold my-3'>
@@ -236,7 +235,7 @@ const handleFormSubmit = async (e) => {
  </div>
   {cartItems.length !== 0 && cartItems.map((item) => (
   
-    <div className="bg-[#edf3ed] w-full md:w-1/2 md:px-4 py-4">
+    <div className=" w-full md:w-1/2 md:px-4 py-4">
   <div className="flex flex-row justify-between items-center gap-3 md:space-x-10 border-b pb-4">
     {/* Product Image */}
     <div className='flex flex-row items-center gap-3'>

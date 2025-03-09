@@ -324,6 +324,7 @@ export const CartProvider = ({ children }) => {
         setIsCartVisible,
         toggleCart,
         validateCartQuantities,
+        checkItems
       }}
     >
       {children}

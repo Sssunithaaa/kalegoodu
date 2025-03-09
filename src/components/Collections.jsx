@@ -55,7 +55,7 @@ const Collections = () => {
             <ImageContainer>
               {category?.images.length > 0 && (
                 <CarouselImage
-                  src={"https://res.cloudinary.com/dgkgxokru/" + category.images[0].image}
+                  src={import.meta.env.VITE_CLOUD_URL + category.images[0].image}
                   alt={category.images[0].alt_text || category.name}
                 />
               )}

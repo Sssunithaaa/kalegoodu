@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "./api";
  const url = import.meta.env.VITE_APP_URL;
 export const getAllProducts = async (page=1,search="") => {
   try {
@@ -74,8 +75,8 @@ export const getProductNames = async (id) => {
    
     return response.data;
   } catch (error) {
-    if (error.response && error.response.data.message)
-      throw new Error(error.response.data.message);
+    if (error.response && error.response.data.error)
+      throw new Error(error.response.data.error);
     throw new Error(error.message);
   }
 };
@@ -106,7 +107,7 @@ export const updateProduct = async ({ updatedData, id }) => {
       },
     };
 
-    const response = await axios.put(`${url}/api/update_product/${id}/`, updatedData, config);
+    const response = await api.put(`/api/update_product/${id}/`, updatedData, config);
    
     return response.data;
   } catch (error) {
@@ -124,9 +125,9 @@ export const createProduct = async (formData) => {
       },
     };
 
-    const { data } = await axios.post(`${url}/api/add_product/`, formData, config);
+    const { data } = await api.post(`/api/add_product/`, formData, config);
 
-    return data; // Return the response data if successful
+    return data; 
   } catch (error) {
     // Check if the error response exists and contains validation messages
     if (error.response && error.response.data) {

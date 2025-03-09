@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "./api";
 
 export const createNewComment = async ({
   token,
@@ -14,7 +15,7 @@ export const createNewComment = async ({
       },
     };
 
-    const { data } = await axios.post(
+    const { data } = await api.post(
       "/api/comments",
       {
         desc,
@@ -40,7 +41,7 @@ export const updateComment = async ({ token, desc, check, commentId }) => {
       },
     };
 
-    const { data } = await axios.put(
+    const { data } = await api.put(
       `/api/comments/${commentId}`,
       {
         desc,

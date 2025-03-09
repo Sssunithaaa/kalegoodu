@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "./api";
  const url = import.meta.env.VITE_APP_URL;
 export const createPageContent = async (formData) => {
     const config = {
@@ -7,8 +8,8 @@ export const createPageContent = async (formData) => {
       },
     };
   try {
-    const response = await axios.post(
-      `${url}/api/add_page_contents/`,formData,config
+    const response = await api.post(
+      `/api/add_page_contents/`,formData,config
     );
    
     return response?.data
@@ -26,7 +27,7 @@ export const updatePageContent = async (pageId, formData) => {
     },
   };
   try {
-    const response = await axios.put(`${url}/api/update_page_contents/${pageId}/`, formData, config);
+    const response = await api.put(`/api/update_page_contents/${pageId}/`, formData, config);
     return response?.data;
   } catch (error) {
     if (error.response && error.response.data.message)

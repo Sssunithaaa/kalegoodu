@@ -109,7 +109,7 @@ const Hero = ({props}) => {
                 backgroundAttachment: "fixed",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
-                backgroundImageSrc: `https://res.cloudinary.com/dgkgxokru/${img.image}`,
+                backgroundImageSrc: `${import.meta.env.VITE_CLOUD_URL}/${img.image}`,
               }}
             />
           ))

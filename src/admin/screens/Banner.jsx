@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import { QueryClient } from '@tanstack/react-query';
 import BackButton from '../BackButton';
 import { ClipLoader } from 'react-spinners';
 import { deleteItem } from '../hooks/utils';
 import DeleteConfirmationDialog from '../ConfirmationDialog';
+import api from '../../services/index/api';
 const AdminContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -136,8 +135,8 @@ const [isUpdatingImage,setIsUpdatingImage] = useState(false)
   formData.append('image', file);
    setIsUpdatingImage(true)
   try {
-    await axios.put(
-      `${baseUrl}/api/update_banner_image/${bannerImageId}/`,
+    await api.put(
+      `/api/update_banner_image/${bannerImageId}/`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     );
@@ -169,8 +168,8 @@ const handleUpload = async (e) => {
           formData.append('title', "Sample image");
           formData.append('image', file);
           formData.append('visible', true);
-          await axios.post(
-            `${baseUrl}/api/banner_images/`,
+          await api.post(
+            `/api/banner_images/`,
             formData,
             config
           );          
@@ -203,7 +202,7 @@ const handleUpload = async (e) => {
    };
  
    const handleConfirmDelete = async () => {
-     const deleteUrl = `${baseUrl}/api/banner_image/${selectedItemId}/delete/`;
+     const deleteUrl = `/api/banner_image/${selectedItemId}/delete/`;
      await deleteItem(deleteUrl, refetch);
      setDeleteDialogOpen(false);
    };
@@ -241,7 +240,7 @@ const handleUpload = async (e) => {
             {...getRootProps({
               className: `${
                 previews[index] ? 'bg-white' : 'bg-black/20'
-              } dropzone grid content-center h-full mx-auto lg:w-[250px] w-[200px] rounded-xl` // Fixed width for images
+              } dropzone grid content-center mx-auto lg:max-w-[250px] max-w-[200px] rounded-xl` // Fixed width for images
             })}
           >
             <input {...getInputProps()} />
@@ -250,7 +249,7 @@ const handleUpload = async (e) => {
                 <img
                   src={previews[index]}
                   alt={`Preview ${index + 1}`}
-                  className="w-full h-auto my-5 rounded-lg mx-auto" // Ensure the image is responsive
+                  className="w-full h-auto rounded-lg mx-auto" // Ensure the image is responsive
                 />
               </div>
             ) : (
@@ -292,7 +291,7 @@ const handleUpload = async (e) => {
 </div>
 
           {addingImages && <div className="flex mx-auto mt-4">
-            <Button isLoading={isAddingImage}  type="submit disabled:cursor-none" disabled={isAddingImage}>{"Upload Images"}</Button>
+            <Button isLoading={isAddingImage}  type="submit disabled:cursor-none" disabled={isAddingImage}>{isAddingImage ? <ClipLoader size={20}/> :"Upload Images"}</Button>
           </div>}
         </div>
       </form>

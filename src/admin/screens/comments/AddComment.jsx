@@ -11,6 +11,8 @@ import "react-quill/dist/quill.snow.css";
 import "quill-emoji/dist/quill-emoji.css"; // Emoji styles
 import { Quill } from "react-quill";
 import * as Emoji from "quill-emoji";
+import api from '../../../services/index/api';
+import { ClipLoader } from 'react-spinners';
 
 Quill.register("modules/emoji", Emoji);
 
@@ -63,16 +65,16 @@ const AddTestimonialForm = () => {
     },
     enabled: isEditMode
   })
- 
+  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-
     try {
      const selectedProduct = products.find((product) => product.product_id === parseInt(productId));
 
       if(isEditMode){
-        await axios.put(`${baseUrl}/api/update_comment/${id}/`, {
+        await api.put(`/api/update_comment/${id}/`, {
         product_name: selectedProduct ? selectedProduct.name : '',
         product: parseInt(productId),
         user_name: userName,
@@ -82,7 +84,7 @@ const AddTestimonialForm = () => {
       });
       toast.success('Testimonial Updated successfully!');
       } else {
-        await axios.post(`${baseUrl}/api/allcomments/`, {
+        await api.post(`/api/allcomments/`, {
         product_name: selectedProduct ? selectedProduct.name : '',
         product: parseInt(productId),
         user_name: userName,
@@ -256,7 +258,7 @@ const AddTestimonialForm = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          {isEditMode ? "Update Testimonial" : 'Add Testimonial'}
+          {isSubmitting ? <ClipLoader size={20}/> :isEditMode ?  "Update Testimonial" : 'Add Testimonial'}
         </Button>
       </form>
     </div>

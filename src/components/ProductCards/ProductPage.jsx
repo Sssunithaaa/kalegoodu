@@ -69,7 +69,7 @@ function ProductPage() {
         {/* Similar Products Section */}
        {/* Similar Products Section */}
 <div className="my-4 px-5 w-full">
-  <h2 className="text-2xl font-semibold text-center mb-2">You may also like</h2>
+  <p className="text-2xl font-semibold text-center uppercase mb-2">YOU MAY ALSO LIKE</p>
   {isLoadingSimilar ? (
     <div className="flex justify-center items-center">
       <ClipLoader color="#36d7b7" loading={isLoadingSimilar} size={50} />

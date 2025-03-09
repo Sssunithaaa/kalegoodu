@@ -9,6 +9,7 @@ import CompactProductCard from '../CompactProductCard';
 import ReactPlayer from 'react-player';
 import "react-image-gallery/styles/css/image-gallery.css";
 import ImageGallery from 'react-image-gallery';
+import Title from '../Title';
 
 function ProductGallery() {
   const [cartCounter, setCartCounter] = useState(1);
@@ -37,8 +38,8 @@ function ProductGallery() {
 
 const images = [
    ...(product?.images?.map((img) => ({
-    original: `https://res.cloudinary.com/dgkgxokru/${img?.image}`,
-    thumbnail: `https://res.cloudinary.com/dgkgxokru/${img?.image}`,
+    original: `${import.meta.env.VITE_CLOUD_URL}${img?.image}`,
+    thumbnail: `${import.meta.env.VITE_CLOUD_URL}${img?.image}`,
     alt: `${product?.name} Image`,
   })) || []),
   ...(product?.video_link
@@ -48,7 +49,7 @@ const images = [
           thumbnail: "https://img.youtube.com/vi/YOUR_VIDEO_ID/hqdefault.jpg", // Use a thumbnail for the video
           embedUrl: product.video_link,
            renderItem: () => (
-            <div className={`video-wrapper h-[300px] md:h-[500px] justify-center flex`}>
+            <div className={`video-wrapper h-[70vh] md:h-[500px] justify-center flex`}>
               <ReactPlayer url={product.video_link} controls width="100%" height="100%" />
             </div>
           ),
@@ -71,20 +72,30 @@ const images = [
       <div className="lg:max-w-[100%] w-[100%] md:max-w-[100%] md:mx-auto md:px-4 pt-[10px] lg:pt-0 md:pt-[0]">
         <div className="flex flex-col md:flex-row md:items-start md:px-0 md:gap-6 md:py-10 lg:py-10 items-center md:justify-center">
           {!isLoadingProduct ? (
-            <div className="flex flex-col md:flex-row md:relative w-full gap-x-2">
+            <div className="flex flex-col md:flex-row md:relative w-full gap-x-2 md:gap-x-1">
               {/* Slider Section */}
-              <div className="md:w-[50%] md:sticky justify-center mx-4">
+              <div className="md:w-[50%] md:sticky justify-center mx-4 md:mx-1">
                 <div className="md:sticky md:top-0">
-<ImageGallery 
-  items={images} 
-  // loading="lazy"
-  // lazyLoad={true}
+<ImageGallery
+  items={images}
   lazyLoad={true}
-  showThumbnails={showThumbnails} 
-  showFullscreenButton={true} 
-  showPlayButton={false} 
-
+  showThumbnails={showThumbnails}
+  showFullscreenButton={true}
+  showPlayButton={false}
+  renderItem={(item) => (
+    <img
+      src={item.original}
+      alt={item.originalAlt}
+      style={{
+        height: "500px", // Minimum 200px, scales with viewport up to 700px
+        width: "100%",
+        objectFit: "cover",
+      }}
+    />
+  )}
 />
+
+
                 </div>
               </div>
 
@@ -114,7 +125,7 @@ const images = [
         {/* Similar Products Section */}
        {/* Similar Products Section */}
 <div className="my-4 px-5 w-full">
-  <h2 className="text-2xl font-semibold text-center mb-2">You may also like</h2>
+  <Title className=" mb-2">You may also like</Title>
   {isLoadingSimilar ? (
     <div className="flex justify-center items-center">
       <ClipLoader color="#36d7b7" loading={isLoadingSimilar} size={50} />

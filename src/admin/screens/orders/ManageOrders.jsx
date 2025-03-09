@@ -8,6 +8,7 @@ import Button from '../../../components/Button';
 import { getAllOrderss } from '../../../services/index/orders';
 import DeleteConfirmationDialog from '../../ConfirmationDialog';
 import { deleteItem } from '../../hooks/utils';
+import api from '../../../services/index/api';
 const ManageProducts = () => {
   const PAGE_SIZE = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -152,7 +153,7 @@ const handleCheckboxChange = (orderId, item, isChecked) => {
    const handleSaveNote = async (orderId, note) => {
    
     try {
-      await axios.put(`${url}/api/acknowledge_order/`, {
+      await api.put(`/api/acknowledge_order/`, {
         order_id: orderId,
         note: note,
         items: []
@@ -181,7 +182,7 @@ const handleInTransit = async (orderId,order) => {
   }));
 
   try {
-    await axios.put(`${url}/api/acknowledge_order/`, {
+    await api.put(`/api/acknowledge_order/`, {
       order_id: orderId,
       items,
       note: order.note,
@@ -190,7 +191,7 @@ const handleInTransit = async (orderId,order) => {
     refetch()
   } catch (error) {
     console.log(error)
-    toast.error("Failed to update order items. Try again!");
+    toast.error(error.response.data.error || "Failed to update order items. Try again!");
 }
 }
  
@@ -202,7 +203,6 @@ const searchKeywordOnChangeHandler = (event) => {
 
 
 
- const url = import.meta.env.VITE_APP_URL;
  
   const totalPages = Math.ceil(ordersData.totalCount/ PAGE_SIZE); 
 

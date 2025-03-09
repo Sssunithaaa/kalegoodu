@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../../services/index/api';
 
 /**
  * Updates an image for a product.
@@ -14,8 +15,8 @@ import { toast } from 'react-toastify';
   formData.append('image', file);
   setLoading(true);
   try {
-    await axios.put(
-      `${baseUrl}/api/${url}`,
+    await api.put(
+      `/api/${url}`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     );
@@ -43,8 +44,8 @@ import { toast } from 'react-toastify';
  
   setLoading(true);
   try {
-    await axios.post(
-      `${baseUrl}/api/${url}`,
+    await api.post(
+      `/api/${url}`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     );

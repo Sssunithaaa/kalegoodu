@@ -20,17 +20,16 @@ const MainPage = () => {
   const { marqueeRef, heroRef, categoriesRef, newArrivalsRef, bestSellersRef } = useStateContext();
   const location = useLocation();
 
-  const { data: saleTypes, isLoading, refetch } = useQuery({
-    queryKey: ["saletypes"],
-    queryFn: async () => {
-      try {
-        const response = await axios.get(`${baseUrl}/api/sale_types/`);
-        return response.data?.sale_types?.filter((saleType) => saleType.visible);
-      } catch (error) {
-        console.log('Error fetching sale types:', error);
-      }
-    },
-  });
+const { data: saleTypes = [], isLoading } = useQuery({
+  queryKey: ["saletypes"],
+  queryFn: async () => {
+    const response = await axios.get(`${baseUrl}/api/sale_types/`);
+    return response.data?.sale_types?.filter((saleType) => saleType.visible) || [];
+  },
+  keepPreviousData: true, // Keeps old data while fetching new one
+});
+
+
 
   // // Filter sale types based on 'visible' field using useMemo
   // const visibleSaleTypes = useMemo(() => {

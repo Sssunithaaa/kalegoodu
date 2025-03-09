@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "./api";
  const url = import.meta.env.VITE_APP_URL;
 export const getAllWorkshops = async (
  search=""
@@ -41,8 +42,8 @@ export const createWorkshop = async (formData) => {
       },
     };
 
-    const { data } = await axios.post(
-      `${url}/api/add_workshop/`,
+    const { data } = await api.post(
+      `/api/add_workshop/`,
       formData,
       config
     );
@@ -63,8 +64,8 @@ export const updateWorkshop = async ({ formData, slug }) => {
       },
     };
 
-    const response = await axios.put(
-      `${url}/api/update_workshops/${slug}/`,
+    const response = await api.put(
+      `/api/update_workshops/${slug}/`,
       formData,
       config
     );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef, useCallback } from "react";
+import React, { useState, useEffect,useRef,useMemo, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Sidebar from "./SideBar";
 import ProductCard from "./ProductCard";
@@ -11,44 +11,49 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import FullPageLoader from "./FullPageLoader";
 import { useStateContext } from "../context/ContextProvider";
 import Button from "./Button";
+import { ClipLoader } from "react-spinners";
 
 const Products = () => {
   const {showSidebar,setShowSidebar} = useStateContext();
-  
   const [showOverlay,setShowOverlay] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [sortOption, setSortOption] = useState("created_at-desc");
+  const [priceRange,setPriceRange] = useState([null,null])
   const [sPrice, setSprice] = useState(0);
   const [ePrice, setEprice] = useState(null);
   const [price, setPrice] = useState(false);
   const [keyword, setKeyword] = useState(null);
   const [sort, setSort] = useState(false);
-  
-
   const baseUrl = import.meta.env.VITE_APP_URL;
-
-
-  const { id, name } = useParams();
+  const { id, name ,slug} = useParams();
   const categoryMode = Boolean(id);
+  const subCategoryMode = Boolean(slug);
+  const subcategoryId = subCategoryMode ? slug.split("-").pop() : null;
+  const [subcategories,setSubCategories] = useState([]);
   const location = useLocation();
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  // const [priceRange, setPriceRange] = useState([null, null]);
+  const [availability, setAvailability] = useState({ inStock: false, outOfStock: false });
+
+  const handleSubcategoryClick = (subcategory) => {
+    setSelectedSubcategory(subcategory);
+  };
+
   
-  // Set the selected category on location/name change
+ 
+
   useEffect(() => {
+    setSelectedSubcategory(null)
     if (name) {
       setSelectedCategory(name.replaceAll("-", " "));
-      
+    } else if (subCategoryMode) {
+      setSelectedCategory(slug.replace(/-\d+$/, "").replace(/-/g, " "));
     } else {
       setSelectedCategory("All Products");
     }
-  }, [name, location]);
-
-
-
-
-
+  }, [name, slug, location]);
 
   const toggleSidebar = () =>{ setShowSidebar((prev) => !prev)
-
     setShowOverlay(true);
   };
 
@@ -60,10 +65,6 @@ const Products = () => {
       setTimeout(toggleSidebar, 1000);
     }
   }, []);
-
-
-
-
 
   useEffect(() => {
   const handleResize = () => {
@@ -77,92 +78,215 @@ const Products = () => {
   return () => window.removeEventListener("resize", handleResize); // Cleanup listener
 }, []);
 
+
 const fetchProducts = async ({ pageParam = 1 }) => {
-  const endpoint = categoryMode
-    ? `${baseUrl}/api/products_by_category/${id}/?page=${pageParam}`
-    : `${baseUrl}/api/list_products?page=${pageParam}`;
+  try {
+    let fetchedSubcategories = [];
+    if (categoryMode) {
+      if (selectedSubcategory) {
+        fetchedSubcategories = [selectedSubcategory];
+      } else {
+        const { data: categoryData } = await axios.get(
+          `${baseUrl}/api/subcategories_by_category/${id}/`
+        );
+        fetchedSubcategories = categoryData?.subcategories || [];
+      }
+    } else if (subCategoryMode) {
+      fetchedSubcategories = [{ subcategory_id: subcategoryId, name: selectedCategory }];
+    }
 
-  const params = new URLSearchParams();
-  if (keyword) params.append("search", keyword);
-  if (sPrice) params.append("min_price", sPrice);
-  if (ePrice) params.append("max_price", ePrice);
-  if (sortOption) {
-    const [field, order] = sortOption.split("-");
-    params.append("sort_by", field);
-    params.append("sort_order", order);
+    if (!selectedSubcategory) {
+      setSubCategories(fetchedSubcategories); // Update state with fetched subcategories
+    }
+
+    // Prepare availability filters
+    const availabilityFilters = {};
+    if (availability.inStock) availabilityFilters.in_stock = true;
+    if (availability.outOfStock) availabilityFilters.out_of_stock = true;
+
+    if (!categoryMode && !subCategoryMode) {
+      const { data } = await axios.get(`${baseUrl}/api/list_products`, {
+        params: {
+          page: pageParam,
+          search: keyword || undefined,
+          min_price: sPrice || undefined,
+          max_price: ePrice || undefined,
+          sort_by: sortOption ? sortOption.split("-")[0] : undefined,
+          sort_order: sortOption ? sortOption.split("-")[1] : undefined,
+          ...availabilityFilters, // Add availability filters here
+        },
+      });
+
+      return {
+        products: data.results || [],
+        nextPage: data.next ? pageParam + 1 : null, // Ensure pagination works correctly
+      };
+    }
+
+    if (fetchedSubcategories.length === 0) {
+      console.warn("No valid subcategories available.");
+      return { products: [], nextPage: null };
+    }
+
+    const productRequests = fetchedSubcategories.map(async (sub) => {
+      const { data } = await axios.get(
+        `${baseUrl}/api/products_by_subcategory/${sub.subcategory_id}/`,
+        {
+          params: {
+            page: pageParam,
+            search: keyword || undefined,
+            min_price: sPrice || undefined,
+            max_price: ePrice || undefined,
+            sort_by: sortOption ? sortOption.split("-")[0] : undefined,
+            sort_order: sortOption ? sortOption.split("-")[1] : undefined,
+            ...availabilityFilters, // Add availability filters here
+          },
+        }
+      );
+      console.log(`${baseUrl}/api/products_by_subcategory/${sub.subcategory_id}/`,
+        {
+          params: {
+            page: pageParam,
+            search: keyword || undefined,
+            min_price: sPrice || undefined,
+            max_price: ePrice || undefined,
+            sort_by: sortOption ? sortOption.split("-")[0] : undefined,
+            sort_order: sortOption ? sortOption.split("-")[1] : undefined,
+            ...availabilityFilters, // Add availability filters here
+          },
+        })
+      return {
+        products: data.results || [],
+        nextPage: data.next ? pageParam + 1 : null,
+      };
+    });
+
+    // Await all product requests
+    const responses = await Promise.all(productRequests);
+
+    // Extract products properly
+    const products = responses.flatMap((res) => res.products);
+
+    // Determine nextPage correctly (if ANY of the subcategories have a next page)
+    const hasMorePages = responses.some((res) => res.nextPage !== null);
+    const nextPage = hasMorePages ? pageParam + 1 : null;
+
+    return {
+      products,
+      nextPage,
+    };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw new Error("Failed to fetch products");
   }
-
-  const url = `${endpoint}${params.toString() ? "&" + params.toString() : ""}`;
-  const { data } = await axios.get(url);
-  return data;
 };
 
- const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    isFetching,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["products_page",id,categoryMode,keyword,sPrice,ePrice,sortOption],
-    queryFn: fetchProducts,
-    getNextPageParam: (lastPage,allPages) => {
-    
-    
-  return lastPage?.next ? allPages.length + 1 : undefined;
-}
-,
-refetchOnWindowFocus:true
 
-  });
+const {
+  data,
+  isLoading,
+  isError,
+  refetch,
+  fetchNextPage,
+  isFetching,
+  hasNextPage,
+  isFetchingNextPage,
+} = useInfiniteQuery({
+  queryKey: ["products_page", id, categoryMode, keyword, sPrice, ePrice, sortOption, selectedSubcategory, availability.inStock, availability.outOfStock], // Add availability here
+  queryFn: fetchProducts,
+  getNextPageParam: (lastPage, allPages) => lastPage.nextPage ? lastPage.nextPage : null,
+  refetchOnWindowFocus: true,
+  
+});
+
+
+//    useEffect(() => {
+//   const timeout = setTimeout(() => refetch(), 500); // Debounce
+//   return () => clearTimeout(timeout);
+// }, [location]);
+
+  
+
+
+  const fetchMore = useCallback(() => {
+  if (!isFetchingNextPage && hasNextPage) {
+    fetchNextPage();
+  }
+}, [isFetchingNextPage, hasNextPage, fetchNextPage]);
+
 
 
  const observerRef = useRef(null);
+const lastProductRef = useCallback(
+  (node) => {
+    if (!node || isFetchingNextPage) return;
+    if (observerRef.current) observerRef.current.disconnect();
 
-  const lastProductRef = useCallback(
-    (node) => {
-      if (isFetchingNextPage) return;
-
-      if (observerRef.current) observerRef.current.disconnect();
-
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
-          fetchNextPage();
+    observerRef.current = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          fetchMore(); // Call wrapped function instead of `fetchNextPage`
         }
+      },
+      { threshold: 1.0 } // Ensures it only triggers once when fully visible
+    );
 
-      });
-         
-
-      if (node) observerRef.current.observe(node);
-    },
-    [isFetchingNextPage, fetchNextPage, hasNextPage,isLoading]
-  );
+    observerRef.current.observe(node);
+  },
+  [fetchMore, isFetchingNextPage]
+);
 
 if (isError) {
-  console.error("Error fetching products");
+  console.log("Error fetching products");
 }
-const products = data?.pages
-  .flatMap((page) => page.results) // Flatten the pages
-  .filter((product) => product.visible) || []; 
+const products = useMemo(() => [
+  ...new Map(
+    (data?.pages?.flatMap((page) => page.products) || []).map((p) => [
+      p.product_id, p
+    ])
+  ).values()
+], [data]);
+
+
+const categorizedProducts = selectedSubcategory
+  ? { 
+      [selectedSubcategory.name]: products
+    }
+  : subcategories.reduce((acc, subcategory) => {
+      const subcategoryName = subcategory?.name || "Uncategorized"; 
+      if (!acc[subcategoryName]) acc[subcategoryName] = [];
+
+      // Find products belonging to this subcategory
+      const subcategoryProducts = products.filter(product => 
+        product.subcategories?.some(sub => sub.subcategory_id === subcategory.subcategory_id)
+      );
+
+      acc[subcategoryName].push(...subcategoryProducts);
+      return acc;
+    }, {});
+
+
+
+
+
+
+
+
+
+
 const loadMoreHandler = () => {
   if (hasNextPage) fetchNextPage();
 };
 
 
-
-
-
  useEffect(() => {
-  
-  // Reset sort and filter options when location changes
   setSortOption(null); // Reset sorting
   setSprice(0);        // Reset price start
   setEprice(null);     // Reset price end
   setKeyword(null);    // Reset search keyword
   setPrice(false);     // Reset price toggle
   setSort(false);      // Reset sort dropdown visibility
+  
   
 }, [name,location]);
 const handlePriceChange = (start, end) => {
@@ -173,11 +297,14 @@ const handlePriceChange = (start, end) => {
 const handleSortChange = (event) => {
   setSortOption(event.target.value);
 };
+
+
+
   return (
     <div className="w-screen mb-10">
       <div className="flex flex-col lg:mx-[20px] px-1 lg:px-0 relative">
         <div className="py-1 px-3">
-          <h1 className="text-3xl font-semibold">{selectedCategory}</h1>
+          <h1 className="heading tracking-wide">{selectedCategory}</h1>
         </div>
         <div className="flex lg:flex-row flex-col">
           {showSidebar && showOverlay && (
@@ -193,11 +320,14 @@ const handleSortChange = (event) => {
           >
             <Sidebar
               onCategorySelect={setSelectedCategory}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
               setSprice={setSprice}
               setEprice={setEprice}
               setKeyword={setKeyword}
               setPrice={setPrice}
-              
+              availability={availability}
+              setAvailability={setAvailability} 
               handlePriceChange={handlePriceChange}
               toggleSidebar={toggleSidebar}
               location={location}
@@ -209,13 +339,13 @@ const handleSortChange = (event) => {
               <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
                 <h1
                   onClick={toggleSidebar}
-                  className="lg:hidden text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[3%]"
+                  className="lg:hidden subHeading text-[#023020] opacity-90 flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 ml-[3%]"
                 >
                   Filter<span><IoFilter /></span>
                 </h1>
                 <h1
                   onClick={() => setSort(!sort)}
-                  className="text-lg flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 font-bold ml-[3%]"
+                  className="subHeading text-[#023020] opacity-90 flex flex-row hover:cursor-pointer items-center justify-center gap-x-3 ml-[3%]"
                 >
                   Sort by<span><BiSort /></span>
                 </h1>
@@ -261,7 +391,7 @@ const handleSortChange = (event) => {
     <span
       className="ml-auto text-[18px] hover:cursor-pointer"
       onClick={() => {
-        setPrice(false); // Hide the box
+        setPriceRange([null,null])
         setSprice(0);   // Reset start price
         setEprice(null); // Reset end price
       }}
@@ -272,38 +402,88 @@ const handleSortChange = (event) => {
 )}
 
             </div>
-
-            <div className="flex w-full md:px-2">
-              <div
-                className={`inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
-                  ${products?.length === 1 ? "grid-cols-1" : ""} 
-                  ${products?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
-                  w-full`}
-              >
-                {isLoading ? (
-                 <FullPageLoader/>
-                ) : isError ? (
-                  <p>Error fetching products.</p>
-                ) : products?.map((product,index) => (
-   <div
-            key={product.id}
-            ref={index === products?.length - 1 ? lastProductRef : null}
-          >
-            <ProductCard productMode={true} product={product} />
-          </div>
-  ))
-}
-              </div>
+     <div>
+      
+       {categoryMode && subcategories?.length > 0 && (
+        <div className="flex overflow-x-auto space-x-4 p-3 scrollbar-hide">
+          {subcategories?.map((subcategory) => (
+            <button
+              key={subcategory.subcategory_id}
+              onClick={() => handleSubcategoryClick(subcategory)}
+              className={`flex flex-col items-center justify-center cursor-pointer 
+                transition-all transform hover:scale-110 `}
+            >
+              <img
+                src={import.meta.env.VITE_CLOUD_URL + "/" + subcategory?.images?.[0]?.image || "placeholder.jpg"}
+                alt={subcategory.name}
+                className={`w-16 h-16 md:w-24 md:h-24 rounded-full object-cover ${
+                  selectedSubcategory?.subcategory_id === subcategory.subcategory_id
+                    ? "border-2 border-green-500"
+                    : ""
+                }`}
+              />
+              <span className="text-sm md:text-lg font-medium mt-1">{subcategory.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+     </div>
+            <div className={`flex w-full md:px-2 ${categoryMode || subCategoryMode ? "mt-2" : "mt-0" }`}>
+  <div
+  className={subCategoryMode || (!subCategoryMode && !categoryMode) ? `inline-grid gap-x-3 gap-y-1 mx-auto md:gap-3 
+    ${products?.length === 1 ? "grid-cols-1" : ""} 
+    ${products?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
+    w-full` : `w-full`}
+>
+  {isLoading && !isFetchingNextPage ? ( // Full page loader only on first load
+    <FullPageLoader />
+  ) : isError ? (
+    <p>Error fetching products.</p>
+  ) : subCategoryMode || (!subCategoryMode && !categoryMode) ? (
+    products?.map((product, index) => (
+      <div
+        key={product.product_id}
+        ref={index === products?.length - 1 ? lastProductRef : null}
+      >
+        <ProductCard productMode={true} product={product} />
+      </div>
+    ))
+  ) : (
+    Object.entries(categorizedProducts)?.map(([categoryName, categoryProducts]) => (
+      <div key={categoryName} className="mb-4 w-full">
+        <h2 className="text-xl font-semibold mb-1 uppercase ml-[3%] md:ml-[1%]">{categoryName}</h2>
+        <div className="flex overflow-x-auto space-x-3 scrollbar-hide w-full">
+          {categoryProducts?.map((product, index) => (
+            <div
+              key={product?.product_id}
+              ref={index === categoryProducts.length - 1 ? lastProductRef : null}
+              className="flex-shrink-0 w-[200px] md:w-[250px] lg:w-[300px] snap-start"
+            >
+              <ProductCard productMode={true} product={product} />
             </div>
-            {hasNextPage && (
+          ))}
+        </div>
+      </div>
+    ))
+  )}
+
+  {/* Show small loader while fetching more products */}
+
+</div>
+
+</div>
+
+            {hasNextPage && !isFetchingNextPage ?  (
     <Button
       onClick={loadMoreHandler}
       disabled={isFetchingNextPage}
       className="my-3 px-4"
     >
-      {isLoading ? "Loading..." : "Load More"}
+      {isLoading ? "" : "Load More"}
     </Button>
-  )}
+  ) : isFetchingNextPage && <div className="flex justify-center items-center mx-auto mt-4">
+      <ClipLoader size={30} color="blue"/>
+    </div>}
             {/* <Pagination
               count={totalPages}
               page={currentPage}

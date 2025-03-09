@@ -20,8 +20,8 @@ const WorkshopDetailsPage = () => {
   const { name, date, place, description, images } = workshop;
 
   const galleryImages = images.map((img) => ({
-    original: "https://res.cloudinary.com/dgkgxokru/" + img.image,
-    thumbnail: "https://res.cloudinary.com/dgkgxokru/" + img.image,
+    original: import.meta.env.VITE_CLOUD_URL + img.image,
+    thumbnail: import.meta.env.VITE_CLOUD_URL + img.image,
     alt: `${name} Image`,
   }));
 

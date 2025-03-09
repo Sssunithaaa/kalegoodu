@@ -11,7 +11,7 @@ const CTA = ({}) => {
     }
   };
   return (
-    <section class="py-4 bg-white w-screen sm:pt-16 md:pt-24">
+    <section class="py-4 w-screen sm:pt-16 md:pt-24">
     <div class=" mx-auto sm:px-6 max-w-7xl px-1">
         <div class="flex md:flex-row justify-between flex-col">
             <div class="lg:pr-8 mb-7 px-4">

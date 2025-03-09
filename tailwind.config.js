@@ -14,7 +14,9 @@ export default {
       colors: {
           'primary': "#1565D8",
           "heading":"1D1D1D",
+          "names":"1D1D1D",
         'orange' : '#B59460',
+        "graycolor": "#949494",
         'pale-orange' : 'hsl(25, 100%, 94%)',
         'dark-blue' : 'hsl(220, 13%, 13%)',
         'dark-grayish-blue' : 'hsl(219, 9%, 45%)',
@@ -33,6 +35,19 @@ export default {
         'zs' : '412px',
         'ws' : '1024px',
           'xl':'1440px'
+      },
+       fontSize: {
+        'body-larger': '1.375rem',
+        'body-large': '1.25rem',
+        'body-medium': '1.125rem',
+        'body': '1rem',
+        'name-larger': '1.375rem',
+        'name-large': '1.123rem',
+        'name-medium': '1rem',
+        'name': '1rem',
+        'font-size-menu-large': '1.25rem',
+        'font-size-menu': '1rem',
+
       },
     },
   },

@@ -4,10 +4,13 @@ import FullPageLoader from './components/FullPageLoader';
 import { CartContext } from './context/CartContext';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import OrderConfirmation from './components/OrderConfirmation';
-import EmailForm from './admin/screens/emails/EmailForm';
-import ManageText from './admin/screens/details/ManageText';
-import ProductGallery from './components/ProductCards/ProductGallery';
+
+const ManageSubCategories = lazy(()=> import('./admin/screens/categories/ManageSubCategories'))
+const SubCategoryPage = lazy(()=> import('./admin/screens/categories/SubCategories'))
+const ProductGallery = lazy(()=> import('./components/ProductCards/ProductGallery'))
+const ManageText = lazy(()=> import('./admin/screens/details/ManageText'))
+const EmailForm = lazy(()=> import('./admin/screens/emails/EmailForm'))
+const OrderConfirmation = lazy(()=> import('./components/OrderConfirmation'))
 const ScrollToTop = lazy(()=> import('./components/ScrollToTop'))
 const MainPage = lazy(() => import('./components/MainPage'));
 const Products = lazy(() => import('./components/Products'));
@@ -62,6 +65,7 @@ const App = () => {
             <Route path="/Products/:id" element={<Products />} />
             <Route path="/Products/:id/:name" element={<ProductGallery />} />
             <Route path="/Categories/:id/:name/" element={<Products />} />
+            <Route path="/Categories/:slug" element={<Products />} />
             <Route path="/Categories" element={<Collections />} />
             <Route path="/Checkout" element={<CheckOut />} />
             <Route path="/Customer-details" element={<CustomerDetails />} />
@@ -90,6 +94,11 @@ const App = () => {
     <Route path="categories/manage" element={<Categories />} />
     <Route path="categories/manage/edit/:slug" element={<EditCategories />} />
     <Route path="categories/add" element={<EditCategories />} />
+     <Route path="sub-categories/manage" element={<ManageSubCategories />} />
+    <Route path="sub-categories/manage/:id" element={<SubCategoryPage />} />  {/* Manage subcategories by category ID */}
+    <Route path="sub-categories/edit/:subcategoryId" element={<SubCategoryPage />} />  {/* Edit a specific subcategory */}
+    <Route path="sub-categories/add" element={<SubCategoryPage />} />  {/* Add new subcategory */}
+
     <Route path="about-us/manage" element={<ManageAboutUs />} />
     <Route path="details/manage" element={<ManageDetails />} />
     <Route path="text/manage" element={<ManageText />} />

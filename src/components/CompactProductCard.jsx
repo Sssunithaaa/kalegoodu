@@ -65,32 +65,27 @@ export default function CompactProductCard({ product }) {
   onClick={() => navigate(`/Products/${product?.product_id}/${displayValue}`)}
   className="hover:cursor-pointer pb-1 p-[10px] px-[20px]"
 >
-    <Typography className="font-medium text-wrap h-12 my-1 text-[14px] md:text-[16px]">
-      {product?.name}
-    </Typography>
+   <p className="w-full max-w-[200px] text-name sm:text-name-medium md:text-name-large text-[#1D1D1D] font-medium not-italic leading-[1.3125] tracking-normal normal-case truncate">
+  {product?.name}
+</p>
+
   
 
   {/* Fixed height for price container to align cards with and without discounts */}
-  <div className="h-10 flex items-center">
-    {hasDiscount ? (
-      <div className="flex flex-col text-[12px]">
-        <Typography color="red">
-          <del>Rs. {product?.price}</del>
-        </Typography>
-        <p className="text-black py-0.5 text-sm">
-          Rs. {product?.discounted_price}
-        </p>
-      </div>
-    ) : (
-      <div className="text-gray-900 py-0.5 text-[12px] flex flex-col">
-        <p className="text-black py-0.5 text-sm">
-          Rs. {product?.price}
-        </p>
-        {/* Placeholder element to match the height of the discounted price */}
-        <p className="invisible py-0.5 text-sm">Rs. 0</p>
-      </div>
-    )}
-  </div>
+ <div className="flex items-center">
+          {hasDiscount ? (
+            <div className="flex flex-col text-[15px]">
+              <Typography color="red">
+                <del>Rs. {product?.price}</del>
+              </Typography>
+              <p className="text-[#023020] opacity-90 font-semibold py-1 text-md">
+                Rs. {product?.discounted_price}
+              </p>
+            </div>
+          ) : (
+            <p className="text-[#023020] opacity-90 md:text-[17px] md:font-semibold py-1">Rs. {product?.price}</p>
+          )}
+        </div>
 </CardBody>
 
 

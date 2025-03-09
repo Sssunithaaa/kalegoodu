@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../../services/index/api";
 
 /**
  * Deletes a resource from the given endpoint.
@@ -8,7 +9,7 @@ import { toast } from "react-toastify";
  */
 export const deleteItem = async (url, refetch) => {
   try {
-    await axios.delete(url);
+    await api.delete(url);
     toast.success("Item deleted successfully.");
     if (typeof refetch === "function") refetch();
   } catch (error) {

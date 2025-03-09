@@ -13,6 +13,7 @@ import BackButton from "../../BackButton";
 import axios from "axios";
 import { addImage,updateImage } from "../../api/ImageApi";
 import { ClipLoader } from "react-spinners";
+import api from "../../../services/index/api";
 const DeleteButton = styled.button`
   background-color: #e74c3c;
   color: white;
@@ -54,7 +55,7 @@ const AddWorkshop = () => {
   const [previews, setPreviews] = useState([null, null, null]);
 
   
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryFn: () => getSingleWorkshop({ slug }),
     queryKey: ["workshops", slug],
     
@@ -63,12 +64,11 @@ const AddWorkshop = () => {
     const [isAdding,setIsAdding] = useState(false)
 
   useEffect(()=>{
-
-      if(isEditMode){
-         setTitle(data?.name || "");
-        setPlace(data?.place);
-       setDate(data?.date || date);
-       setVideoUrl(data?.videos?.[0]?.video_url)
+    if(isEditMode){
+      setTitle(data?.name || "");
+      setPlace(data?.place);
+      setDate(data?.date || date);
+      setVideoUrl(data?.videos?.[0]?.video_url)
       setDescription(data?.description || "");
       setVideoId(data?.videos?.[0]?.workshopvideo_id)
       setPreviews(data?.images?.map((image) => import.meta.env.VITE_CLOUD_URL+ image?.image) || [null, null, null]);
@@ -91,10 +91,8 @@ const AddWorkshop = () => {
   const { mutate: mutateAddWorkshop, isLoading: isLoadingAddWorkshop } = useMutation({
     mutationFn: (formData) => createWorkshop(formData),
     onSuccess: () => {
-      queryClient.invalidateQueries(["workshops"]);
-      toast.success("Workshop added successfully!");
-      
-  
+    queryClient.invalidateQueries(["workshops"]);
+    toast.success("Workshop added successfully!");
     setTitle("");
     setDescription("");
     setDate(new Date().toISOString().split('T')[0]);
@@ -102,11 +100,10 @@ const AddWorkshop = () => {
     setVideoUrl("");
     setFiles([null, null, null]);
     setPreviews([null, null, null]);
-
     },
     onError: (error) => {
         // console.log(error)
-      toast.error("Couldn't add workshop!!");
+      toast.error(error.response.data.error || "Couldn't add workshop!!");
     },
   });
    const { mutate: mutateUpdateWorkshop, isLoading: isLoadingUpdateWorkshop } = useMutation({
@@ -117,7 +114,7 @@ const AddWorkshop = () => {
     },
     onError: (error) => {
         // console.log(error)
-      toast.error("Couldn't update workshop!!");
+      toast.error(error.response.data.error || "Couldn't update workshop!!");
     },
   });
   
@@ -220,7 +217,7 @@ setIsAdding(false);
 
   const handleDelete = async (imageId) => {
     try {
-      await axios.delete(`${baseUrl}/api/workshop-images/${imageId}/delete/`);
+      await api.delete(`/api/workshop-images/${imageId}/delete/`);
       toast.success("Image deleted successfully");
       refetch();
     } catch (error) {
@@ -287,7 +284,7 @@ setIsAdding(false);
       {isUpdatingImage ? <ClipLoader size={20} /> : "Update"}
     </UpdateButton>
   ) : (
-    files[index] && (
+    files[index] && isEditMode && (
       <UpdateButton
         className="disabled:cursor-not-allowed"
         disabled={isAddingImage}
@@ -300,12 +297,12 @@ setIsAdding(false);
   )}
   
   {/* Delete button always visible */}
-  <DeleteButton
+  {isEditMode && <DeleteButton
     type="button"
     onClick={() => handleDelete(data?.images?.[index]?.workshopimage_id)}
   >
     Delete
-  </DeleteButton>
+  </DeleteButton>}
 </div>
 
               </div>
@@ -377,10 +374,11 @@ setIsAdding(false);
         <div className="mt-6 w-[30%] flex mx-auto">
           <Button
             type="submit"
+            isLoading={isLoadingAddWorkshop}
             className="disabled:cursor-none d-button d-button-primary !outline-slate-300 border-2 border-gray-300 w-full py-2"
             disabled={isLoadingAddWorkshop || isAdding}
           >
-            {isLoadingAddWorkshop|| isAdding || isLoadingUpdateWorkshop ? "Submitting..." : isEditMode ? "Update workshop" : "Add workshop"}
+            {isEditMode ? "Update workshop" : "Add workshop"}
           </Button>
         </div>
       </form>

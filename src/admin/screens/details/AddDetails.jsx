@@ -89,8 +89,8 @@ const PolicyForm = ({ title, data, id }) => {
         </div>
         
         <div className="flex flex-col gap-4">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : `Update ${title}`}
+          <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
+            {`Update ${title}`}
           </Button>
 
           {(id === 9 || id === 10) && (

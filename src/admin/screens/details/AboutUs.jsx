@@ -15,6 +15,7 @@ import "quill-emoji/dist/quill-emoji.css"; // Emoji styles
 import { Quill } from "react-quill";
 import { ClipLoader } from 'react-spinners';
 import * as Emoji from "quill-emoji";
+import api from '../../../services/index/api';
 Quill.register("modules/emoji", Emoji);
 
 const AboutUsForm = () => {
@@ -78,7 +79,7 @@ const AboutUsForm = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      await axios.put(`${baseUrl}/api/page-images/${data?.[0].images[0].pageimage_id}/`, formData);
+      await api.put(`/api/page-images/${data?.[0].images[0].pageimage_id}/`, formData);
       toast.success('Image updated successfully!');
       setFile(null);
       setPreview(null);
@@ -236,7 +237,7 @@ const AboutUsForm = () => {
         </div>
 
         <Button isLoading={isSubmitting} type="submit" disabled={isSubmitting}>
-          {pageId ? 'Update About Us' : 'Add About Us'}
+          {isSubmitting ? <ClipLoader size={20}/> : pageId ? 'Update About Us' : 'Add About Us'}
         </Button>
       </form>
     </div>

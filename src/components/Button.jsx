@@ -1,3 +1,4 @@
+import { ClipLoader } from 'react-spinners';
 import styled, { keyframes } from 'styled-components';
 
 const spin = keyframes`
@@ -40,7 +41,7 @@ const Spinner = styled.div`
 
 const Button = ({ isLoading, children, ...props }) => (
   <Buttonn {...props}>
-    {isLoading && <Spinner />}
+    {isLoading && <ClipLoader size={20} />}
     {!isLoading && children}
   </Buttonn>
 );

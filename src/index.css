@@ -18,6 +18,64 @@
   ;
 } */
 
+/* styles.css or global.css */
+.heading {
+  @apply text-xl sm:text-2xl md:text-3xl font-semibold text-[#1D1D1D] my-1 md:my-3 not-italic leading-[1.3125] tracking-normal;
+  font-family: "Poppins, sans-serif";
+}
+
+.subHeading {
+  @apply text-[16px] md:text-[18px] font-semibold uppercase text-[#1D1D1D] my-1 md:my-3;
+  font-family: "Poppins, sans-serif";
+}
+
+.body {
+  @apply text-body sm:text-body-medium md:text-body-large text-[#1D1D1D];
+}
+
+.name {
+  @apply text-name font-[Poppins] sm:text-name-medium md:text-name-large text-[#1D1D1D] font-medium not-italic leading-[1.3125] tracking-normal normal-case whitespace-normal ;
+}
+  
+.menu {
+  @apply text-font-size-menu md:text-font-size-menu-large  text-[#1D1D1D];
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:root {
+  --font-size-heading-1: 1.78125rem;
+  --font-size-heading-2: 1.703125rem;
+  --font-size-heading-3: 1.5625rem;
+  --font-size-heading-4: 1.28125rem;
+}
+
+/* Responsive adjustments */
+@media (min-width: 640px) { /* sm */
+  :root {
+    --font-size-heading-1: 2rem;
+    --font-size-heading-2: 1.875rem;
+    --font-size-heading-3: 1.75rem;
+    --font-size-heading-4: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) { /* lg */
+  :root {
+    --font-size-heading-1: 2.5rem;
+    --font-size-heading-2: 2.25rem;
+    --font-size-heading-3: 2rem;
+    --font-size-heading-4: 1.75rem;
+  }
+}
+
+
 select {
   appearance: none;
   background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="%23999999"/></svg>') no-repeat right 10px center;

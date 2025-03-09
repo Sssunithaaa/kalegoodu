@@ -169,7 +169,7 @@ const completedSettings = {
                 >
                   <div className="shadow-lg bg-green-50 rounded-lg overflow-hidden h-full">
                     <img
-                      src={`https://res.cloudinary.com/dgkgxokru/${workshop.images?.[0]?.image}`}
+                      src={`${import.meta.env.VITE_CLOUD_URL}${workshop.images?.[0]?.image}`}
                       alt={workshop.name}
                       className="w-full md:h-52 h-48 object-cover"
                     />
@@ -210,7 +210,7 @@ const completedSettings = {
           >
             <div className="shadow-lg bg-green-50 rounded-lg overflow-hidden h-full">
               <img
-                src={`https://res.cloudinary.com/dgkgxokru/${workshop.images?.[0]?.image}`}
+                src={`${import.meta.env.VITE_CLOUD_URL}${workshop.images?.[0]?.image}`}
                 alt={workshop.name}
                 className="w-full md:h-52 h-48 object-cover"
               />

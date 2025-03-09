@@ -61,6 +61,9 @@ const Header = () => {
   const dispatch = useDispatch()
   const handleLogout = ()=>{
     dispatch(logout());
+    setTimeout(()=>{
+      navigate("/admin")
+    },2000)
     
   }
 
@@ -120,7 +123,22 @@ const Header = () => {
                 >
                   Add New Category
                 </Link>
-                {/* <Link to="/admin/categories/manage">Categories</Link> */}
+                <Link
+                to="/admin/sub-categories/manage"
+                
+                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                  
+                >
+                  Manage Sub-Categories
+                </Link>
+                <Link
+                to="/admin/sub-categories/add"
+               
+                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
+                 
+                >
+                  Add New Sub-Category
+                </Link>
               </NavItemCollapse>
 
               <NavItemCollapse

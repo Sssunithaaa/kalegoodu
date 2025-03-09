@@ -42,26 +42,34 @@ const Breadcrumbs = () => {
     <BreadcrumbNav>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink to="/"><div className='text-black opacity-80 text-[16px] font-roboto md:text-[16px]'>
+          <BreadcrumbLink to="/"><div className='text-black opacity-80 text-[16px] font-roboto md:text-[18px]'>
                 Home</div></BreadcrumbLink>
         </BreadcrumbItem>
 
-        {pathnames.map((value, index) => {
-          const displayValue = decodeURIComponent(value).replace(/%20/g, '-');
-          const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+       {pathnames.map((value, index) => {
+  let displayValue = decodeURIComponent(value).replace(/%20/g, '-');
 
-          // Exclude numeric segments from the breadcrumb display.
-          if (Number.isInteger(Number(displayValue))) {
-            return null;
-          }
+  // Exclude standalone numbers (like 47)
+  if (/^\d+$/.test(displayValue)) {
+    return null;
+  }
 
-          return (
-            <BreadcrumbItem key={index}>
-              <BreadcrumbLink to={to}><div className='text-black opacity-80 text-[16px] font-roboto md:text-[16px]'>
-                {displayValue}</div></BreadcrumbLink>
-            </BreadcrumbItem>
-          );
-        })}
+  // Remove trailing "-number" if it exists (like "Tea-Light-Holder-47" -> "Tea-Light-Holder")
+  displayValue = displayValue.replace(/-\d+$/, '');
+
+  const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+
+  return (
+    <BreadcrumbItem key={index}>
+      <BreadcrumbLink to={to}>
+        <div className='text-black opacity-80 text-[16px] font-roboto md:text-[18px]'>
+          {displayValue}
+        </div>
+      </BreadcrumbLink>
+    </BreadcrumbItem>
+  );
+})}
+
       </BreadcrumbList>
     </BreadcrumbNav>
   );

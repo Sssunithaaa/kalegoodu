@@ -21,13 +21,17 @@ const Button = styled.button`
     hsla(113.6, 77.2%, 62.2%, 1) 0%,
     hsla(113.6, 77.2%, 62.2%, 0) 100%
   );
-  margin-top: 10px;
+  // background-color: #023020;
+  margin-top: 5px;
   border: none;
+  font-size: 1rem;
+  font-weight: semibold;
   cursor: pointer;
   border-radius: 5px;
 
   &:hover {
-    background-color: #9e7f6b;
+    background-color: #023020;
+    opacity: 0.9;
   }
 `;
 
@@ -132,7 +136,7 @@ export const CTASection = ({ product, setCartCounter }) => {
   const { cartItems, addToCart,setIsCartVisible,setLoading, removeFromCart, increaseQuantity, decreaseQuantity } = useContext(CartContext);
 
   // Get the current quantity of the product in the cart
-  const cartItem = cartItems.find((item) => item.product_id === product.product_id);
+  const cartItem = cartItems.find((item) => item?.product_id === product?.product_id);
   const initialQuantity = cartItem ? cartItem.cartQuantity : 1;
 
   const [productCounter, setProductCounter] = useState(initialQuantity);

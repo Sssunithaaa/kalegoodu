@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "./api";
 const url = import.meta.env.VITE_APP_URL;
 
 export const getAllCategories = async (search = "", sort = "") => {
@@ -20,7 +21,7 @@ export const getAllCategories = async (search = "", sort = "") => {
     const urlWithParams = params.toString()
       ? `${url}/api/categories/?${params.toString()}`
       : `${url}/api/categories/`;
-    console.log(urlWithParams); // Debugging URL
+  
     const response = await axios.get(urlWithParams);
     return response.data;
   } catch (error) {
@@ -47,22 +48,40 @@ export const getAllCategoriess = async () => {
   }
 };
 
-
-
-
-export const getCategoryImages = async () => {
+export const getAllSubCategories = async (search = "", sort = "") => {
   try {
-    const response = await axios.get(`${url}/api/category_images/`);
- 
-    return response.data.category_images; // Adjust to the actual response structure
+    const params = new URLSearchParams();
+
+    if (search) params.append("search", search);
+
+    if (sort === "visible-true" || sort === "visible-false") {
+      params.append("sort_by", "visible");
+      params.append("sort_order", sort === "visible-true");
+    } else if (sort) {
+      const [field, order] = sort.split("-");
+      params.append("sort_by", field);
+      params.append("sort_order", order);
+    }
+
+    // If there are query parameters, append them; otherwise, use the base URL
+    const urlWithParams = params.toString()
+      ? `${url}/api/list-subcategories/?${params.toString()}`
+      : `${url}/api/list-subcategories/`;
+   
+    const response = await axios.get(urlWithParams);
+    return response.data;
   } catch (error) {
-    if (error.response && error.response.data.message) {
+    if (error.response?.data?.message) {
       throw new Error(error.response.data.message);
     }
-   ;
     throw new Error(error.message);
   }
 };
+
+
+
+
+
 
 export const deleteCategory = async (id) => {
   try {
@@ -85,8 +104,8 @@ export const createCategory = async (formData) => {
       },
     };
 
-    const { data } = await axios.post(
-      `${url}/api/add_category/`,
+    const { data } = await api.post(
+      `/api/add_category/`,
       formData,
       config
     );
@@ -106,8 +125,8 @@ export const updateCategory = async ({ updatedData, slug }) => {
       },
     };
 
-    const response = await axios.put(
-      `${url}/api/update_category/${slug}/`,
+    const response = await api.put(
+      `/api/update_category/${slug}/`,
       updatedData,
       config
     );
@@ -122,6 +141,58 @@ export const updateCategory = async ({ updatedData, slug }) => {
 export const getSingleCategory = async ({ slug }) => {
   try {
     const { data } = await axios.get(`${url}/api/categories/${slug}/`);
+    
+    return data?.category;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
+
+export const getSubcategoriesByCategory = async ({ id }) => {
+  try {
+    const { data } = await axios.get(`${url}/api/subcategories_by_category/${id}/`);    
+    return data?.subcategories;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
+
+export const getSubcategoriesByCategories = async (categoryIds) => {
+  try {
+    const { data } = await axios.get(`${url}/api/subcategories_by_categories/`, {
+      params: {
+        category_ids: Array.isArray(categoryIds) ? categoryIds.join(",") : categoryIds, 
+      },
+    });
+    return data.subcategories;
+  } catch (error) {
+    console.error("Error fetching subcategories:", error);
+    throw error;
+  }
+};
+
+
+export const getSubcategoriesById= async ({ subcategoryId }) => {
+  try {
+    const { data } = await axios.get(`${url}/api/subcategory/${subcategoryId}/`);
+    
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    else if(error.response && error.response.data.error)
+      throw new Error(error.response.data.error);
+    throw new Error(error.message);
+  }
+};
+
+export const getProductsBySubcategory = async ({ slug }) => {
+  try {
+    const { data } = await axios.get(`${url}/api/products_by_subcategory/${slug}/`);
     
     return data?.category;
   } catch (error) {

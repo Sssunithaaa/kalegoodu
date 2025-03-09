@@ -5,6 +5,7 @@ import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify'
 import AddSaleTypeDialog from './AddSaleType'
 import Pagination from '../../../components/Pagination'
+import api from '../../../services/index/api'
 
 
 const ManageSaleType = () => {
@@ -90,15 +91,12 @@ const totalPages = Math.ceil(sales?.length / PAGE_SIZE);
   };
 const handleToggleVisibility = async (id, currentVisibility) => {
   try {
-    await axios.put(`${baseUrl}/api/update_sale_type/${id}/`, {
+    await api.put(`/api/update_sale_type/${id}/`, {
       visible: !currentVisibility
     });
-
-    // Only show success toast after the update succeeds
     toast.success("Visibility updated successfully!");
     refetch(); // Re-fetch data after the change
   } catch (error) {
-    // Show the error toast only if there was an error
     toast.error("Couldn't update visibility");
     console.log(error);
   }
@@ -106,9 +104,9 @@ const handleToggleVisibility = async (id, currentVisibility) => {
 
 const deleteDataHandler = async ({ saleTypeId }) => {
   try {
-    await axios.delete(`${baseUrl}/api/sale_type/${saleTypeId}/delete/`);
+    await api.delete(`/api/sale_type/${saleTypeId}/delete/`);
     toast.success("Sale type deleted successfully");
-    refetch(); // Re-fetch data after deletion
+    refetch(); 
   } catch (error) {
     toast.error("Failed to delete sale type");
     console.error("Error deleting sale type:", error.message);
@@ -116,7 +114,7 @@ const deleteDataHandler = async ({ saleTypeId }) => {
 };
 
   const sortOptions = [
-     { label: "Visible", value: "visible-true" },
+    { label: "Visible", value: "visible-true" },
     { label: "Hidden", value: "visible-false" },
     { label: "Date, new to old", value: "created_at-desc" },
     { label: "Date, old to new", value: "created_at-asc" },
