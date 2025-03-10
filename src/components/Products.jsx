@@ -482,7 +482,7 @@ const handleSortChange = (event) => {
       {isLoading ? "" : "Load More"}
     </Button>
   ) : isFetchingNextPage && <div className="flex justify-center items-center mx-auto mt-4">
-      <ClipLoader size={30} color="blue"/>
+      <ClipLoader size={30} color="green"/>
     </div>}
             {/* <Pagination
               count={totalPages}

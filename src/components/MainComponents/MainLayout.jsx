@@ -40,7 +40,7 @@ const MainLayout = ({ children }) => {
 const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; // Adds extra non-breaking spaces
   return (
   <div className='example'>
-    {data?.[4]?.visible ? (
+  
       <div 
   ref={marqueeRef} 
   className="static overflow-hidden w-full z-10 bg-gradient-to-r from-[#ECF487] via-green-50 to-[#C0E6CD] bg-opacity-5 min-h-[40px] flex items-center"
@@ -58,7 +58,7 @@ const spacing = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; 
   )}
 </div>
 
-    ) : null }
+  
 
     <Navbar />
     {!isHomePage && <Breadcrumbs />}
