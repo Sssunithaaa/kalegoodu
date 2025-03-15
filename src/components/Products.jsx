@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useRef,useMemo, useCallback } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sidebar from "./SideBar";
 import ProductCard from "./ProductCard";
 import { FormControl, Select, MenuItem } from "@mui/material";
@@ -12,6 +12,7 @@ import FullPageLoader from "./FullPageLoader";
 import { useStateContext } from "../context/ContextProvider";
 import Button from "./Button";
 import { ClipLoader } from "react-spinners";
+import ProductCarousel from "./ProductCarousel";
 
 const Products = () => {
   const {showSidebar,setShowSidebar} = useStateContext();
@@ -214,10 +215,12 @@ const {
   }
 }, [isFetchingNextPage, hasNextPage, fetchNextPage]);
 
-
+  useEffect(()=>{
+    refetch();
+  },[location])
 
  const observerRef = useRef(null);
-const lastProductRef = useCallback(
+  const lastProductRef = useCallback(
   (node) => {
     if (!node || isFetchingNextPage) return;
     if (observerRef.current) observerRef.current.disconnect();
@@ -299,6 +302,8 @@ const handleSortChange = (event) => {
 };
 
 
+  const carouselRef = useRef(null);
+  const navigate = useNavigate();
 
   return (
     <div className="w-screen mb-10">
@@ -334,7 +339,7 @@ const handleSortChange = (event) => {
               searchKeywordOnSubmitHandler={searchKeywordOnSubmitHandler}
             />
           </div>
-          <div className="flex-1 p-2">
+          <div className="flex-1 overflow-x-auto w-full p-2">
             <div className="flex flex-col justify-start">
               <div className="flex flex-row max-w-[450px] justify-start items-center gap-x-2">
                 <h1
@@ -409,7 +414,7 @@ const handleSortChange = (event) => {
           {subcategories?.map((subcategory) => (
             <button
               key={subcategory.subcategory_id}
-              onClick={() => handleSubcategoryClick(subcategory)}
+              onClick={() => {handleSubcategoryClick(subcategory);navigate(`/Categories/${subcategory.name.replace(/ /g, "-")}-${subcategory.subcategory_id}`)}}
               className={`flex flex-col items-center justify-center cursor-pointer 
                 transition-all transform hover:scale-110 `}
             >
@@ -435,7 +440,7 @@ const handleSortChange = (event) => {
     ${products?.length === 2 ? "md:grid-cols-4 grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"} 
     w-full` : `w-full`}
 >
-  {isLoading && !isFetchingNextPage ? ( // Full page loader only on first load
+  {(isLoading || isFetching) && !isFetchingNextPage ? ( // Full page loader only on first load
     <FullPageLoader />
   ) : isError ? (
     <p>Error fetching products.</p>
@@ -450,20 +455,29 @@ const handleSortChange = (event) => {
     ))
   ) : (
     Object.entries(categorizedProducts)?.map(([categoryName, categoryProducts]) => (
-      <div key={categoryName} className="mb-4 w-full">
-        <h2 className="text-xl font-semibold mb-1 uppercase ml-[3%] md:ml-[1%]">{categoryName}</h2>
-        <div className="flex overflow-x-auto space-x-3 scrollbar-hide w-full">
-          {categoryProducts?.map((product, index) => (
-            <div
-              key={product?.product_id}
-              ref={index === categoryProducts.length - 1 ? lastProductRef : null}
-              className="flex-shrink-0 w-[200px] md:w-[250px] lg:w-[300px] snap-start"
-            >
-              <ProductCard productMode={true} product={product} />
-            </div>
-          ))}
-        </div>
-      </div>
+      // <div key={categoryName} className="mb-4 w-full">
+      //   <h2 className="text-xl font-semibold mb-1 uppercase ml-[3%] md:ml-[1%]">{categoryName}</h2>
+      //  <div className="flex overflow-x-auto md:overflow-x-scroll space-x-3 scrollbar-hide w-full">
+      //     {categoryProducts?.map((product, index) => (
+      //       <div
+      //         key={product?.product_id}
+      //         ref={index === categoryProducts.length - 1 ? lastProductRef : null}
+      //         className="flex-shrink-0 w-[200px] md:w-[250px] lg:w-[300px] snap-start"
+      //       >
+      //         <ProductCard productMode={true} product={product} />
+      //       </div>
+      //     ))}
+      //   </div>
+      // </div>
+       <ProductCarousel
+    key={categoryName}
+    categoryName={categoryName}
+    categoryProducts={categoryProducts}
+    lastProductRef={carouselRef}
+    hasNextPage={hasNextPage}
+    fetchMore={fetchMore}
+    isFetchingNextPage={isFetchingNextPage}
+  />
     ))
   )}
 
@@ -473,7 +487,7 @@ const handleSortChange = (event) => {
 
 </div>
 
-            {hasNextPage && !isFetchingNextPage ?  (
+            {hasNextPage && !isFetchingNextPage && !categoryMode ?  (
     <Button
       onClick={loadMoreHandler}
       disabled={isFetchingNextPage}

@@ -38,7 +38,7 @@
 }
   
 .menu {
-  @apply text-[14px] md:text-[16px] lg:text-[18px] text-[#1D1D1D];
+  @apply text-[14px] md:text-[16px] lg:text-[18px] xl:text-[20px] tracking-tight text-[#1D1D1D];
 }
 
 .scrollbar-hide::-webkit-scrollbar {

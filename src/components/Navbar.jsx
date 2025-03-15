@@ -397,7 +397,7 @@ useEffect(() => {
         key={index}
         className="relative lg:flex lg:mx-auto py-2 md:py-3 px-2 hover:cursor-pointer transition-all duration-300"
         onMouseEnter={() => setHoveredIndex(index)}
-        onMouseLeave={() => setHoveredIndex(null)}
+        onMouseLeave={() => setTimeout(() => setHoveredIndex(null), 1000)} // Added slight delay
       >
         {/* Main Navigation Item */}
         <div
@@ -527,7 +527,7 @@ useEffect(() => {
   return (
     <li
       key={subIndex}
-      onClick={() => {navigate(`/Categories/${slug}`);setIsMenuVisible(false)}}
+      onClick={() => {navigate(`/Categories/${slug}`);setIsMenuVisible(false); setDisplay("static");}}
        className="block py-1 text-[#1D1D1D] hover:text-black"
     >
       {subItem.name}

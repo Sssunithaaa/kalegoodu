@@ -16,7 +16,7 @@ const fetchProductsBySaleType = async (saleTypeId, page=1) => {
     throw new Error("saleTypeId is undefined");
   }
   const response = await fetch(
-    `https://kalegoodupractice.pythonanywhere.com/api/products_by_saletype/${saleTypeId}/?page=${page}`
+    `${import.meta.env.VITE_APP_URL}/api/products_by_saletype/${saleTypeId}/?page=${page}`
   );
   
   if (!response.ok) throw new Error('Failed to fetch products');
@@ -68,7 +68,7 @@ const settings = {
   centerPadding: allProducts.length > 1 && window.innerWidth <=1024 ? "30px" : "0px",
   afterChange: (index) => setCurrentSlide(index),
   prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-  nextArrow: currentSlide + slidesToShow < allProducts.length ? <SampleNextArrow /> : null,
+  nextArrow: currentSlide + slidesToShow < allProducts.length -1 ? <SampleNextArrow /> : null,
   responsive: [
     { breakpoint: 1500, settings: { slidesToShow: Math.min(allProducts.length, 4) } },
     { breakpoint: 1024, settings: { slidesToShow: Math.min(allProducts.length, 3) } },
