@@ -21,7 +21,6 @@ const PolicyForm = ({ title, data, id }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-
     const formData = new FormData();
     formData.append('page_name', data?.page_name);
     formData.append('content', text);
@@ -72,6 +71,7 @@ const PolicyForm = ({ title, data, id }) => {
             onChange={setText}
             className="w-full h-full"
             placeholder="Add your content here..."
+            preserveWhitespace={true}
             modules={{
               toolbar: [
                 [{ header: [1, 2, 3, 4, 5, 6, false] }],

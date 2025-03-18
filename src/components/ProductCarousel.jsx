@@ -1,8 +1,27 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "./ProductCard";
-const ProductCarousel = ({ categoryName, categoryProducts,lastProductRef,hasNextPage,fetchMore,isFetchingNextPage }) => {
+
+const ProductCarousel = ({ categoryName, categoryProducts, lastProductRef, hasNextPage, fetchMore, isFetchingNextPage }) => {
   const carouselRef = useRef(null);
+  const observerRef = useRef(null);
+
+  useEffect(() => {
+    if (!lastProductRef?.current || !hasNextPage || window.innerWidth > 768) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchMore();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    observerRef.current.observe(lastProductRef.current);
+
+    return () => observerRef.current?.disconnect();
+  }, [lastProductRef, hasNextPage, isFetchingNextPage, fetchMore]);
 
   const scrollLeft = () => {
     if (carouselRef.current) {
@@ -11,17 +30,10 @@ const ProductCarousel = ({ categoryName, categoryProducts,lastProductRef,hasNext
   };
 
   const scrollRight = () => {
-  if (carouselRef.current) {
-    // Scroll first
-    carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
-
-    // Fetch only if there are more products to load
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchMore();
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
     }
-  }
-};
-
+  };
 
   return (
     <div key={categoryName} className="relative mb-4 w-full">

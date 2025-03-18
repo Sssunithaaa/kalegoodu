@@ -22,9 +22,9 @@ const refreshAccessToken = async () => {
     const state = store.getState();
     const refreshToken = state.auth.refreshToken;
 
-    if (!refreshToken) {
-        return handleSessionExpiry();
-    }
+    // if (!refreshToken) {
+    //     return handleSessionExpiry();
+    // }
 
     try {
         const response = await axios.post(`${import.meta.env.VITE_APP_URL}/api/token/refresh/`, { refresh: refreshToken });

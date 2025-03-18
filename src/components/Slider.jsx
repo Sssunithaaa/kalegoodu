@@ -64,18 +64,31 @@ const settings = {
   slidesToShow,
   slidesToScroll: 1,
   initialSlide: 0,
-   centerMode: allProducts.length >1 && window.innerWidth <=1024, // Enable center mode if more than 1 product
-  centerPadding: allProducts.length > 1 && window.innerWidth <=1024 ? "30px" : "0px",
+  centerMode: allProducts.length > 1 && window.innerWidth <= 1024,
+  centerPadding: allProducts.length > 1 && window.innerWidth <= 1024 ? "30px" : "0px",
   afterChange: (index) => setCurrentSlide(index),
   prevArrow: currentSlide > 0 ? <SamplePrevArrow /> : null,
-  nextArrow: currentSlide + slidesToShow < allProducts.length -1 ? <SampleNextArrow /> : null,
+  nextArrow: currentSlide + slidesToShow < (window.innerWidth <= 1024 ? allProducts.length : allProducts.length - 1) 
+  ? <SampleNextArrow /> 
+  : null,
   responsive: [
     { breakpoint: 1500, settings: { slidesToShow: Math.min(allProducts.length, 4) } },
     { breakpoint: 1024, settings: { slidesToShow: Math.min(allProducts.length, 3) } },
-    { breakpoint: 768, settings: { slidesToShow: Math.min(allProducts.length, 2),centreMode:true,centerPadding: allProducts?.length > 2 ? "30px" : "0px", } },
-    { breakpoint: 540, settings: { slidesToShow: 1,centreMode: allProducts?.length > 1,centerPadding: allProducts?.length > 1 ? "30px" : "0px", } },
+    { breakpoint: 768, settings: { 
+        slidesToShow: Math.min(allProducts.length, 2), 
+        centerMode: allProducts.length > 2, // ✅ Fixed typo `centreMode` → `centerMode`
+        centerPadding: allProducts.length > 2 ? "30px" : "0px",
+      } 
+    },
+    { breakpoint: 540, settings: { 
+        slidesToShow: 1, 
+        centerMode: allProducts.length > 1, // ✅ Fixed typo `centreMode` → `centerMode`
+        centerPadding: allProducts.length > 1 ? "30px" : "0px",
+      } 
+    },
   ],
 };
+
 
 
 

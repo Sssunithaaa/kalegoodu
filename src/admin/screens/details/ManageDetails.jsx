@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { useEffect } from 'react';
 const ManageDetails = () => {
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['page-contents'],
     queryFn: () => getPageContents(),
   });

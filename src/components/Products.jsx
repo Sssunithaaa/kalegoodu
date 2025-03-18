@@ -103,7 +103,7 @@ const fetchProducts = async ({ pageParam = 1 }) => {
     // Prepare availability filters
     const availabilityFilters = {};
     if (availability.inStock) availabilityFilters.in_stock = true;
-    if (availability.outOfStock) availabilityFilters.out_of_stock = true;
+    if (availability.outOfStock) {availabilityFilters.out_stock = true;availabilityFilters.out_stock=false}
 
     if (!categoryMode && !subCategoryMode) {
       const { data } = await axios.get(`${baseUrl}/api/list_products`, {
@@ -117,6 +117,18 @@ const fetchProducts = async ({ pageParam = 1 }) => {
           ...availabilityFilters, // Add availability filters here
         },
       });
+
+      console.log(`${baseUrl}/api/list_products`, {
+        params: {
+          page: pageParam,
+          search: keyword || undefined,
+          min_price: sPrice || undefined,
+          max_price: ePrice || undefined,
+          sort_by: sortOption ? sortOption.split("-")[0] : undefined,
+          sort_order: sortOption ? sortOption.split("-")[1] : undefined,
+          ...availabilityFilters, // Add availability filters here
+        },
+      })
 
       return {
         products: data.results || [],
@@ -144,6 +156,7 @@ const fetchProducts = async ({ pageParam = 1 }) => {
           },
         }
       );
+      
       console.log(`${baseUrl}/api/products_by_subcategory/${sub.subcategory_id}/`,
         {
           params: {
