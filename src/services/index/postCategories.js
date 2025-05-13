@@ -48,7 +48,7 @@ export const getAllCategoriess = async () => {
   }
 };
 
-export const getAllSubCategories = async (search = "", sort = "") => {
+export const getAllSubCategories = async (search = "", sort = "", page = 1) => {
   try {
     const params = new URLSearchParams();
 
@@ -56,19 +56,19 @@ export const getAllSubCategories = async (search = "", sort = "") => {
 
     if (sort === "visible-true" || sort === "visible-false") {
       params.append("sort_by", "visible");
-      params.append("sort_order", sort === "visible-true");
+      params.append("sort_order", sort === "visible-true" ? "true" : "false");
     } else if (sort) {
       const [field, order] = sort.split("-");
       params.append("sort_by", field);
       params.append("sort_order", order);
     }
 
-    // If there are query parameters, append them; otherwise, use the base URL
-    const urlWithParams = params.toString()
-      ? `${url}/api/list-subcategories/?${params.toString()}`
-      : `${url}/api/list-subcategories/`;
-   
+    // 👇 Add the current page
+    params.append("page", page);
+
+    const urlWithParams = `${url}/api/list-subcategories/?${params.toString()}`;
     const response = await axios.get(urlWithParams);
+    console.log("Response data:", response.data);
     return response.data;
   } catch (error) {
     if (error.response?.data?.message) {
@@ -77,7 +77,6 @@ export const getAllSubCategories = async (search = "", sort = "") => {
     throw new Error(error.message);
   }
 };
-
 
 
 

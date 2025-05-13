@@ -1,10 +1,10 @@
-import React, { useContext,useEffect, Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useContext,useEffect, Suspense,useState, lazy } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import FullPageLoader from './components/FullPageLoader';
 import { CartContext } from './context/CartContext';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-
+import { authGuard } from './services/index/api';
 const ManageSubCategories = lazy(()=> import('./admin/screens/categories/ManageSubCategories'))
 const SubCategoryPage = lazy(()=> import('./admin/screens/categories/SubCategories'))
 const ProductGallery = lazy(()=> import('./components/ProductCards/ProductGallery'))
@@ -50,6 +50,34 @@ const App = () => {
   useEffect(() => {
     window.history.scrollRestoration = 'manual'
   }, []);
+
+  const [authChecked, setAuthChecked] = useState(false);
+ 
+  const navigate = useNavigate();
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+    
+    // Check authentication status when app loads
+    const checkAuth = async () => {
+      if (window.location.pathname.startsWith('/admin')) {
+        try {
+          await authGuard();
+          console.log('Authenticated');
+          setAuthChecked(true);
+        } catch {
+          navigate('/login');
+        }
+      } else {
+        setAuthChecked(true);
+      }
+    };
+    
+    checkAuth();
+  }, [navigate]);
+  console.log('Auth checked:', authChecked);
+  if (!authChecked && window.location.pathname.startsWith('/admin')) {
+    return <FullPageLoader />;
+  }
   return (
     <div>
       {/* ScrollToTop should be outside the Suspense component */}

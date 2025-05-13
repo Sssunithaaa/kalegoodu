@@ -34,17 +34,23 @@ const ManageSubCategories = () => {
   const baseUrl = import.meta.env.VITE_APP_URL;
   const [keyword,setKeyword] = useState("");
   const [sortOption, setSortOption] = useState("created_at-desc");
+  const [currentPage, setCurrentPage] = useState(1);
   const PAGE_SIZE = 5;
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data = { subcategories: [] }, isLoading, isFetching, refetch } = useQuery({
-  queryKey: ['sub-categories', keyword, sortOption],
-  queryFn: () => getAllSubCategories(keyword, sortOption), // Pass the search and sort options
-  keepPreviousData: true,
-  refetchOnWindowFocus: false});
-
+  const {
+    data = { results: [], count: 0 },
+    isLoading,
+    isFetching,
+    refetch,
+  } = useQuery({
+    queryKey: ['sub-categories', keyword, sortOption, currentPage],
+    queryFn: () => getAllSubCategories(keyword, sortOption, currentPage),
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
   
-
+  console.log("data", data);
+  
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
@@ -63,11 +69,12 @@ const ManageSubCategories = () => {
   
 
 
-  const subcategories = data?.subcategories || [];
+  const subcategories = data?.results || [];
+  console.log("subcategories", subcategories);
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-  const totalPages = Math.ceil(subcategories?.length / PAGE_SIZE);
-  const paginatedData = subcategories?.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(data?.count / PAGE_SIZE);
+
 
 
   const handlePageChange = (page) => {
@@ -137,7 +144,7 @@ const updateCategory = async (subCategoryId, updatedField) => {
           
          
         >
-          {isLoading || isFetching ? <FullPageLoader/> : paginatedData?.map((category) => (
+          {isLoading || isFetching ? <FullPageLoader/> : subcategories?.map((category) => (
             <tr key={category.subcategory_id}>
               <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
                 <div className="flex items-center">
