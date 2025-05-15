@@ -167,6 +167,7 @@ export const getSubcategoriesByCategories = async (categoryIds) => {
         category_ids: Array.isArray(categoryIds) ? categoryIds.join(",") : categoryIds, 
       },
     });
+
     return data.subcategories;
   } catch (error) {
     console.error("Error fetching subcategories:", error);

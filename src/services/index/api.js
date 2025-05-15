@@ -130,14 +130,23 @@ api.interceptors.response.use(
     }
 );
 
+
 const handleSessionExpiry = () => {
+    // Show toast BEFORE state clears
+    toast.error('Session expired. Please log in again.', {
+        position: 'top-center',
+        autoClose: 2000,
+    });
+
+    // Logout (this clears state)
     store.dispatch(logout());
-    if (window.location.pathname.startsWith("/admin")) {
-        // Use window.location.replace to prevent back navigation
-        window.location.replace("/login");
-        toast.error("Session expired. Please log in again.");
-    }
+
+    // Redirect after short delay (give time for toast to display)
+    setTimeout(() => {
+        window.location.href = '/#/login';
+    }, 2000);
 };
+
 
 // Initial token check
 const checkInitialAuth = async () => {

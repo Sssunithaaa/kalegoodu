@@ -288,7 +288,7 @@ const MegaMenu = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
- const { data, isLoading } = useQuery({
+ const { data } = useQuery({
   queryKey: ["header"],
   queryFn: async () => {
     const res = await axios.get(`${import.meta.env.VITE_APP_URL}/api/navbar/categories/`);
@@ -394,11 +394,12 @@ useEffect(() => {
 
     return (
       <li
-        key={index}
-        className="relative lg:flex lg:mx-auto py-2 md:py-3 px-2 hover:cursor-pointer transition-all duration-300"
-        onMouseEnter={() => setHoveredIndex(index)}
-        onMouseLeave={() => setTimeout(() => setHoveredIndex(null), 1000)} // Added slight delay
-      >
+  key={index}
+  className="relative lg:flex lg:mx-auto py-2 md:py-3 px-2 hover:cursor-pointer transition-all duration-300"
+  onMouseEnter={() => setHoveredIndex(index)}
+  onMouseLeave={() => setHoveredIndex(null)}
+>
+
         {/* Main Navigation Item */}
         <div
           onClick={() => {
@@ -432,7 +433,7 @@ useEffect(() => {
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.1, ease: "easeInOut" }}
             className="absolute left-0 mt-[40px] bg-gray-50 overflow-hidden border border-gray-200 shadow-lg"
-            style={{ width: "100%" }} // ✅ Makes submenu same width as nav button
+            style={{ width: "150px" }} // ✅ Makes submenu same width as nav button
           >
             {item.subcategories.map((subItem, subIndex) => {
               const slug = `${subItem.name.toLowerCase().replace(/\s+/g, "-")}-${subItem.subcategory_id}`;

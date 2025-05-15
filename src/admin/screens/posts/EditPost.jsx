@@ -88,19 +88,18 @@ const EditPost = () => {
 
 const categoryIds = useMemo(() => categories?.map(category => category.value), [categories]);
 
-
+ 
 
 const { data: subCategoriesData,isFetching: subcategoriesFetching } = useQuery({
   queryKey: ["subcategories", categoryIds],
   queryFn: () => getSubcategoriesByCategories(categoryIds),
-  enabled: categoryIds.length > 1
+  enabled: categoryIds.length >= 1
  // Ensure we only fetch when categories are selected
-  
 });
 
     
 
-  
+   
 
  useEffect(() => {
     import("quill-emoji")
@@ -131,7 +130,7 @@ const baseUrl = import.meta.env.VITE_APP_URL
     enabled: isEditMode, 
     refetchOnWindowFocus: false, 
   });
- 
+  
 
   useEffect(() => {
     if (product) {
