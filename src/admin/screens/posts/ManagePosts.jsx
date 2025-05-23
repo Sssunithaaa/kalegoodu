@@ -43,7 +43,7 @@ const ManageProducts = () => {
     keepPreviousData: true,
   });
 
-  
+  console.log(productsData)
   const products = productsData?.results?.products || [];
   const totalPages = Math.ceil(productsData.count / 4);
   const searchKeywordOnChangeHandler = (event) => {
@@ -121,6 +121,7 @@ const ManageProducts = () => {
           "Discount Price",
           "Quantity",
           "Categories",
+          "Sub-Categories",
           " ",
           " "
         ]}
@@ -165,6 +166,13 @@ const ManageProducts = () => {
                 {product.categories.length > 0
                   ? product.categories.map((cat) => cat.name).join(", ")
                   : "Uncategorized"}
+              </p>
+            </td>
+            <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
+              <p className="text-gray-900 whitespace-no-wrap">
+                {product.subcategories?.length > 0
+                  ? product.subcategories.map((cat) => cat.name).join(", ")
+                  : <span className="text-red-500">No subcategories</span>}
               </p>
             </td>
             <td className="px-5 py-5 text-md bg-white border-b border-gray-200">
