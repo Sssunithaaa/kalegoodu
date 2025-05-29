@@ -59,4 +59,21 @@ import api from '../../services/index/api';
   }
 };
 
-export {addImage,updateImage}
+const deleteImage = async (url,refetch, setLoading) => {
+ 
+  setLoading(true);
+  try {
+    await api.delete(
+      `/api/${url}`
+    );
+    toast.success('Image deleted successfully!');
+    refetch();
+  } catch (error) {
+    toast.error('Failed to delete image');
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+export {addImage,updateImage, deleteImage}

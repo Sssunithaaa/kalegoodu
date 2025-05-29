@@ -17,7 +17,7 @@ import {
   
   filterCategories,
 } from "../../../utils/multiSelectTagUtils";
-import { updateImage } from "../../api/ImageApi";
+import { deleteImage, updateImage } from "../../api/ImageApi";
 import { addImage } from "../../api/ImageApi";
 import Dropzone from "react-dropzone";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
@@ -28,6 +28,7 @@ import Button from "../../../components/Button";
 import BackButton from "../../BackButton";
 import { ClipLoader } from "react-spinners";
 import * as Emoji from "quill-emoji";
+import api from "../../../services/index/api";
 Quill.register("modules/emoji", Emoji);
 
 const promiseOptions = async (inputValue) => {
@@ -330,8 +331,9 @@ const handleFileChange = (acceptedFiles, index) => {
 
 
 
-const [isUpdatingImage, setIsUpdatingImage] = useState(false);
+  const [isUpdatingImage, setIsUpdatingImage] = useState(false);
   const [isAddingImage, setIsAddingImage] = useState(false);
+  const [isDeletingImage, setIsDeletingImage] = useState(false);
 
   const handleUpdate = (productImageId, file) => {
     updateImage(baseUrl, productImageId, file, refetch, setIsUpdatingImage,`update_product_image/${productImageId}/`);
@@ -341,18 +343,22 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
     addImage(baseUrl, productImageId, file, refetch, setIsAddingImage,`add_product_image/${productImageId}/`);
   };
 
- const handleDelete = async (productImageId) => {
-    try {
-      await axios.delete(`${baseUrl}/api/product_image/${productImageId}/delete/`);
-      // queryClient.invalidateQueries(["banner"]);
-      toast.success("Image deleted successfully");
-      refetch()
-    } catch (error) {
+//  const handleDelete = async (productImageId) => {
+//     try {
+//       await api.delete(`${baseUrl}/api/product_image/${productImageId}/delete/`);
+//       // queryClient.invalidateQueries(["banner"]);
+//       toast.success("Image deleted successfully");
+//       refetch()
+//     } catch (error) {
 
-      toast.error("Failed to delete image");
-      // console.error("Error deleting image:", error.message);
-    }
-  };
+//       toast.error("Failed to delete image");
+//       // console.error("Error deleting image:", error.message);
+//     }
+//   };
+
+   const handleDeleteImage = (productImageId) => {
+    deleteImage(`product_image/${productImageId}/delete/`,refetch,setIsDeletingImage)
+   }
   
 
   return (
@@ -437,8 +443,8 @@ const [isUpdatingImage, setIsUpdatingImage] = useState(false);
                      {isAddingImage ? <ClipLoader size={20}></ClipLoader> : "Add Image"}
                     </UpdateButton>
                             </div> )) }
-                             <DeleteButton type="button" onClick={() => handleDelete(product?.images[index]?.product_image_id)}>
-                  Delete
+                             <DeleteButton type="button" onClick={() => handleDeleteImage(product?.images[index]?.product_image_id)}>
+                  {isDeletingImage? <ClipLoader size={20}></ClipLoader> : "Delete"}
                 </DeleteButton>
       </div>
   </div>
